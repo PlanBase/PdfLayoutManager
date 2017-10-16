@@ -206,8 +206,6 @@ Version 0.1: Initial working and documented version
 # License
 Copyright 2017 PlanBase Inc.
 
-Available under the AGPL for free, or you can purchase a proprietary license.
-
 PdfLayoutMgr2 is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
