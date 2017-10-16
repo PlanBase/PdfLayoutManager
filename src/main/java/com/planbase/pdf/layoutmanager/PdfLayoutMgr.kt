@@ -30,7 +30,6 @@ import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.util.Matrix
-import org.organicdesign.fp.function.Fn2
 import org.organicdesign.fp.oneOf.Option
 import java.awt.image.BufferedImage
 import java.io.File
@@ -112,7 +111,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     private val pages:MutableList<SinglePage> = mutableListOf()
     // Just to start, takes a page number and returns an x-offset for that page.
-    var pageReactor: Fn2<Int, SinglePage, Float>? = null
+    var pageReactor: ((Int, SinglePage) -> Float)? = null
 
     // pages.size() counts the first page as 1, so 0 is the appropriate sentinel value
     private var unCommittedPageIdx = 0
@@ -206,7 +205,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      */
     // Part of end-user public interface
     fun logicalPageStart(o: Orientation,
-                         pr: Fn2<Int, SinglePage, Float>?): PageGrouping {
+                         pr: ((Int, SinglePage) -> Float)?): PageGrouping {
         pageReactor = pr
         val pb = SinglePage(pages.size + 1, this, Option.someOrNullNoneOf(pageReactor))
         pages.add(pb)
@@ -337,7 +336,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         val DOC_UNITS_PER_INCH = 72f
         // Some printers need at least 1/2" of margin (36 "pixels") in order to accept a print job.
         // This amount seems to accommodate all printers.
-        internal val DEFAULT_MARGIN = 37f
+        val DEFAULT_MARGIN = 37f
     }
 
     //    public XyOffset putRect(XyOffset outerTopLeft, XyDim outerDimensions, final PDColor c) {

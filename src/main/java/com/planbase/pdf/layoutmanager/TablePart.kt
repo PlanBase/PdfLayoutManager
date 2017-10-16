@@ -34,10 +34,10 @@ class TablePart(private val tableBuilder: TableBuilder) {
     var minRowHeight = 0f
     private val rows = ArrayList<TableRowBuilder>(1)
 
-//    fun cellStyle(x: CellStyle): TablePart {
-//        cellStyle = x
-//        return this
-//    }
+    fun cellStyle(x: CellStyle): TablePart {
+        cellStyle = x
+        return this
+    }
 
     fun align(a: CellStyle.Align): TablePart {
         cellStyle = cellStyle!!.align(a)
@@ -46,15 +46,15 @@ class TablePart(private val tableBuilder: TableBuilder) {
 
     //    public TablePart cellStyle(CellStyle x) { return new Builder().cellStyle(cellStyle).build(); }
 
-//    fun textStyle(x: TextStyle): TablePart {
-//        textStyle = x
-//        return this
-//    }
+    fun textStyle(x: TextStyle): TablePart {
+        textStyle = x
+        return this
+    }
 
-//    fun minRowHeight(f: Float): TablePart {
-//        minRowHeight = f
-//        return this
-//    }
+    fun minRowHeight(f: Float): TablePart {
+        minRowHeight = f
+        return this
+    }
 
     fun rowBuilder(): TableRowBuilder {
         return TableRowBuilder(this)

@@ -21,11 +21,9 @@
 package com.planbase.pdf.layoutmanager
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
-import org.organicdesign.fp.function.Fn2
-import org.organicdesign.fp.oneOf.Option
-
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import org.organicdesign.fp.oneOf.Option
 import java.io.IOException
 import java.util.TreeSet
 
@@ -35,9 +33,10 @@ import java.util.TreeSet
  * you want automatic page-breaking.  SinglePage is for when you want to force something onto a
  * specific page only.
  */
-class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayoutMgr, pr: Option<Fn2<Int, SinglePage, Float>>) : RenderTarget {
+class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayoutMgr,
+                                      pr: Option<((Int, SinglePage) -> Float)?>) : RenderTarget {
     // The x-offset for the body section of this page (left-margin-ish)
-    private val xOff: Float = pr.match({ r -> r.apply(pageNum, this) },
+    private val xOff: Float = pr.match({ r -> r?.invoke(pageNum, this) ?: 0f },
                                        { 0f })
     private var lastOrd: Long = 0
     private val items = TreeSet<PdfItem>()

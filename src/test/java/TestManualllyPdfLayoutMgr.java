@@ -1,17 +1,3 @@
-// Copyright 2013-03-13 PlanBase Inc. & Glen Peterson
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 import com.planbase.pdf.layoutmanager.BorderStyle;
 import com.planbase.pdf.layoutmanager.Cell;
 import com.planbase.pdf.layoutmanager.CellStyle;
@@ -19,12 +5,11 @@ import com.planbase.pdf.layoutmanager.LineStyle;
 import com.planbase.pdf.layoutmanager.Padding;
 import com.planbase.pdf.layoutmanager.PageGrouping;
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr;
-import com.planbase.pdf.layoutmanager.ScaledJpeg;
 import com.planbase.pdf.layoutmanager.TableBuilder;
-import com.planbase.pdf.layoutmanager.Text;
 import com.planbase.pdf.layoutmanager.TextStyle;
+import com.planbase.pdf.layoutmanager.XyDim;
 import com.planbase.pdf.layoutmanager.XyOffset;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
@@ -40,7 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.planbase.pdf.layoutmanager.CellStyle.Align.*;
-import static com.planbase.pdf.layoutmanager.PdfLayoutMgr.DOC_UNITS_PER_INCH;
 import static com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE;
 import static org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER;
 
@@ -65,13 +49,13 @@ public class TestManualllyPdfLayoutMgr {
     @Test
     public void testPdf() throws IOException {
         // Nothing happens without a PdfLayoutMgr.
-        PdfLayoutMgr pageMgr = PdfLayoutMgr.newRgbPageMgr();
+        PdfLayoutMgr pageMgr = new PdfLayoutMgr(PDDeviceRGB.INSTANCE, new XyDim(PDRectangle.LETTER));
 
         // One inch is 72 document units.  36 is about a half-inch - enough margin to satisfy most
         // printers. A typical monitor has 72 dots per inch, so you can think of these as pixels
         // even though they aren't.  Things can be aligned right, center, top, or anywhere within
         // a "pixel".
-        final float pMargin = DOC_UNITS_PER_INCH / 2;
+        final float pMargin = PdfLayoutMgr.Companion.getDOC_UNITS_PER_INCH() / 2;
 
         // A PageGrouping is a group of pages with the same settings.  When your contents scroll off
         // the bottom of a page, a new page is automatically created for you with the settings taken
@@ -85,45 +69,38 @@ public class TestManualllyPdfLayoutMgr {
         final float colWidth = tableWidth/4f;
         final float[] colWidths = new float[] { colWidth + 10, colWidth + 10,
                                                 colWidth + 10, colWidth - 30 };
-        final Padding textCellPadding = Padding.of(2f);
+        final Padding textCellPadding = new Padding(2f);
 
         // Set up some useful styles for later
         final TextStyle heading = new TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, RGB_WHITE);
         final CellStyle headingCell =
-                CellStyle.of(BOTTOM_CENTER, textCellPadding, RGB_BLUE,
-                             BorderStyle.builder()
-                                        .left(LineStyle.of(RGB_BLUE))
-                                        .right(LineStyle.of(RGB_WHITE))
-                                        .build());
+                new CellStyle(BOTTOM_CENTER, textCellPadding, RGB_BLUE,
+                             new BorderStyle(null, new LineStyle(RGB_WHITE),
+                                             null, new LineStyle(RGB_BLUE)));
         final CellStyle headingCellR =
-                CellStyle.of(BOTTOM_CENTER, textCellPadding, RGB_BLACK,
-                             BorderStyle.builder()
-                                        .left(LineStyle.of(RGB_WHITE))
-                                        .right(LineStyle.of(RGB_BLACK))
-                                        .build());
+                new CellStyle(BOTTOM_CENTER, textCellPadding, RGB_BLACK,
+                              new BorderStyle(null, new LineStyle(RGB_BLACK),
+                                              null, new LineStyle(RGB_WHITE)));
 
         final TextStyle regular = new TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK);
-        final CellStyle regularCell = CellStyle.of(TOP_LEFT, textCellPadding, null,
-                                                   BorderStyle.builder()
-                                                              .left(LineStyle.of(RGB_BLACK))
-                                                              .right(LineStyle.of(RGB_BLACK))
-                                                              .bottom(LineStyle.of(RGB_BLACK))
-                                                              .build());
+        final CellStyle regularCell = new CellStyle(TOP_LEFT, textCellPadding, null,
+                                                    new BorderStyle(null, new LineStyle(RGB_BLACK),
+                                                                    new LineStyle(RGB_BLACK), new LineStyle(RGB_BLACK)));
 
         // Let's draw three tables on our first landscape-style page grouping.
 
         // Draw the first table with lots of extra room to show off the vertical and horizontal
         // alignment.
-        TableBuilder tB = TableBuilder.of();
+        TableBuilder tB = new TableBuilder();
         tB.addCellWidths(vec(120f, 120f, 120f))
           .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
-          .partBuilder().cellStyle(CellStyle.of(BOTTOM_CENTER, Padding.of(2),
-                                                RGB_BLUE_GREEN, BorderStyle.of(RGB_BLACK)))
+          .partBuilder().cellStyle(new CellStyle(BOTTOM_CENTER, new Padding(2),
+                                                RGB_BLUE_GREEN, new BorderStyle(RGB_BLACK)))
           .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
           .buildPart()
-          .partBuilder().cellStyle(CellStyle.of(MIDDLE_CENTER, Padding.of(2),
+          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2),
                                                 RGB_LIGHT_GREEN,
-                                                BorderStyle.of(RGB_DARK_GRAY)))
+                                                new BorderStyle(RGB_DARK_GRAY)))
           .minRowHeight(120f)
           .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
           .rowBuilder()
@@ -142,143 +119,142 @@ public class TestManualllyPdfLayoutMgr {
           .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
           .buildRow()
           .buildPart();
-        XyOffset xya = tB.buildTable()
-                         .render(lp, XyOffset.of(40f, lp.yBodyTop()), null);
-
-        // The second table uses the x and y offsets from the previous table to position it to the
-        // right of the first.
-        tB = TableBuilder.of();
-        tB.addCellWidths(vec(100f, 100f, 100f))
-          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
-          .partBuilder().cellStyle(CellStyle.of(BOTTOM_CENTER, Padding.of(2),
-                                                RGB_BLUE_GREEN, BorderStyle.of(RGB_BLACK)))
-          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-          .buildPart()
-          .partBuilder().cellStyle(CellStyle.of(MIDDLE_CENTER, Padding.of(2),
-                                                RGB_LIGHT_GREEN,
-                                                BorderStyle.of(RGB_DARK_GRAY)))
-          .minRowHeight(100f)
-          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
-          .rowBuilder()
-          .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .buildRow()
-          .rowBuilder()
-          .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .buildRow()
-          .rowBuilder()
-          .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .buildRow()
-          .buildPart();
-        XyOffset xyb = tB.buildTable()
-                         .render(lp, XyOffset.of(xya.x() + 10, lp.yBodyTop()), null);
-
-        // The third table uses the x and y offsets from the previous tables to position it to the
-        // right of the first and below the second.  Negative Y is down.  This third table showcases
-        // the way cells extend vertically (but not horizontally) to fit the text you put in them.
-        tB = TableBuilder.of();
-        tB.addCellWidths(vec(100f, 100f, 100f))
-          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
-                                  RGB_YELLOW_BRIGHT))
-          .partBuilder().cellStyle(CellStyle.of(BOTTOM_CENTER, Padding.of(2),
-                                                RGB_BLUE_GREEN,
-                                                BorderStyle.of(RGB_BLACK)))
-          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-          .buildPart()
-          .partBuilder().cellStyle(CellStyle.of(MIDDLE_CENTER, Padding.of(2),
-                                                RGB_LIGHT_GREEN,
-                                                BorderStyle.of(RGB_DARK_GRAY)))
-          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
-          .rowBuilder().cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1").buildCell()
-          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two").buildCell()
-          .cellBuilder().align(BOTTOM_LEFT)
-          .addStrs("Line 1", "Line two", "[Line three is long enough to wrap]").buildCell()
-          .buildRow()
-          .rowBuilder().cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two").buildCell()
-          .cellBuilder().align(MIDDLE_CENTER).addStrs("").buildCell()
-          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1").buildCell().buildRow()
-          .rowBuilder().cellBuilder().align(TOP_RIGHT).addStrs("L1").buildCell()
-          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two").buildCell()
-          .cellBuilder().align(TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
-          .buildPart()
-          .buildTable()
-          .render(lp, XyOffset.of(xya.x() + 10, xyb.y() - 10), null);
-
-        lp.commit();
-
-        // Let's do a portrait page now.  I just copied this from the previous page.
-        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.PORTRAIT);
-        tB = TableBuilder.of();
-        tB.addCellWidths(vec(120f, 120f, 120f))
-          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
-          .partBuilder().cellStyle(CellStyle.of(BOTTOM_CENTER, Padding.of(2), RGB_BLUE_GREEN,
-                                                BorderStyle.of(RGB_BLACK)))
-          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-          .buildPart()
-          .partBuilder().cellStyle(CellStyle.of(MIDDLE_CENTER, Padding.of(2), RGB_LIGHT_GREEN,
-                                                BorderStyle.of(RGB_DARK_GRAY))).minRowHeight(120f)
-          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
-          .rowBuilder()
-          .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .buildRow()
-          .rowBuilder()
-          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .buildRow()
-          .rowBuilder()
-          .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-          .buildRow()
-          .buildPart();
-        XyOffset xyOff = tB.buildTable()
-                           .render(lp, XyOffset.of(40f, lp.yBodyTop()), null);
-
-        // This was very hastily added to this test to prove that font loading works (it does).
-        File fontFile = new File("target/test-classes/LiberationMono-Bold.ttf");
-        PDType0Font liberationFont = pageMgr.loadTrueTypeFont(fontFile);
-        lp.drawCell(xyOff.x(), xyOff.y(),
-                   Cell.of(CellStyle.of(MIDDLE_CENTER, Padding.of(2), RGB_LIGHT_GREEN,
-                                        BorderStyle.of(RGB_DARK_GRAY)), 200f,
-                           new Text(new TextStyle(liberationFont, 12f, RGB_BLACK),
-                                   "Hello Liberation Mono Bold Font!")));
-
-        tB = TableBuilder.of();
-        tB.addCellWidths(vec(100f))
-          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
-                                   RGB_YELLOW_BRIGHT))
-          .partBuilder().cellStyle(CellStyle.of(MIDDLE_CENTER, Padding.of(2),
-                                                RGB_BLUE_GREEN,
-                                                BorderStyle.of(RGB_BLACK)))
-          .rowBuilder().addTextCells("Lower-Right").buildRow()
-          .buildPart();
-        // Where's the lower-right-hand corner?  Put a cell there.
-        tB.buildTable()
-          .render(lp, XyOffset.of(lp.pageWidth() - (100 + pMargin),
-                                  lp.yBodyBottom() + 15 + pMargin), null);
-
-        lp.commit();
-
+//        XyOffset xya = tB.buildTable()
+//                         .render(lp, new XyOffset(40f, lp.yBodyTop()), null);
+//
+//        // The second table uses the x and y offsets from the previous table to position it to the
+//        // right of the first.
+//        tB = new TableBuilder();
+//        tB.addCellWidths(vec(100f, 100f, 100f))
+//          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
+//          .partBuilder().cellStyle(new CellStyle(BOTTOM_CENTER, new Padding(2),
+//                                                RGB_BLUE_GREEN, new BorderStyle(RGB_BLACK)))
+//          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+//          .buildPart()
+//          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2),
+//                                                RGB_LIGHT_GREEN,
+//                                                new BorderStyle(RGB_DARK_GRAY)))
+//          .minRowHeight(100f)
+//          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+//          .rowBuilder()
+//          .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .buildRow()
+//          .rowBuilder()
+//          .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .buildRow()
+//          .rowBuilder()
+//          .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .buildRow()
+//          .buildPart();
+//        XyOffset xyb = tB.buildTable()
+//                         .render(lp, new XyOffset(xya.getX() + 10, lp.yBodyTop()), null);
+//
+//        // The third table uses the x and y offsets from the previous tables to position it to the
+//        // right of the first and below the second.  Negative Y is down.  This third table showcases
+//        // the way cells extend vertically (but not horizontally) to fit the text you put in them.
+//        tB = new TableBuilder();
+//        tB.addCellWidths(vec(100f, 100f, 100f))
+//          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
+//                                  RGB_YELLOW_BRIGHT))
+//          .partBuilder().cellStyle(new CellStyle(BOTTOM_CENTER, new Padding(2),
+//                                                RGB_BLUE_GREEN,
+//                                                new BorderStyle(RGB_BLACK)))
+//          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+//          .buildPart()
+//          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2),
+//                                                RGB_LIGHT_GREEN,
+//                                                new BorderStyle(RGB_DARK_GRAY)))
+//          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+//          .rowBuilder().cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1").buildCell()
+//          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two").buildCell()
+//          .cellBuilder().align(BOTTOM_LEFT)
+//          .addStrs("Line 1", "Line two", "[Line three is long enough to wrap]").buildCell()
+//          .buildRow()
+//          .rowBuilder().cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two").buildCell()
+//          .cellBuilder().align(MIDDLE_CENTER).addStrs("").buildCell()
+//          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1").buildCell().buildRow()
+//          .rowBuilder().cellBuilder().align(TOP_RIGHT).addStrs("L1").buildCell()
+//          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two").buildCell()
+//          .cellBuilder().align(TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
+//          .buildPart()
+//          .buildTable()
+//          .render(lp, new XyOffset(xya.getX() + 10, xyb.getY() - 10), null);
+//
+//        lp.commit();
+//
+//        // Let's do a portrait page now.  I just copied this from the previous page.
+//        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.PORTRAIT);
+//        tB = new TableBuilder();
+//        tB.addCellWidths(vec(120f, 120f, 120f))
+//          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
+//          .partBuilder().cellStyle(new CellStyle(BOTTOM_CENTER, new Padding(2), RGB_BLUE_GREEN,
+//                                                new BorderStyle(RGB_BLACK)))
+//          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+//          .buildPart()
+//          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2), RGB_LIGHT_GREEN,
+//                                                new BorderStyle(RGB_DARK_GRAY))).minRowHeight(120f)
+//          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+//          .rowBuilder()
+//          .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .buildRow()
+//          .rowBuilder()
+//          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .buildRow()
+//          .rowBuilder()
+//          .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+//          .buildRow()
+//          .buildPart();
+//        XyOffset xyOff = tB.buildTable()
+//                           .render(lp, new XyOffset(40f, lp.yBodyTop()), null);
+//
+//        // This was very hastily added to this test to prove that font loading works (it does).
+//        File fontFile = new File("target/test-classes/LiberationMono-Bold.ttf");
+//        PDType0Font liberationFont = pageMgr.loadTrueTypeFont(fontFile);
+//        lp.drawCell(xyOff.getX(), xyOff.getY(),
+//                   new Cell(new CellStyle(MIDDLE_CENTER, new Padding(2), RGB_LIGHT_GREEN, new BorderStyle(RGB_DARK_GRAY)),
+//                            200f,
+//                            new TextStyle(liberationFont, 12f, RGB_BLACK),
+//                            vec("Hello Liberation Mono Bold Font!")));
+//
+//        tB = new TableBuilder();
+//        tB.addCellWidths(vec(100f))
+//          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
+//                                   RGB_YELLOW_BRIGHT))
+//          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2),
+//                                                RGB_BLUE_GREEN,
+//                                                new BorderStyle(RGB_BLACK)))
+//          .rowBuilder().addTextCells("Lower-Right").buildRow()
+//          .buildPart();
+//        // Where's the lower-right-hand corner?  Put a cell there.
+//        tB.buildTable()
+//          .render(lp, new XyOffset(lp.pageWidth() - (100 + pMargin),
+//                                  lp.yBodyBottom() + 15 + pMargin), null);
+//
+//        lp.commit();
+//
         // More landscape pages
         TextStyle pageHeadTextStyle = new TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK);
-        CellStyle pageHeadCellStyle = CellStyle.of(TOP_CENTER, null, null, null);
+        CellStyle pageHeadCellStyle = new CellStyle(TOP_CENTER, null, null, null);
         lp = pageMgr.logicalPageStart(LANDSCAPE,
                                       (pageNum, pb) ->
                                       {
-                                          Cell cell = Cell.of(pageHeadCellStyle, tableWidth,
-                                                              pageHeadTextStyle,
-                                                              "Test Logical Page Three" +
-                                                              " (physical page " + pageNum + ")");
+                                          Cell cell = new Cell(pageHeadCellStyle, tableWidth, pageHeadTextStyle,
+                                                               vec("Test Logical Page Three" +
+                                                                   " (physical page " + pageNum + ")"));
 
-                                          cell.render(pb, XyOffset.of(pMargin,
+                                          cell.render(pb, new XyOffset(pMargin,
                                                                       LETTER.getWidth() - 27),
                                                       cell.calcDimensions(tableWidth)
                                                           .width(tableWidth));
@@ -289,19 +265,18 @@ public class TestManualllyPdfLayoutMgr {
         float y = lp.yBodyTop();
 
         y = lp.putRow(pMargin, y,
-                      Cell.of(headingCell, colWidths[0], heading,
-                              "Transliterated Russian (with un-transliterated Chinese below)"),
-                      Cell.of(headingCellR, colWidths[1], heading, "US English"),
-                      Cell.of(headingCellR, colWidths[2], heading, "Finnish"),
-                      Cell.of(headingCellR, colWidths[3], heading, "German"));
+                      new Cell(headingCell, colWidths[0], heading,
+                               vec("Transliterated Russian (with un-transliterated Chinese below)")),
+                      new Cell(headingCellR, colWidths[1], heading, vec("US English")),
+                      new Cell(headingCellR, colWidths[2], heading, vec("Finnish")),
+                      new Cell(headingCellR, colWidths[3], heading, vec("German")));
 
         File f = new File("target/test-classes/melon.jpg");
         System.out.println(f.getAbsolutePath());
         BufferedImage melonPic = ImageIO.read(f);
 
         y = lp.putRow(pMargin, y,
-                      Cell.builder(regularCell, colWidths[0])
-                          .add(regular,
+                      new Cell(regularCell, colWidths[0], regular,
                                vec("This used to have Russian and Chinese text.",
                                    "The Russian was transliterated and the",
                                    "Chinese was turned into bullets.",
@@ -360,16 +335,15 @@ public class TestManualllyPdfLayoutMgr {
                                    null,
                                    "Here is a picture with the default and other sizes.  Though" +
                                    " it shows up several times, the image data is only attached" +
-                                   " to the file once and reused."))
-                          .addAll(vec(ScaledJpeg.of(melonPic),
-                                      ScaledJpeg.of(melonPic, 50, 50),
-                                      ScaledJpeg.of(melonPic, 50, 50),
-                                      ScaledJpeg.of(melonPic, 170, 100)))
-                          .add(regular, vec("Watermelon!"))
-                          .build(),
-                      Cell.builder(regularCell, colWidths[1])
-                          .add(regular,
-                               // Flowing text
+                                   " to the file once and reused.")),
+//                              .addAll(vec(new ScaledJpeg(melonPic),
+//                                          new ScaledJpeg(melonPic, 50, 50),
+//                                          new ScaledJpeg(melonPic, 50, 50),
+//                                          new ScaledJpeg(melonPic, 170, 100)))
+//                              .add(regular, vec("Watermelon!"))
+//                              .build(),
+                      new Cell(regularCell, colWidths[1],
+                               regular,
                                vec("O say can you see by the dawn's early light, " +
                                    "What so proudly we hailed at the twilight's last gleaming, " +
                                    "Whose broad stripes and bright stars " +
@@ -421,10 +395,9 @@ public class TestManualllyPdfLayoutMgr {
                                    "more",
                                    "lines",
                                    "to",
-                                   "test"))
-                          .build(),
-                      Cell.builder(regularCell, colWidths[2])
-                          .add(regular,
+                                   "test")),
+//                          .build(),
+                      new Cell(regularCell, colWidths[2], regular,
                                vec("Maamme",
                                    null,
                                    "Monument to the Vårt Land poem in Helsinki. " +
@@ -455,10 +428,8 @@ public class TestManualllyPdfLayoutMgr {
                                    "Se, ur vår kärlek skall gå opp " +
                                    "Ditt ljus, din glans, din fröjd, ditt hopp. " +
                                    "Och högre klinga skall en gång " +
-                                   "Vår fosterländska sång."))
-                          .build(),
-                      Cell.builder(regularCell, colWidths[3])
-                          .add(regular,
+                                   "Vår fosterländska sång.")),
+                      new Cell(regularCell, colWidths[3], regular,
                                vec(// Older first 2 verses obsolete.
                                    "Einigkeit und Recht und Freiheit " +
                                    "Für das deutsche Vaterland! " +
@@ -467,26 +438,25 @@ public class TestManualllyPdfLayoutMgr {
                                    "Einigkeit und Recht und Freiheit " +
                                    "Sind des Glückes Unterpfand;" +
                                    "Blüh' im Glanze dieses Glückes, " +
-                                   "  Blühe, deutsches Vaterland!"))
-                          .build());
+                                   "  Blühe, deutsches Vaterland!")));
 
         lp.putRow(pMargin, y,
-                  Cell.of(regularCell, colWidths[0], regular, "Another row of cells"),
-                  Cell.of(regularCell, colWidths[1], regular, "On the second page"),
-                  Cell.of(regularCell, colWidths[2], regular, "Just like any other page"),
-                  Cell.of(regularCell, colWidths[3], regular, "That's it!"));
+                  new Cell(regularCell, colWidths[0], regular, vec("Another row of cells")),
+                  new Cell(regularCell, colWidths[1], regular, vec("On the second page")),
+                  new Cell(regularCell, colWidths[2], regular, vec("Just like any other page")),
+                  new Cell(regularCell, colWidths[3], regular, vec("That's it!")));
         lp.commit();
 
-        final LineStyle lineStyle = LineStyle.of(RGB_BLACK, 1);
+        final LineStyle lineStyle = new LineStyle(RGB_BLACK, 1);
 
         lp = pageMgr.logicalPageStart(LANDSCAPE,
                                       (pageNum, pb) ->
                                       {
-                                          Cell cell = Cell.of(pageHeadCellStyle, tableWidth,
-                                                              pageHeadTextStyle,
-                                                              "Test Logical Page Four " +
-                                                              " (physical page " + pageNum + ")");
-                                          cell.render(pb, XyOffset.of(pMargin,
+                                          Cell cell = new Cell(pageHeadCellStyle, tableWidth,
+                                                               pageHeadTextStyle,
+                                                               vec("Test Logical Page Four " +
+                                                                   " (physical page " + pageNum + ")"));
+                                          cell.render(pb, new XyOffset(pMargin,
                                                                       LETTER.getWidth() - 27),
                                                       cell.calcDimensions(tableWidth)
                                                           .width(tableWidth));

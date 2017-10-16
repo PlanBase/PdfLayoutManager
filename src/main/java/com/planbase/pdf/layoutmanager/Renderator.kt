@@ -23,30 +23,28 @@ package com.planbase.pdf.layoutmanager
 /** Renderable Iterator  */
 interface Renderator {
 
-    //    class SingleItemRenderator implements Renderator {
-    ////        private final float width;
-    //        private Renderable item;
-    //
-    //        SingleItemRenderator(Renderable r) { item = r; }
-    //
-    //        @Override public boolean hasMore() { return item != null; }
-    //
-    //        @Override public ContTerm getSomething(float maxWidth) {
-    //            XyDim dim = item.calcDimensions(maxWidth);
-    //            FixedItem ret = new FixedItemImpl(item, dim.width(), dim.height(), 0f, dim.height());
-    //            item = null;
-    //            return ContTerm.Companion.continuing(ret);
-    //        }
-    //
-    //        @Override public ContTermNone getIfFits(float remainingWidth) {
-    //            XyDim dim = item.calcDimensions(remainingWidth);
-    //            if (dim.width() <= remainingWidth) {
-    //                ContTerm something = getSomething(remainingWidth);
-    //                return something.toContTermNone();
-    //            }
-    //            return ContTermNone.Companion.none();
-    //        }
-    //    }
+//    class SingleItemRenderator(var item: Renderable?) : Renderator {
+//
+//        override fun hasMore(): Boolean {
+//            return item != null
+//        }
+//
+//        override fun getSomething(maxWidth: Float): ContTerm {
+//            val dim = item!!.calcDimensions(maxWidth)
+//            val ret = FixedItemImpl(item, dim.width(), dim.height(), 0f, dim.height())
+//            item = null
+//            return ContTerm.continuing(ret)
+//        }
+//
+//        override fun getIfFits(remainingWidth: Float): ContTermNone {
+//            val dim = item!!.calcDimensions(remainingWidth)
+//            if (dim.width() <= remainingWidth) {
+//                val something = getSomething(remainingWidth)
+//                return something.toContTermNone()
+//            }
+//            return ContTermNone.Companion.none()
+//        }
+//    }
 
     fun hasMore(): Boolean
 

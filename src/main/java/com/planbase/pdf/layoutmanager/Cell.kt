@@ -33,7 +33,10 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
                 val width: Float,
                 // A list of the contents.  It's pretty limiting to have one item per row.
                 private val contents: List<Renderable>) : Renderable {
-
+    constructor(cs: CellStyle = CellStyle.DEFAULT,
+                w: Float,
+                textStyle:TextStyle,
+                text:List<String>) : this(cs, w, text.map{s -> Text(textStyle, s)}.toList())
     private constructor(b:Builder) : this(b.cellStyle ?: CellStyle.DEFAULT, b.width, b.rows)
 
     // Caches XyDims for all content lines, indexed by desired width (we only have to lay-out again

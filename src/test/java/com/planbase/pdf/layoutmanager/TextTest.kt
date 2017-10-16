@@ -19,10 +19,10 @@ class TextTest {
         var idx = ri.idx
         assertEquals("This is a", wrappedRow.string)
         assertEquals(10, idx)
-        assertEquals(34.903126f, wrappedRow.rowDim.width())
-        assertEquals(tStyle.ascent(), wrappedRow.ascent())
-        assertEquals(tStyle.descent() + tStyle.leading(), wrappedRow.descentAndLeading())
-        assertEquals(tStyle.lineHeight(), wrappedRow.rowDim.height())
+        assertEquals(34.903126f, wrappedRow.xyDim.width)
+        assertEquals(tStyle.ascent(), wrappedRow.ascent)
+        assertEquals(tStyle.descent() + tStyle.leading(), wrappedRow.descentAndLeading)
+        assertEquals(tStyle.lineHeight(), wrappedRow.xyDim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -55,10 +55,10 @@ class TextTest {
         var idx = ri.idx
         assertEquals("This is", wrappedRow.string)
         assertEquals(8, idx)
-        assertEquals(27.084375f, wrappedRow.rowDim.width())
-        assertEquals(tStyle.ascent(), wrappedRow.ascent())
-        assertEquals(tStyle.descent() + tStyle.leading(), wrappedRow.descentAndLeading())
-        assertEquals(tStyle.lineHeight(), wrappedRow.rowDim.height())
+        assertEquals(27.084375f, wrappedRow.xyDim.width)
+        assertEquals(tStyle.ascent(), wrappedRow.ascent)
+        assertEquals(tStyle.descent() + tStyle.leading(), wrappedRow.descentAndLeading)
+        assertEquals(tStyle.lineHeight(), wrappedRow.xyDim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -112,18 +112,23 @@ class TextTest {
         val ri:ContTerm = rend.getSomething(40f)
         assertFalse(ri.foundCr)
         val row = ri.item
-        assertEquals(tStyle.ascent(), row.ascent())
+        assertEquals(tStyle.ascent(), row.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(),
-                row.descentAndLeading())
-        assertEquals(tStyle.lineHeight(), row.lineHeight())
-        assertEquals(tStyle.lineHeight(), row.xyDim().height())
-        assertEquals(28.250002f, row.xyDim().width())
+                row.descentAndLeading)
+        assertEquals(tStyle.lineHeight(), row.lineHeight)
+        assertEquals(tStyle.lineHeight(), row.xyDim.height)
+        assertEquals(28.250002f, row.xyDim.width)
 
-        assertTrue(rend.getIfFits(5f).isNone)
+        assertTrue(rend.getIfFits(5f) is None)
 
-        val row3 = rend.getIfFits(20f).match({it},{it},null)
+        val ctn:ContTermNone = rend.getIfFits(20f)
+        val row3 = when(ctn) {
+            is Continuing -> ctn.item
+            is Terminal -> ctn.item
+            None -> null
+        }
         assertNotNull(row3)
-        assertEquals(14.816668f, row3.xyDim().width())
+        assertEquals(14.816668f, row3!!.xyDim.width)
     }
 
     @Test fun testRenderator2() {
@@ -134,19 +139,24 @@ class TextTest {
         val ri:ContTerm = rend.getSomething(40f)
         assertFalse(ri.foundCr)
         val row = ri.item
-        assertEquals(tStyle.ascent(), row.ascent())
+        assertEquals(tStyle.ascent(), row.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(),
-                     row.descentAndLeading())
-        assertEquals(tStyle.lineHeight(), row.lineHeight())
-        assertEquals(tStyle.lineHeight(), row.xyDim().height())
-        assertEquals(28.250002f, row.xyDim().width())
+                     row.descentAndLeading)
+        assertEquals(tStyle.lineHeight(), row.lineHeight)
+        assertEquals(tStyle.lineHeight(), row.xyDim.height)
+        assertEquals(28.250002f, row.xyDim.width)
 
-        assertTrue(rend.getIfFits(5f).isNone)
+        assertTrue(rend.getIfFits(5f) is None)
 
-        val row3 = rend.getIfFits(40f).match({it},{it},null)
+        val ctn:ContTermNone = rend.getIfFits(40f)
+        val row3 = when(ctn) {
+            is Continuing -> ctn.item
+            is Terminal -> ctn.item
+            None -> null
+        }
         assertNotNull(row3)
-        assertEquals(14.816668f, row3.xyDim().width())
-        assertEquals(tStyle.lineHeight(), row3.xyDim().height())
+        assertEquals(14.816668f, row3!!.xyDim.width)
+        assertEquals(tStyle.lineHeight(), row3.xyDim.height)
     }
 
 //    @Test fun testCalcDimensions() {
