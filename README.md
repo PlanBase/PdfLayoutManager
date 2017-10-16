@@ -13,11 +13,11 @@ See the [FAQ](#faq) below
 
 Example: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayoutMgr.java)
 
-[API Docs](https://glenkpeterson.github.io/PdfLayoutManager/apidocs/)
+[API Docs](https://PlanBase.github.io/PdfLayoutMgr2/apidocs/)
 
 # Maven Dependency
 ```xml
-    <!-- Now Affero GPL - no longer Apache -->
+    <!-- Affero GPL - contact PlanBase for commercial version. -->
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>

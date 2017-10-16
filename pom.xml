@@ -37,14 +37,13 @@ this directory like the following (you'll have to replace the question marks):
 
 -->
 	<groupId>com.planbase.pdf</groupId>
-	<artifactId>PdfLayoutManager2</artifactId>
+	<artifactId>PdfLayoutMgr2</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>PdfLayoutManager</name>
+	<name>PdfLayoutMgr2</name>
 	<description>An AGPL page-layout manager for PDFBox with line-breaking, page-breaking, and tables. Uses a box-model for styles.</description>
-	<!-- TODO: Fix this for the PlanBase version. -->
-	<url>https://github.com/GlenKPeterson/PdfLayoutManager</url>
+	<url>https://github.com/PlanBase/PdfLayoutMgr2</url>
 
 	<licenses>
 		<license>
@@ -54,17 +53,16 @@ this directory like the following (you'll have to replace the question marks):
 	</licenses>
 	<developers>
 		<developer>
-			<name>Glen K. Peterson</name>
-			<email>glen@organicdesign.com</email>
+			<name>PlanBase Inc.</name>
+			<email>support@planbase.com</email>
 			<organization>PlanBase Inc.</organization>
 			<organizationUrl>https://planbase.com/</organizationUrl>
 		</developer>
 	</developers>
 	<scm>
-		<!-- TODO: Fix this for the PlanBase version. -->
-		<connection>scm:git:https://github.com/GlenKPeterson/PdfLayoutManager.git</connection>
-		<developerConnection>scm:git:https://github.com/GlenKPeterson/PdfLayoutManager.git</developerConnection>
-		<url>https://github.com/GlenKPeterson/PdfLayoutManager.git</url>
+		<connection>scm:git:https://github.com/PlanBase/PdfLayoutMgr2.git</connection>
+		<developerConnection>scm:git:https://github.com/PlanBase/PdfLayoutMgr2.git</developerConnection>
+		<url>https://github.com/PlanBase/PdfLayoutMgr2</url>
 	</scm>
 	<build>
 		<plugins>
