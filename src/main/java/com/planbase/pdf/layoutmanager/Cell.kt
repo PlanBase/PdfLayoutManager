@@ -75,9 +75,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         return pcl!!
     }
 
-    override fun renderator(): CellRenderator {
-        return CellRenderator(this)
-    }
+    override fun renderator(): Renderator = TODO()
 
 
     /** {@inheritDoc}  */
@@ -91,22 +89,6 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         return if (cellStyle.padding == null) blockDim else cellStyle.padding.addTo(blockDim)
         //        System.out.println("Cell.calcDimensions(" + maxWidth + ") dim=" + dim +
         //                           " returns " + ret);
-    }
-
-    // TODO!
-    inner class CellRenderator(c: Cell) : Renderator {
-
-        override fun hasMore(): Boolean {
-            return false
-        }
-
-        override fun getSomething(maxWidth: Float): ContTerm? {
-            return null
-        }
-
-        override fun getIfFits(remainingWidth: Float): ContTermNone? {
-            return null
-        }
     }
 
     /*

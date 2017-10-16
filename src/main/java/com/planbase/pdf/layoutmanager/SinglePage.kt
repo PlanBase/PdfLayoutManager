@@ -37,22 +37,18 @@ import java.util.TreeSet
  */
 class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayoutMgr, pr: Option<Fn2<Int, SinglePage, Float>>) : RenderTarget {
     // The x-offset for the body section of this page (left-margin-ish)
-    private val xOff: Float
+    private val xOff: Float = pr.match({ r -> r.apply(pageNum, this) },
+                                       { 0f })
     private var lastOrd: Long = 0
     private val items = TreeSet<PdfItem>()
-
-    init {
-        xOff = pr.match({ r -> r.apply(pageNum, this) }
-                       ) { 0f }
-    }
 
     internal fun fillRect(x: Float, y: Float, width: Float, height: Float, c: PDColor, zIdx: Float) {
         items.add(FillRect(x + xOff, y, width, height, c, lastOrd++, zIdx))
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(topLeft: XyOffset, dim: XyDim, c: PDColor): SinglePage {
-        fillRect(topLeft.x, topLeft.y, dim.width, dim.height, c, -1f)
+    override fun fillRect(outerTopLeft: XyOffset, outerDim: XyDim, c: PDColor): SinglePage {
+        fillRect(outerTopLeft.x, outerTopLeft.y, outerDim.width, outerDim.height, c, -1f)
         return this
     }
     //        public void fillRect(final float xVal, final float yVal, final float w, final PDColor c,
@@ -84,8 +80,8 @@ class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayo
     }
 
     /** {@inheritDoc}  */
-    override fun drawLine(xa: Float, ya: Float, xb: Float, yb: Float, ls: LineStyle): SinglePage {
-        drawLine(xa, ya, xb, yb, ls, PdfItem.DEFAULT_Z_INDEX)
+    override fun drawLine(x1: Float, y1: Float, x2: Float, y2: Float, lineStyle: LineStyle): SinglePage {
+        drawLine(x1, y1, x2, y2, lineStyle, PdfItem.DEFAULT_Z_INDEX)
         return this
     }
 
@@ -94,8 +90,8 @@ class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayo
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(x: Float, y: Float, text: String, s: TextStyle): SinglePage {
-        drawStyledText(x, y, text, s, PdfItem.DEFAULT_Z_INDEX)
+    override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): SinglePage {
+        drawStyledText(x, y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
         return this
     }
 
