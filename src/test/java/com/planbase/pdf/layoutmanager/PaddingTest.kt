@@ -1,18 +1,16 @@
 package com.planbase.pdf.layoutmanager
 
-import org.junit.Test
-
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Test
 import org.organicdesign.testUtils.EqualsContract.equalsDistinctHashCode
-import org.organicdesign.testUtils.EqualsContract.equalsSameHashCode
 
 class PaddingTest {
     @Test
     fun staticFactoryTest() {
-        assertTrue(Padding.NO_PADDING === Padding(0f))
-        assertTrue(Padding.NO_PADDING === Padding(0f, 0f, 0f, 0f))
-        assertTrue(Padding.DEFAULT_TEXT_PADDING === Padding(1.5f, 1.5f, 2f, 1.5f))
+        assertTrue(Padding.NO_PADDING == Padding(0f))
+        assertTrue(Padding.NO_PADDING == Padding(0f, 0f, 0f, 0f))
+        assertTrue(Padding.DEFAULT_TEXT_PADDING == Padding(1.5f, 1.5f, 2f, 1.5f))
 
         val (top, right, bottom, left) = Padding(2f)
         assertEquals(2.0f, top, 0.0f)
@@ -30,17 +28,17 @@ class PaddingTest {
     @Test
     fun equalHashTest() {
         // Test first item different
-        equalsDistinctHashCode<Any, Padding, Padding, Padding, Padding>(Padding(1f), Padding(1f, 1f, 1f, 1f), Padding(1f),
-                                                                        Padding(2f, 1f, 1f, 1f))
+        equalsDistinctHashCode(Padding(1f), Padding(1f, 1f, 1f, 1f), Padding(1f),
+                               Padding(2f, 1f, 1f, 1f))
 
         // Test transposed middle items are different (but have same hashcode)
-        equalsSameHashCode<Any, Padding, Padding, Padding, Padding>(Padding(3f, 5f, 7f, 1.1f), Padding(3f, 5f, 7f, 1.1f),
-                                                                    Padding(3f, 5f, 7f, 1.1f),
-                                                                    Padding(3f, 7f, 5f, 1.1f))
+        equalsDistinctHashCode(Padding(3f, 5f, 7f, 1.1f), Padding(3f, 5f, 7f, 1.1f),
+                               Padding(3f, 5f, 7f, 1.1f),
+                               Padding(3f, 7f, 5f, 1.1f))
 
         // Padding values that differ by less than 0.1f have the same hashcode
         // but are not equal.  Prove it (also tests last item is different):
-        equalsSameHashCode<Any, Padding, Padding, Padding, Padding>(Padding(1f), Padding(1f, 1f, 1f, 1f), Padding(1f),
-                                                                    Padding(1f, 1f, 1f, 1.0001f))
+        equalsDistinctHashCode(Padding(1f), Padding(1f, 1f, 1f, 1f), Padding(1f),
+                               Padding(1f, 1f, 1f, 1.0001f))
     }
 }

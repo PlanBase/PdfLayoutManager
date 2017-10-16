@@ -34,8 +34,8 @@ class XyDimTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun testEx1() = XyDim(3.5f, -1f)
+    fun testEx1() { XyDim(3.5f, -1f) }
 
     @Test(expected = IllegalArgumentException::class)
-    fun testEx2() = XyDim(-3.5f, 1f)
+    fun testEx2() { XyDim(-3.5f, 1f) }
 }
