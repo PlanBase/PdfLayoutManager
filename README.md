@@ -6,7 +6,6 @@ Requires PDFBox which in turn requires Log4J or apache commons Logging.
 
 ![Sample Output](sampleScreenShot.png)
 
-# NOTICE: No longer Apache!
 You can use this as free software under the [Affero GPL](https://www.gnu.org/licenses/agpl-3.0.en.html) or contact PlanBase about a commercial license.
 See the [FAQ](#faq) below
 
