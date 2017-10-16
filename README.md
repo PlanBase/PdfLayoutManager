@@ -36,9 +36,9 @@ A sample PDF named `test.pdf` shows up in the root folder of this project when y
 
 A jar file can be built with `mvn clean package` and ends up in the `target/` sub-folder.  Or type `mvn clean install` to build and install into your local maven repository.
 
-FAQ
-===
-***Q: Can I use this in closed-source software?***
+#FAQ
+
+#####Q: Can I use this in closed-source software?
 
 **A:** You can purchase a commercial license from [PlanBase Inc.](https://planbase.com)
 Otherwise, you must comply with all the terms of the [Affero GPL](https://www.gnu.org/licenses/agpl-3.0.en.html).
