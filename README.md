@@ -39,20 +39,24 @@ A jar file can be built with `mvn clean package` and ends up in the `target/` su
 FAQ
 ===
 ***Q: Can I use this in closed-source software?***
+
 **A:** You can purchase a commercial license from [PlanBase Inc.](https://planbase.com)
 Otherwise, you must comply with all the terms of the [Affero GPL](https://www.gnu.org/licenses/agpl-3.0.en.html).
 Affero GPL software cannot be combined with closed-source software in the same JVM even if the AGPL software is used over a network or the Internet.
 
 ***Q: Can I use this in non-AfferoGPL Open-Sourced software?***
+
 **A:** No.
 Any software that uses AfferoGPL code (in the same JVM) must be released under the AfferoGPL. 
 
 ***Q: Why isn't this Apache-licensed any more?***
+
 **A:** The recent version required a near-total rewrite in order to accommodate inline images and style changes.
 PlanBase paid for that.  It was a significant investment and they deserve the chance to profit from it.
-You can still use the old PdfLayoutManager versions 0.x under the Apache license, but it lacks inline styles and images.
+You can still use the old PdfLayoutManager2 versions 0.x under the Apache license, but it lacks inline styles and images.
 
-***Q: What languages/character sets does PdfLayoutManager support?***
+***Q: What languages/character sets does PdfLayoutManager2 support?***
+
 **A:** The PDF spec guarantees support for [WinAnsiEncoding AKA Windows Code Page 1252](http://en.wikipedia.org/wiki/Windows-1252) and maybe four PDType1Fonts fonts without any font embedding.  WinAnsi covers the following languages:
 
 Afrikaans (af), Albanian (sq), Basque (eu), Catalan (ca), Danish (da), Dutch (nl), English (en), Faroese (fo), Finnish (fi), French (fr), Galician (gl), German (de), Icelandic (is), Irish (ga), Italian (it), Norwegian (no), Portuguese (pt), Scottish (gd), Spanish (es), and Swedish (sv)
@@ -60,14 +64,16 @@ Afrikaans (af), Albanian (sq), Basque (eu), Catalan (ca), Danish (da), Dutch (nl
 If you embed fonts, you can use whatever characters are in that font.  PDFBox throws an exception if you request a character that's not covered by your font list.
 
 ***Q: I don't want text wrapping.  I just want to set the size of a cell and let it chop off whatever I put in there.***
-**A:** PdfLayoutManager was intended to provide html-table-like flowing of text and resizing of cells to fit whatever you put in them, even across multiple pages.  If you don't need that, use PDFBox directly.  If you need other features of PdfLayoutManager, there is a minHeight() setting on table rows.  Combined with padding and alignment, that may get you what you need to layout things that will always fit in the box.
 
-***Q: Will PdfLayoutManager ever support cropping the contents of a fixed-size box?***
-**A:** If individual letters or images have a dimension which is bigger than the same dimension of their bounding box, we either have to suppress their display, or crop them.  The PDF spec mentions something about a "clipping path" that might be usable for cropping overflow if you turn it on, render your object, then turn it off again.  I'm not currently aware of PDFBox support for this (if it's even possible).
+**A:** PdfLayoutManager2 was intended to provide html-table-like flowing of text and resizing of cells to fit whatever you put in them, even across multiple pages.  If you don't need that, use PDFBox directly.  If you need other features of PdfLayoutManager2, there is a minHeight() setting on table rows.  Combined with padding and alignment, that may get you what you need to layout things that will always fit in the box.
 
-If the contents are all little things, we could just show as many little letters or images as completely fit, then no more (truncate the list of contents).  Showing none could make truncation work for big objects too, but I'm not in a rush to implement that since it's conceptually so different from the very reason for the existence of PdfLayoutManager.
+***Q: Will PdfLayoutManager2 ever support cropping the contents of a fixed-size box?***
 
-Maybe some day I'll provide some sample code so you can do truncation yourself.  [TextStyle](src/main/java/com/planbase/pdf/layoutmanager/TextStyle.java) has lineHeight() and stringWidthInDocUnits() that you may find useful for writing your own compatible cropping algorithm.  If you do that (and it works well), I hope you'll consider contributing it back to PdfLayoutManager (at least to this doc) so that others can benefit!
+**A:** If individual letters or images have a dimension which is bigger than the same dimension of their bounding box, we either have to suppress their display, or crop them.  The PDF spec mentions something about a "clipping path" that might be usable for cropping overflow if you turn it on, render your object, then turn it off again.
+
+If the contents are all little things, we could just show as many little letters or images as completely fit, then no more (truncate the list of contents).  Showing none could make truncation work for big objects too, but this is conceptually very different from the very reason for the existence of PdfLayoutManager.
+
+Maybe some day we will provide some sample code so you can do truncation yourself.  [TextStyle](src/main/java/com/planbase/pdf/layoutmanager/TextStyle.java) has lineHeight() and stringWidthInDocUnits() that you may find useful for writing your own compatible cropping algorithm.  If you do that (and it works well), consider contributing it back to PdfLayoutManager2 (at least to this doc) so that others can benefit!
 
 ***Q: Why doesn't PdfLayoutManager line-wrap my insanely long single-word test string properly?***
 **A:** For text wrapping to work, the text needs occasional whitespace.  In HTML, strings without whitespace do not wrap at all!  In PdfLayoutManager, a long enough string will wrap at some point wider than the cell.
@@ -125,10 +131,9 @@ Recent Changes
  - Changed TextStyle to take a PDFont instead of the more specific PDType1Font
  - Bundled LiberationMono-Bold font in the test resources (for testing).
    I'm pretty sure this is excluded from the JAR file, it's just to prove that font loading works.
-   If I'm doing something wrong, I hope someone will tell me and/or provide a liberal open-source font with a small file size as a substitute.
+   If this is wrong something wrong, let us know and/or provide a liberal open-source font with a small file size as a substitute.
    RedHat or whoever else is responsible for this font is not endorsing, supporting, or probably even aware of this project.
-   I appreciate their work and will give them credit if I can figure out who they are.
-   Any font would do, I just picked this one because of the small file size and (presumably) open-source license.
+   Any font would do, this one has a small file size and (presumably) open-source license.
  - Added PdfLayoutMgr.pageReactor to (so far) move body content left and right on alternate pages.
  - Added Paguro and bumped minimum Java version from 1.6 to 1.8.
 
@@ -184,7 +189,7 @@ Added Portrait page orientation (previously only Landscape was available).  Orie
 (a grouping of similar pages) so that you can switch mid-document.  Public methods were moved from PdfLayoutMgr to
 LogicalPage in order for this to work: pageMgr(), yPageTop(), yPageBottom(), and pageWidth(). Now you must call
 them *after* LogicalPage lp = pageMgr.logicalPageStart(); Also added some comments and fixed others.  Because this
-changes the API, I bumped up the middle version number.  Thank you @EricHans76 for requesting this feature.
+changes the API, the middle version number was bumped.  Thank you @EricHans76 for requesting this feature.
 
 ***Version 0.2.2***
 Fixed misleading use of package-scoped method in the example/test.  Thank you @wienczny
