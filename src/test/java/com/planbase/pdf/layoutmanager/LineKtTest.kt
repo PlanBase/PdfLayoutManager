@@ -34,8 +34,8 @@ class LineKtTest {
         val txt2 = Text.of(tStyle2, "there ")
         val txt3 = Text.of(tStyle1, "world! This is great stuff.")
 
-        val lines : ImList<Line> = renderablesToLines(vec(txt1, txt2, txt3), 50f)
-        println(lines)
+        val lines : ImList<Line> = renderablesToLines(vec(txt1, txt2, txt3), 60f)
+//        println(lines)
         val line1 = lines[0]
         assertEquals(tStyle2.lineHeight(), line1.height())
     }
