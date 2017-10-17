@@ -332,7 +332,7 @@ public class TestManualllyPdfLayoutMgr {
 //                                   "冒著敵人的炮火，前進！ " +
 //                                   "冒著敵人的炮火，前進！ " +
 //                                   "前進！前進！進！",
-                                   null,
+                                   "\n",
                                    "Here is a picture with the default and other sizes.  Though" +
                                    " it shows up several times, the image data is only attached" +
                                    " to the file once and reused.")),
@@ -365,14 +365,14 @@ public class TestManualllyPdfLayoutMgr {
                                    "'Tis the star-spangled banner, O! long may it wave ",
                                    "O'er the land of the free and the home of the brave. ",
                                    // Big space.
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
+                                   "\n",
+                                   "\n",
+                                   "\n",
+                                   "\n",
+                                   "\n",
+                                   "\n",
+                                   "\n",
+                                   "\n",
                                    // Flowing text
                                    "And where is that band who so vauntingly swore " +
                                    "That the havoc of war and the battle's confusion, " +
@@ -382,7 +382,7 @@ public class TestManualllyPdfLayoutMgr {
                                    "From the terror of flight, or the gloom of the grave: " +
                                    "And the star-spangled banner in triumph doth wave, " +
                                    "O'er the land of the free and the home of the brave. " +
-                                   null,
+                                   "\n",
                                    "O thus be it ever, when freemen shall stand " +
                                    "Between their loved home and the war's desolation. " +
                                    "Blest with vict'ry and peace, may the Heav'n rescued land " +
@@ -399,7 +399,7 @@ public class TestManualllyPdfLayoutMgr {
 //                          .build(),
                       new Cell(regularCell, colWidths[2], regular,
                                vec("Maamme",
-                                   null,
+                                   "\n",
                                    "Monument to the Vårt Land poem in Helsinki. " +
                                    "Oi maamme, Suomi, synnyinmaa, " +
                                    "soi, sana kultainen! " +
@@ -413,9 +413,9 @@ public class TestManualllyPdfLayoutMgr {
                                    "sun toivos, riemus loistossaan, " +
                                    "ja kerran laulus, synnyinmaa " +
                                    "korkeemman kaiun saa. ",
-                                   null,
+                                   "\n",
                                    "Vårt land ",
-                                   null,
+                                   "\n",
                                    "(the original, by Johan Ludvig Runeberg) " +
                                    "Vårt land, vårt land, vårt fosterland, " +
                                    "ljud högt, o dyra ord! " +

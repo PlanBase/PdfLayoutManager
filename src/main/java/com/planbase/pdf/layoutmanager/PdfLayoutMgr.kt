@@ -176,7 +176,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
             y += lp.bodyHeight()
             idx++
             if (pages.size <= idx) {
-                pages.add(SinglePage(pages.size + 1, this, Option.someOrNullNoneOf(pageReactor)))
+                pages.add(SinglePage(pages.size + 1, this, pageReactor))
             }
         }
         val ps = pages[idx]
@@ -205,9 +205,8 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      */
     // Part of end-user public interface
     fun logicalPageStart(o: Orientation,
-                         pr: ((Int, SinglePage) -> Float)?): PageGrouping {
-        pageReactor = pr
-        val pb = SinglePage(pages.size + 1, this, Option.someOrNullNoneOf(pageReactor))
+                         pageReactor: ((Int, SinglePage) -> Float)?): PageGrouping {
+        val pb = SinglePage(pages.size + 1, this, pageReactor)
         pages.add(pb)
         return PageGrouping(this, o)
     }

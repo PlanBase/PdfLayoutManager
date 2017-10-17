@@ -13,33 +13,28 @@
  // limitations under the License.
 
 import com.planbase.pdf.layoutmanager.*
+import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_LEFT
+import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_RIGHT
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
+import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.junit.Test
+import org.organicdesign.fp.StaticImports.vec
 import org.organicdesign.fp.collections.ImList
-
-import javax.imageio.ImageIO
-import java.awt.image.BufferedImage
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
 import java.security.SecureRandom
-
-import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_LEFT
-import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_RIGHT
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import org.organicdesign.fp.StaticImports.vec
+import javax.imageio.ImageIO
 
 /**
  * Created by gpeterso on 6/6/17.
  */
 class TestManual2 {
 
-
-@Test @Throws(IOException::class)
+@Test
 fun testBodyMargins() {
     // Nothing happens without a PdfLayoutMgr.
     val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, XyDim(PDRectangle.A6))
@@ -53,12 +48,12 @@ fun testBodyMargins() {
     val lp = pageMgr.logicalPageStart(
             PORTRAIT,
             { pageNum:Int, pb:SinglePage ->
-                val isLeft = pageNum!! % 2 == 1
+                val isLeft = pageNum % 2 == 1
                 val leftMargin:Float = if (isLeft) 37f else 45f
                 //            System.out.println("pageNum " + pageNum);
                 pb.drawLine(leftMargin, 30f, leftMargin + bodyWidth, 30f,
                             LineStyle(Utils.CMYK_BLACK))
-                pb.drawStyledText(leftMargin, 20f, "Page # " + pageNum!!,
+                pb.drawStyledText(leftMargin, 20f, "Page # " + pageNum,
                                   TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK))
                 leftMargin })
 

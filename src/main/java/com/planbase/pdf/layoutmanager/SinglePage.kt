@@ -23,8 +23,8 @@ package com.planbase.pdf.layoutmanager
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
-import org.organicdesign.fp.oneOf.Option
 import java.io.IOException
+import java.util.SortedSet
 import java.util.TreeSet
 
 /**
@@ -33,15 +33,16 @@ import java.util.TreeSet
  * you want automatic page-breaking.  SinglePage is for when you want to force something onto a
  * specific page only.
  */
-class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayoutMgr,
-                                      pr: Option<((Int, SinglePage) -> Float)?>) : RenderTarget {
-    // The x-offset for the body section of this page (left-margin-ish)
-    private val xOff: Float = pr.match({ r -> r?.invoke(pageNum, this) ?: 0f },
-                                       { 0f })
+class SinglePage(val pageNum: Int,
+                 private val mgr: PdfLayoutMgr,
+                 pageReactor: ((Int, SinglePage) -> Float)?) : RenderTarget {
+    private var items : SortedSet<PdfItem> = TreeSet()
     private var lastOrd: Long = 0
-    private val items = TreeSet<PdfItem>()
+    // The x-offset for the body section of this page (left-margin-ish)
+    // THIS MUST COME LAST as items will not be initialized if it comes before.
+    private val xOff: Float = pageReactor?.invoke(pageNum, this) ?: 0f
 
-    internal fun fillRect(x: Float, y: Float, width: Float, height: Float, c: PDColor, zIdx: Float) {
+    private fun fillRect(x: Float, y: Float, width: Float, height: Float, c: PDColor, zIdx: Float) {
         items.add(FillRect(x + xOff, y, width, height, c, lastOrd++, zIdx))
     }
 
@@ -153,11 +154,7 @@ class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayo
                           private val scaledPng: ScaledPng,
                           mgr: PdfLayoutMgr,
                           ord: Long, z: Float) : PdfItem(ord, z) {
-        private val png: PDImageXObject
-
-        init {
-            png = mgr.ensureCached(scaledPng)
-        }
+        private val png: PDImageXObject = mgr.ensureCached(scaledPng)
 
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
@@ -172,11 +169,7 @@ class SinglePage internal constructor(val pageNum: Int, private val mgr: PdfLayo
                            val scaledJpeg: ScaledJpeg,
                            mgr: PdfLayoutMgr,
                            ord: Long, z: Float) : PdfItem(ord, z) {
-        private val jpeg: PDImageXObject
-
-        init {
-            jpeg = mgr.ensureCached(scaledJpeg)
-        }
+        private val jpeg: PDImageXObject = mgr.ensureCached(scaledJpeg)
 
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {

@@ -239,7 +239,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         }
 
         fun buildCell(): TableRowBuilder {
-            val c = Cell(cellStyle!!, width, rows)
+            val c = Cell(cellStyle ?: CellStyle.DEFAULT, width, rows)
             return tableRowBuilder.addCellAt(c, colIdx)
         }
 
