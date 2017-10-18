@@ -27,9 +27,15 @@ package com.planbase.pdf.layoutmanager
  None means that nothing is left or nothing will fit in the given remaining width on this line.
  */
 sealed class ContTermNone
-data class Continuing(override val item: LineWrapped): ContTermNone(), ContTerm
-data class Terminal(override val item: LineWrapped): ContTermNone(), ContTerm
-object None: ContTermNone()
+data class Continuing(override val item: LineWrapped): ContTermNone(), ContTerm {
+    override fun toString() = "Cont($item)"
+}
+data class Terminal(override val item: LineWrapped): ContTermNone(), ContTerm {
+    override fun toString() = "Term($item)"
+}
+object None: ContTermNone() {
+    override fun toString() = "None"
+}
 
 /**
 Represents a continuing or terminal LineWrapped where Continuing means there could be more on this

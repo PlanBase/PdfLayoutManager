@@ -89,12 +89,14 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
         while (rtor.hasMore()) {
             if (line.isEmpty()) {
                 val something : ContTerm = rtor.getSomething(maxWidth)
+//                println("🢂something=" + something)
                 line.append(something.item)
                 if (something is Terminal) {
                     line = TextLine()
                 }
             } else {
                 val ctn: ContTermNone = rtor.getIfFits(maxWidth - line.width)
+//                println("🢂ctn=" + ctn)
 
                 when (ctn) {
                     is Continuing ->
@@ -110,5 +112,12 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
             }
         }
     }
+    // Don't forget to add last item.  Haven't thought this through as carefully as the rest...
+    textLines.add(line)
+//    if ( !line.isEmpty() &&
+//         (textLines.last() != line)) {
+//        textLines.add(line)
+//    }
+
     return textLines.toList()
 }
