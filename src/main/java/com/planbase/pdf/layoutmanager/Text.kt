@@ -31,6 +31,9 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
     internal data class WrappedRow(val string: String,
                                    override val xyDim: XyDim,
                                    val textStyle: TextStyle) : FixedItem {
+
+        constructor(s: String, x: Float, ts: TextStyle): this(s, XyDim(x, ts.lineHeight()), ts)
+
         //        float width() { return xyDim.width(); }
         //        float totalHeight() { return xyDim.height(); }
 
@@ -44,12 +47,6 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
             lp.drawStyledText(outerTopLeft.x, outerTopLeft.y, string, textStyle)
             return XyOffset(outerTopLeft.x + xyDim.width,
                             outerTopLeft.y - xyDim.height - textStyle.leading())
-        }
-
-        companion object {
-            fun of(s: String, x: Float, ts: TextStyle): WrappedRow {
-                return WrappedRow(s, XyDim(x, ts.lineHeight()), ts)
-            }
         }
     }
 
@@ -420,9 +417,9 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
                 if (strWidth > maxWidth) {
                     throw IllegalStateException("strWidth=$strWidth > maxWidth=$maxWidth")
                 }
-                return RowIdx(WrappedRow.of(substr, strWidth, txt.textStyle), idx + startIdx + 1, true)
+                return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1, true)
             }
-            return RowIdx(WrappedRow.of(substr, strWidth, txt.textStyle), idx + startIdx + 1, false)
+            return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1, false)
         }
     }
 
