@@ -20,31 +20,6 @@
 
 package com.planbase.pdf.layoutmanager
 
-/**
-Represents a continuing or terminal FixedItem where Continuing means there could be more on this
-line (no hard line break) and Terminal means a hard-coded line-break was encountered.
- */
-data class ContTerm(val item: FixedItem, val foundCr: Boolean) {
-    fun toContTermNone() : ContTermNone =
-            if (foundCr) {
-                Terminal(item)
-            } else {
-                Continuing(item)
-            }
-    companion object {
-        /** Construct a new Continuing from the given object.  */
-        fun continuing(continuing: FixedItem): ContTerm = ContTerm(continuing, false)
-
-        /** Construct a new Terminal from the given object.  */
-        fun terminal(terminal: FixedItem): ContTerm = ContTerm(terminal, true)
-    }
-}
-
-sealed class ContTermNone
-data class Continuing(val item:FixedItem):ContTermNone()
-data class Terminal(val item:FixedItem):ContTermNone()
-object None:ContTermNone()
-
 /** A mutable data structure to hold a line. */
 class TextLine {
     var width: Float = 0f
@@ -118,7 +93,7 @@ fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : Li
                     line = TextLine()
                 }
             } else {
-                val ctn:ContTermNone = rtor.getIfFits(maxWidth - line.width)
+                val ctn: ContTermNone = rtor.getIfFits(maxWidth - line.width)
 
                 when (ctn) {
                     is Continuing ->
