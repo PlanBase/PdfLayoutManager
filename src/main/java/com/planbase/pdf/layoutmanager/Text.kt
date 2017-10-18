@@ -48,6 +48,8 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Arrangeable {
             return XyOffset(outerTopLeft.x + xyDim.width,
                             outerTopLeft.y - xyDim.height - textStyle.leading())
         }
+
+        override fun toString() = "WrappedRow(\"$string\" $xyDim $textStyle)"
     }
 
     private class WrappedBlock(var rows: MutableList<WrappedRow> = ArrayList(), var blockDim: XyDim? = null)

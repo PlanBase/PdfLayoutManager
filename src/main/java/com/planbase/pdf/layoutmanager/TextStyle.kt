@@ -67,6 +67,11 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
 
     private val factor = factorFromFontSize(fontSize)
 
+    override fun toString() = "TextStyle(\"" + font.toString().replace("PDType1Font", "T1") + "\" " +
+                              fontSize + " " +
+                              (if (textColor == Utils.CMYK_BLACK) "CMYK_BLACK" else textColor) +
+                              " $adl avgCharWidth=$avgCharWidth)"
+
     /**
      Assumes ISO_8859_1 encoding
      @param text ISO_8859_1 encoded text
@@ -108,6 +113,9 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
         fun lineHeight(): Float {
             return ascent + descent + leading
         }
+
+        override fun toString() = "AscDescLead($ascent $descent $leading)"
+
         companion object {
             fun fromLeadingFactor(font: PDFont, fontSize: Float, leadingFactor: Float) : AscDescLead {
                 val factor = factorFromFontSize(fontSize)

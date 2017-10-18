@@ -33,8 +33,11 @@ class TextLineKtTest {
         val txt3 = Text.of(tStyle1, "world! This is great stuff.")
 
         val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1, txt2, txt3), 60f)
-//        println(textLines)
+        println(textLines)
+
+        assertEquals(2, textLines.size)
         val line1 = textLines[0]
+        println("line1: " + line1)
         assertEquals(tStyle2.lineHeight(), line1.height())
     }
 

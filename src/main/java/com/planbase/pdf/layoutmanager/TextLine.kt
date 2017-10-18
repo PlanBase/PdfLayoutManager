@@ -48,13 +48,14 @@ class TextLine {
     }
 
     override fun toString(): String {
-        return "TextLine(\n" +
-                "               width=$width\n" +
-                "           maxAscent=$maxAscent\n" +
-                "maxDescentAndLeading=$maxDescentAndLeading\n" +
-                "              height=${height()}\n" +
-                "               items=\n" +
-                "$items)\n"
+        return "TextLine(width=$width maxAscent=$maxAscent maxDescentAndLeading=$maxDescentAndLeading" +
+               " height=${height()} items=\n" +
+               items.fold(StringBuilder("["),
+                          {acc, item ->
+                              if (acc.length > 1) acc.append(",\n ")
+                              acc.append(item)})
+                       .append("])\n")
+                       .toString()
     }
 }
 

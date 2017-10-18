@@ -81,6 +81,8 @@ data class XyDim(val width: Float, val height: Float) {
     fun lte(that: XyDim): Boolean = this.width <= that.width &&
                                     this.height <= that.height
 
+    override fun toString() = "XyDim($width $height)"
+
     companion object {
         val ZERO = XyDim(0f, 0f)
     }
