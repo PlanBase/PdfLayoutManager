@@ -20,8 +20,9 @@
 
 package com.planbase.pdf.layoutmanager
 
-/** Represents a fixed-size item  */
-
+/**
+ Represents a fixed-size item.  Classes implementing this interface should be immutable.
+ */
 interface LineWrapped {
     val xyDim: XyDim
 //    fun width(): Float = width

@@ -23,7 +23,7 @@ package com.planbase.pdf.layoutmanager
 /**
  Implementing LineWrappable means being suitable for use with a two-pass layout manager whose first
  pass says, "given this width, what is your height?" and second pass says, "Given these dimensions,
- draw yourself as best you can."
+ draw yourself as best you can."  Classes implementing LineWrapper are generally mutable (builders).
  */
 interface LineWrappable {
     fun arranger(): LineWrapper
