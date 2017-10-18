@@ -27,7 +27,6 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
     constructor(textStyle: TextStyle) : this(textStyle, "")
 
     private val dims = HashMap<Float, WrappedBlock>()
-    private val align = CellStyle.DEFAULT_ALIGN
 
     internal data class WrappedRow(val string: String,
                                    override val xyDim: XyDim,

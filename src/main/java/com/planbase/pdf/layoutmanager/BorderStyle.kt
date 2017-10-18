@@ -50,13 +50,13 @@ data class BorderStyle(val top: LineStyle?,
      */
     constructor(ls:LineStyle) : this(ls, ls, ls, ls)
 
-    /**
-     * Returns an equal border on all sides
-     * @param c the border color
-     * @param w the width of the border.
-     * @return a new immutable border object
-     */
-    constructor(c: PDColor, w: Float) : this (LineStyle(c, w))
+//    /**
+//     * Returns an equal border on all sides
+//     * @param c the border color
+//     * @param w the width of the border.
+//     * @return a new immutable border object
+//     */
+//    constructor(c: PDColor, w: Float) : this (LineStyle(c, w))
 
     /**
      * Returns an equal border on all sides

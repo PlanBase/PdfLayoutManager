@@ -37,7 +37,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
                 w: Float,
                 textStyle:TextStyle,
                 text:List<String>) : this(cs, w, text.map{s -> Text(textStyle, s)}.toList())
-    private constructor(b:Builder) : this(b.cellStyle ?: CellStyle.DEFAULT, b.width, b.rows)
+//    private constructor(b:Builder) : this(b.cellStyle ?: CellStyle.DEFAULT, b.width, b.rows)
 
     // Caches XyDims for all content textLines, indexed by desired width (we only have to lay-out again
     // when the width changes.
@@ -207,95 +207,6 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
     //        return b;
     //    }
 
-    /**
-     * A mutable Builder for somewhat less mutable cells.
-     */
-    class Builder(var cellStyle: CellStyle?,
-                  override val width: Float,
-                  val rows:MutableList<Layoutable>,
-                  var textStyle: TextStyle?) : CellBuilder {
-        constructor(cs:CellStyle, w:Float) : this(cs, w, mutableListOf(), null)
-
-        // Is this necessary?
-        //        public Builder width(float w) { width = w; return this; }
-
-        /** {@inheritDoc}  */
-        override fun cellStyle(cs: CellStyle): Builder {
-            cellStyle = cs
-            return this
-        }
-
-        /** {@inheritDoc}  */
-        override fun align(align: CellStyle.Align): Builder {
-            cellStyle = cellStyle?.align(align) ?: CellStyle(align, null, null, null)
-            return this
-        }
-
-        /** {@inheritDoc}  */
-        override fun textStyle(x: TextStyle): Builder {
-            textStyle = x
-            return this
-        }
-
-        /** {@inheritDoc}  */
-        override fun add(rs: Layoutable): Builder {
-            rows.add(rs)
-            return this
-        }
-
-        /** {@inheritDoc}  */
-        override fun addAll(js: Collection<Layoutable>): Builder {
-            rows.addAll(js)
-            return this
-        }
-
-        /** {@inheritDoc}  */
-        override fun add(ts: TextStyle, ls: Iterable<String>): Builder {
-            for (s in ls) {
-                rows.add(Text(ts, s))
-            }
-            return this
-        }
-
-        /** {@inheritDoc}  */
-        override fun addStrs(vararg ss: String): Builder {
-            if (textStyle == null) {
-                throw IllegalStateException("Must set a default text style before adding raw strings")
-            }
-            for (s in ss) {
-                rows.add(Text(textStyle!!, s))
-            }
-            return this
-        }
-        //        public Builder add(Cell c) { contents.add(c); return this; }
-
-        fun build(): Cell {
-            return Cell(cellStyle!!, width, rows)
-        }
-
-        // Replaced with TableRow.CellBuilder.buildCell()
-        //        public TableRowBuilder buildCell() {
-        //            Cell c = new Cell(cellStyle, width, contents);
-        //            return trb.addCell(c);
-        //        }
-
-        /** {@inheritDoc}  */
-        override fun toString(): String {
-            val sB = StringBuilder("Cell.Builder(").append(cellStyle).append(" width=")
-                    .append(width).append(" contents=[")
-
-            var i = 0
-            while (i < rows.size && i < 3) {
-                if (i > 0) {
-                    sB.append(" ")
-                }
-                sB.append(rows[i])
-                i++
-            }
-            return sB.append("])").toString()
-        }
-    }
-
     /** {@inheritDoc}  */
     override fun toString(): String {
         val sB = StringBuilder("Cell(").append(cellStyle).append(" width=")
@@ -310,63 +221,5 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
             i++
         }
         return sB.append("])").toString()
-    }
-
-    companion object {
-
-        /**
-         * Creates a new cell with the given style and width.
-         *
-         * @param cs    the cell style
-         * @param width the width (height will be calculated based on how objects can be rendered within
-         * this width).
-         * @return a cell suitable for rendering.
-         */
-        fun of(cs: CellStyle, width: Float): Cell { //, final Object... r) {
-            return Cell(cs, width, emptyList())
-            //                        (r == null) ? Collections.emptyList()
-            //                                    : Arrays.asList(r));
-        }
-
-        // Simple case of a single styled String
-        fun of(cs: CellStyle, width: Float, ts: TextStyle, s: String): Cell {
-            val ls = ArrayList<Layoutable>(1)
-            ls.add(Text(ts, s))
-            return Cell(cs, width, ls)
-        }
-
-        // Simple case of a single styled String
-        fun of(cs: CellStyle, width: Float, t: Text): Cell {
-            val ls = ArrayList<Layoutable>(1)
-            ls.add(t)
-            return Cell(cs, width, ls)
-        }
-
-        fun of(cs: CellStyle, width: Float, j: ScaledJpeg): Cell {
-            val ls = ArrayList<Layoutable>(1)
-            ls.add(j)
-            return Cell(cs, width, ls)
-        }
-
-        fun of(cs: CellStyle, width: Float, r: Layoutable): Cell {
-            val ls = ArrayList<Layoutable>(1)
-            ls.add(r)
-            return Cell(cs, width, ls)
-        }
-
-        fun of(cs: CellStyle, width: Float, ls: List<Layoutable>): Cell {
-            return Cell(cs, width, ls)
-        }
-
-        // Simple case of a single styled String
-        fun of(cs: CellStyle, width: Float, c: Cell): Cell {
-            val ls = ArrayList<Layoutable>(1)
-            ls.add(c)
-            return Cell(cs, width, ls)
-        }
-
-        fun builder(cellStyle: CellStyle, width: Float): Builder {
-            return Builder(cellStyle, width)
-        }
     }
 }

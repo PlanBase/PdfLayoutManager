@@ -41,7 +41,6 @@ data class XyDim(val width: Float, val height: Float) {
      */
     constructor(rect: PDRectangle) : this(rect.width, rect.height)
 
-
     fun width(newX: Float) = XyDim(newX, height)
 
     fun height(newY: Float) = XyDim(width, newY)

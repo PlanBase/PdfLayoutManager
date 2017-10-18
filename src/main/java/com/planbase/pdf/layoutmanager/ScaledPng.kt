@@ -78,5 +78,5 @@ class ScaledPng(val bufferedImage: BufferedImage,
         return XyOffset(outerTopLeft.x + width, y)
     }
 
-    override fun layouter(): Layouter = fixedItemRenderator(this)
+    override fun layouter(): Layouter = fixedItemLayouter(this)
 }

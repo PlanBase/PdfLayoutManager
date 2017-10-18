@@ -71,7 +71,7 @@ class ScaledJpeg(val bufferedImage: BufferedImage,
         return XyOffset(outerTopLeft.x + width, y)
     }
 
-    override fun layouter(): Layouter = fixedItemRenderator(this)
+    override fun layouter(): Layouter = fixedItemLayouter(this)
 
     companion object {
         internal val ASSUMED_IMAGE_DPI = 300f

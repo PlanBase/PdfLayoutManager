@@ -26,44 +26,5 @@ package com.planbase.pdf.layoutmanager
  * draw yourself as best you can."
  */
 interface Layoutable {
-    //    enum Constants implements Layoutable {
-    //        EOL {
-    ////            @Override
-    ////            public XyDim calcDimensions(float maxWidth) {
-    ////                return null;
-    ////            }
-    //
-    ////            @Override
-    ////            public XyOffset render(RenderTarget lp, XyOffset outerTopLeft, XyDim outerDimensions) {
-    ////                return null;
-    ////            }
-    //        };
-    //
-    //    }
-
-    //    /**
-    //    Given a width, returns the height and actual width after line wrapping.  If line wrapping is
-    //    not needed, just returns the static width and height.  If calculations are done, the results
-    //    should be cached because render() will likely be called with the same width (or at least one
-    //    previously given widths).
-    //     */
-    //    XyDim calcDimensions(float maxWidth);
-
-    //    /**
-    //     Only call this with a maxWidth that you have previously passed to calcDimensions.
-    //     Renders item and all child-items with given width and returns the x-y pair of the
-    //     lower-right-hand corner of the last line (e.g. of text).
-    //     @param lp the place to render to (either a single page, or logical collection of pages)
-    //     @param outerTopLeft the top-left position to render to
-    //     @param outerDimensions the width and height of the thing to render.
-    //     @return the bottom-right corner of the rendered result.  This is not necessarily
-    //     the same as topLeft + outerDimensions (it could be on a different page).
-    //    */
-    //    XyOffset render(RenderTarget lp, XyOffset outerTopLeft, XyDim outerDimensions);
-
     fun layouter(): Layouter
-    //    {
-    //        return new Layouter.SingleItemRenderator(this);
-    //    }
-
 }

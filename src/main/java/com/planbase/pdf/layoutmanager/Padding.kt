@@ -31,9 +31,9 @@ data class Padding(val top: Float,
     /** Sets all padding values equally  */
     constructor(a:Float) : this(a, a, a, a)
 
-    fun topLeftPadDim(): XyDim = XyDim(left, top)
-
-    fun botRightPadDim(): XyDim = XyDim(right, bottom)
+//    fun topLeftPadDim(): XyDim = XyDim(left, top)
+//
+//    fun botRightPadDim(): XyDim = XyDim(right, bottom)
 
     fun subtractFrom(outer: XyDim): XyDim =
             XyDim(outer.width - (left + right),

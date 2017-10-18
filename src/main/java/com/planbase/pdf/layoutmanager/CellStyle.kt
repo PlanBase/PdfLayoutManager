@@ -176,7 +176,7 @@ data class CellStyle(val align: Align,
     fun bgColor(c: PDColor) = CellStyle(align, padding, c, borderStyle)
     fun borderStyle(bs: BorderStyle) = CellStyle(align, padding, bgColor, bs)
 
-    fun cellBuilder(w: Float) = Cell.builder(this, w)
+//    fun cellBuilder(w: Float) = Cell.builder(this, w)
 
     companion object {
         val DEFAULT_ALIGN = Align.TOP_LEFT
