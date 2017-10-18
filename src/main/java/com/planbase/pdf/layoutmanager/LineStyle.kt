@@ -23,8 +23,8 @@ package com.planbase.pdf.layoutmanager
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**
- * Represents the color and width of a line.  DashStyle (and maybe capStyle or joinStyle?) could be
- * added later.  Immutable.
+ Represents the color and width of a line (line meaning a long narrow mark or band).
+ DashStyle (and maybe capStyle or joinStyle?) could be added later.  Immutable.
  */
 data class LineStyle(val color: PDColor, val width: Float) {
     constructor(color: PDColor) : this(color, DEFAULT_WIDTH)

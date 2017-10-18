@@ -41,6 +41,11 @@ class Utils private constructor() {
         val CMYK_BLACK = PDColor(floatArrayOf(0f, 0f, 0f, 1f), PDDeviceCMYK.INSTANCE)
         val CMYK_WHITE = PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)
 
+        /** For implementing briefer toString() methods */
+        fun colorToString(color:PDColor) =
+                if (color == CMYK_BLACK) "BLACK"
+                else if (color == CMYK_WHITE) "WHITE"
+                else color.toString()
 
         //    public static String toString(PDColor c) {
         //        if (c == null) { return "null"; }

@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager
 
 /** Represents a fixed-size item  */
 
-interface Arranged {
+interface LineWrapped {
     val xyDim: XyDim
 //    fun width(): Float = width
 //    fun totalHeight(): Float = heightAboveBase + depthBelowBase
@@ -39,8 +39,8 @@ interface Arranged {
     fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset
 }
 
-fun fixedItemArranger(item: Arranged) =
-        object : Arranger {
+fun preWrappedLineWrapper(item: LineWrapped) =
+        object : LineWrapper {
             internal var hasMore = true
             override fun hasMore(): Boolean = hasMore
 

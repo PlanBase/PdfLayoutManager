@@ -20,10 +20,10 @@
 
 package com.planbase.pdf.layoutmanager
 
-/** Arrangeable Iterator  */
-interface Arranger {
+/** LineWrappable Iterator  */
+interface LineWrapper {
 
-//    class SingleItemRenderator(var item: Arrangeable?) : Arranger {
+//    class SingleItemRenderator(var item: LineWrappable?) : LineWrapper {
 //
 //        override fun hasMore(): Boolean {
 //            return item != null

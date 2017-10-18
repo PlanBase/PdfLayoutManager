@@ -23,14 +23,14 @@ package com.planbase.pdf.layoutmanager
 /**
  * Represents styled text kind of like a #Text node in HTML.
  */
-data class Text(val textStyle: TextStyle, val text: String = "") : Arrangeable {
+data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable {
     constructor(textStyle: TextStyle) : this(textStyle, "")
 
     private val dims = HashMap<Float, WrappedBlock>()
 
     internal data class WrappedRow(val string: String,
                                    override val xyDim: XyDim,
-                                   val textStyle: TextStyle) : Arranged {
+                                   val textStyle: TextStyle) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle): this(s, XyDim(x, ts.lineHeight()), ts)
 
@@ -238,8 +238,8 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Arrangeable {
                 }) + "\")"
     }
 
-    override fun arranger(): Arranger {
-        return TextArranger(this)
+    override fun arranger(): LineWrapper {
+        return TextLineWrapper(this)
     }
 
     internal data class RowIdx(val row: WrappedRow,
@@ -259,7 +259,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Arrangeable {
 //                }
     }
 
-    internal inner class TextArranger(private val txt: Text) : Arranger {
+    internal inner class TextLineWrapper(private val txt: Text) : LineWrapper {
         private var idx = 0
 
         override fun hasMore(): Boolean = idx < txt.text.length

@@ -25,7 +25,7 @@ package com.planbase.pdf.layoutmanager
  * It used to be that you'd build a table and that act would commit it to a logical page.
  */
 // TODO: This should probably freeze all the underlying stuff, but good enough for now.
-class Table(private val parts: List<TablePart>) : Arranged {
+class Table(private val parts: List<TablePart>) : LineWrapped {
     override val xyDim: XyDim = parts.fold(XyDim.ZERO,
                                            { acc, part -> acc.plus(part.calcDimensions()) })
     override val ascent: Float = xyDim.height

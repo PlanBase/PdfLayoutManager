@@ -32,7 +32,7 @@ import java.lang.Math.max
 data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can override this style
                 val width: Float,
                 // A list of the contents.  It's pretty limiting to have one item per row.
-                private val contents: List<Arrangeable>) : Arrangeable {
+                private val contents: List<LineWrappable>) : LineWrappable {
     constructor(cs: CellStyle = CellStyle.DEFAULT,
                 w: Float,
                 textStyle:TextStyle,
@@ -78,7 +78,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         return pcl!!
     }
 
-    override fun arranger(): Arranger = TODO()
+    override fun arranger(): LineWrapper = TODO()
 
 
     /** {@inheritDoc}  */

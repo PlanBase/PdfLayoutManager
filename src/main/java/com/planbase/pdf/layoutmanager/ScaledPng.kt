@@ -40,7 +40,7 @@ import java.awt.image.BufferedImage
  */
 class ScaledPng(val bufferedImage: BufferedImage,
                 private val width: Float,
-                private val height: Float) : Arranged, Arrangeable {
+                private val height: Float) : LineWrapped, LineWrappable {
 
     /**
      Returns a new buffered image with width and height calculated from the source BufferedImage
@@ -78,5 +78,5 @@ class ScaledPng(val bufferedImage: BufferedImage,
         return XyOffset(outerTopLeft.x + width, y)
     }
 
-    override fun arranger(): Arranger = fixedItemArranger(this)
+    override fun arranger(): LineWrapper = preWrappedLineWrapper(this)
 }

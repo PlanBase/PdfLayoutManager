@@ -37,15 +37,15 @@ interface CellBuilder {
     fun textStyle(x: TextStyle): CellBuilder
 
     /**
-     * Adds the given [Arrangeable] content to this cell.
+     * Adds the given [LineWrappable] content to this cell.
      * To add multiple Renderables at once, use [.addAll] instead.
      */
-    fun add(rs: Arrangeable): CellBuilder
+    fun add(rs: LineWrappable): CellBuilder
 
     /**
-     * Adds the given list of [Arrangeable] content to this cell.
+     * Adds the given list of [LineWrappable] content to this cell.
      */
-    fun addAll(js: Collection<Arrangeable>): CellBuilder
+    fun addAll(js: Collection<LineWrappable>): CellBuilder
 
     /**
      * Adds text, but you must have textStyle set properly (or inherited) before calling this.

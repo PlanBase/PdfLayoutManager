@@ -28,7 +28,7 @@ class FixedCell(override val xyDim: XyDim,
                 override val descentAndLeading: Float,
                 override val lineHeight: Float,
                 val pcls: Cell.PreCalcLines,
-                val cellStyle: CellStyle) : Arranged {
+                val cellStyle: CellStyle) : LineWrapped {
 
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         val padding = cellStyle.padding

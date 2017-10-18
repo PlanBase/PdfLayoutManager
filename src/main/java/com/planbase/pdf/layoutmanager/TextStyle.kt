@@ -20,6 +20,7 @@
 
 package com.planbase.pdf.layoutmanager
 
+import com.planbase.pdf.layoutmanager.Utils.Companion.colorToString
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 
@@ -68,8 +69,7 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
     private val factor = factorFromFontSize(fontSize)
 
     override fun toString() = "TextStyle(\"" + font.toString().replace("PDType1Font", "T1") + "\" " +
-                              fontSize + " " +
-                              (if (textColor == Utils.CMYK_BLACK) "CMYK_BLACK" else textColor) +
+                              fontSize + " " + colorToString(textColor) +
                               " $adl avgCharWidth=$avgCharWidth)"
 
     /**

@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 
 class SingleItemRenderatorTest {
 //    @Test fun testSingleItemRenderator() {
-//        val r = object : Arrangeable {
+//        val r = object : LineWrappable {
 //            override fun calcDimensions(maxWidth: Float): XyDim {
 //                return XyDim(5f, 7f)
 //            }
@@ -17,8 +17,8 @@ class SingleItemRenderatorTest {
 //                return null
 //            }
 //
-//            override fun arranger(): Arranger {
-//                return Arranger.SingleItemRenderator(this)
+//            override fun arranger(): LineWrapper {
+//                return LineWrapper.SingleItemRenderator(this)
 //            }
 //        }
 //

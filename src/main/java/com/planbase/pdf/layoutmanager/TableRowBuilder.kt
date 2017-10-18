@@ -72,7 +72,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return this
     }
 
-    // TODO: This should be add Arrangeable Cells.
+    // TODO: This should be add LineWrappable Cells.
     fun addJpegCells(vararg js: ScaledJpeg): TableRowBuilder {
         for (j in js) {
             addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), listOf(j)), nextCellIdx)
@@ -83,7 +83,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     // Because cells are renderable, this would accept one which could result in duplicate cells
     // when Cell.buildCell() creates a cell and passes it in here.
-    //    public TableRowBuilder addCell(CellStyle.Align align, Arrangeable... things) {
+    //    public TableRowBuilder addCell(CellStyle.Align align, LineWrappable... things) {
     //            cells.add(Cell.builder(this).add(things).build());
     //        return this;
     //    }
@@ -173,7 +173,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         /** {@inheritDoc}  */
         override val width: Float = tableRowBuilder.nextCellSize() // Both require this.
         private var cellStyle: CellStyle? = tableRowBuilder.cellStyle // Both require this.
-        private val rows = ArrayList<Arrangeable>()
+        private val rows = ArrayList<LineWrappable>()
         private var textStyle: TextStyle? = tableRowBuilder.textStyle
         private val colIdx: Int = tableRowBuilder.nextCellIdx()
 
@@ -205,14 +205,14 @@ class TableRowBuilder(private val tablePart: TablePart) {
         }
 
         /** {@inheritDoc}  */
-        override fun add(rs: Arrangeable): RowCellBuilder {
+        override fun add(rs: LineWrappable): RowCellBuilder {
             // TODO: Is this correct???  Adding rows and returning a row cell builder???
             Collections.addAll(rows, rs)
             return this
         }
 
         /** {@inheritDoc}  */
-        override fun addAll(js: Collection<Arrangeable>): RowCellBuilder {
+        override fun addAll(js: Collection<LineWrappable>): RowCellBuilder {
             rows.addAll(js)
             return this
         }
