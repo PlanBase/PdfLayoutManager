@@ -3,8 +3,6 @@ package com.planbase.pdf.layoutmanager
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.organicdesign.fp.StaticImports.vec
-import org.organicdesign.fp.collections.ImList
 
 class TextLineKtTest {
     @Test fun testLine() {
@@ -34,7 +32,7 @@ class TextLineKtTest {
         val txt2 = Text.of(tStyle2, "there ")
         val txt3 = Text.of(tStyle1, "world! This is great stuff.")
 
-        val textLines: ImList<TextLine> = renderablesToTextLines(vec(txt1, txt2, txt3), 60f)
+        val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1, txt2, txt3), 60f)
 //        println(textLines)
         val line1 = textLines[0]
         assertEquals(tStyle2.lineHeight(), line1.height())

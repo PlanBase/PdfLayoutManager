@@ -20,10 +20,6 @@
 
 package com.planbase.pdf.layoutmanager
 
-import org.organicdesign.fp.StaticImports.mutableVec
-import org.organicdesign.fp.collections.ImList
-import org.organicdesign.fp.collections.MutList
-
 /**
 Represents a continuing or terminal FixedItem where Continuing means there could be more on this
 line (no hard line break) and Terminal means a hard-coded line-break was encountered.
@@ -54,14 +50,14 @@ class TextLine {
     var width: Float = 0f
     var maxAscent: Float = 0f
     var maxDescentAndLeading: Float = 0f
-    val items: MutList<FixedItem> = mutableVec()
+    val items: MutableList<FixedItem> = mutableListOf()
 
     fun isEmpty() = items.isEmpty()
     fun append(fi : FixedItem): TextLine {
         maxAscent = maxOf(maxAscent, fi.ascent)
         maxDescentAndLeading = maxOf(maxDescentAndLeading, fi.descentAndLeading)
         width += fi.xyDim.width
-        items.append(fi)
+        items.add(fi)
         return this
     }
     fun height(): Float = maxAscent + maxDescentAndLeading
@@ -105,11 +101,11 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
-fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : ImList<TextLine> {
+fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : List<TextLine> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }
-    val textLines: MutList<TextLine> = mutableVec()
+    val textLines: MutableList<TextLine> = mutableListOf()
     var line = TextLine()
 
     for (item in itemsInBlock) {
@@ -132,11 +128,11 @@ fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : Im
                         line = TextLine()
                     }
                     None -> {
-                        textLines.append(line)
+                        textLines.add(line)
                         line = TextLine()
                     }}
             }
         }
     }
-    return textLines.immutable()
+    return textLines.toList()
 }

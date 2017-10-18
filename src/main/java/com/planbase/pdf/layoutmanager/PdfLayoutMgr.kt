@@ -30,7 +30,6 @@ import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.util.Matrix
-import org.organicdesign.fp.oneOf.Option
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException

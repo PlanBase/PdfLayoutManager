@@ -16,14 +16,11 @@ import com.planbase.pdf.layoutmanager.*
 import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_LEFT
 import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_RIGHT
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.junit.Test
-import org.organicdesign.fp.StaticImports.vec
-import org.organicdesign.fp.collections.ImList
 import java.io.File
 import java.io.FileOutputStream
 import java.security.SecureRandom
@@ -80,17 +77,17 @@ fun testBodyMargins() {
     // This could be in a loop that prints out list items.
     var rcb:TableRowBuilder.RowCellBuilder = tpb.rowBuilder().cellBuilder()
     rcb.cellStyle(BULLET_CELL_STYLE)
-            .add(BULLET_TEXT_STYLE, vec(Utils.BULLET_CHAR))
+            .add(BULLET_TEXT_STYLE, listOf(Utils.BULLET_CHAR))
     rcb = rcb.buildCell().cellBuilder()
-    rcb.add(BULLET_TEXT_STYLE, vec("This is some text that has a bullet"))
+    rcb.add(BULLET_TEXT_STYLE, listOf("This is some text that has a bullet"))
     rcb.buildCell().buildRow()
 
     // Next iteration in the loop
     rcb = tpb.rowBuilder().cellBuilder()
     rcb.cellStyle(BULLET_CELL_STYLE)
-            .add(BULLET_TEXT_STYLE, vec("2."))
+            .add(BULLET_TEXT_STYLE, listOf("2."))
     rcb = rcb.buildCell().cellBuilder()
-    rcb.add(BULLET_TEXT_STYLE, vec("text that has a number"))
+    rcb.add(BULLET_TEXT_STYLE, listOf("text that has a number"))
     rcb.buildCell().buildRow()
 
     // After the loop, build the table.
@@ -99,7 +96,7 @@ fun testBodyMargins() {
     lp.drawCell(0f, PDRectangle.A6.height - 40f,
                 Cell(CellStyle(TOP_LEFT, Padding(2f), CMYK_LIGHT_GREEN,
                                BorderStyle(CMYK_DARK_GRAY)), bodyWidth,
-                     vec(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                     listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                               "The long "),
                          Text(TextStyle(PDType1Font.HELVETICA_BOLD, 12f, Utils.CMYK_BLACK),
                               "families"),
@@ -177,27 +174,27 @@ fun testBodyMargins() {
         // and
         // subject verb pronoun matching descriptive noun
 
-        internal val adjs:ImList<String> = vec("able", "bad", "best", "better", "big", "black", "certain", "clear", "different",
-                                               "early", "easy", "economic", "federal", "free", "full", "good", "great", "hard",
-                                               "high", "human", "important", "international", "large", "late", "little", "local",
-                                               "long", "low", "major", "military", "national", "new", "old", "only", "other",
-                                               "political", "possible", "public", "real", "recent", "right", "small", "social",
-                                               "special", "strong", "sure", "true", "white", "whole", "young")
+        internal val adjs:List<String> = listOf("able", "bad", "best", "better", "big", "black", "certain", "clear", "different",
+                                                "early", "easy", "economic", "federal", "free", "full", "good", "great", "hard",
+                                                "high", "human", "important", "international", "large", "late", "little", "local",
+                                                "long", "low", "major", "military", "national", "new", "old", "only", "other",
+                                                "political", "possible", "public", "real", "recent", "right", "small", "social",
+                                                "special", "strong", "sure", "true", "white", "whole", "young")
 
-        internal val verbs:ImList<String> = vec("asked", "was", "became", "began", "called", "could", "came", "did", "felt",
-                                                "found", "got", "gave", "went", "had", "heard", "helped", "kept", "knew", "left",
-                                                "let", "liked", "lived", "looked", "made", "meant", "moved", "needed",
-                                                "played", "put", "ran", "said", "saw", "seemed", "showed", "started", "took",
-                                                "talked", "told", "thought", "tried", "turned", "used", "wanted", "willed",
-                                                "worked")
+        internal val verbs:List<String> = listOf("asked", "was", "became", "began", "called", "could", "came", "did", "felt",
+                                                 "found", "got", "gave", "went", "had", "heard", "helped", "kept", "knew", "left",
+                                                 "let", "liked", "lived", "looked", "made", "meant", "moved", "needed",
+                                                 "played", "put", "ran", "said", "saw", "seemed", "showed", "started", "took",
+                                                 "talked", "told", "thought", "tried", "turned", "used", "wanted", "willed",
+                                                 "worked")
 
-        internal val nouns:ImList<String> = vec("areas", "books", "businesses", "cases", "children", "companies", "countries",
-                                                "days", "eyes", "facts", "families", "governments", "groups", "hands", "homes",
-                                                "jobs", "lives", "lots", "men", "money", "months", "mothers", "Mrs", "nights",
-                                                "numbers", "parts", "people", "places", "points", "problems", "programs",
-                                                "questions", "rights", "rooms", "schools", "states", "stories", "students",
-                                                "studies", "systems", "things", "times", "waters", "ways",
-                                                "weeks", "women", "words", "work", "worlds", "years")
+        internal val nouns:List<String> = listOf("areas", "books", "businesses", "cases", "children", "companies", "countries",
+                                                 "days", "eyes", "facts", "families", "governments", "groups", "hands", "homes",
+                                                 "jobs", "lives", "lots", "men", "money", "months", "mothers", "Mrs", "nights",
+                                                 "numbers", "parts", "people", "places", "points", "problems", "programs",
+                                                 "questions", "rights", "rooms", "schools", "states", "stories", "students",
+                                                 "studies", "systems", "things", "times", "waters", "ways",
+                                                 "weeks", "women", "words", "work", "worlds", "years")
 
         internal fun mumble(times:Int):String {
             val rand = SecureRandom()

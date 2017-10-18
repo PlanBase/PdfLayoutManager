@@ -23,8 +23,6 @@ package com.planbase.pdf.layoutmanager
 import java.util.ArrayList
 import java.util.Collections
 
-import org.organicdesign.fp.StaticImports.vec
-
 /**
  * Unsynchronized mutable class which is not thread-safe.  The internal tracking of cells and widths
  * allows you to make a cell builder for a cell at a given column, add cells in subsequent columns,
@@ -68,7 +66,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
             throw IllegalStateException("Tried to add a text cell without setting a default text style")
         }
         for (s in ss) {
-            addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), vec(Text(textStyle!!, s))), nextCellIdx)
+            addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), listOf(Text(textStyle!!, s))), nextCellIdx)
             nextCellIdx++
         }
         return this
@@ -77,7 +75,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
     // TODO: This should be add Layoutable Cells.
     fun addJpegCells(vararg js: ScaledJpeg): TableRowBuilder {
         for (j in js) {
-            addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), vec(j)), nextCellIdx)
+            addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), listOf(j)), nextCellIdx)
             nextCellIdx++
         }
         return this
