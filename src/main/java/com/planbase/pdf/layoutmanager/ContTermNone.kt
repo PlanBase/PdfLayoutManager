@@ -27,14 +27,14 @@ package com.planbase.pdf.layoutmanager
  None means that nothing is left or nothing will fit in the given remaining width on this line.
  */
 sealed class ContTermNone
-data class Continuing(override val item: FixedItem): ContTermNone(), ContTerm
-data class Terminal(override val item: FixedItem): ContTermNone(), ContTerm
+data class Continuing(override val item: Arranged): ContTermNone(), ContTerm
+data class Terminal(override val item: Arranged): ContTermNone(), ContTerm
 object None: ContTermNone()
 
 /**
-Represents a continuing or terminal FixedItem where Continuing means there could be more on this
+Represents a continuing or terminal Arranged where Continuing means there could be more on this
 line (no hard line break) and Terminal means a hard-coded line-break was encountered.
  */
 interface ContTerm {
-    val item: FixedItem
+    val item: Arranged
 }

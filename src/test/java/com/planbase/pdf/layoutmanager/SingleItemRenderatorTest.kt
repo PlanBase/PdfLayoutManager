@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 
 class SingleItemRenderatorTest {
 //    @Test fun testSingleItemRenderator() {
-//        val r = object : Layoutable {
+//        val r = object : Arrangeable {
 //            override fun calcDimensions(maxWidth: Float): XyDim {
 //                return XyDim(5f, 7f)
 //            }
@@ -17,17 +17,17 @@ class SingleItemRenderatorTest {
 //                return null
 //            }
 //
-//            override fun layouter(): Layouter {
-//                return Layouter.SingleItemRenderator(this)
+//            override fun arranger(): Arranger {
+//                return Arranger.SingleItemRenderator(this)
 //            }
 //        }
 //
-//        var tor = r.layouter()
+//        var tor = r.arranger()
 //        assertTrue(tor.hasMore())
 //        assertEquals(r.calcDimensions(0f), tor.getSomething(9f).item.xyDim())
 //        assertFalse(tor.hasMore())
 //
-//        tor = r.layouter()
+//        tor = r.arranger()
 //        assertTrue(tor.hasMore())
 //        assertTrue(tor.getIfFits(3f) is None)
 //        assertTrue(tor.hasMore())

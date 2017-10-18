@@ -37,15 +37,15 @@ interface CellBuilder {
     fun textStyle(x: TextStyle): CellBuilder
 
     /**
-     * Adds the given [Layoutable] content to this cell.
+     * Adds the given [Arrangeable] content to this cell.
      * To add multiple Renderables at once, use [.addAll] instead.
      */
-    fun add(rs: Layoutable): CellBuilder
+    fun add(rs: Arrangeable): CellBuilder
 
     /**
-     * Adds the given list of [Layoutable] content to this cell.
+     * Adds the given list of [Arrangeable] content to this cell.
      */
-    fun addAll(js: Collection<Layoutable>): CellBuilder
+    fun addAll(js: Collection<Arrangeable>): CellBuilder
 
     /**
      * Adds text, but you must have textStyle set properly (or inherited) before calling this.

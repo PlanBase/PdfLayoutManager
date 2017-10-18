@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager
 
 /** Represents a fixed-size item  */
 
-interface FixedItem {
+interface Arranged {
     val xyDim: XyDim
 //    fun width(): Float = width
 //    fun totalHeight(): Float = heightAboveBase + depthBelowBase
@@ -39,8 +39,8 @@ interface FixedItem {
     fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset
 }
 
-fun fixedItemLayouter(item:FixedItem): Layouter =
-        object : Layouter {
+fun fixedItemArranger(item: Arranged) =
+        object : Arranger {
             internal var hasMore = true
             override fun hasMore(): Boolean = hasMore
 

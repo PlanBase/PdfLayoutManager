@@ -25,10 +25,10 @@ class TextLine {
     var width: Float = 0f
     var maxAscent: Float = 0f
     var maxDescentAndLeading: Float = 0f
-    val items: MutableList<FixedItem> = mutableListOf()
+    val items: MutableList<Arranged> = mutableListOf()
 
     fun isEmpty() = items.isEmpty()
-    fun append(fi : FixedItem): TextLine {
+    fun append(fi : Arranged): TextLine {
         maxAscent = maxOf(maxAscent, fi.ascent)
         maxDescentAndLeading = maxOf(maxDescentAndLeading, fi.descentAndLeading)
         width += fi.xyDim.width
@@ -40,7 +40,7 @@ class TextLine {
     fun render(lp:RenderTarget, outerTopLeft:XyOffset):XyOffset {
         var x:Float = outerTopLeft.x
         val y = outerTopLeft.y
-        for (item: FixedItem in items) {
+        for (item: Arranged in items) {
             item.render(lp, XyOffset(x, y - item.ascent))
             x += item.xyDim.width
         }
@@ -76,7 +76,7 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
-fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : List<TextLine> {
+fun renderablesToTextLines(itemsInBlock: List<Arrangeable>, maxWidth: Float) : List<TextLine> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }
@@ -84,7 +84,7 @@ fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : Li
     var line = TextLine()
 
     for (item in itemsInBlock) {
-        val rtor: Layouter = item.layouter()
+        val rtor: Arranger = item.arranger()
         while (rtor.hasMore()) {
             if (line.isEmpty()) {
                 val something : ContTerm = rtor.getSomething(maxWidth)

@@ -13,13 +13,13 @@ class TextLineKtTest {
         val txt3 = Text.of(tStyle1, "world!")
         val line = TextLine()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
-        line.append(txt1.layouter().getSomething(999f).item)
+        line.append(txt1.arranger().getSomething(999f).item)
         assertEquals(tStyle1.lineHeight(), line.height(), 0.000002f)
 
-        line.append(txt2.layouter().getSomething(999f).item)
+        line.append(txt2.arranger().getSomething(999f).item)
         assertEquals(tStyle2.lineHeight(), line.height(), 0.000002f)
 
-        line.append(txt3.layouter().getSomething(999f).item)
+        line.append(txt3.arranger().getSomething(999f).item)
         assertEquals(tStyle2.lineHeight(), line.height(), 0.000002f)
     }
 

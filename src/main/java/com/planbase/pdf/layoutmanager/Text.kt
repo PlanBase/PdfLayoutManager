@@ -23,14 +23,14 @@ package com.planbase.pdf.layoutmanager
 /**
  * Represents styled text kind of like a #Text node in HTML.
  */
-data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
+data class Text(val textStyle: TextStyle, val text: String = "") : Arrangeable {
     constructor(textStyle: TextStyle) : this(textStyle, "")
 
     private val dims = HashMap<Float, WrappedBlock>()
 
     internal data class WrappedRow(val string: String,
                                    override val xyDim: XyDim,
-                                   val textStyle: TextStyle) : FixedItem {
+                                   val textStyle: TextStyle) : Arranged {
 
         constructor(s: String, x: Float, ts: TextStyle): this(s, XyDim(x, ts.lineHeight()), ts)
 
@@ -72,7 +72,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
 //        var maxX = x
 //        val txt = this
 //
-//        val rend = layouter()
+//        val rend = arranger()
 //        val line:TextLine = TextLine()
 //
 //        // TODO: This is fundamentally wrong - need to change how things are rendered.
@@ -236,8 +236,8 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
                 }) + "\")"
     }
 
-    override fun layouter(): Layouter {
-        return TextLayouter(this)
+    override fun arranger(): Arranger {
+        return TextArranger(this)
     }
 
     internal data class RowIdx(val row: WrappedRow,
@@ -257,7 +257,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
 //                }
     }
 
-    internal inner class TextLayouter(private val txt: Text) : Layouter {
+    internal inner class TextArranger(private val txt: Text) : Arranger {
         private var idx = 0
 
         override fun hasMore(): Boolean = idx < txt.text.length

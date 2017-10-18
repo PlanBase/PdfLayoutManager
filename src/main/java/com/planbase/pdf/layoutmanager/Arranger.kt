@@ -20,10 +20,10 @@
 
 package com.planbase.pdf.layoutmanager
 
-/** Layoutable Iterator  */
-interface Layouter {
+/** Arrangeable Iterator  */
+interface Arranger {
 
-//    class SingleItemRenderator(var item: Layoutable?) : Layouter {
+//    class SingleItemRenderator(var item: Arrangeable?) : Arranger {
 //
 //        override fun hasMore(): Boolean {
 //            return item != null

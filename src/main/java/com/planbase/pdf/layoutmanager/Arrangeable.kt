@@ -21,10 +21,10 @@
 package com.planbase.pdf.layoutmanager
 
 /**
- * Implementing Layoutable means being suitable for use with a two-pass layout manager whose first
- * pass says, "given this width, what is your height?" and second pass says, "Given these dimensions,
- * draw yourself as best you can."
+ Implementing Arrangeable means being suitable for use with a two-pass layout manager whose first
+ pass says, "given this width, what is your height?" and second pass says, "Given these dimensions,
+ draw yourself as best you can."
  */
-interface Layoutable {
-    fun layouter(): Layouter
+interface Arrangeable {
+    fun arranger(): Arranger
 }

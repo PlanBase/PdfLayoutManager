@@ -32,7 +32,7 @@ import java.awt.image.BufferedImage
  */
 class ScaledJpeg(val bufferedImage: BufferedImage,
                  private val width: Float,
-                 private val height: Float) : FixedItem, Layoutable {
+                 private val height: Float) : Arranged, Arrangeable {
     /**
      * Returns a new buffered image with width and height calculated from the source BufferedImage
      * assuming that it will print at 300 DPI.  There are 72 document units per inch, so the actual
@@ -71,7 +71,7 @@ class ScaledJpeg(val bufferedImage: BufferedImage,
         return XyOffset(outerTopLeft.x + width, y)
     }
 
-    override fun layouter(): Layouter = fixedItemLayouter(this)
+    override fun arranger(): Arranger = fixedItemArranger(this)
 
     companion object {
         internal val ASSUMED_IMAGE_DPI = 300f
