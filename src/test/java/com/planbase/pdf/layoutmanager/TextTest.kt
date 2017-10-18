@@ -110,7 +110,7 @@ class TextTest {
         val rend = txt.layouter()
         assertTrue(rend.hasMore())
         val ri: ContTerm = rend.getSomething(40f)
-        assertFalse(ri.foundCr)
+        assertFalse(ri is Terminal)
         val row = ri.item
         assertEquals(tStyle.ascent(), row.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(),
@@ -137,7 +137,7 @@ class TextTest {
         val rend = txt.layouter()
         assertTrue(rend.hasMore())
         val ri: ContTerm = rend.getSomething(40f)
-        assertFalse(ri.foundCr)
+        assertFalse(ri is Terminal)
         val row = ri.item
         assertEquals(tStyle.ascent(), row.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(),

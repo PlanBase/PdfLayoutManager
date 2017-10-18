@@ -89,7 +89,7 @@ fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : Li
             if (line.isEmpty()) {
                 val something : ContTerm = rtor.getSomething(maxWidth)
                 line.append(something.item)
-                if (something.foundCr) {
+                if (something is Terminal) {
                     line = TextLine()
                 }
             } else {

@@ -46,7 +46,7 @@ fun fixedItemLayouter(item:FixedItem): Layouter =
 
             override fun getSomething(maxWidth: Float): ContTerm {
                 hasMore = false
-                return ContTerm.continuing(item)
+                return Continuing(item)
             }
 
             override fun getIfFits(remainingWidth: Float): ContTermNone =

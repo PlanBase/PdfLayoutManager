@@ -248,9 +248,9 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
                                val foundCr: Boolean) {
         fun toContTerm() : ContTerm =
                 if (foundCr) {
-                    ContTerm.Companion.terminal(row)
+                    Terminal(row)
                 } else {
-                    ContTerm.Companion.continuing(row)
+                    Continuing(row)
                 }
 //        fun toContTermNone() : ContTermNone =
 //                if (foundCr) {
