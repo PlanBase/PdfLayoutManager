@@ -30,7 +30,7 @@ data class LineStyle(val color: PDColor, val width: Float) {
     constructor(color: PDColor) : this(color, DEFAULT_WIDTH)
 
     init {
-        if (width <= 0) { throw IllegalArgumentException("Line Style must have a positive width.") }
+        if (width <= 0) { throw IllegalArgumentException("TextLine Style must have a positive width.") }
     }
 
     companion object {

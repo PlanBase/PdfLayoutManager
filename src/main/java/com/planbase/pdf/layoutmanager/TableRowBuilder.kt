@@ -74,7 +74,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return this
     }
 
-    // TODO: This should be add Renderable Cells.
+    // TODO: This should be add Layoutable Cells.
     fun addJpegCells(vararg js: ScaledJpeg): TableRowBuilder {
         for (j in js) {
             addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), vec(j)), nextCellIdx)
@@ -85,7 +85,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     // Because cells are renderable, this would accept one which could result in duplicate cells
     // when Cell.buildCell() creates a cell and passes it in here.
-    //    public TableRowBuilder addCell(CellStyle.Align align, Renderable... things) {
+    //    public TableRowBuilder addCell(CellStyle.Align align, Layoutable... things) {
     //            cells.add(Cell.builder(this).add(things).build());
     //        return this;
     //    }
@@ -175,7 +175,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         /** {@inheritDoc}  */
         override val width: Float = tableRowBuilder.nextCellSize() // Both require this.
         private var cellStyle: CellStyle? = tableRowBuilder.cellStyle // Both require this.
-        private val rows = ArrayList<Renderable>()
+        private val rows = ArrayList<Layoutable>()
         private var textStyle: TextStyle? = tableRowBuilder.textStyle
         private val colIdx: Int = tableRowBuilder.nextCellIdx()
 
@@ -207,14 +207,14 @@ class TableRowBuilder(private val tablePart: TablePart) {
         }
 
         /** {@inheritDoc}  */
-        override fun add(rs: Renderable): RowCellBuilder {
+        override fun add(rs: Layoutable): RowCellBuilder {
             // TODO: Is this correct???  Adding rows and returning a row cell builder???
             Collections.addAll(rows, rs)
             return this
         }
 
         /** {@inheritDoc}  */
-        override fun addAll(js: Collection<Renderable>): RowCellBuilder {
+        override fun addAll(js: Collection<Layoutable>): RowCellBuilder {
             rows.addAll(js)
             return this
         }

@@ -36,7 +36,7 @@ Descent/          """\ \,.
        \____          '--"
 Leading ____  _  _  _  _  _  _
 
-Line height = ascent + descent + leading.
+TextLine height = ascent + descent + leading.
  */
 /**
  * Specifies font, font-size, color, and padding.  Immutable.
@@ -51,7 +51,7 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
                                          val avgCharWidth: Float) {
     /**
      * Creates a TextStyle with the given font, size, color, and leadingFactor.
-     * The leading factor defines the actual leading (vertical space between lines) based on the
+     * The leading factor defines the actual leading (vertical space between textLines) based on the
      * font descent (how far letters like g, q, j, etc. go below the baseline of letters like m).
      * A leadingFactor of 1 will result of a leading equal to the descent, while a leadingFactor
      * of 2 will result of a leading equal to twice the descent etc...

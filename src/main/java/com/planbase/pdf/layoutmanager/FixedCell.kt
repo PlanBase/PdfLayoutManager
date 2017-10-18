@@ -66,7 +66,7 @@ class FixedCell(override val xyDim: XyDim,
 
         var outerLowerRight = innerTopLeft
         var y = innerTopLeft.y
-        for (line in pcls.lines) {
+        for (line in pcls.textLines) {
             val rowXOffset = cellStyle.align
                     .leftOffset(wrappedBlockDim.width, line.width)
             outerLowerRight = line.render(lp,

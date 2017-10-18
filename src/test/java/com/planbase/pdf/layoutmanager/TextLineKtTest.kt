@@ -6,22 +6,22 @@ import org.junit.Test
 import org.organicdesign.fp.StaticImports.vec
 import org.organicdesign.fp.collections.ImList
 
-class LineKtTest {
+class TextLineKtTest {
     @Test fun testLine() {
         val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
         val txt1 = Text.of(tStyle1, "Hello ")
         val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, Utils.CMYK_BLACK)
         val txt2 = Text.of(tStyle2, "there ")
         val txt3 = Text.of(tStyle1, "world!")
-        val line = Line()
+        val line = TextLine()
         println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
-        line.append(txt1.renderator().getSomething(999f).item)
+        line.append(txt1.layouter().getSomething(999f).item)
         assertEquals(tStyle1.lineHeight(), line.height(), 0.000002f)
 
-        line.append(txt2.renderator().getSomething(999f).item)
+        line.append(txt2.layouter().getSomething(999f).item)
         assertEquals(tStyle2.lineHeight(), line.height(), 0.000002f)
 
-        line.append(txt3.renderator().getSomething(999f).item)
+        line.append(txt3.layouter().getSomething(999f).item)
         assertEquals(tStyle2.lineHeight(), line.height(), 0.000002f)
     }
 
@@ -34,9 +34,9 @@ class LineKtTest {
         val txt2 = Text.of(tStyle2, "there ")
         val txt3 = Text.of(tStyle1, "world! This is great stuff.")
 
-        val lines : ImList<Line> = renderablesToLines(vec(txt1, txt2, txt3), 60f)
-//        println(lines)
-        val line1 = lines[0]
+        val textLines: ImList<TextLine> = renderablesToTextLines(vec(txt1, txt2, txt3), 60f)
+//        println(textLines)
+        val line1 = textLines[0]
         assertEquals(tStyle2.lineHeight(), line1.height())
     }
 }

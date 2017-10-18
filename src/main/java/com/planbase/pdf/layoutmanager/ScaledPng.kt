@@ -40,7 +40,7 @@ import java.awt.image.BufferedImage
  */
 class ScaledPng(val bufferedImage: BufferedImage,
                 private val width: Float,
-                private val height: Float) : FixedItem, Renderable {
+                private val height: Float) : FixedItem, Layoutable {
 
     /**
      Returns a new buffered image with width and height calculated from the source BufferedImage
@@ -78,5 +78,5 @@ class ScaledPng(val bufferedImage: BufferedImage,
         return XyOffset(outerTopLeft.x + width, y)
     }
 
-    override fun renderator(): Renderator = fixedItemRenderator(this)
+    override fun layouter(): Layouter = fixedItemRenderator(this)
 }

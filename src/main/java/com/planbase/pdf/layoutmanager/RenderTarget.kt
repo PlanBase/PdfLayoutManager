@@ -68,7 +68,7 @@ interface RenderTarget {
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
-     * separately with lines).
+     * separately with textLines).
      * @param outerTopLeft exterior x and y values of the upper-left corner
      * @param outerDim width and height (dimensions) of rectangle
      * @param c color

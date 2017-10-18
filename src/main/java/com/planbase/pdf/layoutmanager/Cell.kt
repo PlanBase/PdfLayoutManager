@@ -32,19 +32,19 @@ import java.lang.Math.max
 data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can override this style
                 val width: Float,
                 // A list of the contents.  It's pretty limiting to have one item per row.
-                private val contents: List<Renderable>) : Renderable {
+                private val contents: List<Layoutable>) : Layoutable {
     constructor(cs: CellStyle = CellStyle.DEFAULT,
                 w: Float,
                 textStyle:TextStyle,
                 text:List<String>) : this(cs, w, text.map{s -> Text(textStyle, s)}.toList())
     private constructor(b:Builder) : this(b.cellStyle ?: CellStyle.DEFAULT, b.width, b.rows)
 
-    // Caches XyDims for all content lines, indexed by desired width (we only have to lay-out again
+    // Caches XyDims for all content textLines, indexed by desired width (we only have to lay-out again
     // when the width changes.
     private val widthCache = HashMap<Float, PreCalcLines>(0)
 
-    // A cache for all pre-calculated lines.
-    class PreCalcLines(val lines: List<Line> = ArrayList(1),
+    // A cache for all pre-calculated textLines.
+    class PreCalcLines(val textLines: List<TextLine> = ArrayList(1),
                        val totalDim: XyDim)
 
     init {
@@ -59,14 +59,14 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         if (padding != null) {
             innerWidth -= padding.left + padding.right
         }
-        val lines: List<Line> = renderablesToLines(contents, innerWidth)
+        val textLines: List<TextLine> = renderablesToTextLines(contents, innerWidth)
         var width = 0f
         var height = 0f
-        for (line in lines) {
+        for (line in textLines) {
             width = max(width, line.width)
             height += line.height()
         }
-        widthCache.put(maxWidth, PreCalcLines(lines, XyDim(width, height)))
+        widthCache.put(maxWidth, PreCalcLines(textLines, XyDim(width, height)))
     }
 
     private fun ensurePreCalcLines(maxWidth: Float): PreCalcLines {
@@ -78,7 +78,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         return pcl!!
     }
 
-    override fun renderator(): Renderator = TODO()
+    override fun layouter(): Layouter = TODO()
 
 
     /** {@inheritDoc}  */
@@ -95,7 +95,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
     }
 
     /*
-    Renders item and all child-lines with given width and returns the x-y pair of the
+    Renders item and all child-textLines with given width and returns the x-y pair of the
     lower-right-hand corner of the last line (e.g. of text).
 
     {@inheritDoc}
@@ -141,7 +141,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
 
         var outerLowerRight = innerTopLeft
         var y:Float = innerTopLeft.y
-        for (line in pcls.lines) {
+        for (line in pcls.textLines) {
             val rowXOffset = cellStyle.align
                     .leftOffset(wrappedBlockDim.width, line.width)
             outerLowerRight = line.render(lp,
@@ -212,7 +212,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
      */
     class Builder(var cellStyle: CellStyle?,
                   override val width: Float,
-                  val rows:MutableList<Renderable>,
+                  val rows:MutableList<Layoutable>,
                   var textStyle: TextStyle?) : CellBuilder {
         constructor(cs:CellStyle, w:Float) : this(cs, w, mutableListOf(), null)
 
@@ -238,13 +238,13 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         }
 
         /** {@inheritDoc}  */
-        override fun add(rs: Renderable): Builder {
+        override fun add(rs: Layoutable): Builder {
             rows.add(rs)
             return this
         }
 
         /** {@inheritDoc}  */
-        override fun addAll(js: Collection<Renderable>): Builder {
+        override fun addAll(js: Collection<Layoutable>): Builder {
             rows.addAll(js)
             return this
         }
@@ -330,37 +330,37 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
 
         // Simple case of a single styled String
         fun of(cs: CellStyle, width: Float, ts: TextStyle, s: String): Cell {
-            val ls = ArrayList<Renderable>(1)
+            val ls = ArrayList<Layoutable>(1)
             ls.add(Text(ts, s))
             return Cell(cs, width, ls)
         }
 
         // Simple case of a single styled String
         fun of(cs: CellStyle, width: Float, t: Text): Cell {
-            val ls = ArrayList<Renderable>(1)
+            val ls = ArrayList<Layoutable>(1)
             ls.add(t)
             return Cell(cs, width, ls)
         }
 
         fun of(cs: CellStyle, width: Float, j: ScaledJpeg): Cell {
-            val ls = ArrayList<Renderable>(1)
+            val ls = ArrayList<Layoutable>(1)
             ls.add(j)
             return Cell(cs, width, ls)
         }
 
-        fun of(cs: CellStyle, width: Float, r: Renderable): Cell {
-            val ls = ArrayList<Renderable>(1)
+        fun of(cs: CellStyle, width: Float, r: Layoutable): Cell {
+            val ls = ArrayList<Layoutable>(1)
             ls.add(r)
             return Cell(cs, width, ls)
         }
 
-        fun of(cs: CellStyle, width: Float, ls: List<Renderable>): Cell {
+        fun of(cs: CellStyle, width: Float, ls: List<Layoutable>): Cell {
             return Cell(cs, width, ls)
         }
 
         // Simple case of a single styled String
         fun of(cs: CellStyle, width: Float, c: Cell): Cell {
-            val ls = ArrayList<Renderable>(1)
+            val ls = ArrayList<Layoutable>(1)
             ls.add(c)
             return Cell(cs, width, ls)
         }

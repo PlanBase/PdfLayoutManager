@@ -50,14 +50,14 @@ data class Terminal(val item:FixedItem):ContTermNone()
 object None:ContTermNone()
 
 /** A mutable data structure to hold a line. */
-class Line {
+class TextLine {
     var width: Float = 0f
     var maxAscent: Float = 0f
     var maxDescentAndLeading: Float = 0f
     val items: MutList<FixedItem> = mutableVec()
 
     fun isEmpty() = items.isEmpty()
-    fun append(fi : FixedItem):Line {
+    fun append(fi : FixedItem): TextLine {
         maxAscent = maxOf(maxAscent, fi.ascent)
         maxDescentAndLeading = maxOf(maxDescentAndLeading, fi.descentAndLeading)
         width += fi.xyDim.width
@@ -77,7 +77,7 @@ class Line {
     }
 
     override fun toString(): String {
-        return "Line(\n" +
+        return "TextLine(\n" +
                 "               width=$width\n" +
                 "           maxAscent=$maxAscent\n" +
                 "maxDescentAndLeading=$maxDescentAndLeading\n" +
@@ -88,7 +88,7 @@ class Line {
 }
 
 /**
- Given a maximum width, turns a list of renderables into a list of fixed-item lines.
+ Given a maximum width, turns a list of renderables into a list of fixed-item textLines.
  This allows each line to contain multiple Renderables.  They are baseline-aligned.
  If any renderables are not text, their bottom is aligned to the text baseline.
  
@@ -105,21 +105,21 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
-fun renderablesToLines(itemsInBlock: List<Renderable>, maxWidth: Float) : ImList<Line> {
+fun renderablesToTextLines(itemsInBlock: List<Layoutable>, maxWidth: Float) : ImList<TextLine> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }
-    val lines: MutList<Line> = mutableVec()
-    var line = Line()
+    val textLines: MutList<TextLine> = mutableVec()
+    var line = TextLine()
 
     for (item in itemsInBlock) {
-        val rtor:Renderator = item.renderator()
+        val rtor: Layouter = item.layouter()
         while (rtor.hasMore()) {
             if (line.isEmpty()) {
                 val something : ContTerm = rtor.getSomething(maxWidth)
                 line.append(something.item)
                 if (something.foundCr) {
-                    line = Line()
+                    line = TextLine()
                 }
             } else {
                 val ctn:ContTermNone = rtor.getIfFits(maxWidth - line.width)
@@ -129,14 +129,14 @@ fun renderablesToLines(itemsInBlock: List<Renderable>, maxWidth: Float) : ImList
                         line.append(ctn.item)
                     is Terminal -> {
                         line.append(ctn.item)
-                        line = Line()
+                        line = TextLine()
                     }
                     None -> {
-                        lines.append(line)
-                        line = Line()
+                        textLines.append(line)
+                        line = TextLine()
                     }}
             }
         }
     }
-    return lines.immutable()
+    return textLines.immutable()
 }

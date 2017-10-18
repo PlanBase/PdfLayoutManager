@@ -23,7 +23,7 @@ package com.planbase.pdf.layoutmanager
 /**
  * Represents styled text kind of like a #Text node in HTML.
  */
-data class Text(val textStyle: TextStyle, val text: String = "") : Renderable {
+data class Text(val textStyle: TextStyle, val text: String = "") : Layoutable {
     constructor(textStyle: TextStyle) : this(textStyle, "")
 
     private val dims = HashMap<Float, WrappedBlock>()
@@ -76,8 +76,8 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Renderable {
 //        var maxX = x
 //        val txt = this
 //
-//        val rend = renderator()
-//        val line:Line = Line()
+//        val rend = layouter()
+//        val line:TextLine = TextLine()
 //
 //        // TODO: This is fundamentally wrong - need to change how things are rendered.
 //        while (rend.hasMore()) {
@@ -240,8 +240,8 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Renderable {
                 }) + "\")"
     }
 
-    override fun renderator(): Renderator {
-        return TextRenderator(this)
+    override fun layouter(): Layouter {
+        return TextLayouter(this)
     }
 
     internal data class RowIdx(val row: WrappedRow,
@@ -261,7 +261,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : Renderable {
 //                }
     }
 
-    internal inner class TextRenderator(private val txt: Text) : Renderator {
+    internal inner class TextLayouter(private val txt: Text) : Layouter {
         private var idx = 0
 
         override fun hasMore(): Boolean = idx < txt.text.length

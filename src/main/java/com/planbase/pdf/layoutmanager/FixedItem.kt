@@ -39,8 +39,8 @@ interface FixedItem {
     fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset
 }
 
-fun fixedItemRenderator(item:FixedItem): Renderator =
-        object : Renderator {
+fun fixedItemRenderator(item:FixedItem): Layouter =
+        object : Layouter {
             internal var hasMore = true
             override fun hasMore(): Boolean = hasMore
 
