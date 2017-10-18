@@ -20,6 +20,12 @@
 
 package com.planbase.pdf.layoutmanager
 
+/**
+ Represents a part of a line (of text).
+ Terminal means this item ends with a line break.
+ Continuing means it does not.
+ None means that nothing is left or nothing will fit in the given remaining width on this line.
+ */
 sealed class ContTermNone
 data class Continuing(val item: FixedItem): ContTermNone()
 data class Terminal(val item: FixedItem): ContTermNone()
