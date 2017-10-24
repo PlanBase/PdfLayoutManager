@@ -92,6 +92,8 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
 //                println("🢂something=" + something)
                 line.append(something.item)
                 if (something is Terminal) {
+//                    println("=============== TERMINAL")
+//                    println("something:" + something)
                     textLines.add(line)
                     line = TextLine()
                 }
@@ -113,12 +115,16 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
             }
         }
     }
-    // Don't forget to add last item.  Haven't thought this through as carefully as the rest...
+    // The last item could be a blank line.  If so, take the height from the previous line.
+    // TODO: We could have internal blank lines too - think about and test that!
+    if (line.isEmpty() && textLines.isNotEmpty())  {
+        val lastRealItem:LineWrapped = textLines.last().items.last()
+        line.maxAscent = lastRealItem.ascent
+        line.maxDescentAndLeading = lastRealItem.descentAndLeading
+    }
+
+    // Don't forget to add last item.
     textLines.add(line)
-//    if ( !line.isEmpty() &&
-//         (textLines.last() != line)) {
-//        textLines.add(line)
-//    }
 
     return textLines.toList()
 }
