@@ -74,7 +74,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
 //        var maxX = x
 //        val txt = this
 //
-//        val rend = arranger()
+//        val rend = lineWrapper()
 //        val line:TextLine = TextLine()
 //
 //        // TODO: This is fundamentally wrong - need to change how things are rendered.
@@ -238,7 +238,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
                 }) + "\")"
     }
 
-    override fun arranger(): LineWrapper {
+    override fun lineWrapper(): LineWrapper {
         return TextLineWrapper(this)
     }
 

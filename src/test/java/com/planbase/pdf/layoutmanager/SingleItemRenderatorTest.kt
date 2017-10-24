@@ -17,17 +17,17 @@ class SingleItemRenderatorTest {
 //                return null
 //            }
 //
-//            override fun arranger(): LineWrapper {
+//            override fun lineWrapper(): LineWrapper {
 //                return LineWrapper.SingleItemRenderator(this)
 //            }
 //        }
 //
-//        var tor = r.arranger()
+//        var tor = r.lineWrapper()
 //        assertTrue(tor.hasMore())
 //        assertEquals(r.calcDimensions(0f), tor.getSomething(9f).item.xyDim())
 //        assertFalse(tor.hasMore())
 //
-//        tor = r.arranger()
+//        tor = r.lineWrapper()
 //        assertTrue(tor.hasMore())
 //        assertTrue(tor.getIfFits(3f) is None)
 //        assertTrue(tor.hasMore())

@@ -107,7 +107,7 @@ class TextTest {
     @Test fun testRenderator() {
         val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
         val txt = Text.of(tStyle, "This is a long enough line of text.")
-        val rend = txt.arranger()
+        val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
         val ri: ContTerm = rend.getSomething(40f)
         assertFalse(ri is Terminal)
@@ -134,7 +134,7 @@ class TextTest {
     @Test fun testRenderator2() {
         val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
         val txt = Text.of(tStyle, "This is a long enough line of text.")
-        val rend = txt.arranger()
+        val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
         val ri: ContTerm = rend.getSomething(40f)
         assertFalse(ri is Terminal)

@@ -71,7 +71,7 @@ class ScaledJpeg(val bufferedImage: BufferedImage,
         return XyOffset(outerTopLeft.x + width, y)
     }
 
-    override fun arranger(): LineWrapper = preWrappedLineWrapper(this)
+    override fun lineWrapper(): LineWrapper = preWrappedLineWrapper(this)
 
     companion object {
         internal val ASSUMED_IMAGE_DPI = 300f

@@ -26,5 +26,5 @@ package com.planbase.pdf.layoutmanager
  draw yourself as best you can."  Classes implementing LineWrapper are generally mutable (builders).
  */
 interface LineWrappable {
-    fun arranger(): LineWrapper
+    fun lineWrapper(): LineWrapper
 }

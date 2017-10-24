@@ -78,5 +78,5 @@ class ScaledPng(val bufferedImage: BufferedImage,
         return XyOffset(outerTopLeft.x + width, y)
     }
 
-    override fun arranger(): LineWrapper = preWrappedLineWrapper(this)
+    override fun lineWrapper(): LineWrapper = preWrappedLineWrapper(this)
 }

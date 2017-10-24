@@ -85,7 +85,7 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
     var line = TextLine()
 
     for (item in itemsInBlock) {
-        val rtor: LineWrapper = item.arranger()
+        val rtor: LineWrapper = item.lineWrapper()
         while (rtor.hasMore()) {
             if (line.isEmpty()) {
                 val something : ContTerm = rtor.getSomething(maxWidth)

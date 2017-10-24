@@ -78,7 +78,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         return pcl!!
     }
 
-    override fun arranger(): LineWrapper = TODO()
+    override fun lineWrapper(): LineWrapper = TODO()
 
 
     /** {@inheritDoc}  */
