@@ -245,18 +245,13 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
     internal data class RowIdx(val row: WrappedRow,
                                val idx: Int,
                                val foundCr: Boolean) {
+
         fun toContTerm() : ContTerm =
                 if (foundCr) {
                     Terminal(row)
                 } else {
                     Continuing(row)
                 }
-//        fun toContTermNone() : ContTermNone =
-//                if (foundCr) {
-//                    ContTermNone.Companion.terminal(row)
-//                } else {
-//                    ContTermNone.Companion.continuing(row)
-//                }
     }
 
     internal inner class TextLineWrapper(private val txt: Text) : LineWrapper {
@@ -281,11 +276,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
             val row = ctri.row
             return if (row.xyDim.width <= remainingWidth) {
                 idx = ctri.idx
-                if (ctri.foundCr) {
-                    Terminal(row)
-                } else {
-                    Continuing(row)
-                }
+                ctri.toContTerm() as ContTermNone
             } else {
                 None
             }
@@ -293,14 +284,6 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
     }
 
     companion object {
-
-        fun of(style: TextStyle, text: String?): Text =
-                if (text == null) {
-                    Text(style, "")
-                } else {
-                    Text(style, text)
-                }
-
         private val CR = '\n'
 
         private fun substrNoLeadingWhitespace(text: String, startIdx: Int): String {

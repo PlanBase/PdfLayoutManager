@@ -11,10 +11,10 @@ class TextLineKtTest {
 
     @Test fun testLine() {
         val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-        val txt1 = Text.of(tStyle1, "Hello ")
+        val txt1 = Text(tStyle1, "Hello ")
         val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, Utils.CMYK_BLACK)
-        val txt2 = Text.of(tStyle2, "there ")
-        val txt3 = Text.of(tStyle1, "world!")
+        val txt2 = Text(tStyle2, "there ")
+        val txt3 = Text(tStyle1, "world!")
         val line = TextLine()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
         line.append(txt1.lineWrapper().getSomething(999f).item)
@@ -42,10 +42,10 @@ class TextLineKtTest {
 
     @Test fun testRenderablesToLines() {
         val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-        val txt1 = Text.of(tStyle1, "Hello ")
+        val txt1 = Text(tStyle1, "Hello ")
         val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, Utils.CMYK_BLACK)
-        val txt2 = Text.of(tStyle2, "there ")
-        val txt3 = Text.of(tStyle1, "world! This is great stuff.")
+        val txt2 = Text(tStyle2, "there ")
+        val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 60f
 
         val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1, txt2, txt3), maxWidth)
@@ -62,10 +62,10 @@ class TextLineKtTest {
 
     @Test fun testRenderablesToLines2() {
         val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-        val txt1 = Text.of(tStyle1, "Hello ")
+        val txt1 = Text(tStyle1, "Hello ")
         val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, Utils.CMYK_BLACK)
-        val txt2 = Text.of(tStyle2, "there ")
-        val txt3 = Text.of(tStyle1, "world! This is great stuff.")
+        val txt2 = Text(tStyle2, "there ")
+        val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 90f
 
         val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1, txt2, txt3), maxWidth)
@@ -80,7 +80,7 @@ class TextLineKtTest {
 
     @Test fun testRenderablesToLines3() {
         val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-        val txt1 = Text.of(tStyle1, "Hello there world! This is great stuff.")
+        val txt1 = Text(tStyle1, "Hello there world! This is great stuff.")
         val maxWidth = 300f
 
         val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1), maxWidth)
@@ -94,7 +94,7 @@ class TextLineKtTest {
 
 //    @Test fun testRenderablesToLinesTerminal() {
 //        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-//        val txt1 = Text.of(tStyle1, "Hello\nthere world! This is great stuff.")
+//        val txt1 = Text(tStyle1, "Hello\nthere world! This is great stuff.")
 //        val maxWidth = 300f
 //
 //        val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1), maxWidth)

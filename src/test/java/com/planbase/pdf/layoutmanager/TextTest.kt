@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 class TextTest {
     @Test fun testText() {
         val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-        val txt = Text.of(tStyle, "This is a long enough line of text.")
+        val txt = Text(tStyle, "This is a long enough line of text.")
         var ri : RowIdx = Text.tryGettingText(50f, 0, txt)
         assertFalse(ri.foundCr)
         val wrappedRow : WrappedRow = ri.row
@@ -48,7 +48,7 @@ class TextTest {
 
     @Test fun testTextTerminal() {
         val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-        val txt = Text.of(tStyle, "This is\na long enough line of text.")
+        val txt = Text(tStyle, "This is\na long enough line of text.")
         var ri = Text.tryGettingText(50f, 0, txt)
         assertFalse(ri.foundCr)
         val wrappedRow : WrappedRow = ri.row
@@ -106,7 +106,7 @@ class TextTest {
 
     @Test fun testRenderator() {
         val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
-        val txt = Text.of(tStyle, "This is a long enough line of text.")
+        val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
         val ri: ContTerm = rend.getSomething(40f)
@@ -133,7 +133,7 @@ class TextTest {
 
     @Test fun testRenderator2() {
         val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
-        val txt = Text.of(tStyle, "This is a long enough line of text.")
+        val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
         val ri: ContTerm = rend.getSomething(40f)
