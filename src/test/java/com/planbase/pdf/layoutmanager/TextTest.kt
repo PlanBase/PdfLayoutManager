@@ -50,7 +50,7 @@ class TextTest {
         val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
         val txt = Text(tStyle, "This is\na long enough line of text.")
         var ri = Text.tryGettingText(50f, 0, txt)
-        assertFalse(ri.foundCr)
+        assertTrue(ri.foundCr)
         val wrappedRow : WrappedRow = ri.row
         var idx = ri.idx
         assertEquals("This is", wrappedRow.string)

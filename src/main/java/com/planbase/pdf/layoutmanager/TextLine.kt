@@ -92,6 +92,7 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
 //                println("🢂something=" + something)
                 line.append(something.item)
                 if (something is Terminal) {
+                    textLines.add(line)
                     line = TextLine()
                 }
             } else {

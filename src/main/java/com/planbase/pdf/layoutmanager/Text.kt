@@ -336,7 +336,9 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
 
             // String text = substrNoLeadingWhitespace(row, startIdx);
             val thing = substrNoLeadingSpaceUntilRet(row, startIdx)
+//            println("thing:" + thing)
             val text = thing.trimmedStr
+//            println("text:" + text)
 
             val charWidthGuess = txt.avgCharsForWidth(maxWidth)
 
@@ -404,7 +406,11 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
                 }
                 return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1, true)
             }
-            return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1, false)
+            // Need to test trailing whitespace.
+//            println("idx=" + idx + " substr=\"" + substr + "\"")
+
+            return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1,
+                          if (substr == thing.trimmedStr) thing.foundCr else false)
         }
     }
 
