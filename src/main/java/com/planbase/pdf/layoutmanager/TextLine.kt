@@ -88,7 +88,7 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
         val rtor: LineWrapper = item.lineWrapper()
         while (rtor.hasMore()) {
             if (line.isEmpty()) {
-                val something : ContTerm = rtor.getSomething(maxWidth)
+                val something : ConTerm = rtor.getSomething(maxWidth)
 //                println("🢂something=" + something)
                 line.append(something.item)
                 if (something is Terminal) {
@@ -98,7 +98,7 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
                     line = TextLine()
                 }
             } else {
-                val ctn: ContTermNone = rtor.getIfFits(maxWidth - line.width)
+                val ctn: ConTermNone = rtor.getIfFits(maxWidth - line.width)
 //                println("🢂ctn=" + ctn)
 
                 when (ctn) {

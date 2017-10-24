@@ -140,7 +140,7 @@ class TextLineKtTest {
 //        val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1), maxWidth)
 //        println(textLines)
 //
-//        assertEquals(4, textLines.size)
+//        assertEquals(7, textLines.size)
 //
 //        println("line3: " + textLines[3])
 //

@@ -29,20 +29,20 @@ interface LineWrapper {
 //            return item != null
 //        }
 //
-//        override fun getSomething(maxWidth: Float): ContTerm {
+//        override fun getSomething(maxWidth: Float): ConTerm {
 //            val dim = item!!.calcDimensions(maxWidth)
 //            val ret = FixedItemImpl(item, dim.width(), dim.height(), 0f, dim.height())
 //            item = null
-//            return ContTerm.continuing(ret)
+//            return ConTerm.continuing(ret)
 //        }
 //
-//        override fun getIfFits(remainingWidth: Float): ContTermNone {
+//        override fun getIfFits(remainingWidth: Float): ConTermNone {
 //            val dim = item!!.calcDimensions(remainingWidth)
 //            if (dim.width() <= remainingWidth) {
 //                val something = getSomething(remainingWidth)
 //                return something.toContTermNone()
 //            }
-//            return ContTermNone.Companion.none()
+//            return ConTermNone.Companion.none()
 //        }
 //    }
 
@@ -52,11 +52,11 @@ interface LineWrapper {
      * Called when line is empty.  Returns something less than maxWidth if possible, but always
      * returns something even if it won’t fit.  Call this when line is empty.
      */
-    fun getSomething(maxWidth: Float): ContTerm
+    fun getSomething(maxWidth: Float): ConTerm
 
     /**
      * Called when line is not empty to try to fit on this line.  If it doesn’t fit, then the
      * caller will probably create a new line and call getSomething(maxWidth) to start that line.
      */
-    fun getIfFits(remainingWidth: Float): ContTermNone
+    fun getIfFits(remainingWidth: Float): ConTermNone
 }

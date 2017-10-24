@@ -109,7 +109,7 @@ class TextTest {
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
-        val ri: ContTerm = rend.getSomething(40f)
+        val ri: ConTerm = rend.getSomething(40f)
         assertFalse(ri is Terminal)
         val row = ri.item
         assertEquals(tStyle.ascent(), row.ascent)
@@ -121,7 +121,7 @@ class TextTest {
 
         assertTrue(rend.getIfFits(5f) is None)
 
-        val ctn: ContTermNone = rend.getIfFits(20f)
+        val ctn: ConTermNone = rend.getIfFits(20f)
         val row3 = when(ctn) {
             is Continuing -> ctn.item
             is Terminal -> ctn.item
@@ -136,7 +136,7 @@ class TextTest {
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
-        val ri: ContTerm = rend.getSomething(40f)
+        val ri: ConTerm = rend.getSomething(40f)
         assertFalse(ri is Terminal)
         val row = ri.item
         assertEquals(tStyle.ascent(), row.ascent)
@@ -148,7 +148,7 @@ class TextTest {
 
         assertTrue(rend.getIfFits(5f) is None)
 
-        val ctn: ContTermNone = rend.getIfFits(40f)
+        val ctn: ConTermNone = rend.getIfFits(40f)
         val row3 = when(ctn) {
             is Continuing -> ctn.item
             is Terminal -> ctn.item

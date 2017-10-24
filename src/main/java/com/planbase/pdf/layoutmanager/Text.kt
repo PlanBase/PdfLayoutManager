@@ -246,7 +246,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
                                val idx: Int,
                                val foundCr: Boolean) {
 
-        fun toContTerm() : ContTerm =
+        fun toContTerm() : ConTerm =
                 if (foundCr) {
                     Terminal(row)
                 } else {
@@ -259,7 +259,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
 
         override fun hasMore(): Boolean = idx < txt.text.length
 
-        override fun getSomething(maxWidth: Float): ContTerm {
+        override fun getSomething(maxWidth: Float): ConTerm {
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Illegal negative width: " + maxWidth)
             }
@@ -268,7 +268,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
             return rowIdx.toContTerm()
         }
 
-        override fun getIfFits(remainingWidth: Float): ContTermNone {
+        override fun getIfFits(remainingWidth: Float): ConTermNone {
             if (remainingWidth <= 0) {
                 return None
             }
@@ -276,7 +276,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
             val row = ctri.row
             return if (row.xyDim.width <= remainingWidth) {
                 idx = ctri.idx
-                ctri.toContTerm() as ContTermNone
+                ctri.toContTerm() as ConTermNone
             } else {
                 None
             }

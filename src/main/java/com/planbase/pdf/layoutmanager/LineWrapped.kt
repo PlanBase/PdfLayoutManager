@@ -45,12 +45,12 @@ fun preWrappedLineWrapper(item: LineWrapped) =
             internal var hasMore = true
             override fun hasMore(): Boolean = hasMore
 
-            override fun getSomething(maxWidth: Float): ContTerm {
+            override fun getSomething(maxWidth: Float): ConTerm {
                 hasMore = false
                 return Continuing(item)
             }
 
-            override fun getIfFits(remainingWidth: Float): ContTermNone =
+            override fun getIfFits(remainingWidth: Float): ConTermNone =
                     if (hasMore && (item.xyDim.width <= remainingWidth)) {
                         hasMore = false
                         Continuing(item)

@@ -26,14 +26,14 @@ package com.planbase.pdf.layoutmanager
  Continuing means it does not.
  None means that nothing is left or nothing will fit in the given remaining width on this line.
  */
-sealed class ContTermNone
-data class Continuing(override val item: LineWrapped): ContTermNone(), ContTerm {
+sealed class ConTermNone
+data class Continuing(override val item: LineWrapped): ConTermNone(), ConTerm {
     override fun toString() = "Cont($item)"
 }
-data class Terminal(override val item: LineWrapped): ContTermNone(), ContTerm {
+data class Terminal(override val item: LineWrapped): ConTermNone(), ConTerm {
     override fun toString() = "Term($item)"
 }
-object None: ContTermNone() {
+object None: ConTermNone() {
     override fun toString() = "None"
 }
 
@@ -41,6 +41,6 @@ object None: ContTermNone() {
 Represents a continuing or terminal LineWrapped where Continuing means there could be more on this
 line (no hard line break) and Terminal means a hard-coded line-break was encountered.
  */
-interface ContTerm {
+interface ConTerm {
     val item: LineWrapped
 }
