@@ -78,4 +78,32 @@ class TextLineKtTest {
         verifyLine(textLines[1], tStyle1.lineHeight(), maxWidth, "This is great stuff.")
     }
 
+    @Test fun testRenderablesToLines3() {
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
+        val txt1 = Text.of(tStyle1, "Hello there world! This is great stuff.")
+        val maxWidth = 300f
+
+        val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1), maxWidth)
+//        println(textLines)
+
+        assertEquals(1, textLines.size)
+
+        verifyLine(textLines[0], tStyle1.lineHeight(), maxWidth, "Hello there world! This is great stuff.")
+    }
+
+
+//    @Test fun testRenderablesToLinesTerminal() {
+//        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
+//        val txt1 = Text.of(tStyle1, "Hello\nthere world! This is great stuff.")
+//        val maxWidth = 300f
+//
+//        val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1), maxWidth)
+//        println(textLines)
+//
+//        assertEquals(2, textLines.size)
+//
+//        verifyLine(textLines[0], tStyle1.lineHeight(), maxWidth, "Hello")
+//        verifyLine(textLines[1], tStyle1.lineHeight(), maxWidth, "there world! This is great stuff.")
+//    }
+
 }
