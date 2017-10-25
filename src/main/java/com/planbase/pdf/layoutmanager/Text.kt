@@ -23,19 +23,18 @@ package com.planbase.pdf.layoutmanager
 /**
  * Represents styled text kind of like a #Text node in HTML.
  */
-data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable {
+data class Text(val textStyle: TextStyle, private val initialText: String = "") : LineWrappable {
     constructor(textStyle: TextStyle) : this(textStyle, "")
 
-    private val dims = HashMap<Float, WrappedBlock>()
+    // This removes all tabs, transforms all line-terminators into "\n", and removes all runs of spaces that
+    // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
+    val text = cleanStr(initialText)
 
     internal data class WrappedRow(val string: String,
                                    override val xyDim: XyDim,
                                    val textStyle: TextStyle) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle): this(s, XyDim(x, ts.lineHeight()), ts)
-
-        //        float width() { return xyDim.width(); }
-        //        float totalHeight() { return xyDim.height(); }
 
         override val ascent: Float = textStyle.ascent()
 
@@ -52,8 +51,6 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
         override fun toString() = "WrappedRow(\"$string\" $xyDim $textStyle)"
     }
 
-    private class WrappedBlock(var rows: MutableList<WrappedRow> = ArrayList(), var blockDim: XyDim? = null)
-
     fun text(): String = text
 
     fun style(): TextStyle = textStyle
@@ -61,169 +58,6 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
     fun avgCharsForWidth(width: Float): Int = (width * 1220 / textStyle.avgCharWidth).toInt()
 
     fun maxWidth(): Float = textStyle.stringWidthInDocUnits(text.trim())
-
-    private fun calcDimensionsForReal(maxWidth: Float): XyDim {
-        if (maxWidth < 0) {
-            throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: " + maxWidth)
-        }
-        throw Exception("calcDimForReal")
-
-//        val wb = WrappedBlock()
-//        val x = 0f
-//        var y = 0f
-//        var maxX = x
-//        val txt = this
-//
-//        val rend = lineWrapper()
-//        val line:TextLine = TextLine()
-//
-//        // TODO: This is fundamentally wrong - need to change how things are rendered.
-//        while (rend.hasMore()) {
-//
-//        }
-//
-//
-//
-//        val row = txt.text() //PdfLayoutMgr.convertJavaStringToWinAnsi(txt.text());
-//
-//        var text = substrNoLeadingWhitespace(row, 0)
-//        val charWidthGuess = txt.avgCharsForWidth(maxWidth)
-//
-//        while (text.isNotEmpty()) {
-//            val textLen = text.length
-//            //            System.out.println("text=[" + text + "] len=" + textLen);
-//            // Knowing the average width of a character lets us guess and generally be near
-//            // the word where the line break will occur.  Since the font reports a narrow average,
-//            // (possibly due to the predominance of spaces in text) we widen it a little for a
-//            // better first guess.
-//            var idx = charWidthGuess
-//            if (idx > textLen) {
-//                idx = textLen
-//            }
-//            var substr = text.substring(0, idx)
-//            var strWidth = textStyle.stringWidthInDocUnits(substr)
-//
-//            //            System.out.println("(strWidth=" + strWidth + " < maxWidth=" + maxWidth + ") && (idx=" + idx + " < textLen=" + textLen + ")");
-//            // If too short - find shortest string that is too long.
-//            // int idx = idx;
-//            // int maxTooShortIdx = -1;
-//            while (strWidth < maxWidth && idx < textLen) {
-//                //                System.out.println("find shortest string that is too long");
-//                // Consume any whitespace.
-//                while (idx < textLen && Character.isWhitespace(text[idx])) {
-//                    idx++
-//                }
-//                // Find last non-whitespace character
-//                while (idx < textLen && !Character.isWhitespace(text[idx])) {
-//                    idx++
-//                }
-//                // Test new width
-//                substr = text.substring(0, idx)
-//                strWidth = textStyle.stringWidthInDocUnits(substr)
-//            }
-//
-//            idx--
-//            //            System.out.println("(strWidth=" + strWidth + " > maxWidth=" + maxWidth + ") && (idx=" + idx + " > 0)");
-//            // Too long.  Find longest string that is short enough.
-//            while (strWidth > maxWidth && idx > 0) {
-//                //                System.out.println("find longest string that is short enough");
-//                //logger.info("strWidth: " + strWidth + " cell.width: " + cell.width + " idx: " + idx);
-//                // Find previous whitespace run
-//                while (idx > -1 && !Character.isWhitespace(text[idx])) {
-//                    idx--
-//                }
-//                // Find last non-whatespace character before whitespace run.
-//                while (idx > -1 && Character.isWhitespace(text[idx])) {
-//                    idx--
-//                }
-//                if (idx < 1) {
-//                    break // no spaces - have to put whole thing in cell and let it run over.
-//                }
-//                // Test new width
-//                substr = text.substring(0, idx + 1)
-//                strWidth = textStyle.stringWidthInDocUnits(substr)
-//            }
-//
-//            wb.rows.add(WrappedRow.of(substr, strWidth, textStyle))
-//            //            System.out.println("added row");
-//            y -= textStyle.lineHeight()
-//            //            System.out.println("y=" + y);
-//
-//            // Chop off section of substring that we just wrote out.
-//            text = substrNoLeadingWhitespace(text, substr.length)
-//            if (strWidth > maxX) {
-//                maxX = strWidth
-//            }
-//            //            System.out.println("maxX=" + maxX);
-//        }
-//        //        // Not sure what to do if passed "".  This used to mean to insert a blank line, but I'd
-//        //        // really like to make that "\n" instead, but don't have the time.  *sigh*
-//        //        if (y == 0) {
-//        //            y -= textStyle.lineHeight();
-//        //        }
-//        wb.blockDim = XyDim.of(maxX, 0 - y)
-//        dims.put(maxWidth, wb)
-//        //        System.out.println("\tcalcWidth(" + maxWidth + ") on " + this.toString());
-//        //        System.out.println("\t\ttext calcDim() blockDim=" + wb.blockDim);
-//        return wb.blockDim!!
-    }
-
-    private fun ensureWrappedBlock(maxWidth: Float): WrappedBlock {
-        var wb: WrappedBlock? = dims[maxWidth]
-        if (wb == null) {
-            calcDimensionsForReal(maxWidth)
-            wb = dims[maxWidth]
-        }
-        return wb!!
-    }
-
-//    override fun calcDimensions(maxWidth: Float): XyDim {
-//        // I'd like to try to make calcDimensionsForReal() handle this situation before throwing an exception here.
-//        //        if (maxWidth < 0) {
-//        //            throw new IllegalArgumentException("maxWidth must be positive, not " + maxWidth);
-//        //        }
-//        return ensureWrappedBlock(maxWidth).blockDim!!
-//    }
-
-//    /** {@inheritDoc}  */
-//    override fun render(lp: RenderTarget, outerTopLeft: XyOffset,
-//                        outerDimensions: XyDim): XyOffset {
-//
-//        //        System.out.println("\tText.render(" + this.toString());
-//        //        System.out.println("\t\ttext.render(outerTopLeft=" + outerTopLeft +
-//        //                           ", outerDimensions=" + outerDimensions);
-//
-//        val maxWidth = outerDimensions.width()
-//        val wb = ensureWrappedBlock(maxWidth)
-//
-//        var x = outerTopLeft.x()
-//        var y = outerTopLeft.y()
-//        val innerPadding = align.calcPadding(outerDimensions, wb.blockDim)
-//        //        System.out.println("\t\ttext align.calcPadding() returns: " + innerPadding);
-//        if (innerPadding != null) {
-//            x += innerPadding.left()
-//            //y -= innerPadding.top();
-//        }
-//
-//        for (wr in wb.rows) {
-//            // Here we're done whether it fits or not.
-//            //final float xVal = x + align.leftOffset(wb.blockDim.x(), wr.xyDim.x());
-//
-//            y -= textStyle.ascent()
-//            //            if (allPages) {
-//            //                lp.borderStyledText(x, y, wr.string, textStyle);
-//            //            } else {
-//
-//            // TODO: Probably want this!
-//            //            wr.render(lp, XyOffset.of(x, y));
-//            lp.drawStyledText(x, y, wr.string, textStyle)
-//            //            }
-//            y -= textStyle.descent()
-//            y -= textStyle.leading()
-//        }
-//        return XyOffset.of(outerTopLeft.x() + wb.blockDim!!.width(),
-//                           outerTopLeft.y() - wb.blockDim!!.height())
-//    }
 
     internal data class Thing(val trimmedStr: String,
                               val totalCharsConsumed: Int,
@@ -254,7 +88,7 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
                 }
     }
 
-    internal inner class TextLineWrapper(private val txt: Text) : LineWrapper {
+    class TextLineWrapper(private val txt: Text) : LineWrapper {
         private var idx = 0
 
         override fun hasMore(): Boolean = idx < txt.text.length
@@ -286,18 +120,6 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
     companion object {
         private val CR = '\n'
 
-        private fun substrNoLeadingWhitespace(text: String, startIdx: Int): String {
-            var tempStartIdx = startIdx
-            // Drop any opening whitespace.
-            while (tempStartIdx < text.length && Character.isWhitespace(text[tempStartIdx])) {
-                tempStartIdx++
-            }
-            if (tempStartIdx > 0) {
-                return text.substring(tempStartIdx)
-            }
-            return text
-        }
-
         internal fun substrNoLeadingSpaceUntilRet(text: String, origStartIdx: Int): Thing {
             var veryBeginningIdx = origStartIdx
             var startIdx = origStartIdx
@@ -316,27 +138,21 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
             }
             val charsConsumed = crIdx - veryBeginningIdx
             return Thing(text.substring(startIdx, crIdx), charsConsumed, foundCr)
-
-            //        return xformChars(text)
-            //                       .drop(startIdx)
-            //                       .dropWhile(Character::isWhitespace)
-            //                       .takeWhile(c -> CR != c)
-            //                       .fold(new StringBuilder(), StringBuilder::append)
-            //                       .toString();
         }
 
         internal fun tryGettingText(maxWidth: Float, startIdx: Int, txt: Text): RowIdx {
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: " + maxWidth)
             }
-            val row = txt.text() //PdfLayoutMgr.convertJavaStringToWinAnsi(txt.text());
+
+            // Already removed all tabs, transformed all line-terminators into "\n", and removed all runs of spaces
+            // that precede line terminators.
+            val row = txt.text()
             if (row.length <= startIdx) {
                 throw IllegalStateException("text length must be greater than startIdx")
             }
 
-            // String text = substrNoLeadingWhitespace(row, startIdx);
             val thing = substrNoLeadingSpaceUntilRet(row, startIdx)
-//            println("thing:" + thing)
             val text = thing.trimmedStr
 //            println("text:" + text)
 
@@ -412,6 +228,18 @@ data class Text(val textStyle: TextStyle, val text: String = "") : LineWrappable
             return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1,
                           if (substr == thing.trimmedStr) thing.foundCr else false)
         }
-    }
 
+        // From: https://docs.google.com/document/d/1vpbFYqfW7XmJplSwwLLo7zSPOztayO7G4Gw5_EHfpfI/edit#
+        //
+        // 1. Remove all tabs.  There is no way to make a good assumption about how to turn them into spaces.
+        //
+        // 2. Transform all line-terminators into "\n".  Also remove spaces before every line terminator (hard break).
+        //
+        // The wrapping algorithm will remove all consecutive spaces on an automatic line-break.  Otherwise, we want
+        // to preserve consecutive spaces within a line.
+        //
+        // Non-breaking spaces are ignored here.
+        fun cleanStr(s:String):String = s.replace(Regex("\t"), "")
+                .replace(Regex("[ ]*(\r\n|[\r\n\u0085\u2028\u2029])"), "\n")
+    }
 }

@@ -1,5 +1,6 @@
 package com.planbase.pdf.layoutmanager
 
+import com.planbase.pdf.layoutmanager.Text.Companion.cleanStr
 import com.planbase.pdf.layoutmanager.Text.RowIdx
 import com.planbase.pdf.layoutmanager.Text.WrappedRow
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -169,4 +170,8 @@ class TextTest {
 //        assertEquals(28.250002f, dim.width())
 //    }
 
+    @Test fun testCleanStr() {
+        assertEquals("\n\nHello\n\n\n   There\nWorld\n\n\n   ",
+                     cleanStr("  \n\n\tHello  \n\n\n   There\r\nWorld   \n\n\n   "))
+    }
 }

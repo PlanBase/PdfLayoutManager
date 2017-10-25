@@ -77,6 +77,18 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
+
+private fun addLineToTextLinesCheckBlank(textLines: MutableList<TextLine>, line: TextLine) {
+    // If this item is a blank line, take the height from the previous item (if there is one).
+    if (line.isEmpty() && textLines.isNotEmpty())  {
+        val lastRealItem:LineWrapped = textLines.last().items.last()
+        line.maxAscent = lastRealItem.ascent
+        line.maxDescentAndLeading = lastRealItem.descentAndLeading
+    }
+    // Now add the line to the list.
+    textLines.add(line)
+}
+
 fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<TextLine> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
@@ -94,7 +106,7 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
                 if (something is Terminal) {
 //                    println("=============== TERMINAL")
 //                    println("something:" + something)
-                    textLines.add(line)
+                    addLineToTextLinesCheckBlank(textLines, line)
                     line = TextLine()
                 }
             } else {
@@ -105,26 +117,21 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
                     is Continuing ->
                         line.append(ctn.item)
                     is Terminal -> {
+//                        println("=============== TERMINAL 222222222")
+//                        println("ctn:" + ctn)
                         line.append(ctn.item)
                         line = TextLine()
                     }
                     None -> {
-                        textLines.add(line)
+//                        textLines.add(line)
+                        addLineToTextLinesCheckBlank(textLines, line)
                         line = TextLine()
                     }}
             }
         }
     }
-    // The last item could be a blank line.  If so, take the height from the previous line.
-    // TODO: We could have internal blank lines too - think about and test that!
-    if (line.isEmpty() && textLines.isNotEmpty())  {
-        val lastRealItem:LineWrapped = textLines.last().items.last()
-        line.maxAscent = lastRealItem.ascent
-        line.maxDescentAndLeading = lastRealItem.descentAndLeading
-    }
-
     // Don't forget to add last item.
-    textLines.add(line)
+    addLineToTextLinesCheckBlank(textLines, line)
 
     return textLines.toList()
 }

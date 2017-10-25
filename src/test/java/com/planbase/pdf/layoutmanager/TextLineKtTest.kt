@@ -132,7 +132,7 @@ class TextLineKtTest {
 
 //    @Test fun testRenderablesToLinesMultiReturn() {
 //        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
-//        val txt1 = Text(tStyle1, "Hello\n\n\nthere world! This\n\nis great stuff.\n")
+//        val txt1 = Text(tStyle1, "Hello\n\n\nthere world! This\n\nis great stuff.\n\n")
 //        // This is 300 just like previous test, showing this can fit on one line
 //        // So we know the line breaks are due to the \n characters.
 //        val maxWidth = 300f
@@ -145,10 +145,13 @@ class TextLineKtTest {
 //        println("line3: " + textLines[3])
 //
 //        verifyLine(textLines[0], tStyle1.lineHeight(), maxWidth, "Hello")
-//        verifyLine(textLines[1], tStyle1.lineHeight(), maxWidth, "there world! This")
-//        verifyLine(textLines[2], tStyle1.lineHeight(), maxWidth, "is great stuff.")
+//        verifyLine(textLines[1], tStyle1.lineHeight(), maxWidth, "")
+//        verifyLine(textLines[2], tStyle1.lineHeight(), maxWidth, "")
+//        verifyLine(textLines[3], tStyle1.lineHeight(), maxWidth, "there world! This")
+//        verifyLine(textLines[4], tStyle1.lineHeight(), maxWidth, "")
+//        verifyLine(textLines[5], tStyle1.lineHeight(), maxWidth, "is great stuff.")
 //        // Additional blank line has same height as previous one.
-//        verifyLine(textLines[3], tStyle1.lineHeight(), maxWidth, "")
+//        verifyLine(textLines[6], tStyle1.lineHeight(), maxWidth, "")
+//        verifyLine(textLines[7], tStyle1.lineHeight(), maxWidth, "")
 //    }
-
 }
