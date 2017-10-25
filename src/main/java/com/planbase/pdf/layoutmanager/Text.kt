@@ -51,8 +51,6 @@ data class Text(val textStyle: TextStyle, private val initialText: String = "") 
         override fun toString() = "WrappedRow(\"$string\" $xyDim $textStyle)"
     }
 
-    fun text(): String = text
-
     fun style(): TextStyle = textStyle
 
     fun avgCharsForWidth(width: Float): Int = (width * 1220 / textStyle.avgCharWidth).toInt()
@@ -120,26 +118,6 @@ data class Text(val textStyle: TextStyle, private val initialText: String = "") 
     companion object {
         private val CR = '\n'
 
-        internal fun substrNoLeadingSpaceUntilRet(text: String, origStartIdx: Int): Thing {
-            var veryBeginningIdx = origStartIdx
-            var startIdx = origStartIdx
-            // Drop any opening whitespace.
-            while (startIdx < text.length && Character.isWhitespace(text[startIdx])) {
-                startIdx++
-            }
-            var crIdx = text.indexOf(CR, startIdx)
-            var foundCr = true
-            if (crIdx < 0) {
-                crIdx = text.length
-                foundCr = false
-            } else {
-                // decrement here effectively adds one to the total length to consume the CR.
-                veryBeginningIdx--
-            }
-            val charsConsumed = crIdx - veryBeginningIdx
-            return Thing(text.substring(startIdx, crIdx), charsConsumed, foundCr)
-        }
-
         internal fun tryGettingText(maxWidth: Float, startIdx: Int, txt: Text): RowIdx {
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: " + maxWidth)
@@ -147,13 +125,21 @@ data class Text(val textStyle: TextStyle, private val initialText: String = "") 
 
             // Already removed all tabs, transformed all line-terminators into "\n", and removed all runs of spaces
             // that precede line terminators.
-            val row = txt.text()
+            val row = txt.text
             if (row.length <= startIdx) {
                 throw IllegalStateException("text length must be greater than startIdx")
             }
 
-            val thing = substrNoLeadingSpaceUntilRet(row, startIdx)
-            val text = thing.trimmedStr
+            var crIdx = row.indexOf(CR, startIdx)
+            val foundCr =
+                    if (crIdx < 0) {
+                        crIdx = row.length
+                        false
+                    } else {
+                        true
+                    }
+
+            val text = row.substring(startIdx, crIdx)
 //            println("text:" + text)
 
             val charWidthGuess = txt.avgCharsForWidth(maxWidth)
@@ -226,7 +212,7 @@ data class Text(val textStyle: TextStyle, private val initialText: String = "") 
 //            println("idx=" + idx + " substr=\"" + substr + "\"")
 
             return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1,
-                          if (substr == thing.trimmedStr) thing.foundCr else false)
+                          if (substr == text) { foundCr } else { false })
         }
 
         // From: https://docs.google.com/document/d/1vpbFYqfW7XmJplSwwLLo7zSPOztayO7G4Gw5_EHfpfI/edit#

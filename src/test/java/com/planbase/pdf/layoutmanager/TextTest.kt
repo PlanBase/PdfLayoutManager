@@ -83,27 +83,27 @@ class TextTest {
         assertEquals(36, idx)
     }
 
-    @Test fun testSubstrNoLeadingSpaceUntilRet() {
-        var ret = Text.substrNoLeadingSpaceUntilRet("Hello", 0)
-        assertEquals("Hello", ret.trimmedStr)
-        assertFalse(ret.foundCr)
-        assertEquals(5, ret.totalCharsConsumed)
-
-        ret = Text.substrNoLeadingSpaceUntilRet(" Hello", 0)
-        assertEquals("Hello", ret.trimmedStr)
-        assertFalse(ret.foundCr)
-        assertEquals(6, ret.totalCharsConsumed)
-
-        ret = Text.substrNoLeadingSpaceUntilRet(" Hello\n", 0)
-        assertEquals("Hello", ret.trimmedStr)
-        assertTrue(ret.foundCr)
-        assertEquals(7, ret.totalCharsConsumed)
-
-        ret = Text.substrNoLeadingSpaceUntilRet("  Hello there\n world.", 7)
-        assertEquals("there", ret.trimmedStr)
-        assertTrue(ret.foundCr)
-        assertEquals(7, ret.totalCharsConsumed)
-    }
+//    @Test fun testSubstrNoLeadingSpaceUntilRet() {
+//        var ret = Text.substrNoLeadingSpaceUntilRet("Hello", 0)
+//        assertEquals("Hello", ret.trimmedStr)
+//        assertFalse(ret.foundCr)
+//        assertEquals(5, ret.totalCharsConsumed)
+//
+//        ret = Text.substrNoLeadingSpaceUntilRet(" Hello", 0)
+//        assertEquals("Hello", ret.trimmedStr)
+//        assertFalse(ret.foundCr)
+//        assertEquals(6, ret.totalCharsConsumed)
+//
+//        ret = Text.substrNoLeadingSpaceUntilRet(" Hello\n", 0)
+//        assertEquals("Hello", ret.trimmedStr)
+//        assertTrue(ret.foundCr)
+//        assertEquals(7, ret.totalCharsConsumed)
+//
+//        ret = Text.substrNoLeadingSpaceUntilRet("  Hello there\n world.", 7)
+//        assertEquals("there", ret.trimmedStr)
+//        assertTrue(ret.foundCr)
+//        assertEquals(7, ret.totalCharsConsumed)
+//    }
 
     @Test fun testRenderator() {
         val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
