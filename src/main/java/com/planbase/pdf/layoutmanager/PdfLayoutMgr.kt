@@ -76,7 +76,9 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                     * good idea to use this directly.  Use the corrected values through a [PageGrouping]
                     * instead.
                     */
-                   val pageDim:XyDim) {
+                   val pageDim:XyDim,
+                   /** Takes a page number and returns an x-offset for that page. */
+                   var pageReactor:((Int, SinglePage) -> Float)? = null) {
     private val doc = PDDocument()
 //    val pageDim = XyDim(mb ?: PDRectangle.LETTER)
 
@@ -109,8 +111,6 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     private val pngMap = HashMap<BufferedImage, PDImageXObject>()
 
     private val pages:MutableList<SinglePage> = mutableListOf()
-    // Just to start, takes a page number and returns an x-offset for that page.
-    var pageReactor: ((Int, SinglePage) -> Float)? = null
 
     // pages.size() counts the first page as 1, so 0 is the appropriate sentinel value
     private var unCommittedPageIdx = 0
@@ -175,6 +175,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
             y += lp.bodyHeight()
             idx++
             if (pages.size <= idx) {
+//                println("PageReactor before adding a page: " + pageReactor)
                 pages.add(SinglePage(pages.size + 1, this, pageReactor))
             }
         }
@@ -204,7 +205,8 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      */
     // Part of end-user public interface
     fun logicalPageStart(o: Orientation,
-                         pageReactor: ((Int, SinglePage) -> Float)?): PageGrouping {
+                         pr: ((Int, SinglePage) -> Float)?): PageGrouping {
+        pageReactor = pr
         val pb = SinglePage(pages.size + 1, this, pageReactor)
         pages.add(pb)
         return PageGrouping(this, o)
