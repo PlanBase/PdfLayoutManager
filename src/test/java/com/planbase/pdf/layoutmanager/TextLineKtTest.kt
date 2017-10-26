@@ -138,11 +138,11 @@ class TextLineKtTest {
         val maxWidth = 300f
 
         val textLines: List<TextLine> = renderablesToTextLines(listOf(txt1), maxWidth)
-        println(textLines)
+//        println(textLines)
 
         assertEquals(8, textLines.size)
 
-        println("line3: " + textLines[3])
+//        println("line3: " + textLines[3])
 
         verifyLine(textLines[0], tStyle1.lineHeight(), maxWidth, "Hello")
         verifyLine(textLines[1], tStyle1.lineHeight(), maxWidth, "")
@@ -150,8 +150,12 @@ class TextLineKtTest {
         verifyLine(textLines[3], tStyle1.lineHeight(), maxWidth, "there world! This")
         verifyLine(textLines[4], tStyle1.lineHeight(), maxWidth, "")
         verifyLine(textLines[5], tStyle1.lineHeight(), maxWidth, "is great stuff.")
-        // Additional blank line has same height as previous one.
         verifyLine(textLines[6], tStyle1.lineHeight(), maxWidth, "")
         verifyLine(textLines[7], tStyle1.lineHeight(), maxWidth, "")
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun testRenderablesToLinesEx() {
+        renderablesToTextLines(listOf(), -1f)
     }
 }
