@@ -207,12 +207,12 @@ this directory like the following (you'll have to replace the question marks):
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.7</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>junit</groupId>-->
+			<!--<artifactId>junit</artifactId>-->
+			<!--<version>4.12</version>-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.organicdesign.testUtils</groupId>
 			<artifactId>TestUtils</artifactId>
