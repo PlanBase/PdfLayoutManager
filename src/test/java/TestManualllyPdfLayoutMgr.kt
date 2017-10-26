@@ -254,7 +254,7 @@ class TestManualllyPdfLayoutMgr {
                                   "See:",
                                   "https://pdfbox.apache.org/1.8/cookbook/",
                                   "workingwithfonts.html",
-                                  "",
+                                  "\n",
                                   "here",
                                   "are",
                                   "more lines",
@@ -302,6 +302,7 @@ class TestManualllyPdfLayoutMgr {
                                   " to the file once and reused."))
                               .addAll(listOf(ScaledJpeg(melonPic),
                                              ScaledJpeg(melonPic, XyDim(50f, 50f)),
+                                             Text(regular, " Melon "),
                                              ScaledJpeg(melonPic, XyDim(50f, 50f)),
                                              ScaledJpeg(melonPic, XyDim(170f, 100f)),
                                              Text(regular, "Watermelon!"))),
@@ -316,9 +317,7 @@ class TestManualllyPdfLayoutMgr {
                                    "Gave proof through the night that our flag was still there; " +
                                    "O say does that star-spangled banner yet wave, " +
                                    "O'er the land of the free and the home of the brave? "),
-                                   // Tiny space
-                                  "",
-                                   // Set line breaks:
+                                  "\n\n",
                                   "On the shore dimly seen through the mists of the deep, ",
                                   "Where the foe's haughty host in dread silence reposes, ",
                                   "What is that which the breeze, o'er the towering steep, ",
@@ -327,16 +326,11 @@ class TestManualllyPdfLayoutMgr {
                                   "In full glory reflected now shines in the stream: ",
                                   "'Tis the star-spangled banner, O! long may it wave ",
                                   "O'er the land of the free and the home of the brave. ",
-                                   // Big space.
                                   "\n",
                                   "\n",
                                   "\n",
                                   "\n",
                                   "\n",
-                                  "\n",
-                                  "\n",
-                                  "\n",
-                                   // Flowing text
                                   ("And where is that band who so vauntingly swore " +
                                    "That the havoc of war and the battle's confusion, " +
                                    "A home and a country, should leave us no more? " +
@@ -345,7 +339,7 @@ class TestManualllyPdfLayoutMgr {
                                    "From the terror of flight, or the gloom of the grave: " +
                                    "And the star-spangled banner in triumph doth wave, " +
                                    "O'er the land of the free and the home of the brave. " +
-                                   "\n"),
+                                   "\n\n"),
                                   ("O thus be it ever, when freemen shall stand " +
                                    "Between their loved home and the war's desolation. " +
                                    "Blest with vict'ry and peace, may the Heav'n rescued land " +
@@ -354,12 +348,11 @@ class TestManualllyPdfLayoutMgr {
                                    "And this be our motto: \"In God is our trust.\" " +
                                    "And the star-spangled banner in triumph shall wave " +
                                    "O'er the land of the free and the home of the brave!"),
-                                  "",
-                                  "more",
-                                  "lines",
-                                  "to",
+                                  "\n\n",
+                                  "more ",
+                                  "lines ",
+                                  "to ",
                                   "test")),
-                //                          .build(),
                       Cell(regularCell, colWidths[2], regular,
                            listOf("Maamme",
                                   "\n",
@@ -376,9 +369,9 @@ class TestManualllyPdfLayoutMgr {
                                    "sun toivos, riemus loistossaan, " +
                                    "ja kerran laulus, synnyinmaa " +
                                    "korkeemman kaiun saa. "),
-                                  "\n",
+                                  "\n\n",
                                   "Vårt land ",
-                                  "\n",
+                                  "\n\n",
                                   ("(the original, by Johan Ludvig Runeberg) " +
                                    "Vårt land, vårt land, vårt fosterland, " +
                                    "ljud högt, o dyra ord! " +
@@ -391,7 +384,7 @@ class TestManualllyPdfLayoutMgr {
                                    "Se, ur vår kärlek skall gå opp " +
                                    "Ditt ljus, din glans, din fröjd, ditt hopp. " +
                                    "Och högre klinga skall en gång " +
-                                   "Vår fosterländska sång."))),
+                                   "Vår fosterländska sång.\n\n"))),
                       Cell(regularCell, colWidths[3], regular,
                            listOf(// Older first 2 verses obsolete.
                                    ("Einigkeit und Recht und Freiheit " +
