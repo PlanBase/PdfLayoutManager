@@ -3,6 +3,7 @@ import com.planbase.pdf.layoutmanager.CellStyle.Align.*
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
+import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -10,6 +11,7 @@ import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import javax.imageio.ImageIO
 
 class TestManualllyPdfLayoutMgr {
 
@@ -54,7 +56,7 @@ class TestManualllyPdfLayoutMgr {
 
         // Draw the first table with lots of extra room to show off the vertical and horizontal
         // alignment.
-        val tB = TableBuilder()
+        var tB = TableBuilder()
         tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER, Padding(2f),
@@ -82,131 +84,131 @@ class TestManualllyPdfLayoutMgr {
                 .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
                 .buildRow()
                 .buildPart()
-        //        XyOffset xya = tB.buildTable()
-        //                         .render(lp, new XyOffset(40f, lp.yBodyTop()), null);
-        //
-        //        // The second table uses the x and y offsets from the previous table to position it to the
-        //        // right of the first.
-        //        tB = new TableBuilder();
-        //        tB.addCellWidths(listOf(100f, 100f, 100f))
-        //          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
-        //          .partBuilder().cellStyle(new CellStyle(BOTTOM_CENTER, new Padding(2),
-        //                                                RGB_BLUE_GREEN, new BorderStyle(RGB_BLACK)))
-        //          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-        //          .buildPart()
-        //          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2),
-        //                                                RGB_LIGHT_GREEN,
-        //                                                new BorderStyle(RGB_DARK_GRAY)))
-        //          .minRowHeight(100f)
-        //          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
-        //          .rowBuilder()
-        //          .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .buildRow()
-        //          .rowBuilder()
-        //          .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .buildRow()
-        //          .rowBuilder()
-        //          .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .buildRow()
-        //          .buildPart();
-        //        XyOffset xyb = tB.buildTable()
-        //                         .render(lp, new XyOffset(xya.getX() + 10, lp.yBodyTop()), null);
-        //
-        //        // The third table uses the x and y offsets from the previous tables to position it to the
-        //        // right of the first and below the second.  Negative Y is down.  This third table showcases
-        //        // the way cells extend vertically (but not horizontally) to fit the text you put in them.
-        //        tB = new TableBuilder();
-        //        tB.addCellWidths(listOf(100f, 100f, 100f))
-        //          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
-        //                                  RGB_YELLOW_BRIGHT))
-        //          .partBuilder().cellStyle(new CellStyle(BOTTOM_CENTER, new Padding(2),
-        //                                                RGB_BLUE_GREEN,
-        //                                                new BorderStyle(RGB_BLACK)))
-        //          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-        //          .buildPart()
-        //          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2),
-        //                                                RGB_LIGHT_GREEN,
-        //                                                new BorderStyle(RGB_DARK_GRAY)))
-        //          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
-        //          .rowBuilder().cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1").buildCell()
-        //          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two").buildCell()
-        //          .cellBuilder().align(BOTTOM_LEFT)
-        //          .addStrs("Line 1", "Line two", "[Line three is long enough to wrap]").buildCell()
-        //          .buildRow()
-        //          .rowBuilder().cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two").buildCell()
-        //          .cellBuilder().align(MIDDLE_CENTER).addStrs("").buildCell()
-        //          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1").buildCell().buildRow()
-        //          .rowBuilder().cellBuilder().align(TOP_RIGHT).addStrs("L1").buildCell()
-        //          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two").buildCell()
-        //          .cellBuilder().align(TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
-        //          .buildPart()
-        //          .buildTable()
-        //          .render(lp, new XyOffset(xya.getX() + 10, xyb.getY() - 10), null);
-        //
-        //        lp.commit();
-        //
-        //        // Let's do a portrait page now.  I just copied this from the previous page.
-        //        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.PORTRAIT);
-        //        tB = new TableBuilder();
-        //        tB.addCellWidths(listOf(120f, 120f, 120f))
-        //          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
-        //          .partBuilder().cellStyle(new CellStyle(BOTTOM_CENTER, new Padding(2), RGB_BLUE_GREEN,
-        //                                                new BorderStyle(RGB_BLACK)))
-        //          .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-        //          .buildPart()
-        //          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2), RGB_LIGHT_GREEN,
-        //                                                new BorderStyle(RGB_DARK_GRAY))).minRowHeight(120f)
-        //          .textStyle(new TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
-        //          .rowBuilder()
-        //          .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .buildRow()
-        //          .rowBuilder()
-        //          .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .buildRow()
-        //          .rowBuilder()
-        //          .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
-        //          .buildRow()
-        //          .buildPart();
-        //        XyOffset xyOff = tB.buildTable()
-        //                           .render(lp, new XyOffset(40f, lp.yBodyTop()), null);
-        //
-        //        // This was very hastily added to this test to prove that font loading works (it does).
-        //        File fontFile = new File("target/test-classes/LiberationMono-Bold.ttf");
-        //        PDType0Font liberationFont = pageMgr.loadTrueTypeFont(fontFile);
-        //        lp.drawCell(xyOff.getX(), xyOff.getY(),
-        //                   new Cell(new CellStyle(MIDDLE_CENTER, new Padding(2), RGB_LIGHT_GREEN, new BorderStyle(RGB_DARK_GRAY)),
-        //                            200f,
-        //                            new TextStyle(liberationFont, 12f, RGB_BLACK),
-        //                            listOf("Hello Liberation Mono Bold Font!")));
-        //
-        //        tB = new TableBuilder();
-        //        tB.addCellWidths(listOf(100f))
-        //          .textStyle(new TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
-        //                                   RGB_YELLOW_BRIGHT))
-        //          .partBuilder().cellStyle(new CellStyle(MIDDLE_CENTER, new Padding(2),
-        //                                                RGB_BLUE_GREEN,
-        //                                                new BorderStyle(RGB_BLACK)))
-        //          .rowBuilder().addTextCells("Lower-Right").buildRow()
-        //          .buildPart();
-        //        // Where's the lower-right-hand corner?  Put a cell there.
-        //        tB.buildTable()
-        //          .render(lp, new XyOffset(lp.pageWidth() - (100 + pMargin),
-        //                                  lp.yBodyBottom() + 15 + pMargin), null);
-        //
-        //        lp.commit();
-        //
+                val xya:XyOffset = tB.buildTable()
+                                 .render(lp, XyOffset(40f, lp.yBodyTop()))
+
+                // The second table uses the x and y offsets from the previous table to position it to the
+                // right of the first.
+                tB = TableBuilder()
+                tB.addCellWidths(listOf(100f, 100f, 100f))
+                  .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
+                  .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER, Padding(2f),
+                                                        RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)))
+                  .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+                  .buildPart()
+                  .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER, Padding(2f),
+                                                        RGB_LIGHT_GREEN,
+                                                        BorderStyle(RGB_DARK_GRAY)))
+                  .minRowHeight(100f)
+                  .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                  .rowBuilder()
+                  .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .buildRow()
+                  .rowBuilder()
+                  .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .buildRow()
+                  .rowBuilder()
+                  .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .buildRow()
+                  .buildPart()
+                val xyb:XyOffset = tB.buildTable()
+                                 .render(lp, XyOffset(xya.x + 10, lp.yBodyTop()))
+
+                // The third table uses the x and y offsets from the previous tables to position it to the
+                // right of the first and below the second.  Negative Y is down.  This third table showcases
+                // the way cells extend vertically (but not horizontally) to fit the text you put in them.
+                tB = TableBuilder()
+                tB.addCellWidths(listOf(100f, 100f, 100f))
+                  .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
+                                          RGB_YELLOW_BRIGHT))
+                  .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER, Padding(2f),
+                                                        RGB_BLUE_GREEN,
+                                                        BorderStyle(RGB_BLACK)))
+                  .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+                  .buildPart()
+                  .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER, Padding(2f),
+                                                        RGB_LIGHT_GREEN,
+                                                        BorderStyle(RGB_DARK_GRAY)))
+                  .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                  .rowBuilder().cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1").buildCell()
+                  .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two").buildCell()
+                  .cellBuilder().align(BOTTOM_LEFT)
+                  .addStrs("Line 1", "Line two", "[Line three is long enough to wrap]").buildCell()
+                  .buildRow()
+                  .rowBuilder().cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two").buildCell()
+                  .cellBuilder().align(MIDDLE_CENTER).addStrs("").buildCell()
+                  .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1").buildCell().buildRow()
+                  .rowBuilder().cellBuilder().align(TOP_RIGHT).addStrs("L1").buildCell()
+                  .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two").buildCell()
+                  .cellBuilder().align(TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
+                  .buildPart()
+                  .buildTable()
+                  .render(lp, XyOffset(xya.x + 10, xyb.y - 10))
+
+                lp.commit()
+
+                // Let's do a portrait page now.  I just copied this from the previous page.
+                lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.PORTRAIT)
+                tB = TableBuilder()
+                tB.addCellWidths(listOf(120f, 120f, 120f))
+                  .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
+                  .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER, Padding(2f), RGB_BLUE_GREEN,
+                                                        BorderStyle(RGB_BLACK)))
+                  .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+                  .buildPart()
+                  .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER, Padding(2f), RGB_LIGHT_GREEN,
+                                                        BorderStyle(RGB_DARK_GRAY))).minRowHeight(120f)
+                  .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                  .rowBuilder()
+                  .cellBuilder().align(TOP_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(TOP_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(TOP_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .buildRow()
+                  .rowBuilder()
+                  .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .buildRow()
+                  .rowBuilder()
+                  .cellBuilder().align(BOTTOM_LEFT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(BOTTOM_CENTER).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .cellBuilder().align(BOTTOM_RIGHT).addStrs("Line 1", "Line two", "Line three").buildCell()
+                  .buildRow()
+                  .buildPart()
+                val xyOff = tB.buildTable()
+                                   .render(lp, XyOffset(40f, lp.yBodyTop()))
+
+                // This was very hastily added to this test to prove that font loading works (it does).
+                val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
+                val liberationFont:PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
+                lp.drawCell(xyOff.x, xyOff.y,
+                           Cell(CellStyle(MIDDLE_CENTER, Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY)),
+                                    200f,
+                                    TextStyle(liberationFont, 12f, RGB_BLACK),
+                                    listOf("Hello Liberation Mono Bold Font!")))
+
+                tB = TableBuilder()
+                tB.addCellWidths(listOf(100f))
+                  .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
+                                           RGB_YELLOW_BRIGHT))
+                  .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER, Padding(2f),
+                                                        RGB_BLUE_GREEN,
+                                                        BorderStyle(RGB_BLACK)))
+                  .rowBuilder().addTextCells("Lower-Right").buildRow()
+                  .buildPart()
+                // Where's the lower-right-hand corner?  Put a cell there.
+                tB.buildTable()
+                  .render(lp, XyOffset(lp.pageWidth() - (100 + pMargin),
+                                          lp.yBodyBottom() + 15 + pMargin))
+
+                lp.commit()
+
         // More landscape pages
         val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK)
         val pageHeadCellStyle = CellStyle(TOP_CENTER, null, null, null)
@@ -235,7 +237,7 @@ class TestManualllyPdfLayoutMgr {
 
         val f = File("target/test-classes/melon.jpg")
         println(f.absolutePath)
-//        val melonPic = ImageIO.read(f)
+        val melonPic = ImageIO.read(f)
 
         y = lp.putRow(pMargin, y,
                       Cell(regularCell, colWidths[0], regular,
@@ -297,13 +299,12 @@ class TestManualllyPdfLayoutMgr {
                                   "\n",
                                   "Here is a picture with the default and other sizes.  Though" +
                                   " it shows up several times, the image data is only attached" +
-                                  " to the file once and reused.")),
-                //                              .addAll(listOf(new ScaledJpeg(melonPic),
-                //                                          new ScaledJpeg(melonPic, 50, 50),
-                //                                          new ScaledJpeg(melonPic, 50, 50),
-                //                                          new ScaledJpeg(melonPic, 170, 100)))
-                //                              .add(regular, listOf("Watermelon!"))
-                //                              .build(),
+                                  " to the file once and reused."))
+                              .addAll(listOf(ScaledJpeg(melonPic),
+                                             ScaledJpeg(melonPic, XyDim(50f, 50f)),
+                                             ScaledJpeg(melonPic, XyDim(50f, 50f)),
+                                             ScaledJpeg(melonPic, XyDim(170f, 100f)),
+                                             Text(regular, "Watermelon!"))),
                       Cell(regularCell, colWidths[1],
                            regular,
                            listOf(("O say can you see by the dawn's early light, " +

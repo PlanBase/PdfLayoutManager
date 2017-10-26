@@ -32,7 +32,7 @@ import java.lang.Math.max
 data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can override this style
                 val width: Float,
                 // A list of the contents.  It's pretty limiting to have one item per row.
-                private val contents: List<LineWrappable>) : LineWrappable {
+                private var contents: List<LineWrappable>) : LineWrappable {
     constructor(cs: CellStyle = CellStyle.DEFAULT,
                 w: Float,
                 textStyle:TextStyle,
@@ -51,6 +51,13 @@ data class Cell(val cellStyle: CellStyle = CellStyle.DEFAULT, // contents can ov
         if (width < 0) {
             throw IllegalArgumentException("A cell cannot have a negative width")
         }
+    }
+
+    fun addAll(lrs:List<LineWrappable>):Cell {
+        val tempItems = contents.toMutableList()
+        tempItems.addAll(lrs)
+        contents = tempItems.toList()
+        return this
     }
 
     private fun calcDimensionsForReal(maxWidth: Float) {
