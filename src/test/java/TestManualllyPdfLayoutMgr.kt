@@ -304,6 +304,7 @@ class TestManualllyPdfLayoutMgr {
                                              ScaledJpeg(melonPic, XyDim(50f, 50f)),
                                              Text(regular, " Melon "),
                                              ScaledJpeg(melonPic, XyDim(50f, 50f)),
+                                             Text(regular, " Yum!"),
                                              ScaledJpeg(melonPic, XyDim(170f, 100f)),
                                              Text(regular, "Watermelon!"))),
                       Cell(regularCell, colWidths[1],
