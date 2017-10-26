@@ -34,13 +34,11 @@ import java.awt.image.BufferedImage
  Constructor lets you specify the document units for how you want your image displayed.
 
  @param bufferedImage the source BufferedImage
- @param width the width in document units
- @param height the width in document units
+ @param xyDim the width and height in document units
  @return a ScaledPng with the given width and height for that image.
  */
 class ScaledPng(val bufferedImage: BufferedImage,
-                private val width: Float,
-                private val height: Float) : LineWrapped, LineWrappable {
+                override val xyDim: XyDim) : LineWrapped, LineWrappable {
 
     /**
      Returns a new buffered image with width and height calculated from the source BufferedImage
@@ -50,32 +48,21 @@ class ScaledPng(val bufferedImage: BufferedImage,
      @return a ScaledPng holding the width and height for that image.
      */
     constructor(bufferedImage:BufferedImage) :
-            this(bufferedImage, bufferedImage.width * IMAGE_SCALE,
-                 bufferedImage.height * IMAGE_SCALE)
+            this(bufferedImage, XyDim(bufferedImage.width * IMAGE_SCALE,
+                                      bufferedImage.height * IMAGE_SCALE))
 
-    init {
-        if (width <= 0) {
-            throw IllegalArgumentException("Width must be > 0.")
-        }
-        if (height <= 0) {
-            throw IllegalArgumentException("Height must be > 0.")
-        }
-    }
-
-    override val xyDim: XyDim = XyDim(width, height)
-
-    override val ascent: Float = height
+    override val ascent: Float = xyDim.height
 
     override val descentAndLeading: Float = 0f
 
-    override val lineHeight: Float = height
+    override val lineHeight: Float = xyDim.height
 
     /** {@inheritDoc}  */
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         // use bottom of image for page-breaking calculation.
-        var y = outerTopLeft.y - height
-        y = lp.drawPng(outerTopLeft.x, y, this)
-        return XyOffset(outerTopLeft.x + width, y)
+//        var y = outerTopLeft.y - height
+        val y = lp.drawPng(outerTopLeft.x, outerTopLeft.y, this)
+        return XyOffset(outerTopLeft.x + xyDim.width, y)
     }
 
     override fun lineWrapper(): LineWrapper = preWrappedLineWrapper(this)
