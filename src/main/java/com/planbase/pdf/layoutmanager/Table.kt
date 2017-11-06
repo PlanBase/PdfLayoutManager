@@ -24,13 +24,17 @@ package com.planbase.pdf.layoutmanager
  *
  * It used to be that you'd build a table and that act would commit it to a logical page.
  */
-// TODO: This should probably freeze all the underlying stuff, but good enough for now.
-class Table(private val parts: List<TablePart>) : LineWrapped {
-    override val xyDim: XyDim = parts.fold(XyDim.ZERO,
-                                           { acc, part -> acc.plus(part.calcDimensions()) })
-    override val ascent: Float = xyDim.height
-    override val descentAndLeading: Float = 0f
-    override val lineHeight: Float = xyDim.height
+// TODO: This should probably freeze all the underlying stuff
+class Table(private val parts: List<TablePart>, override val boxStyle: BoxStyle) : LineWrappable {
+    override fun lineWrapper(): LineWrapper {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+//    val xyDim: XyDim = parts.fold(XyDim.ZERO,
+//                                           { acc, part -> acc.plus(part.xyDim()) })
+//    override val ascent: Float = xyDim.height
+//    val descentAndLeading: Float = 0f
+//    override val lineHeight: Float = xyDim.height
     //    @Override  public XyDim calcDimensions(float maxWidth) {
     //        XyDim maxDim = XyDim.ZERO;
     //        for (TablePart part : parts) {
@@ -46,7 +50,7 @@ class Table(private val parts: List<TablePart>) : LineWrapped {
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         var rightmostLowest = outerTopLeft
         for (part in parts) {
             //            System.out.println("About to render part: " + part);

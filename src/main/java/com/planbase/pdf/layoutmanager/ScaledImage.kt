@@ -23,21 +23,24 @@ package com.planbase.pdf.layoutmanager
 import java.awt.image.BufferedImage
 
 /**
- * Represents a Jpeg image and the document units it should be scaled to.  When a ScaledJpeg is added
+ * Represents a Jpeg image and the document units it should be scaled to.  When a ScaledImage is added
  * to a PdfLayoutMgr, its underlying bufferedImage is compared to the images already embedded in that
  * PDF file.  If an equivalent bufferedImage object is found, the underlying image is not added to
  * the document twice.  Only the additional position and scaling of that image is added.  This
  * significantly decreases the file size of the resulting PDF when images are reused within that
  * document.
  */
-class ScaledJpeg(val bufferedImage: BufferedImage,
-                 override val xyDim: XyDim) : LineWrapped, LineWrappable {
+class ScaledImage(val bufferedImage: BufferedImage,
+                  override val xyDim: XyDim) : LineWrapped, LineWrappable {
+
+    override val boxStyle = BoxStyle.NONE
+
     /**
      * Returns a new buffered image with width and height calculated from the source BufferedImage
      * assuming that it will print at 300 DPI.  There are 72 document units per inch, so the actual
      * formula is: bi.width / 300 * 72
      * @param bufferedImage the source BufferedImage
-     * @return a ScaledJpeg holding the width and height for that image.
+     * @return a ScaledImage holding the width and height for that image.
      */
     constructor(bufferedImage:BufferedImage) :
             this(bufferedImage, XyDim(bufferedImage.width * IMAGE_SCALE,
@@ -52,11 +55,11 @@ class ScaledJpeg(val bufferedImage: BufferedImage,
     /** {@inheritDoc}  */
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         // use bottom of image for page-breaking calculation.
-        val y = lp.drawJpeg(outerTopLeft.x, outerTopLeft.y, this)
+        val y = lp.drawImage(outerTopLeft.x, outerTopLeft.y, this)
         return XyOffset(outerTopLeft.x + xyDim.width, y)
     }
 
-    override fun lineWrapper(): LineWrapper = preWrappedLineWrapper(this)
+    override fun lineWrapper(): LineWrapper = LineWrapped.preWrappedLineWrapper(this)
 
     companion object {
         private val ASSUMED_IMAGE_DPI = 300f

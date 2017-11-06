@@ -102,14 +102,6 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     // must be an inner class (or this would have to be package scoped).
     private val jpegMap = HashMap<BufferedImage, PDImageXObject>()
 
-    // You can have many DrawPngs backed by only a few images - it is a flyweight, and this
-    // hash map keeps track of the few underlying images, even as intances of DrawPng
-    // represent all the places where these images are used.
-    // CRITICAL: This means that the the set of jpgs must be thrown out and created anew for each
-    // document!  Thus, a private final field on the PdfLayoutMgr instead of DrawPng, and DrawPng
-    // must be an inner class (or this would have to be package scoped).
-    private val pngMap = HashMap<BufferedImage, PDImageXObject>()
-
     private val pages:MutableList<SinglePage> = mutableListOf()
 
     // pages.size() counts the first page as 1, so 0 is the appropriate sentinel value
@@ -120,7 +112,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         LANDSCAPE
     }
 
-    internal fun ensureCached(sj: ScaledJpeg): PDImageXObject {
+    internal fun ensureCached(sj: ScaledImage): PDImageXObject {
         val bufferedImage = sj.bufferedImage
         var temp: PDImageXObject? = jpegMap[bufferedImage]
         if (temp == null) {
@@ -136,33 +128,16 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         return temp!!
     }
 
-    internal fun ensureCached(sj: ScaledPng): PDImageXObject {
-        val bufferedImage = sj.bufferedImage
-        var temp: PDImageXObject? = pngMap[bufferedImage]
-        if (temp == null) {
-            try {
-                temp = LosslessFactory.createFromImage(doc, bufferedImage)
-            } catch (ioe: IOException) {
-                // can there ever be an exception here?  Doesn't it get written later?
-                throw IllegalStateException("Caught exception creating a PDImageXObject from a bufferedImage", ioe)
-            }
-
-            pngMap.put(bufferedImage, temp)
-        }
-        return temp!!
-    }
-    //    private final PDRectangle pageSize;
-
     internal fun pages(): List<SinglePage> {
         return Collections.unmodifiableList(pages)
     }
 
-    /**
-     * Returns the correct page for the given value of y.  This lets the user use any Y value and
-     * we continue extending their canvas downward (negative) by adding extra pages.
-     * @param origY the un-adjusted y value.
-     * @return the proper page and adjusted y value for that page.
-     */
+/**
+ * Returns the correct page for the given value of y.  This lets the user use any Y value and
+ * we continue extending their canvas downward (negative) by adding extra pages.
+ * @param origY the un-adjusted y value.
+ * @return the proper page and adjusted y value for that page.
+ */
     internal fun appropriatePage(lp: PageGrouping, origY: Float, height: Float): PageGrouping.PageBufferAndY {
         var y = origY
         if (pages.size < 1) {

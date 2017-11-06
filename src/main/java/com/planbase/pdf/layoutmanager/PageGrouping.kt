@@ -79,6 +79,14 @@ import java.util.TreeSet
  *
  *
  * Put header/footer content wherever you want.  We move the body as a unit as needed.
+ *
+ * Constructor
+ * @param mgr the PdfLayoutMgr you are using.
+ * @param orientation page orientation for this logical page grouping.
+ * @param bodyOff the offset (in document units) from the lower-left hand corner of the page to
+ * the lower-left of the body area.
+ * @param bodyDim the dimensions of the body area.
+ * @return a new PageGrouping with the given settings.
  */
 class PageGrouping(private val mgr: PdfLayoutMgr,
                    val orientation: Orientation,
@@ -166,26 +174,14 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawJpeg(x: Float, y: Float, sj: ScaledJpeg): Float {
+    override fun drawImage(x: Float, y: Float, sj: ScaledImage): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
         val pby = mgr.appropriatePage(this, y, sj.xyDim.height)
         // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawJpeg(x, pby.y, sj)
-        return y + pby.adj
-    }
-
-    /** {@inheritDoc}  */
-    override fun drawPng(x: Float, y: Float, sj: ScaledPng): Float {
-        if (!valid) {
-            throw IllegalStateException("Logical page accessed after commit")
-        }
-        // Calculate what page image should start on
-        val pby = mgr.appropriatePage(this, y, sj.xyDim.height)
-        // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawPng(x, pby.y, sj)
+        pby.pb.drawImage(x, pby.y, sj)
 
         // The y value is the distance from the bottom of the first page to the bottom of the image.
         // We want to return the corrected version of the same distance.  On the first page, y is
@@ -338,57 +334,46 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * You can draw a cell without a table (for a heading, or paragraph of same-format text, or
      * whatever).
      */
-    fun drawCell(x: Float, y: Float, cell: Cell): XyOffset {
-        if (!valid) {
-            throw IllegalStateException("Logical page accessed after commit")
-        }
-        // Similar to TableBuilder and TableRowBuilder.calcDimensions().  Should be combined?
-        var maxDim = XyDim.ZERO
-        val wh = cell.calcDimensions(cell.width)
-        maxDim = XyDim(wh!!.width + maxDim.width, Math.max(maxDim.height, wh.height))
-        val maxHeight = maxDim.height
-
+    fun drawCell(x: Float, y: Float, cell: FixedCell): XyOffset {
         // render the row with that maxHeight.
-        cell.render(this, XyOffset(x, y), XyDim(cell.width, maxHeight))
-
-        return XyOffset(x + wh.width, y - wh.height)
+        return cell.render(this, XyOffset(x, y))
     }
 
-    /**
-     * Shows the given cells plus either a background or an outline as appropriate.
-     *
-     * @param initialX the left-most x-value.
-     * @param origY the starting y-value
-     * @param cells the Cells to display
-     * @return the final y-value
-     * @throws IOException if there is an error writing to the underlying stream.
-     */
-    @Throws(IOException::class)
-    fun putRow(initialX: Float, origY: Float, vararg cells: Cell): Float {
-        if (!valid) {
-            throw IllegalStateException("Logical page accessed after commit")
-        }
-
-        // Similar to TableBuilder and TableRowBuilder.calcDimensions().  Should be combined?
-        var maxDim = XyDim.ZERO
-        for (cell in cells) {
-            val wh = cell.calcDimensions(cell.width)
-            maxDim = XyDim(wh!!.width + maxDim.width,
-                           Math.max(maxDim.height, wh.height))
-        }
-        val maxHeight = maxDim.height
-
-        //        System.out.println("putRow: maxHeight=" + maxHeight);
-
-        // render the row with that maxHeight.
-        var x = initialX
-        for (cell in cells) {
-            cell.render(this, XyOffset(x, origY), XyDim(cell.width, maxHeight))
-            x += cell.width
-        }
-
-        return origY - maxHeight
-    }
+//    /**
+//     * Shows the given cells plus either a background or an outline as appropriate.
+//     *
+//     * @param initialX the left-most x-value.
+//     * @param origY the starting y-value
+//     * @param cells the Cells to display
+//     * @return the final y-value
+//     * @throws IOException if there is an error writing to the underlying stream.
+//     */
+//    @Throws(IOException::class)
+//    fun putRow(initialX: Float, origY: Float, vararg cells: Cell): Float {
+//        if (!valid) {
+//            throw IllegalStateException("Logical page accessed after commit")
+//        }
+//
+//        // Similar to TableBuilder and TableRowBuilder.calcDimensions().  Should be combined?
+//        var maxDim = XyDim.ZERO
+//        for (cell in cells) {
+//            val wh = cell.calcDimensions(cell.width)
+//            maxDim = XyDim(wh!!.width + maxDim.width,
+//                           Math.max(maxDim.height, wh.height))
+//        }
+//        val maxHeight = maxDim.height
+//
+//        //        System.out.println("putRow: maxHeight=" + maxHeight);
+//
+//        // render the row with that maxHeight.
+//        var x = initialX
+//        for (cell in cells) {
+//            cell.render(this, XyOffset(x, origY), XyDim(cell.width, maxHeight))
+//            x += cell.width
+//        }
+//
+//        return origY - maxHeight
+//    }
 
     //    /**
     //     Header and footer in this case means anything that doesn't have to appear within the body
@@ -435,27 +420,14 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                                         PdfItem.DEFAULT_Z_INDEX))
     }
 
+/**
+ * @param pb specific page item will be put on
+ * @param y the y-value on that page
+ * @param adj the height of the adjustment used to keep the line on one page.
+ */
     internal class PageBufferAndY(val pb: SinglePage, val y: Float, val adj: Float)
 
     companion object {
-
         private val DEFAULT_DOUBLE_MARGIN_DIM = XyDim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
-
-        /**
-         * The full factory.
-         * @param m the PdfLayoutMgr you are using.
-         * @param orientation page orientation for this logical page grouping.
-         * @param bodyOff the offset (in document units) from the lower-left hand corner of the page to
-         * the lower-left of the body area.
-         * @param bodyDim the dimensions of the body area.
-         * @return a new PageGrouping with the given settings.
-         */
-        @JvmOverloads internal fun of(m: PdfLayoutMgr, orientation: Orientation,
-                                      bodyOff: XyOffset = XyOffset(DEFAULT_MARGIN, DEFAULT_MARGIN), bodyDim: XyDim = if (orientation == PORTRAIT)
-                    m.pageDim.minus(DEFAULT_DOUBLE_MARGIN_DIM)
-                else
-                    m.pageDim.swapWh().minus(DEFAULT_DOUBLE_MARGIN_DIM)): PageGrouping {
-            return PageGrouping(m, orientation, bodyOff, bodyDim)
-        }
     }
 }

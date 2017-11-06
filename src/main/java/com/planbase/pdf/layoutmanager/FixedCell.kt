@@ -24,20 +24,25 @@ package com.planbase.pdf.layoutmanager
  TODO: This should be a private inner class of Cell, but it's easer to break it out and work on it in Kotlin.
  */
 class FixedCell(override val xyDim: XyDim,
-                override val ascent: Float,
-                override val descentAndLeading: Float,
-                override val lineHeight: Float,
-                val pcls: Cell.PreCalcLines,
-                val cellStyle: CellStyle) : LineWrapped {
+                val source: Cell,
+                private val pcls: List<LineWrapped>) : LineWrapped {
+
+    override val ascent: Float
+        get() = xyDim.height
+
+    override val descentAndLeading: Float = 0f
+
+    override val lineHeight: Float
+        get() = xyDim.height
 
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
-        val padding = cellStyle.padding
+        val padding = source.boxStyle.padding
         // XyDim xyDim = padding.addTo(pcrs.dim);
 
         // Draw background first (if necessary) so that everything else ends up on top of it.
-        if (cellStyle.bgColor != null) {
+        if (source.boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(outerTopLeft, xyDim, cellStyle.bgColor)
+            lp.fillRect(outerTopLeft, xyDim, source.boxStyle.bgColor)
             //            System.out.println("\tCell.render back from putRect");
         }
 
@@ -53,30 +58,30 @@ class FixedCell(override val xyDim: XyDim,
             //            System.out.println("\tCell.render innerTopLeft after padding=" + innerTopLeft);
             innerDimensions = padding.subtractFrom(xyDim)
         }
-        val wrappedBlockDim = pcls.totalDim
+//        val wrappedBlockDim = xyDim
 //        System.out.println("\tCell.render cellStyle.align()=" + cellStyle.align());
 //        System.out.println("\tCell.render xyDim=" + xyDim);
 //        System.out.println("\tCell.render padding=" + padding);
 //        System.out.println("\tCell.render innerDimensions=" + innerDimensions);
 //        System.out.println("\tCell.render wrappedBlockDim=" + wrappedBlockDim);
-        val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
+        val alignPad = source.align.calcPadding(innerDimensions, xyDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
         innerTopLeft = XyOffset(innerTopLeft.x + alignPad.left,
                                 innerTopLeft.y - alignPad.top)
 
         var outerLowerRight = innerTopLeft
         var y = innerTopLeft.y
-        for (line in pcls.textLines) {
-            val rowXOffset = cellStyle.align
-                    .leftOffset(wrappedBlockDim.width, line.width)
+        for (line in pcls) {
+            val rowXOffset = source.align
+                    .leftOffset(xyDim.width, line.xyDim.width)
             outerLowerRight = line.render(lp,
                                           XyOffset(rowXOffset + innerTopLeft.x, y))
-            y -= line.height()
+            y -= line.xyDim.height
             //            innerTopLeft = outerLowerRight.x(innerTopLeft.x);
         }
 
         // Draw border last to cover anything that touches it?
-        val border = cellStyle.borderStyle
+        val border = source.boxStyle.border
         if (border != null) {
             val origX = outerTopLeft.x
             val origY = outerTopLeft.y
@@ -94,7 +99,7 @@ class FixedCell(override val xyDim: XyDim,
             // page, then refactor backward from there until we enter this code with pre-corrected
             // outerLowerRight and can get rid of Math.min.
             //
-            // When we do that, we also want to check PageGrouping.drawJpeg() and .drawPng()
+            // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
             // to see if `return y + pby.adj;` still makes sense.
             val bottomY = Math.min(outerTopLeft.y - xyDim.height,
                                    outerLowerRight.y)

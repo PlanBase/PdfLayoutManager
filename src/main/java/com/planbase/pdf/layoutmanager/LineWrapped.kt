@@ -37,12 +37,33 @@ interface LineWrapped {
     /** Total vertical height this line, both above and below the baseline */
     val lineHeight: Float
 
-    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset
-}
+    /**
+     Sends the underlying object to PDFBox to be drawn.
 
-fun preWrappedLineWrapper(item: LineWrapped) =
-        object : LineWrapper {
-            internal var hasMore = true
+     @param lp RenderTarget is the SinglePage or PageGrouping to draw to.  This will contain the paper size,
+     orientation, and body area which are necessary in order to calculate page breaking
+     @param outerTopLeft is the offset where this item starts.
+     @return the XyOffset of the outer bottom-right of the rendered item which may include extra (vertical) spacing
+     required to nudge some items onto the next page so they don't end up in the margin or off the page.
+     */
+    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset
+
+    object ZeroLineWrapped:LineWrapped {
+        override val xyDim: XyDim = XyDim.ZERO
+
+        override val ascent: Float = 0f
+
+        override val descentAndLeading: Float = 0f
+
+        override val lineHeight: Float = 0f
+
+        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset = outerTopLeft
+    }
+
+    companion object {
+
+        fun preWrappedLineWrapper(item: LineWrapped) = object : LineWrapper {
+            private var hasMore = true
             override fun hasMore(): Boolean = hasMore
 
             override fun getSomething(maxWidth: Float): ConTerm {
@@ -58,3 +79,6 @@ fun preWrappedLineWrapper(item: LineWrapped) =
                         None
                     }
         }
+    }
+}
+

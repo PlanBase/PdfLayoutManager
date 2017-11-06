@@ -56,21 +56,14 @@ class SinglePage(val pageNum: Int,
     //            fillRect(xVal, yVal, w, h, c, PdfItem.DEFAULT_Z_INDEX);
     //        }
     //
-    //        public void drawJpeg(final float xVal, final float yVal, final BufferedImage bi,
+    //        public void drawImage(final float xVal, final float yVal, final BufferedImage bi,
     //                             final PdfLayoutMgr mgr, final float z) {
-    //            items.add(DrawJpeg.of(xVal, yVal, bi, mgr, lastOrd++, z));
+    //            items.add(DrawImage.of(xVal, yVal, bi, mgr, lastOrd++, z));
     //        }
 
     /** {@inheritDoc}  */
-    override fun drawJpeg(x: Float, y: Float, sj: ScaledJpeg): Float {
-        items.add(DrawJpeg(x + xOff, y, sj, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
-        // This does not account for a page break because this class represents a single page.
-        return sj.xyDim.height
-    }
-
-    /** {@inheritDoc}  */
-    override fun drawPng(x: Float, y: Float, sj: ScaledPng): Float {
-        items.add(DrawPng(x + xOff, y, sj, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+    override fun drawImage(x: Float, y: Float, sj: ScaledImage): Float {
+        items.add(DrawImage(x + xOff, y, sj, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
         // This does not account for a page break because this class represents a single page.
         return sj.xyDim.height
     }
@@ -149,33 +142,18 @@ class SinglePage(val pageNum: Int,
         }
     }
 
-    private class DrawPng(private val x: Float,
-                          private val y: Float,
-                          private val scaledPng: ScaledPng,
-                          mgr: PdfLayoutMgr,
-                          ord: Long, z: Float) : PdfItem(ord, z) {
-        private val png: PDImageXObject = mgr.ensureCached(scaledPng)
-
-        @Throws(IOException::class)
-        override fun commit(stream: PDPageContentStream) {
-            // stream.drawImage(png, x, y);
-            val (width, height) = scaledPng.xyDim
-            stream.drawImage(png, x, y, width, height)
-        }
-    }
-
-    private class DrawJpeg(val x: Float,
-                           val y: Float,
-                           val scaledJpeg: ScaledJpeg,
-                           mgr: PdfLayoutMgr,
-                           ord: Long, z: Float) : PdfItem(ord, z) {
-        private val jpeg: PDImageXObject = mgr.ensureCached(scaledJpeg)
+    private class DrawImage(val x: Float,
+                            val y: Float,
+                            val scaledImage: ScaledImage,
+                            mgr: PdfLayoutMgr,
+                            ord: Long, z: Float) : PdfItem(ord, z) {
+        private val img: PDImageXObject = mgr.ensureCached(scaledImage)
 
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             // stream.drawImage(jpeg, x, y);
-            val (width, height) = scaledJpeg.xyDim
-            stream.drawImage(jpeg, x, y, width, height)
+            val (width, height) = scaledImage.xyDim
+            stream.drawImage(img, x, y, width, height)
         }
     }
 }

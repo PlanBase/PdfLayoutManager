@@ -13,8 +13,8 @@
  // limitations under the License.
 
 import com.planbase.pdf.layoutmanager.*
-import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_LEFT
-import com.planbase.pdf.layoutmanager.CellStyle.Align.TOP_RIGHT
+import com.planbase.pdf.layoutmanager.Align.TOP_LEFT
+import com.planbase.pdf.layoutmanager.Align.TOP_RIGHT
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -76,16 +76,18 @@ fun testBodyMargins() {
 
     // This could be in a loop that prints out list items.
     var rcb:TableRowBuilder.RowCellBuilder = tpb.rowBuilder().cellBuilder()
-    rcb.cellStyle(BULLET_CELL_STYLE)
+    rcb.boxStyle(BULLET_CELL_STYLE)
             .add(BULLET_TEXT_STYLE, listOf(Utils.BULLET_CHAR))
+    rcb.align(TOP_RIGHT)
     rcb = rcb.buildCell().cellBuilder()
     rcb.add(BULLET_TEXT_STYLE, listOf("This is some text that has a bullet"))
     rcb.buildCell().buildRow()
 
     // Next iteration in the loop
     rcb = tpb.rowBuilder().cellBuilder()
-    rcb.cellStyle(BULLET_CELL_STYLE)
+    rcb.boxStyle(BULLET_CELL_STYLE)
             .add(BULLET_TEXT_STYLE, listOf("2."))
+    rcb.align(TOP_RIGHT)
     rcb = rcb.buildCell().cellBuilder()
     rcb.add(BULLET_TEXT_STYLE, listOf("text that has a number"))
     rcb.buildCell().buildRow()
@@ -94,13 +96,13 @@ fun testBodyMargins() {
     //        Table table = tpb.buildPart().buildTable();
 
     lp.drawCell(0f, PDRectangle.A6.height - 40f,
-                Cell(CellStyle(TOP_LEFT, Padding(2f), CMYK_LIGHT_GREEN,
-                               BorderStyle(CMYK_DARK_GRAY)), bodyWidth,
+                Cell(BoxStyle(Padding(2f), CMYK_LIGHT_GREEN,
+                               BorderStyle(CMYK_DARK_GRAY)), TOP_LEFT, bodyWidth,
                      listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                               "The long "),
-                         Text(TextStyle(PDType1Font.HELVETICA_BOLD, 12f, Utils.CMYK_BLACK),
+                            Text(TextStyle(PDType1Font.HELVETICA_BOLD, 12f, Utils.CMYK_BLACK),
                               "families"),
-                         Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                               " needed the national " +
                               "words and women said new. The new " +
                               "companies told the possible hands " +
@@ -112,8 +114,8 @@ fun testBodyMargins() {
                               "began the international rights and " +
                               "places got free. The able homes said " +
                               "the better work and cases went free."),
-                         ScaledPng(graphPic),
-                         Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                         ScaledImage(graphPic),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                               ("The hard eyes seemed the clear " +
                                "mothers and systems came economic. " +
                                "The high months showed the possible " +
@@ -126,8 +128,8 @@ fun testBodyMargins() {
                                "facts told easy. The long homes ran " +
                                "the good governments and cases " +
                                "lived social.")),
-                         ScaledPng(graphPic),
-                         Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                            ScaledImage(graphPic),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                               ("The social people ran the " +
                                "local cases and men left local. The " +
                                "easy areas saw the whole times and " +
@@ -145,8 +147,8 @@ fun testBodyMargins() {
                                "mothers turned able. The " +
                                "international men kept the real " +
                                "questions and nights made big.")),
-                         ScaledPng(graphPic),
-                         Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                            ScaledImage(graphPic),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                               ("The " +
                                "best points got the economic waters " +
                                "and problems gave great. The whole " +
@@ -167,7 +169,7 @@ fun testBodyMargins() {
         val CMYK_DARK_GRAY = PDColor(floatArrayOf(0f, 0f, 0f, 0.2f), PDDeviceCMYK.INSTANCE)
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
 
-        internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT, Padding(0f, 4f, 0f, 0f), null, null)
+        internal val BULLET_CELL_STYLE = BoxStyle(Padding(0f, 4f, 0f, 0f), null, null)
         internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK)
 
         // adj plNoun verb adj descriptiveNoun

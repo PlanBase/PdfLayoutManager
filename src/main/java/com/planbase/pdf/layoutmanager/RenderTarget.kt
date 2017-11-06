@@ -55,16 +55,7 @@ interface RenderTarget {
      * @param sj the jpeg image
      * @return the lowest y-value.
      */
-    fun drawJpeg(x: Float, y: Float, sj: ScaledJpeg): Float
-
-    /**
-     * Puts a png on this RenderTarget
-     * @param x left offset
-     * @param y bottom offset
-     * @param sj the png image
-     * @return the lowest y-value.
-     */
-    fun drawPng(x: Float, y: Float, sj: ScaledPng): Float
+    fun drawImage(x: Float, y: Float, sj: ScaledImage): Float
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn

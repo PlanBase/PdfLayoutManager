@@ -30,13 +30,14 @@ import java.util.Collections
  */
 class TableRowBuilder(private val tablePart: TablePart) {
     var textStyle: TextStyle? = tablePart.textStyle
-    val cellStyle: CellStyle? = tablePart.cellStyle
+    val boxStyle: BoxStyle = tablePart.boxStyle
+    var align: Align = tablePart.align
     private val cells: MutableList<Cell?> = ArrayList(tablePart.cellWidths.size)
     private var minRowHeight = tablePart.minRowHeight
     private var nextCellIdx = 0
 
-//    private TableRow(TablePart tp, float[] a, Cell[] b, CellStyle c, TextStyle d) {
-//        tablePart = tp; cellWidths = a; cells = b; cellStyle = c; textStyle = d;
+//    private TableRow(TablePart tp, float[] a, Cell[] b, BoxStyle c, TextStyle d) {
+//        tablePart = tp; cellWidths = a; cells = b; boxStyle = c; textStyle = d;
 //    }
 
     fun nextCellSize(): Float {
@@ -66,16 +67,16 @@ class TableRowBuilder(private val tablePart: TablePart) {
             throw IllegalStateException("Tried to add a text cell without setting a default text style")
         }
         for (s in ss) {
-            addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), listOf(Text(textStyle!!, s))), nextCellIdx)
+            addCellAt(Cell(boxStyle, align, nextCellSize(), listOf(Text(textStyle!!, s))), nextCellIdx)
             nextCellIdx++
         }
         return this
     }
 
     // TODO: This should be add LineWrappable Cells.
-    fun addJpegCells(vararg js: ScaledJpeg): TableRowBuilder {
+    fun addJpegCells(vararg js: ScaledImage): TableRowBuilder {
         for (j in js) {
-            addCellAt(Cell(cellStyle ?: CellStyle.DEFAULT, nextCellSize(), listOf(j)), nextCellIdx)
+            addCellAt(Cell(boxStyle, align, nextCellSize(), listOf(j)), nextCellIdx)
             nextCellIdx++
         }
         return this
@@ -83,7 +84,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     // Because cells are renderable, this would accept one which could result in duplicate cells
     // when Cell.buildCell() creates a cell and passes it in here.
-    //    public TableRowBuilder addCell(CellStyle.Align align, LineWrappable... things) {
+    //    public TableRowBuilder addCell(BoxStyle.Align align, LineWrappable... things) {
     //            cells.add(Cell.builder(this).add(things).build());
     //        return this;
     //    }
@@ -126,41 +127,35 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return tablePart.addRow(this)
     }
 
-    fun calcDimensions(): XyDim {
-        var maxDim = XyDim.ZERO
-        // Similar to PdfLayoutMgr.putRow().  Should be combined?
-        for (cell in cells) {
-            if (cell != null) {
-                val wh = cell.calcDimensions(cell.width)
-                maxDim = XyDim(wh!!.width + maxDim.width,
-                               Math.max(maxDim.height, wh.height))
-            }
-        }
-        return maxDim
-    }
+//    fun calcDimensions(): XyDim {
+//        var maxDim = XyDim.ZERO
+//        // Similar to PdfLayoutMgr.putRow().  Should be combined?
+//        for (cell in cells) {
+//            if (cell != null) {
+//                val wh = cell.calcDimensions(cell.width)
+//                maxDim = XyDim(wh!!.width + maxDim.width,
+//                               Math.max(maxDim.height, wh.height))
+//            }
+//        }
+//        return maxDim
+//    }
 
     fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         var maxDim = XyDim.ZERO.height(minRowHeight)
-        for (cell in cells) {
-            if (cell != null) {
-                val wh = cell.calcDimensions(cell.width)
-                maxDim = XyDim(maxDim.width + cell.width,
-                               Math.max(maxDim.height, wh!!.height))
-            }
+        val fixedCells = cells.map { c -> c?.fix() ?: LineWrapped.ZeroLineWrapped }
+        for (fixedCell in fixedCells) {
+            val wh = fixedCell.xyDim
+            maxDim = XyDim(maxDim.width + wh.width,
+                           Math.max(maxDim.height, wh.height))
         }
-        val maxHeight = maxDim.height
 
         var x = outerTopLeft.x
-        for (cell in cells) {
-            if (cell != null) {
-                //            System.out.println("\t\tAbout to render cell: " + cell);
-                // TODO: Cache the duplicate cell.calcDimensions call!!!
-                cell.render(lp, XyOffset(x, outerTopLeft.y),
-                            XyDim(cell.width, maxHeight))
-                x += cell.width
-            }
+        for (fixedCell in fixedCells) {
+            // TODO: Account for page breaks!
+            fixedCell.render(lp, XyOffset(x, outerTopLeft.y))
+            x += fixedCell.xyDim.width
         }
-        return XyOffset(x, outerTopLeft.y - maxHeight)
+        return XyOffset(x, outerTopLeft.y - maxDim.height)
     }
 
     override fun toString(): String {
@@ -172,7 +167,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
     inner class RowCellBuilder(private val tableRowBuilder: TableRowBuilder) : CellBuilder {
         /** {@inheritDoc}  */
         override val width: Float = tableRowBuilder.nextCellSize() // Both require this.
-        private var cellStyle: CellStyle? = tableRowBuilder.cellStyle // Both require this.
+        private var boxStyle: BoxStyle = tableRowBuilder.boxStyle // Both require this.
         private val rows = ArrayList<LineWrappable>()
         private var textStyle: TextStyle? = tableRowBuilder.textStyle
         private val colIdx: Int = tableRowBuilder.nextCellIdx()
@@ -182,19 +177,19 @@ class TableRowBuilder(private val tablePart: TablePart) {
         // public TableRowCellBuilder width(float w) { width = w; return this; }
 
         /** {@inheritDoc}  */
-        override fun cellStyle(cs: CellStyle): RowCellBuilder {
-            cellStyle = cs
+        override fun boxStyle(cs: BoxStyle): RowCellBuilder {
+            boxStyle = cs
             return this
         }
 
-        fun borderStyle(bs: BorderStyle): RowCellBuilder {
-            cellStyle = cellStyle!!.borderStyle(bs)
-            return this
-        }
+//        fun borderStyle(bs: BorderStyle): RowCellBuilder {
+//            boxStyle = boxStyle.borderStyle(bs)
+//            return this
+//        }
 
         /** {@inheritDoc}  */
-        override fun align(align: CellStyle.Align): RowCellBuilder {
-            cellStyle = cellStyle!!.align(align)
+        override fun align(a: Align): RowCellBuilder {
+            align = a
             return this
         }
 
@@ -237,7 +232,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         }
 
         fun buildCell(): TableRowBuilder {
-            val c = Cell(cellStyle ?: CellStyle.DEFAULT, width, rows)
+            val c = Cell(boxStyle, align, width, rows)
             return tableRowBuilder.addCellAt(c, colIdx)
         }
 

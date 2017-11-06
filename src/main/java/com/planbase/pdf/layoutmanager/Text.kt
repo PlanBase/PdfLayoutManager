@@ -23,18 +23,23 @@ package com.planbase.pdf.layoutmanager
 /**
  * Represents styled text kind of like a #Text node in HTML.
  */
-data class Text(val textStyle: TextStyle, private val initialText: String = "") : LineWrappable {
+data class Text(val textStyle: TextStyle,
+                private val initialText: String = "",
+                override val boxStyle: BoxStyle = BoxStyle.NONE) : LineWrappable {
     constructor(textStyle: TextStyle) : this(textStyle, "")
 
     // This removes all tabs, transforms all line-terminators into "\n", and removes all runs of spaces that
     // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
     val text = cleanStr(initialText)
 
+    // TODO: Can this be replaced with WrappedMultiLineWrapped?
     internal data class WrappedRow(val string: String,
                                    override val xyDim: XyDim,
-                                   val textStyle: TextStyle) : LineWrapped {
+                                   val textStyle: TextStyle,
+                                   val source: LineWrappable) : LineWrapped {
 
-        constructor(s: String, x: Float, ts: TextStyle): this(s, XyDim(x, ts.lineHeight()), ts)
+        constructor(s: String, x: Float, ts: TextStyle,
+                    src: LineWrappable): this(s, XyDim(x, ts.lineHeight()), ts, src)
 
         override val ascent: Float = textStyle.ascent()
 
@@ -56,10 +61,6 @@ data class Text(val textStyle: TextStyle, private val initialText: String = "") 
     fun avgCharsForWidth(width: Float): Int = (width * 1220 / textStyle.avgCharWidth).toInt()
 
     fun maxWidth(): Float = textStyle.stringWidthInDocUnits(text.trim())
-
-    internal data class Thing(val trimmedStr: String,
-                              val totalCharsConsumed: Int,
-                              val foundCr: Boolean)
 
     override fun toString(): String {
         return "Text(\"" +
@@ -206,12 +207,12 @@ data class Text(val textStyle: TextStyle, private val initialText: String = "") 
                 if (strWidth > maxWidth) {
                     throw IllegalStateException("strWidth=$strWidth > maxWidth=$maxWidth")
                 }
-                return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1, true)
+                return RowIdx(WrappedRow(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1, true)
             }
             // Need to test trailing whitespace.
 //            println("idx=" + idx + " substr=\"" + substr + "\"")
 
-            return RowIdx(WrappedRow(substr, strWidth, txt.textStyle), idx + startIdx + 1,
+            return RowIdx(WrappedRow(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1,
                           if (substr == text) { foundCr } else { false })
         }
 

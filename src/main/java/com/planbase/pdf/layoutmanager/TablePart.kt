@@ -21,7 +21,6 @@
 package com.planbase.pdf.layoutmanager
 
 import java.util.ArrayList
-import java.util.Collections
 
 /**
  * A set of styles to be the default for a table header or footer, or whatever other kind of group of table rows you
@@ -29,22 +28,23 @@ import java.util.Collections
  */
 class TablePart(private val tableBuilder: TableBuilder) {
     val cellWidths:List<Float> = tableBuilder.cellWidths.toList()
-    var cellStyle: CellStyle? = tableBuilder.cellStyle
+    var boxStyle: BoxStyle = tableBuilder.boxStyle
+    var align: Align = Align.TOP_LEFT
     var textStyle: TextStyle? = tableBuilder.textStyle
     var minRowHeight = 0f
     private val rows = ArrayList<TableRowBuilder>(1)
 
-    fun cellStyle(x: CellStyle): TablePart {
-        cellStyle = x
+    fun boxStyle(x: BoxStyle): TablePart {
+        boxStyle = x
         return this
     }
 
-    fun align(a: CellStyle.Align): TablePart {
-        cellStyle = cellStyle!!.align(a)
+    fun align(a: Align): TablePart {
+        align = a
         return this
     }
 
-    //    public TablePart cellStyle(CellStyle x) { return new Builder().cellStyle(cellStyle).build(); }
+    //    public TablePart boxStyle(BoxStyle x) { return new Builder().boxStyle(boxStyle).build(); }
 
     fun textStyle(x: TextStyle): TablePart {
         textStyle = x
@@ -69,15 +69,15 @@ class TablePart(private val tableBuilder: TableBuilder) {
         return tableBuilder.addPart(this)
     }
 
-    fun calcDimensions(): XyDim {
-        var maxDim = XyDim.ZERO
-        for (row in rows) {
-            val (width, height) = row.calcDimensions()
-            maxDim = XyDim(Math.max(width, maxDim.width),
-                           maxDim.height + height)
-        }
-        return maxDim
-    }
+//    fun calcDimensions(): XyDim {
+//        var maxDim = XyDim.ZERO
+//        for (row in rows) {
+//            val (width, height) = row.calcDimensions()
+//            maxDim = XyDim(Math.max(width, maxDim.width),
+//                           maxDim.height + height)
+//        }
+//        return maxDim
+//    }
 
     fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         var rightmostLowest = outerTopLeft
@@ -99,15 +99,15 @@ class TablePart(private val tableBuilder: TableBuilder) {
     //    public static class Builder {
     //        private final TableBuilder tableBuilder;
     //        private float[] cellWidths;
-    //        private CellStyle cellStyle;
+    //        private BoxStyle boxStyle;
     //        private TextStyle textStyle;
     //
     //        private Builder(TableBuilder t) { tableBuilder = t; }
     //
     //        public Builder cellWidths(float[] x) { cellWidths = x; return this; }
-    //        public Builder cellStyle(CellStyle x) { cellStyle = x; return this; }
+    //        public Builder boxStyle(BoxStyle x) { boxStyle = x; return this; }
     //        public Builder textStyle(TextStyle x) { textStyle = x; return this; }
     //
-    //        public TablePart build() { return new TablePart(tableBuilder, cellWidths, cellStyle, textStyle); }
+    //        public TablePart build() { return new TablePart(tableBuilder, cellWidths, boxStyle, textStyle); }
     //    } // end of class Builder
 }

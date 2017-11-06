@@ -27,11 +27,11 @@ package com.planbase.pdf.layoutmanager
 interface CellBuilder {
     val width:Float
     
-    /** Creates a new CellBuilder with the given CellStyle  */
-    fun cellStyle(cs: CellStyle): CellBuilder
+    /** Creates a new CellBuilder with the given BoxStyle  */
+    fun boxStyle(cs: BoxStyle): CellBuilder
 
     /** Creates a new CellBuilder with the given alignment  */
-    fun align(align: CellStyle.Align): CellBuilder
+    fun align(a: Align): CellBuilder
 
     /** Creates a new CellBuilder with the given TextStyle  */
     fun textStyle(x: TextStyle): CellBuilder

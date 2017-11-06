@@ -59,4 +59,16 @@ interface LineWrapper {
      * caller will probably create a new line and call getSomething(maxWidth) to start that line.
      */
     fun getIfFits(remainingWidth: Float): ConTermNone
+
+    companion object NO_LINE_WRAPPER : LineWrapper {
+        override fun hasMore() = false
+
+        override fun getSomething(maxWidth: Float):ConTerm {
+            throw UnsupportedOperationException("Can't call getSomething on a NullLineWrapper")
+        }
+
+        override fun getIfFits(remainingWidth: Float):ConTermNone {
+            throw UnsupportedOperationException("Can't call getIfFits on a NullLineWrapper")
+        }
+    }
 }

@@ -20,36 +20,48 @@
 
 package com.planbase.pdf.layoutmanager
 
-/** A mutable data structure to hold a line. */
-class TextLine {
+// TODO: Rename to WrappedLine
+/**
+A mutable data structure to hold a wrapped line.
+ @param source
+ */
+class WrappedMultiLineWrapped : LineWrapped {
     var width: Float = 0f
-    var maxAscent: Float = 0f
-    var maxDescentAndLeading: Float = 0f
+
+    override val xyDim:XyDim
+            get() = XyDim(width, lineHeight)
+
+    override var ascent: Float = 0f
+
+    override var descentAndLeading: Float = 0f
+
+    override val lineHeight: Float
+            get() = ascent + descentAndLeading
+
     val items: MutableList<LineWrapped> = mutableListOf()
 
     fun isEmpty() = items.isEmpty()
-    fun append(fi : LineWrapped): TextLine {
-        maxAscent = maxOf(maxAscent, fi.ascent)
-        maxDescentAndLeading = maxOf(maxDescentAndLeading, fi.descentAndLeading)
+    fun append(fi : LineWrapped): WrappedMultiLineWrapped {
+        ascent = maxOf(ascent, fi.ascent)
+        descentAndLeading = maxOf(descentAndLeading, fi.descentAndLeading)
         width += fi.xyDim.width
         items.add(fi)
         return this
     }
-    fun height(): Float = maxAscent + maxDescentAndLeading
-//    fun xyDim(): XyDim = XyDim.of(width, height())
-    fun render(lp:RenderTarget, outerTopLeft:XyOffset):XyOffset {
+
+    override fun render(lp:RenderTarget, outerTopLeft:XyOffset):XyOffset {
         var x:Float = outerTopLeft.x
         val y = outerTopLeft.y
         for (item: LineWrapped in items) {
             item.render(lp, XyOffset(x, y - item.ascent))
             x += item.xyDim.width
         }
-        return XyOffset(x, height())
+        return XyOffset(x, lineHeight)
     }
 
     override fun toString(): String {
-        return "TextLine(width=$width maxAscent=$maxAscent maxDescentAndLeading=$maxDescentAndLeading" +
-               " height=${height()} items=\n" +
+        return "WrappedMultiLineWrapped(width=$width ascent=$ascent descentAndLeading=$descentAndLeading" +
+               " height=$lineHeight items=\n" +
                items.fold(StringBuilder("["),
                           {acc, item ->
                               if (acc.length > 1) acc.append(",\n ")
@@ -60,7 +72,7 @@ class TextLine {
 }
 
 /**
- Given a maximum width, turns a list of renderables into a list of fixed-item textLines.
+ Given a maximum width, turns a list of renderables into a list of fixed-item WrappedMultiLineWrappeds.
  This allows each line to contain multiple Renderables.  They are baseline-aligned.
  If any renderables are not text, their bottom is aligned to the text baseline.
  
@@ -78,23 +90,25 @@ For each renderable
         start a new line.
  */
 
-private fun addLineToTextLinesCheckBlank(textLines: MutableList<TextLine>, line: TextLine) {
+private fun addLineToWrappedMultiLineWrappedsCheckBlank(WrappedMultiLineWrappeds: MutableList<WrappedMultiLineWrapped>, line: WrappedMultiLineWrapped) {
     // If this item is a blank line, take the height from the previous item (if there is one).
-    if (line.isEmpty() && textLines.isNotEmpty())  {
-        val lastRealItem:LineWrapped = textLines.last().items.last()
-        line.maxAscent = lastRealItem.ascent
-        line.maxDescentAndLeading = lastRealItem.descentAndLeading
+    if (line.isEmpty() && WrappedMultiLineWrappeds.isNotEmpty())  {
+        val lastRealItem:LineWrapped = WrappedMultiLineWrappeds.last().items.last()
+        line.ascent = lastRealItem.ascent
+        line.descentAndLeading = lastRealItem.descentAndLeading
     }
     // Now add the line to the list.
-    textLines.add(line)
+    WrappedMultiLineWrappeds.add(line)
 }
 
-fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<TextLine> {
+fun renderablesToWrappedMultiLineWrappeds(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<WrappedMultiLineWrapped> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }
-    val textLines: MutableList<TextLine> = mutableListOf()
-    var line = TextLine()
+
+    // Really should call this "List of wrapped, wrapped line lists"
+    val listOfWrappedWrappedLineLists: MutableList<WrappedMultiLineWrapped> = mutableListOf()
+    var line = WrappedMultiLineWrapped() // Is this right, putting no source here?
 
     for (item in itemsInBlock) {
         val rtor: LineWrapper = item.lineWrapper()
@@ -106,8 +120,8 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
                 if (something is Terminal) {
 //                    println("=============== TERMINAL")
 //                    println("something:" + something)
-                    addLineToTextLinesCheckBlank(textLines, line)
-                    line = TextLine()
+                    addLineToWrappedMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
+                    line = WrappedMultiLineWrapped()
                 }
             } else {
                 val ctn: ConTermNone = rtor.getIfFits(maxWidth - line.width)
@@ -120,18 +134,18 @@ fun renderablesToTextLines(itemsInBlock: List<LineWrappable>, maxWidth: Float) :
 //                        println("=============== TERMINAL 222222222")
 //                        println("ctn:" + ctn)
                         line.append(ctn.item)
-                        line = TextLine()
+                        line = WrappedMultiLineWrapped()
                     }
                     None -> {
-//                        textLines.add(line)
-                        addLineToTextLinesCheckBlank(textLines, line)
-                        line = TextLine()
+//                        WrappedMultiLineWrappeds.add(line)
+                        addLineToWrappedMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
+                        line = WrappedMultiLineWrapped()
                     }}
             }
         }
     }
     // Don't forget to add last item.
-    addLineToTextLinesCheckBlank(textLines, line)
+    addLineToWrappedMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
 
-    return textLines.toList()
+    return listOfWrappedWrappedLineLists.toList()
 }

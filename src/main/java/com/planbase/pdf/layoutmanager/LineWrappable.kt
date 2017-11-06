@@ -26,5 +26,12 @@ package com.planbase.pdf.layoutmanager
  draw yourself as best you can."  Classes implementing LineWrapper are generally mutable (builders).
  */
 interface LineWrappable {
+    val boxStyle:BoxStyle
+
     fun lineWrapper(): LineWrapper
+
+    companion object ZeroLineWrappable:LineWrappable {
+        override val boxStyle = BoxStyle.NONE
+        override fun lineWrapper() = LineWrapper.NO_LINE_WRAPPER
+    }
 }
