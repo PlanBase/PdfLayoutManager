@@ -22,12 +22,8 @@ package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
-import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
-import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
-import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper.NO_LINE_WRAPPER
-import com.planbase.pdf.layoutmanager.lineWrapping.None
+import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapperWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.WrappedMultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToWrappedMultiLineWrappeds
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -92,7 +88,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //        return pcl!!
 //    }
 
-    fun fix() : FixedCell {
+    fun fix() : WrappedCell {
         val fixedLines: List<WrappedMultiLineWrapped> = renderablesToWrappedMultiLineWrappeds(contents, width)
         var maxWidth = 0f
         var height = 0f
@@ -100,55 +96,12 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
             height += line.xyDim.height
             maxWidth = maxOf(line.xyDim.width, maxWidth)
         }
-        return FixedCell(XyDim(maxWidth, height), this, fixedLines)
+        return WrappedCell(XyDim(maxWidth, height), this, fixedLines)
     }
 
     override fun lineWrapper() = MultiLineWrapperWrapper(contents.iterator())
 
-    // This is a generic stackable line wrapper (a line wrapper that wraps an Iterable of line wrappers)
-    // Not sure yet that it's really needed.
-    // The name pronounced, "Multi- LineWrapper Wrapper"  LineWrapper is something that does line breaking.
-    // The last word, "Wrapper" means "container"
-    // TODO: Move to its own file
-    class MultiLineWrapperWrapper(private val items: Iterator<LineWrappable>) : LineWrapper {
-        private var internLineWrapper: LineWrapper =
-                if (items.hasNext()) {
-                    items.next().lineWrapper()
-                } else {
-                    NO_LINE_WRAPPER
-                }
-
-        private fun ensureValidInternLineWrapper() {
-            if ( !internLineWrapper.hasMore() &&
-                 (items.hasNext()) ) {
-                internLineWrapper = items.next().lineWrapper()
-            }
-        }
-
-        override fun hasMore():Boolean {
-            ensureValidInternLineWrapper()
-            return (items.hasNext()) ||
-                   internLineWrapper.hasMore()
-        }
-
-        override fun getSomething(maxWidth: Float): ConTerm {
-            if (maxWidth < 0) {
-                throw IllegalArgumentException("Illegal negative width: " + maxWidth)
-            }
-            ensureValidInternLineWrapper()
-            return internLineWrapper.getSomething(maxWidth)
-        }
-
-        override fun getIfFits(remainingWidth: Float): ConTermNone {
-            if (remainingWidth < 0) {
-                return None
-            }
-            ensureValidInternLineWrapper()
-            return internLineWrapper.getIfFits(remainingWidth)
-        }
-    }
-
-//    fun calcDimensions(maxWidth: Float): XyDim {
+    //    fun calcDimensions(maxWidth: Float): XyDim {
 //        // I think zero or negative width cells might be OK to ignore.  I'd like to try to make
 //        // Text.calcDimensionsForReal() handle this situation before throwing an error here.
 //        //        if (maxWidth < 0) {

@@ -20,14 +20,13 @@
 
 package com.planbase.pdf.layoutmanager.pages
 
-import com.planbase.pdf.layoutmanager.contents.FixedCell
+import com.planbase.pdf.layoutmanager.contents.WrappedCell
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.PdfItem
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -343,7 +342,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * You can draw a cell without a table (for a heading, or paragraph of same-format text, or
      * whatever).
      */
-    fun drawCell(x: Float, y: Float, cell: FixedCell): XyOffset {
+    fun drawCell(x: Float, y: Float, cell: WrappedCell): XyOffset {
         // render the row with that maxHeight.
         return cell.render(this, XyOffset(x, y))
     }

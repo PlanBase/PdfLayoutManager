@@ -25,12 +25,10 @@ import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 
-/**
- TODO: This should be a private inner class of Cell
- */
-class FixedCell(override val xyDim: XyDim,
-                val source: Cell,
-                private val pcls: List<LineWrapped>) : LineWrapped {
+// TODO: This should be a private inner class of Cell
+class WrappedCell(override val xyDim: XyDim,
+                  val source: Cell,
+                  private val pcls: List<LineWrapped>) : LineWrapped {
 
     override val ascent: Float
         get() = xyDim.height
