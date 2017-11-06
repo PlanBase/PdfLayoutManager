@@ -1,8 +1,16 @@
 package com.planbase.pdf.layoutmanager
 
-import com.planbase.pdf.layoutmanager.Text.Companion.cleanStr
-import com.planbase.pdf.layoutmanager.Text.RowIdx
-import com.planbase.pdf.layoutmanager.Text.WrappedRow
+import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
+import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
+import com.planbase.pdf.layoutmanager.contents.Text.WrappedRow
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.Text
+import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
+import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
+import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
+import com.planbase.pdf.layoutmanager.lineWrapping.None
+import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
+import com.planbase.pdf.layoutmanager.utils.Utils
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.junit.Test
 import kotlin.test.assertEquals

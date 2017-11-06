@@ -18,22 +18,29 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
-
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor
+package com.planbase.pdf.layoutmanager.lineWrapping
 
 /**
- Represents the color and width of a line (line meaning a long narrow mark or band).
- DashStyle (and maybe capStyle or joinStyle?) could be added later.  Immutable.
+ Represents a part of a line (of text).
+ Terminal means this item ends with a line break.
+ Continuing means it does not.
+ None means that nothing is left or nothing will fit in the given remaining width on this line.
  */
-data class LineStyle(val color: PDColor, val width: Float) {
-    constructor(color: PDColor) : this(color, DEFAULT_WIDTH)
+sealed class ConTermNone
+data class Continuing(override val item: LineWrapped): ConTermNone(), ConTerm {
+    override fun toString() = "Cont($item)"
+}
+data class Terminal(override val item: LineWrapped): ConTermNone(), ConTerm {
+    override fun toString() = "Term($item)"
+}
+object None: ConTermNone() {
+    override fun toString() = "None"
+}
 
-    init {
-        if (width <= 0) { throw IllegalArgumentException("TextLine Style must have a positive width.") }
-    }
-
-    companion object {
-        val DEFAULT_WIDTH = 1f
-    }
+/**
+Represents a continuing or terminal LineWrapped where Continuing means there could be more on this
+line (no hard line break) and Terminal means a hard-coded line-break was encountered.
+ */
+interface ConTerm {
+    val item: LineWrapped
 }

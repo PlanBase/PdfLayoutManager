@@ -21,13 +21,16 @@
 package com.planbase.pdf.layoutmanager
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.layoutmanager.contents.ScaledImage
+import com.planbase.pdf.layoutmanager.pages.PageGrouping
+import com.planbase.pdf.layoutmanager.pages.SinglePage
+import com.planbase.pdf.layoutmanager.utils.XyDim
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.util.Matrix
 import java.awt.image.BufferedImage
@@ -76,7 +79,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                     * good idea to use this directly.  Use the corrected values through a [PageGrouping]
                     * instead.
                     */
-                   val pageDim:XyDim,
+                   val pageDim: XyDim,
                    /** Takes a page number and returns an x-offset for that page. */
                    var pageReactor:((Int, SinglePage) -> Float)? = null) {
     private val doc = PDDocument()

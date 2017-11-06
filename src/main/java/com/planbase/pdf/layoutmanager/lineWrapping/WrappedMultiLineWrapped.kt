@@ -18,7 +18,11 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.lineWrapping
+
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 
 // TODO: Rename to WrappedLine
 /**
@@ -28,7 +32,7 @@ A mutable data structure to hold a wrapped line.
 class WrappedMultiLineWrapped : LineWrapped {
     var width: Float = 0f
 
-    override val xyDim:XyDim
+    override val xyDim: XyDim
             get() = XyDim(width, lineHeight)
 
     override var ascent: Float = 0f
@@ -49,7 +53,7 @@ class WrappedMultiLineWrapped : LineWrapped {
         return this
     }
 
-    override fun render(lp:RenderTarget, outerTopLeft:XyOffset):XyOffset {
+    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         var x:Float = outerTopLeft.x
         val y = outerTopLeft.y
         for (item: LineWrapped in items) {
@@ -93,7 +97,7 @@ For each renderable
 private fun addLineToWrappedMultiLineWrappedsCheckBlank(WrappedMultiLineWrappeds: MutableList<WrappedMultiLineWrapped>, line: WrappedMultiLineWrapped) {
     // If this item is a blank line, take the height from the previous item (if there is one).
     if (line.isEmpty() && WrappedMultiLineWrappeds.isNotEmpty())  {
-        val lastRealItem:LineWrapped = WrappedMultiLineWrappeds.last().items.last()
+        val lastRealItem: LineWrapped = WrappedMultiLineWrappeds.last().items.last()
         line.ascent = lastRealItem.ascent
         line.descentAndLeading = lastRealItem.descentAndLeading
     }

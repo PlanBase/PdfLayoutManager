@@ -18,7 +18,12 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
+
+import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 
 /**
  * Something that can be built into a table cell, OR just something rendered within a box model

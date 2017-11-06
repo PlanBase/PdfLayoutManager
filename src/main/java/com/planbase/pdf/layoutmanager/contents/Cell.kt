@@ -18,9 +18,20 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
 
-import com.planbase.pdf.layoutmanager.LineWrapper.NO_LINE_WRAPPER
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper.NO_LINE_WRAPPER
+import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
+import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
+import com.planbase.pdf.layoutmanager.lineWrapping.None
+import com.planbase.pdf.layoutmanager.lineWrapping.WrappedMultiLineWrapped
+import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToWrappedMultiLineWrappeds
+import com.planbase.pdf.layoutmanager.utils.XyDim
 
 /**
  A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated
@@ -34,8 +45,8 @@ data class Cell(override val boxStyle: BoxStyle = BoxStyle.NONE, // contents can
     constructor(bs: BoxStyle = BoxStyle.NONE,
                 al: Align = Align.DEFAULT,
                 w: Float,
-                textStyle:TextStyle,
-                text:List<String>) : this(bs, al, w, text.map{s -> Text(textStyle, s)}.toList())
+                textStyle: TextStyle,
+                text:List<String>) : this(bs, al, w, text.map{s -> Text(textStyle, s) }.toList())
 //    private constructor(b:Builder) : this(b.cellStyle ?: CellStyle.DEFAULT, b.width, b.rows)
 
     // Caches XyDims for all content textLines, indexed by desired width (we only have to lay-out again
@@ -52,7 +63,7 @@ data class Cell(override val boxStyle: BoxStyle = BoxStyle.NONE, // contents can
         }
     }
 
-    fun addAll(lrs:List<LineWrappable>):Cell {
+    fun addAll(lrs:List<LineWrappable>): Cell {
         val tempItems = contents.toMutableList()
         tempItems.addAll(lrs)
         contents = tempItems.toList()
@@ -84,7 +95,7 @@ data class Cell(override val boxStyle: BoxStyle = BoxStyle.NONE, // contents can
 //        return pcl!!
 //    }
 
-    fun fix() :FixedCell {
+    fun fix() : FixedCell {
         val fixedLines: List<WrappedMultiLineWrapped> = renderablesToWrappedMultiLineWrappeds(contents, width)
         var maxWidth = 0f
         var height = 0f
@@ -102,8 +113,8 @@ data class Cell(override val boxStyle: BoxStyle = BoxStyle.NONE, // contents can
     // The name pronounced, "Multi- LineWrapper Wrapper"  LineWrapper is something that does line breaking.
     // The last word, "Wrapper" means "container"
     // TODO: Move to its own file
-    class MultiLineWrapperWrapper(private val items: Iterator<LineWrappable>) :LineWrapper {
-        private var internLineWrapper:LineWrapper =
+    class MultiLineWrapperWrapper(private val items: Iterator<LineWrappable>) : LineWrapper {
+        private var internLineWrapper: LineWrapper =
                 if (items.hasNext()) {
                     items.next().lineWrapper()
                 } else {

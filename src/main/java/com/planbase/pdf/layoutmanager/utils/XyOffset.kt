@@ -18,7 +18,7 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.utils
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 
@@ -52,7 +52,7 @@ data class XyOffset(val x: Float, val y: Float) {
                 that
             } else {
                 XyOffset(if (this.x > that.x) this.x else that.x,
-                         if (this.y < that.y) this.y else that.y)
+                                                              if (this.y < that.y) this.y else that.y)
             }
 
     /** Compares dimensions  */

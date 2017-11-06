@@ -1,5 +1,10 @@
 package com.planbase.pdf.layoutmanager
 
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.Text
+import com.planbase.pdf.layoutmanager.lineWrapping.WrappedMultiLineWrapped
+import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToWrappedMultiLineWrappeds
+import com.planbase.pdf.layoutmanager.utils.Utils
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -29,7 +34,7 @@ class WrappedMultiLineWrappedKtTest {
 
 //    @Ignore
 
-    fun verifyLine(line:WrappedMultiLineWrapped, lineHeight:Float, maxWidth:Float, text:String) {
+    fun verifyLine(line: WrappedMultiLineWrapped, lineHeight:Float, maxWidth:Float, text:String) {
 //        println("line: " + line)
         assertEquals(lineHeight, line.xyDim.height, floatCloseEnough)
         assertTrue(line.width < maxWidth)

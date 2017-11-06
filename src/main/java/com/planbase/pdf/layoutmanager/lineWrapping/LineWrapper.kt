@@ -18,7 +18,7 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.lineWrapping
 
 /** LineWrappable Iterator  */
 interface LineWrapper {
@@ -63,11 +63,11 @@ interface LineWrapper {
     companion object NO_LINE_WRAPPER : LineWrapper {
         override fun hasMore() = false
 
-        override fun getSomething(maxWidth: Float):ConTerm {
+        override fun getSomething(maxWidth: Float): ConTerm {
             throw UnsupportedOperationException("Can't call getSomething on a NullLineWrapper")
         }
 
-        override fun getIfFits(remainingWidth: Float):ConTermNone {
+        override fun getIfFits(remainingWidth: Float): ConTermNone {
             throw UnsupportedOperationException("Can't call getIfFits on a NullLineWrapper")
         }
     }

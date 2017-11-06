@@ -18,8 +18,13 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
 
+import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 import java.util.ArrayList
 
 /**
@@ -85,7 +90,7 @@ class TablePart(private val tableBuilder: TableBuilder) {
             //            System.out.println("\tAbout to render row: " + row);
             val (x, y) = row.render(lp, XyOffset(outerTopLeft.x, rightmostLowest.y))
             rightmostLowest = XyOffset(Math.max(x, rightmostLowest.x),
-                                       Math.min(y, rightmostLowest.y))
+                                                                            Math.min(y, rightmostLowest.y))
         }
         return rightmostLowest
     }

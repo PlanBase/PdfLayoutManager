@@ -1,17 +1,19 @@
 package com.planbase.pdf.layoutmanager
 
+import com.planbase.pdf.layoutmanager.utils.XyDim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.junit.Test
 
 import org.junit.Assert.*
 import org.organicdesign.testUtils.EqualsContract.equalsDistinctHashCode
+import java.lang.Float
 
 class XyDimTest {
     @Test fun testBasics() {
-        val xyd1 = XyDim(java.lang.Float.MAX_VALUE, java.lang.Float.MIN_VALUE)
+        val xyd1 = XyDim(Float.MAX_VALUE, Float.MIN_VALUE)
         assertEquals(java.lang.Float.MAX_VALUE.toDouble(), xyd1.width.toDouble(), 0.00000001)
         assertEquals(java.lang.Float.MIN_VALUE.toDouble(), xyd1.height.toDouble(), 0.00000001)
-        val xyd2 = XyDim(PDRectangle(java.lang.Float.MAX_VALUE, java.lang.Float.MIN_VALUE))
+        val xyd2 = XyDim(PDRectangle(Float.MAX_VALUE, Float.MIN_VALUE))
         assertEquals(java.lang.Float.MAX_VALUE.toDouble(), xyd2.width.toDouble(), 0.00000001)
         assertEquals(java.lang.Float.MIN_VALUE.toDouble(), xyd2.height.toDouble(), 0.00000001)
         val xyd3 = XyDim.ZERO.width(java.lang.Float.MAX_VALUE).height(java.lang.Float.MIN_VALUE)
@@ -34,8 +36,12 @@ class XyDimTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun testEx1() { XyDim(3.5f, -1f) }
+    fun testEx1() {
+        XyDim(3.5f, -1f)
+    }
 
     @Test(expected = IllegalArgumentException::class)
-    fun testEx2() { XyDim(-3.5f, 1f) }
+    fun testEx2() {
+        XyDim(-3.5f, 1f)
+    }
 }

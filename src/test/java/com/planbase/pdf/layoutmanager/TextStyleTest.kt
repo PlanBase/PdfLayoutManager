@@ -1,5 +1,7 @@
 package com.planbase.pdf.layoutmanager
 
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.utils.Utils
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.junit.Test
 

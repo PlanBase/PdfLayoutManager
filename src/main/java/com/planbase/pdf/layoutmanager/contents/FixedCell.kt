@@ -18,7 +18,12 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
+
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 
 /**
  TODO: This should be a private inner class of Cell, but it's easer to break it out and work on it in Kotlin.
@@ -67,7 +72,7 @@ class FixedCell(override val xyDim: XyDim,
         val alignPad = source.align.calcPadding(innerDimensions, xyDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
         innerTopLeft = XyOffset(innerTopLeft.x + alignPad.left,
-                                innerTopLeft.y - alignPad.top)
+                                                                     innerTopLeft.y - alignPad.top)
 
         var outerLowerRight = innerTopLeft
         var y = innerTopLeft.y

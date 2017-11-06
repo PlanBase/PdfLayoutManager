@@ -18,8 +18,16 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
 
+import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 import java.util.ArrayList
 import java.util.Collections
 
@@ -146,7 +154,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         for (fixedCell in fixedCells) {
             val wh = fixedCell.xyDim
             maxDim = XyDim(maxDim.width + wh.width,
-                           Math.max(maxDim.height, wh.height))
+                                                                Math.max(maxDim.height, wh.height))
         }
 
         var x = outerTopLeft.x

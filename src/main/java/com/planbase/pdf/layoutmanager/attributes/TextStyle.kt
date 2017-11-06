@@ -18,9 +18,9 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.Utils.Companion.colorToString
+import com.planbase.pdf.layoutmanager.utils.Utils.Companion.colorToString
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 
@@ -58,13 +58,13 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
      * of 2 will result of a leading equal to twice the descent etc...
      */
     constructor(f: PDFont, sz: Float, tc: PDColor, leadingFactor: Float) :
-            this(f, sz, tc , AscDescLead.fromLeadingFactor(f, sz, leadingFactor),
-                 Companion.avgCharWidth(f, sz))
+            this(f, sz, tc, AscDescLead.fromLeadingFactor(f, sz, leadingFactor),
+                 avgCharWidth(f, sz))
 
     /** Creates a TextStyle with the given font, size, color, and a leadingFactor of 0.5.  */
     constructor(f: PDFont, sz: Float, tc: PDColor) :
             this(f, sz, tc, AscDescLead.fromLeadingFactor(f, sz, 0.5f),
-                 Companion.avgCharWidth(f, sz))
+                 avgCharWidth(f, sz))
 
     private val factor = factorFromFontSize(fontSize)
 

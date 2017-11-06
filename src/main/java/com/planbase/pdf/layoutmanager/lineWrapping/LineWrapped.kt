@@ -18,7 +18,11 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.lineWrapping
+
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 
 /**
  Represents a fixed-size item.  Classes implementing this interface should be immutable.
@@ -48,7 +52,7 @@ interface LineWrapped {
      */
     fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset
 
-    object ZeroLineWrapped:LineWrapped {
+    object ZeroLineWrapped: LineWrapped {
         override val xyDim: XyDim = XyDim.ZERO
 
         override val ascent: Float = 0f

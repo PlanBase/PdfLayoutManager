@@ -18,8 +18,16 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
 
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 import java.awt.image.BufferedImage
 
 /**

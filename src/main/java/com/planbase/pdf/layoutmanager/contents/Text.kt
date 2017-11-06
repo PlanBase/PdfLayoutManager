@@ -18,7 +18,21 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
+
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
+import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
+import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
+import com.planbase.pdf.layoutmanager.lineWrapping.None
+import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 
 /**
  * Represents styled text kind of like a #Text node in HTML.
@@ -50,7 +64,7 @@ data class Text(val textStyle: TextStyle,
         override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
             lp.drawStyledText(outerTopLeft.x, outerTopLeft.y, string, textStyle)
             return XyOffset(outerTopLeft.x + xyDim.width,
-                            outerTopLeft.y - xyDim.height - textStyle.leading())
+                                                                 outerTopLeft.y - xyDim.height - textStyle.leading())
         }
 
         override fun toString() = "WrappedRow(\"$string\" $xyDim $textStyle)"
@@ -200,7 +214,7 @@ data class Text(val textStyle: TextStyle,
             }
 
             idx++
-            val eolIdx = substr.indexOf(char=CR)
+            val eolIdx = substr.indexOf(char= CR)
             if (eolIdx > -1) {
                 substr = substr.substring(0, eolIdx)
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
@@ -213,7 +227,11 @@ data class Text(val textStyle: TextStyle,
 //            println("idx=" + idx + " substr=\"" + substr + "\"")
 
             return RowIdx(WrappedRow(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1,
-                          if (substr == text) { foundCr } else { false })
+                                                                       if (substr == text) {
+                                                                           foundCr
+                                                                       } else {
+                                                                           false
+                                                                       })
         }
 
         // From: https://docs.google.com/document/d/1vpbFYqfW7XmJplSwwLLo7zSPOztayO7G4Gw5_EHfpfI/edit#

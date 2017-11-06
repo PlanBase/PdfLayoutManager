@@ -1,6 +1,5 @@
 package com.planbase.pdf.layoutmanager
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceGray
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -11,6 +10,9 @@ import java.io.IOException
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.layoutmanager.pages.PageGrouping
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.junit.Assert.assertEquals
 
@@ -18,7 +20,7 @@ class PageGroupingTest {
     @Test
     @Throws(IOException::class)
     fun testBasics() {
-        var pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        var pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(LETTER))
         var lp = pageMgr.logicalPageStart()
 
         // Just testing some default values before potentially merging changes that could make
@@ -40,7 +42,7 @@ class PageGroupingTest {
         pageMgr.save(ByteArrayOutputStream())
 
         // Make a new manager for a new test.
-        pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, XyDim(PDRectangle.A1))
+        pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, XyDim(A1))
         lp = pageMgr.logicalPageStart(PORTRAIT)
 
         assertEquals((A1.height - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
@@ -79,7 +81,7 @@ class PageGroupingTest {
         pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, XyDim(A6))
         lp = PageGrouping(pageMgr, LANDSCAPE, XyOffset(PdfLayoutMgr.DEFAULT_MARGIN, bottomM),
                           pageMgr.pageDim.swapWh()
-                                  .minus(XyDim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
+                                                                       .minus(XyDim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
 
         assertEquals((A6.width - topM).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(bottomM.toDouble(), lp.yBodyBottom().toDouble(), 0.000000001)

@@ -18,7 +18,9 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.lineWrapping
+
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 
 /**
  Implementing LineWrappable means being suitable for use with a two-pass layout manager whose first
@@ -26,12 +28,12 @@ package com.planbase.pdf.layoutmanager
  draw yourself as best you can."  Classes implementing LineWrapper are generally mutable (builders).
  */
 interface LineWrappable {
-    val boxStyle:BoxStyle
+    val boxStyle: BoxStyle
 
     fun lineWrapper(): LineWrapper
 
-    companion object ZeroLineWrappable:LineWrappable {
+    companion object ZeroLineWrappable: LineWrappable {
         override val boxStyle = BoxStyle.NONE
-        override fun lineWrapper() = LineWrapper.NO_LINE_WRAPPER
+        override fun lineWrapper() = LineWrapper
     }
 }

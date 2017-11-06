@@ -18,7 +18,7 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.utils
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 
@@ -79,7 +79,7 @@ data class XyDim(val width: Float, val height: Float) {
 
     /** Compares dimensions and returns true if that dimension doesn't extend beyond this one.  */
     fun lte(that: XyDim): Boolean = this.width <= that.width &&
-                                    this.height <= that.height
+                                                                         this.height <= that.height
 
     override fun toString() = "XyDim($width $height)"
 

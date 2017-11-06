@@ -18,7 +18,10 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.attributes
+
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 
 /**
  * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
@@ -37,11 +40,11 @@ data class Padding(val top: Float,
 
     fun subtractFrom(outer: XyDim): XyDim =
             XyDim(outer.width - (left + right),
-                  outer.height - (top + bottom))
+                                                       outer.height - (top + bottom))
 
     fun addTo(outer: XyDim): XyDim =
             XyDim(outer.width + (left + right),
-                  outer.height + (top + bottom))
+                                                       outer.height + (top + bottom))
 
     fun applyTopLeft(orig: XyOffset): XyOffset = XyOffset(orig.x + left, orig.y - top)
 

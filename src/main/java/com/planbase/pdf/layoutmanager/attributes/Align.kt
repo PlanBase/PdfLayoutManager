@@ -18,7 +18,9 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.attributes
+
+import com.planbase.pdf.layoutmanager.utils.XyDim
 
 //    /** Horizontal allignment options for cell contents */
 //    public enum HorizAlign { LEFT, CENTER, RIGHT; }
@@ -157,6 +159,6 @@ enum class Align {
     //               x;
     //    }
     companion object {
-        val DEFAULT = Align.TOP_LEFT
+        val DEFAULT = TOP_LEFT
     }
 }

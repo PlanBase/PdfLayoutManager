@@ -1,4 +1,4 @@
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.attributes
 
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
@@ -11,8 +11,8 @@ data class BoxStyle(val padding: Padding?,
                     val border: BorderStyle?) {
     companion object {
         val NONE = BoxStyle(null,
-                            null,
-                            null)
+                                                                      null,
+                                                                      null)
     }
 }
 

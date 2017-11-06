@@ -1,17 +1,20 @@
 import com.planbase.pdf.layoutmanager.*
-import com.planbase.pdf.layoutmanager.Align.*
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.layoutmanager.attributes.Align.*
+import com.planbase.pdf.layoutmanager.attributes.BorderStyle
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.TableBuilder
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle
-import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
-import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import javax.imageio.ImageIO
 
 class TestManualllyPdfLayoutMgr {
 
@@ -43,14 +46,14 @@ class TestManualllyPdfLayoutMgr {
         // Set up some useful styles for later
         val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, RGB_WHITE)
         val headingCell = BoxStyle(textCellPadding, RGB_BLUE,
-                                    BorderStyle(null, LineStyle(RGB_WHITE), null, LineStyle(RGB_BLUE)))
+                                                                             BorderStyle(null, LineStyle(RGB_WHITE), null, LineStyle(RGB_BLUE)))
         val headingCellR = BoxStyle(textCellPadding, RGB_BLACK,
-                                     BorderStyle(null, LineStyle(RGB_BLACK), null, LineStyle(RGB_WHITE)))
+                                                                              BorderStyle(null, LineStyle(RGB_BLACK), null, LineStyle(RGB_WHITE)))
 
         val regular = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
         val regularCell = BoxStyle(textCellPadding, null,
-                                    BorderStyle(null, LineStyle(RGB_BLACK),
-                                                LineStyle(RGB_BLACK), LineStyle(RGB_BLACK)))
+                                                                             BorderStyle(null, LineStyle(RGB_BLACK),
+                                                                                         LineStyle(RGB_BLACK), LineStyle(RGB_BLACK)))
 
         // Let's draw three tables on our first landscape-style page grouping.
 

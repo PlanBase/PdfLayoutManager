@@ -18,7 +18,7 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.attributes
 
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
@@ -48,7 +48,7 @@ data class BorderStyle(val top: LineStyle?,
      * @param ls the line style
      * @return a new immutable border object
      */
-    constructor(ls:LineStyle) : this(ls, ls, ls, ls)
+    constructor(ls: LineStyle) : this(ls, ls, ls, ls)
 
 //    /**
 //     * Returns an equal border on all sides
