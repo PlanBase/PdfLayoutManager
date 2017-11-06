@@ -29,6 +29,7 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -182,14 +183,14 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawImage(x: Float, y: Float, sj: ScaledImage): Float {
+    override fun drawImage(x: Float, y: Float, wi: WrappedImage): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = mgr.appropriatePage(this, y, sj.xyDim.height)
+        val pby = mgr.appropriatePage(this, y, wi.xyDim.height)
         // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawImage(x, pby.y, sj)
+        pby.pb.drawImage(x, pby.y, wi)
 
         // The y value is the distance from the bottom of the first page to the bottom of the image.
         // We want to return the corrected version of the same distance.  On the first page, y is

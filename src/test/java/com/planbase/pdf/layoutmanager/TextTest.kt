@@ -2,7 +2,7 @@ package com.planbase.pdf.layoutmanager
 
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
 import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
-import com.planbase.pdf.layoutmanager.contents.Text.WrappedRow
+import com.planbase.pdf.layoutmanager.contents.Text.WrappedText
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
@@ -24,14 +24,14 @@ class TextTest {
         val txt = Text(tStyle, "This is a long enough line of text.")
         var ri : RowIdx = Text.tryGettingText(50f, 0, txt)
         assertFalse(ri.foundCr)
-        val wrappedRow : WrappedRow = ri.row
+        val wrappedText: WrappedText = ri.row
         var idx = ri.idx
-        assertEquals("This is a", wrappedRow.string)
+        assertEquals("This is a", wrappedText.string)
         assertEquals(10, idx)
-        assertEquals(34.903126f, wrappedRow.xyDim.width)
-        assertEquals(tStyle.ascent(), wrappedRow.ascent)
-        assertEquals(tStyle.descent() + tStyle.leading(), wrappedRow.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedRow.xyDim.height)
+        assertEquals(34.903126f, wrappedText.xyDim.width)
+        assertEquals(tStyle.ascent(), wrappedText.ascent)
+        assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
+        assertEquals(tStyle.lineHeight(), wrappedText.xyDim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -60,14 +60,14 @@ class TextTest {
         val txt = Text(tStyle, "This is\na long enough line of text.")
         var ri = Text.tryGettingText(50f, 0, txt)
         assertTrue(ri.foundCr)
-        val wrappedRow : WrappedRow = ri.row
+        val wrappedText: WrappedText = ri.row
         var idx = ri.idx
-        assertEquals("This is", wrappedRow.string)
+        assertEquals("This is", wrappedText.string)
         assertEquals(8, idx)
-        assertEquals(27.084375f, wrappedRow.xyDim.width)
-        assertEquals(tStyle.ascent(), wrappedRow.ascent)
-        assertEquals(tStyle.descent() + tStyle.leading(), wrappedRow.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedRow.xyDim.height)
+        assertEquals(27.084375f, wrappedText.xyDim.width)
+        assertEquals(tStyle.ascent(), wrappedText.ascent)
+        assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
+        assertEquals(tStyle.lineHeight(), wrappedText.xyDim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)

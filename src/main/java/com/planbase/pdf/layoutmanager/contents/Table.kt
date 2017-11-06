@@ -20,7 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
@@ -31,7 +31,7 @@ import com.planbase.pdf.layoutmanager.utils.XyOffset
  * It used to be that you'd build a table and that act would commit it to a logical page.
  */
 // TODO: This should probably freeze all the underlying stuff
-class Table(private val parts: List<TablePart>, override val boxStyle: BoxStyle) : LineWrappable {
+class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : LineWrappable {
     override fun lineWrapper(): LineWrapper {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

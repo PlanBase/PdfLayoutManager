@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
@@ -32,7 +32,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
  * Still familiarity with HTML may make this class easier to use.
  */
 class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
-                   override var boxStyle: BoxStyle = BoxStyle.NONE,
+                   var cellStyle: CellStyle = CellStyle.Default,
                    var align: Align = Align.TOP_LEFT,
                    var textStyle: TextStyle? = null,
                    val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
@@ -59,8 +59,8 @@ class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
         return this
     }
 
-    fun boxStyle(x: BoxStyle): TableBuilder {
-        boxStyle = x
+    fun cellStyle(x: CellStyle): TableBuilder {
+        cellStyle = x
         return this
     }
 
@@ -78,5 +78,5 @@ class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
         return TablePart(this)
     }
 
-    fun buildTable() = Table(parts, this.boxStyle)
+    fun buildTable() = Table(parts, this.cellStyle)
 }

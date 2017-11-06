@@ -18,6 +18,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align.TOP_RIGHT
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -89,18 +90,16 @@ fun testBodyMargins() {
 
     // This could be in a loop that prints out list items.
     var rcb: TableRowBuilder.RowCellBuilder = tpb.rowBuilder().cellBuilder()
-    rcb.boxStyle(BULLET_CELL_STYLE)
+    rcb.cellStyle(BULLET_CELL_STYLE)
             .add(BULLET_TEXT_STYLE, listOf(Utils.BULLET_CHAR))
-    rcb.align(TOP_RIGHT)
     rcb = rcb.buildCell().cellBuilder()
     rcb.add(BULLET_TEXT_STYLE, listOf("This is some text that has a bullet"))
     rcb.buildCell().buildRow()
 
     // Next iteration in the loop
     rcb = tpb.rowBuilder().cellBuilder()
-    rcb.boxStyle(BULLET_CELL_STYLE)
+    rcb.cellStyle(BULLET_CELL_STYLE)
             .add(BULLET_TEXT_STYLE, listOf("2."))
-    rcb.align(TOP_RIGHT)
     rcb = rcb.buildCell().cellBuilder()
     rcb.add(BULLET_TEXT_STYLE, listOf("text that has a number"))
     rcb.buildCell().buildRow()
@@ -109,64 +108,64 @@ fun testBodyMargins() {
     //        Table table = tpb.buildPart().buildTable();
 
     lp.drawCell(0f, PDRectangle.A6.height - 40f,
-                Cell(BoxStyle(Padding(2f), CMYK_LIGHT_GREEN,
-                                                                      BorderStyle(CMYK_DARK_GRAY)), TOP_LEFT, bodyWidth,
-                                                             listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                                                         "The long "),
-                                                                    Text(TextStyle(PDType1Font.HELVETICA_BOLD, 12f, Utils.CMYK_BLACK),
-                                                                                                                 "families"),
-                                                                    Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                                                                                                 " needed the national " +
-                                                                                                                 "words and women said new. The new " +
-                                                                                                                 "companies told the possible hands " +
-                                                                                                                 "and books was low. The other " +
-                                                                                                                 "questions got the recent children and " +
-                                                                                                                 "lots felt important. The sure hands " +
-                                                                                                                 "moved the major stories and countries " +
-                                                                                                                 "showed possible. The major students " +
-                                                                                                                 "began the international rights and " +
-                                                                                                                 "places got free. The able homes said " +
-                                                                                                                 "the better work and cases went free."),
-                                                                    ScaledImage(graphPic),
-                                                                    Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                                                                                                 ("The hard eyes seemed the clear " +
-                                                                                                                  "mothers and systems came economic. " +
-                                                                                                                  "The high months showed the possible " +
-                                                                                                                  "money and eyes heard certain. The " +
-                                                                                                                  "true men played the different facts and " +
-                                                                                                                  "areas showed large. The good ways " +
-                                                                                                                  "lived the different countries and " +
-                                                                                                                  "stories found good. The certain " +
-                                                                                                                  "places found the political months and " +
-                                                                                                                  "facts told easy. The long homes ran " +
-                                                                                                                  "the good governments and cases " +
-                                                                                                                  "lived social.")),
-                                                                    ScaledImage(graphPic),
-                                                                    Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                                                                                                 ("The social people ran the " +
-                                                                                                                  "local cases and men left local. The " +
-                                                                                                                  "easy areas saw the whole times and " +
-                                                                                                                  "systems became national. The whole " +
-                                                                                                                  "Page # 1questions lived the white points and " +
-                                                                                                                  "governments had national. The real " +
-                                                                                                                  "families saw the hard stories and Mrs " +
-                                                                                                                  "looked late. The young studies had " +
-                                                                                                                  "the other times and families started " +
-                                                                                                                  "late. The public years saw the hard " +
-                                                                                                                  "stories and waters used sure. The " +
-                                                                                                                  "clear lives showed the white work and " +
-                                                                                                                  "people used long. The major rights " +
-                                                                                                                  "was the important children and " +
-                                                                                                                  "mothers turned able. The " +
-                                                                                                                  "international men kept the real " +
-                                                                                                                  "questions and nights made big.")),
-                                                                    ScaledImage(graphPic),
-                                                                    Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                                                                                                 ("The " +
-                                                                                                                  "best points got the economic waters " +
-                                                                                                                  "and problems gave great. The whole " +
-                                                                                                                  "countries went the best children and " +
-                                                                                                                  "eyes came able.")))))
+                Cell(CellStyle(BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY)), TOP_LEFT),
+                     bodyWidth,
+                     listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                                 "The long "),
+                            Text(TextStyle(PDType1Font.HELVETICA_BOLD, 12f, Utils.CMYK_BLACK),
+                                 "families"),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                                 " needed the national " +
+                                 "words and women said new. The new " +
+                                 "companies told the possible hands " +
+                                 "and books was low. The other " +
+                                 "questions got the recent children and " +
+                                 "lots felt important. The sure hands " +
+                                 "moved the major stories and countries " +
+                                 "showed possible. The major students " +
+                                 "began the international rights and " +
+                                 "places got free. The able homes said " +
+                                 "the better work and cases went free."),
+                            ScaledImage(graphPic),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                                 ("The hard eyes seemed the clear " +
+                                  "mothers and systems came economic. " +
+                                  "The high months showed the possible " +
+                                  "money and eyes heard certain. The " +
+                                  "true men played the different facts and " +
+                                  "areas showed large. The good ways " +
+                                  "lived the different countries and " +
+                                  "stories found good. The certain " +
+                                  "places found the political months and " +
+                                  "facts told easy. The long homes ran " +
+                                  "the good governments and cases " +
+                                  "lived social.")),
+                            ScaledImage(graphPic),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                                 ("The social people ran the " +
+                                  "local cases and men left local. The " +
+                                  "easy areas saw the whole times and " +
+                                  "systems became national. The whole " +
+                                  "Page # 1questions lived the white points and " +
+                                  "governments had national. The real " +
+                                  "families saw the hard stories and Mrs " +
+                                  "looked late. The young studies had " +
+                                  "the other times and families started " +
+                                  "late. The public years saw the hard " +
+                                  "stories and waters used sure. The " +
+                                  "clear lives showed the white work and " +
+                                  "people used long. The major rights " +
+                                  "was the important children and " +
+                                  "mothers turned able. The " +
+                                  "international men kept the real " +
+                                  "questions and nights made big.")),
+                            ScaledImage(graphPic),
+                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                                 ("The " +
+                                  "best points got the economic waters " +
+                                  "and problems gave great. The whole " +
+                                  "countries went the best children and " +
+                                  "eyes came able.")))).fix())
     //        table
     //        );
     lp.commit()
@@ -182,7 +181,7 @@ fun testBodyMargins() {
         val CMYK_DARK_GRAY = PDColor(floatArrayOf(0f, 0f, 0f, 0.2f), PDDeviceCMYK.INSTANCE)
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
 
-        internal val BULLET_CELL_STYLE = BoxStyle(Padding(0f, 4f, 0f, 0f), null, null)
+        internal val BULLET_CELL_STYLE = CellStyle(BoxStyle(Padding(0f, 4f, 0f, 0f), null, null), TOP_RIGHT)
         internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK)
 
         // adj plNoun verb adj descriptiveNoun

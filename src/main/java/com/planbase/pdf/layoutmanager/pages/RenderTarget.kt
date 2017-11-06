@@ -23,6 +23,7 @@ package com.planbase.pdf.layoutmanager.pages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -47,7 +48,7 @@ interface RenderTarget {
      * Puts styled text on this RenderTarget
      * @param x the left-most X-value
      * @param y the (bottom?) Y-value
-     * @param s the text
+     * @param text the text
      * @param textStyle the style
      * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
@@ -57,10 +58,10 @@ interface RenderTarget {
      * Puts a jpeg on this RenderTarget
      * @param x left offset
      * @param y bottom offset
-     * @param sj the jpeg image
+     * @param wi the scaled, "wrapped" jpeg/png image
      * @return the lowest y-value.
      */
-    fun drawImage(x: Float, y: Float, sj: ScaledImage): Float
+    fun drawImage(x: Float, y: Float, wi: WrappedImage): Float
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn

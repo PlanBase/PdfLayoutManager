@@ -38,19 +38,17 @@ import com.planbase.pdf.layoutmanager.utils.XyOffset
  * Represents styled text kind of like a #Text node in HTML.
  */
 data class Text(val textStyle: TextStyle,
-                private val initialText: String = "",
-                override val boxStyle: BoxStyle = BoxStyle.NONE) : LineWrappable {
+                private val initialText: String = "") : LineWrappable {
     constructor(textStyle: TextStyle) : this(textStyle, "")
 
     // This removes all tabs, transforms all line-terminators into "\n", and removes all runs of spaces that
     // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
     val text = cleanStr(initialText)
 
-    // TODO: Can this be replaced with WrappedMultiLineWrapped?
-    internal data class WrappedRow(val string: String,
-                                   override val xyDim: XyDim,
-                                   val textStyle: TextStyle,
-                                   val source: LineWrappable) : LineWrapped {
+    internal data class WrappedText(val string: String,
+                                    override val xyDim: XyDim,
+                                    val textStyle: TextStyle,
+                                    val source: LineWrappable) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle,
                     src: LineWrappable): this(s, XyDim(x, ts.lineHeight()), ts, src)
@@ -67,7 +65,7 @@ data class Text(val textStyle: TextStyle,
                                                                  outerTopLeft.y - xyDim.height - textStyle.leading())
         }
 
-        override fun toString() = "WrappedRow(\"$string\" $xyDim $textStyle)"
+        override fun toString() = "WrappedText(\"$string\" $xyDim $textStyle)"
     }
 
     fun style(): TextStyle = textStyle
@@ -89,7 +87,7 @@ data class Text(val textStyle: TextStyle,
         return TextLineWrapper(this)
     }
 
-    internal data class RowIdx(val row: WrappedRow,
+    internal data class RowIdx(val row: WrappedText,
                                val idx: Int,
                                val foundCr: Boolean) {
 
@@ -221,13 +219,13 @@ data class Text(val textStyle: TextStyle,
                 if (strWidth > maxWidth) {
                     throw IllegalStateException("strWidth=$strWidth > maxWidth=$maxWidth")
                 }
-                return RowIdx(WrappedRow(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1, true)
+                return RowIdx(WrappedText(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1, true)
             }
             // Need to test trailing whitespace.
 //            println("idx=" + idx + " substr=\"" + substr + "\"")
 
-            return RowIdx(WrappedRow(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1,
-                                                                       if (substr == text) {
+            return RowIdx(WrappedText(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1,
+                          if (substr == text) {
                                                                            foundCr
                                                                        } else {
                                                                            false

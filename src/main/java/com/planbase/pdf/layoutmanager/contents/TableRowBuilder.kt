@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
@@ -38,8 +38,7 @@ import java.util.Collections
  */
 class TableRowBuilder(private val tablePart: TablePart) {
     var textStyle: TextStyle? = tablePart.textStyle
-    val boxStyle: BoxStyle = tablePart.boxStyle
-    var align: Align = tablePart.align
+    val cellStyle: CellStyle = tablePart.cellStyle
     private val cells: MutableList<Cell?> = ArrayList(tablePart.cellWidths.size)
     private var minRowHeight = tablePart.minRowHeight
     private var nextCellIdx = 0
@@ -75,16 +74,16 @@ class TableRowBuilder(private val tablePart: TablePart) {
             throw IllegalStateException("Tried to add a text cell without setting a default text style")
         }
         for (s in ss) {
-            addCellAt(Cell(boxStyle, align, nextCellSize(), listOf(Text(textStyle!!, s))), nextCellIdx)
+            addCellAt(Cell(cellStyle, nextCellSize(), listOf(Text(textStyle!!, s))), nextCellIdx)
             nextCellIdx++
         }
         return this
     }
 
     // TODO: This should be add LineWrappable Cells.
-    fun addJpegCells(vararg js: ScaledImage): TableRowBuilder {
+    fun addImageCells(vararg js: ScaledImage): TableRowBuilder {
         for (j in js) {
-            addCellAt(Cell(boxStyle, align, nextCellSize(), listOf(j)), nextCellIdx)
+            addCellAt(Cell(cellStyle, nextCellSize(), listOf(j)), nextCellIdx)
             nextCellIdx++
         }
         return this
@@ -175,7 +174,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
     inner class RowCellBuilder(private val tableRowBuilder: TableRowBuilder) : CellBuilder {
         /** {@inheritDoc}  */
         override val width: Float = tableRowBuilder.nextCellSize() // Both require this.
-        private var boxStyle: BoxStyle = tableRowBuilder.boxStyle // Both require this.
+        private var cellStyle: CellStyle = tableRowBuilder.cellStyle // Both require this.
         private val rows = ArrayList<LineWrappable>()
         private var textStyle: TextStyle? = tableRowBuilder.textStyle
         private val colIdx: Int = tableRowBuilder.nextCellIdx()
@@ -185,8 +184,8 @@ class TableRowBuilder(private val tablePart: TablePart) {
         // public TableRowCellBuilder width(float w) { width = w; return this; }
 
         /** {@inheritDoc}  */
-        override fun boxStyle(cs: BoxStyle): RowCellBuilder {
-            boxStyle = cs
+        override fun cellStyle(cs: CellStyle): RowCellBuilder {
+            cellStyle = cs
             return this
         }
 
@@ -197,7 +196,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
         /** {@inheritDoc}  */
         override fun align(a: Align): RowCellBuilder {
-            align = a
+            cellStyle = cellStyle.align(a)
             return this
         }
 
@@ -240,7 +239,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         }
 
         fun buildCell(): TableRowBuilder {
-            val c = Cell(boxStyle, align, width, rows)
+            val c = Cell(cellStyle, width, rows)
             return tableRowBuilder.addCellAt(c, colIdx)
         }
 

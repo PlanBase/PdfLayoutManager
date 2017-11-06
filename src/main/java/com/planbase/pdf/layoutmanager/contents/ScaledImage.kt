@@ -38,10 +38,8 @@ import java.awt.image.BufferedImage
  * significantly decreases the file size of the resulting PDF when images are reused within that
  * document.
  */
-class ScaledImage(val bufferedImage: BufferedImage,
-                  override val xyDim: XyDim) : LineWrapped, LineWrappable {
-
-    override val boxStyle = BoxStyle.NONE
+class ScaledImage(private val bufferedImage: BufferedImage,
+                  val xyDim: XyDim) : LineWrappable {
 
     /**
      * Returns a new buffered image with width and height calculated from the source BufferedImage
@@ -54,20 +52,24 @@ class ScaledImage(val bufferedImage: BufferedImage,
             this(bufferedImage, XyDim(bufferedImage.width * IMAGE_SCALE,
                                       bufferedImage.height * IMAGE_SCALE))
 
-    override val ascent: Float = xyDim.height
+    override fun lineWrapper(): LineWrapper = LineWrapped.preWrappedLineWrapper(WrappedImage(bufferedImage, xyDim))
 
-    override val descentAndLeading: Float = 0f
+    data class WrappedImage(val bufferedImage: BufferedImage,
+                            override val xyDim: XyDim) : LineWrapped {
 
-    override val lineHeight: Float = xyDim.height
+        override val ascent: Float = xyDim.height
 
-    /** {@inheritDoc}  */
-    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
-        // use bottom of image for page-breaking calculation.
-        val y = lp.drawImage(outerTopLeft.x, outerTopLeft.y, this)
-        return XyOffset(outerTopLeft.x + xyDim.width, y)
+        override val descentAndLeading: Float = 0f
+
+        override val lineHeight: Float = xyDim.height
+
+        /** {@inheritDoc}  */
+        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+            val y = lp.drawImage(outerTopLeft.x, outerTopLeft.y, this)
+            return XyOffset(outerTopLeft.x + xyDim.width, y)
+        }
+
     }
-
-    override fun lineWrapper(): LineWrapper = LineWrapped.preWrappedLineWrapper(this)
 
     companion object {
         private val ASSUMED_IMAGE_DPI = 300f

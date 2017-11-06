@@ -41,7 +41,7 @@ class WrappedMultiLineWrappedKtTest {
         assertEquals(text,
                      line.items
                              .fold(StringBuilder(),
-                                   {acc, item -> acc.append((item as Text.WrappedRow).string)})
+                                   {acc, item -> acc.append((item as Text.WrappedText).string)})
                              .toString())
     }
 

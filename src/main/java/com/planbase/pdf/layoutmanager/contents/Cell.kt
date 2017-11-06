@@ -20,14 +20,13 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
-import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper.NO_LINE_WRAPPER
-import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper.NO_LINE_WRAPPER
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.WrappedMultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToWrappedMultiLineWrappeds
@@ -37,16 +36,14 @@ import com.planbase.pdf.layoutmanager.utils.XyDim
  A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated
  based on how the content is rendered with regard to line-breaks and page-breaks.
  */
-data class Cell(override val boxStyle: BoxStyle = BoxStyle.NONE, // contents can override this style
-                val align: Align = Align.DEFAULT,
+data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can override this style
                 val width: Float,
                 // A list of the contents.  It's pretty limiting to have one item per row.
                 private var contents: List<LineWrappable>) : LineWrappable {
-    constructor(bs: BoxStyle = BoxStyle.NONE,
-                al: Align = Align.DEFAULT,
+    constructor(cs: CellStyle,
                 w: Float,
                 textStyle: TextStyle,
-                text:List<String>) : this(bs, al, w, text.map{s -> Text(textStyle, s) }.toList())
+                text:List<String>) : this(cs, w, text.map{s -> Text(textStyle, s) }.toList())
 //    private constructor(b:Builder) : this(b.cellStyle ?: CellStyle.DEFAULT, b.width, b.rows)
 
     // Caches XyDims for all content textLines, indexed by desired width (we only have to lay-out again
@@ -279,7 +276,7 @@ data class Cell(override val boxStyle: BoxStyle = BoxStyle.NONE, // contents can
 
     /** {@inheritDoc}  */
     override fun toString(): String {
-        val sB = StringBuilder("Cell(").append(boxStyle).append(" ").append(align).append(" width=")
+        val sB = StringBuilder("Cell(").append(cellStyle).append(" width=")
                 .append(width).append(" contents=[")
 
         var i = 0

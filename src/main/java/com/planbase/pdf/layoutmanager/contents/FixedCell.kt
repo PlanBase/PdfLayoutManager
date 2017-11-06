@@ -26,7 +26,7 @@ import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 
 /**
- TODO: This should be a private inner class of Cell, but it's easer to break it out and work on it in Kotlin.
+ TODO: This should be a private inner class of Cell
  */
 class FixedCell(override val xyDim: XyDim,
                 val source: Cell,
@@ -41,13 +41,13 @@ class FixedCell(override val xyDim: XyDim,
         get() = xyDim.height
 
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
-        val padding = source.boxStyle.padding
+        val padding = source.cellStyle.boxStyle.padding
         // XyDim xyDim = padding.addTo(pcrs.dim);
 
         // Draw background first (if necessary) so that everything else ends up on top of it.
-        if (source.boxStyle.bgColor != null) {
+        if (source.cellStyle.boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(outerTopLeft, xyDim, source.boxStyle.bgColor)
+            lp.fillRect(outerTopLeft, xyDim, source.cellStyle.boxStyle.bgColor)
             //            System.out.println("\tCell.render back from putRect");
         }
 
@@ -69,7 +69,7 @@ class FixedCell(override val xyDim: XyDim,
 //        System.out.println("\tCell.render padding=" + padding);
 //        System.out.println("\tCell.render innerDimensions=" + innerDimensions);
 //        System.out.println("\tCell.render wrappedBlockDim=" + wrappedBlockDim);
-        val alignPad = source.align.calcPadding(innerDimensions, xyDim)
+        val alignPad = source.cellStyle.align.calcPadding(innerDimensions, xyDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
         innerTopLeft = XyOffset(innerTopLeft.x + alignPad.left,
                                                                      innerTopLeft.y - alignPad.top)
@@ -77,7 +77,7 @@ class FixedCell(override val xyDim: XyDim,
         var outerLowerRight = innerTopLeft
         var y = innerTopLeft.y
         for (line in pcls) {
-            val rowXOffset = source.align
+            val rowXOffset = source.cellStyle.align
                     .leftOffset(xyDim.width, line.xyDim.width)
             outerLowerRight = line.render(lp,
                                           XyOffset(rowXOffset + innerTopLeft.x, y))
@@ -86,7 +86,7 @@ class FixedCell(override val xyDim: XyDim,
         }
 
         // Draw border last to cover anything that touches it?
-        val border = source.boxStyle.border
+        val border = source.cellStyle.boxStyle.border
         if (border != null) {
             val origX = outerTopLeft.x
             val origY = outerTopLeft.y

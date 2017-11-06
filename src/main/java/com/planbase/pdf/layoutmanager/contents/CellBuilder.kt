@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 
@@ -33,7 +33,7 @@ interface CellBuilder {
     val width:Float
     
     /** Creates a new CellBuilder with the given BoxStyle  */
-    fun boxStyle(cs: BoxStyle): CellBuilder
+    fun cellStyle(cs: CellStyle): CellBuilder
 
     /** Creates a new CellBuilder with the given alignment  */
     fun align(a: Align): CellBuilder

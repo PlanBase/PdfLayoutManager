@@ -22,6 +22,7 @@ package com.planbase.pdf.layoutmanager
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
+import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -115,7 +116,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         LANDSCAPE
     }
 
-    internal fun ensureCached(sj: ScaledImage): PDImageXObject {
+    internal fun ensureCached(sj: WrappedImage): PDImageXObject {
         val bufferedImage = sj.bufferedImage
         var temp: PDImageXObject? = jpegMap[bufferedImage]
         if (temp == null) {

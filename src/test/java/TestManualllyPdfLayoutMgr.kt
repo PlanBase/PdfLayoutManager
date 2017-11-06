@@ -2,6 +2,7 @@ import com.planbase.pdf.layoutmanager.*
 import com.planbase.pdf.layoutmanager.attributes.Align.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -63,16 +64,14 @@ class TestManualllyPdfLayoutMgr {
         tB.addCellWidths(listOf(120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder()
-                .boxStyle(BoxStyle(Padding(2f),
-                                   RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)))
-                .align(BOTTOM_CENTER)
+                .cellStyle(CellStyle(BoxStyle(Padding(2f),
+                                              RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)), BOTTOM_CENTER))
                 .rowBuilder().addTextCells("First").buildRow()
                 .buildPart()
                 .partBuilder()
-                .boxStyle(BoxStyle(Padding(2f),
-                                   RGB_LIGHT_GREEN,
-                                   BorderStyle(RGB_DARK_GRAY)))
-                .align(MIDDLE_CENTER)
+                .cellStyle(CellStyle(BoxStyle(Padding(2f),
+                                              RGB_LIGHT_GREEN,
+                                              BorderStyle(RGB_DARK_GRAY)), MIDDLE_CENTER))
                 .minRowHeight(120f)
                 .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
                 .rowBuilder()
@@ -94,7 +93,7 @@ class TestManualllyPdfLayoutMgr {
         // target="_blank" on your link to the PDF download action.
 
         // We're just going to write to a file.
-        val os = FileOutputStream("test.pdf")
+                           val os = FileOutputStream("test.pdf")
 
         // Commit it to the output stream!
         pageMgr.save(os)

@@ -20,8 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
-import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.XyOffset
@@ -33,19 +32,13 @@ import java.util.ArrayList
  */
 class TablePart(private val tableBuilder: TableBuilder) {
     val cellWidths:List<Float> = tableBuilder.cellWidths.toList()
-    var boxStyle: BoxStyle = tableBuilder.boxStyle
-    var align: Align = Align.TOP_LEFT
+    var cellStyle: CellStyle = tableBuilder.cellStyle
     var textStyle: TextStyle? = tableBuilder.textStyle
     var minRowHeight = 0f
     private val rows = ArrayList<TableRowBuilder>(1)
 
-    fun boxStyle(x: BoxStyle): TablePart {
-        boxStyle = x
-        return this
-    }
-
-    fun align(a: Align): TablePart {
-        align = a
+    fun cellStyle(x: CellStyle): TablePart {
+        cellStyle = x
         return this
     }
 

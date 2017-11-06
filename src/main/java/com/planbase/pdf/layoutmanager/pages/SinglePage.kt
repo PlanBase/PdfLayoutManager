@@ -25,6 +25,7 @@ import com.planbase.pdf.layoutmanager.PdfItem
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -69,10 +70,10 @@ class SinglePage(val pageNum: Int,
     //        }
 
     /** {@inheritDoc}  */
-    override fun drawImage(x: Float, y: Float, sj: ScaledImage): Float {
-        items.add(DrawImage(x + xOff, y, sj, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+    override fun drawImage(x: Float, y: Float, wi: WrappedImage): Float {
+        items.add(DrawImage(x + xOff, y, wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
         // This does not account for a page break because this class represents a single page.
-        return sj.xyDim.height
+        return wi.xyDim.height
     }
 
     private fun drawLine(xa: Float, ya: Float, xb: Float, yb: Float, ls: LineStyle, z: Float) {
@@ -151,7 +152,7 @@ class SinglePage(val pageNum: Int,
 
     private class DrawImage(val x: Float,
                             val y: Float,
-                            val scaledImage: ScaledImage,
+                            val scaledImage: WrappedImage,
                             mgr: PdfLayoutMgr,
                             ord: Long, z: Float) : PdfItem(ord, z) {
         private val img: PDImageXObject = mgr.ensureCached(scaledImage)
