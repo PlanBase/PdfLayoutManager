@@ -1,20 +1,13 @@
 import TestManualllyPdfLayoutMgr.Companion.RGB_BLACK
-import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE
 import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
-import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
-import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
-import TestManualllyPdfLayoutMgr.Companion.RGB_WHITE
-import TestManualllyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
-import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.contents.WrappedCell
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -45,7 +38,7 @@ class TestManualCell {
         val boxStyle = BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))
         val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
         val cellWidth = 300f
-        val cell = Cell(CellStyle(boxStyle, Align.BOTTOM_CENTER),
+        val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
                         cellWidth, listOf(Text(textStyle, "Hello")))
         println(cell)
         println()

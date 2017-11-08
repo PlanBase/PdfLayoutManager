@@ -108,7 +108,7 @@ fun testBodyMargins() {
     //        Table table = tpb.buildPart().buildTable();
 
     lp.drawCell(0f, PDRectangle.A6.height - 40f,
-                Cell(CellStyle(BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY)), TOP_LEFT),
+                Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
                      bodyWidth,
                      listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                                  "The long "),
@@ -181,7 +181,7 @@ fun testBodyMargins() {
         val CMYK_DARK_GRAY = PDColor(floatArrayOf(0f, 0f, 0f, 0.2f), PDDeviceCMYK.INSTANCE)
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
 
-        internal val BULLET_CELL_STYLE = CellStyle(BoxStyle(Padding(0f, 4f, 0f, 0f), null, BorderStyle.NO_BORDERS), TOP_RIGHT)
+        internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT, BoxStyle(Padding(0f, 4f, 0f, 0f), null, BorderStyle.NO_BORDERS))
         internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK)
 
         // adj plNoun verb adj descriptiveNoun

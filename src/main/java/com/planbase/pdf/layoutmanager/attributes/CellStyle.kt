@@ -1,13 +1,13 @@
 package com.planbase.pdf.layoutmanager.attributes
 
-data class CellStyle(val boxStyle: BoxStyle,
-                     val align: Align) {
+data class CellStyle(val align: Align,
+                     val boxStyle: BoxStyle) {
 
-    fun align(a: Align) = CellStyle(boxStyle, a)
+    fun align(a: Align) = CellStyle(a, boxStyle)
 
-    override fun toString() = "CellStyle($boxStyle, $align)"
+    override fun toString() = "CellStyle($align, $boxStyle)"
 
     companion object {
-        val Default = CellStyle(BoxStyle.NONE, Align.TOP_LEFT)
+        val Default = CellStyle(Align.TOP_LEFT, BoxStyle.NONE)
     }
 }
