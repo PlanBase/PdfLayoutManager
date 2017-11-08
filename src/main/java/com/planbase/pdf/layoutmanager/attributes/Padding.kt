@@ -48,6 +48,13 @@ data class Padding(val top: Float,
 
     fun applyTopLeft(orig: XyOffset): XyOffset = XyOffset(orig.x + left, orig.y - top)
 
+    override fun toString() =
+            if ((top == right) && (top == bottom) && (top == left)) {
+                "Padding($top)"
+            } else {
+                super.toString()
+            }
+
     //    public XyOffset topLeftPadOffset() { return XyOffset(left, -top); }
     //    public XyOffset botRightPadOffset() { return XyOffset(right, -bottom); }
 

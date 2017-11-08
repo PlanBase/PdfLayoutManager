@@ -38,6 +38,8 @@ class WrappedCell(override val xyDim: XyDim,
     override val lineHeight: Float
         get() = xyDim.height
 
+    override fun toString() = "WrappedCell($xyDim, $source, $pcls)"
+
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         val padding = source.cellStyle.boxStyle.padding
         // XyDim xyDim = padding.addTo(pcrs.dim);

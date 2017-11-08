@@ -22,8 +22,10 @@ package com.planbase.pdf.layoutmanager.utils
 
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
+import java.util.Arrays
 import java.util.Collections
 import java.util.HashMap
 import java.util.regex.Pattern
@@ -41,11 +43,33 @@ class Utils private constructor() {
         val CMYK_BLACK = PDColor(floatArrayOf(0f, 0f, 0f, 1f), PDDeviceCMYK.INSTANCE)
         val CMYK_WHITE = PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)
 
+        val RGB_BLACK = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
+
         /** For implementing briefer toString() methods */
-        fun colorToString(color:PDColor) =
-                if (color == CMYK_BLACK) "BLACK"
-                else if (color == CMYK_WHITE) "WHITE"
-                else color.toString()
+        fun colorToString(color:PDColor?) =
+                when {
+                    color == null -> "null"
+                    pdColorEquator(color, CMYK_BLACK) -> "CMYK_BLACK"
+                    pdColorEquator(color, CMYK_WHITE) -> "CMYK_WHITE"
+                    pdColorEquator(color, RGB_BLACK) -> "RGB_BLACK"
+                    else -> {
+                        if (color.patternName != null) {
+                            color.toString()
+                        } else {
+                            var ret = color.colorSpace.toString()
+                            if (color.components != null) {
+                                ret += Arrays.toString(color.components)
+                            }
+                            ret
+                        }
+                    }
+                }
+
+        fun pdColorEquator(a:PDColor, b:PDColor):Boolean =
+                if (a === b) { true }
+                else (a.colorSpace == b.colorSpace) &&
+                     (a.patternName == b.patternName) &&
+                     Arrays.equals(a.components, b.components)
 
         //    public static String toString(PDColor c) {
         //        if (c == null) { return "null"; }

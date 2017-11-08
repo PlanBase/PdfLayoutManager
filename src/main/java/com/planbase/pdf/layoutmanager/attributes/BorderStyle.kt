@@ -70,6 +70,13 @@ data class BorderStyle(val top: LineStyle?,
     fun bottom(ls: LineStyle) = BorderStyle(top, right, ls, left)
     fun left(ls: LineStyle) = BorderStyle(top, right, bottom, ls)
 
+    override fun toString() =
+            if ((top == right) && (top == bottom) && (top == left)) {
+                "BorderStyle($top)"
+            } else {
+                super.toString()
+            }
+
     companion object {
         val NO_BORDERS = BorderStyle(null, null, null, null)
     }

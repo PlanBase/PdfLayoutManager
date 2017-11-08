@@ -115,7 +115,7 @@ class SinglePage(val pageNum: Int,
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             stream.setStrokingColor(style.color)
-            stream.setLineWidth(style.width)
+            stream.setLineWidth(style.thickness)
             stream.moveTo(x1, y1)
             stream.lineTo(x2, y2)
             stream.stroke()

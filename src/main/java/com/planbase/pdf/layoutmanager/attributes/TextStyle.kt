@@ -69,8 +69,8 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
     private val factor = factorFromFontSize(fontSize)
 
     override fun toString() = "TextStyle(\"" + font.toString().replace("PDType1Font", "T1") + "\" " +
-                              fontSize + " " + colorToString(textColor) +
-                              " $adl avgCharWidth=$avgCharWidth)"
+                              fontSize + ", " + colorToString(textColor) +
+                              ", $adl)"// avgCharWidth=$avgCharWidth)"
 
     /**
      Assumes ISO_8859_1 encoding
@@ -114,7 +114,7 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
             return ascent + descent + leading
         }
 
-        override fun toString() = "AscDescLead($ascent $descent $leading)"
+        override fun toString() = "AscDescLead($ascent, $descent, $leading)"
 
         companion object {
             fun fromLeadingFactor(font: PDFont, fontSize: Float, leadingFactor: Float) : AscDescLead {

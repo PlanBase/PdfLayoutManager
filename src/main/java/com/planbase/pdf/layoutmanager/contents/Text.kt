@@ -20,7 +20,6 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
@@ -34,6 +33,7 @@ import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 
+// TODO: Should match order of params in WrappedText.  String should either be first or last.
 /**
  * Represents styled text kind of like a #Text node in HTML.
  */
@@ -45,13 +45,14 @@ data class Text(val textStyle: TextStyle,
     // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
     val text = cleanStr(initialText)
 
-    internal data class WrappedText(val string: String,
+    // TODO: Should match order of params in Text.  String should either be first or last.
+    internal data class WrappedText(val textStyle: TextStyle,
+                                    val string: String,
                                     override val xyDim: XyDim,
-                                    val textStyle: TextStyle,
                                     val source: LineWrappable) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle,
-                    src: LineWrappable): this(s, XyDim(x, ts.lineHeight()), ts, src)
+                    src: LineWrappable): this(ts, s, XyDim(x, ts.lineHeight()), src)
 
         override val ascent: Float = textStyle.ascent()
 
@@ -62,10 +63,10 @@ data class Text(val textStyle: TextStyle,
         override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
             lp.drawStyledText(outerTopLeft.x, outerTopLeft.y, string, textStyle)
             return XyOffset(outerTopLeft.x + xyDim.width,
-                                                                 outerTopLeft.y - xyDim.height - textStyle.leading())
+                            outerTopLeft.y - xyDim.height - textStyle.leading())
         }
 
-        override fun toString() = "WrappedText(\"$string\" $xyDim $textStyle)"
+        override fun toString() = "WrappedText(\"$string\", $xyDim, $textStyle)"
     }
 
     fun style(): TextStyle = textStyle
@@ -75,7 +76,7 @@ data class Text(val textStyle: TextStyle,
     fun maxWidth(): Float = textStyle.stringWidthInDocUnits(text.trim())
 
     override fun toString(): String {
-        return "Text(\"" +
+        return "Text($textStyle, \"" +
                 (if (text.length > 25) {
                     text.substring(0, 22) + "..."
                 } else {
