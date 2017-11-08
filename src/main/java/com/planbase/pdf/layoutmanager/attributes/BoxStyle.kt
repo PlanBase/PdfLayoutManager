@@ -16,8 +16,14 @@ data class BoxStyle(val padding: Padding = Padding.NO_PADDING,
         val NONE = BoxStyle(Padding.NO_PADDING, null, BorderStyle.NO_BORDERS)
     }
 
-    fun topBottomThickness():Float = padding.topBottomPadding() + border.topBottomThickness()
+    /**
+     The top and bottom padding plus half of the top and bottom border thickness.
+     */
+    fun topBottomInteriorSp():Float = padding.topBottomPadding() + (border.topBottomThickness() / 2)
 
-    fun leftRightThickness():Float = padding.leftRightPadding() + border.leftRightThickness()
+    /**
+    The left and right padding plus half of the left and right border thickness.
+     */
+    fun leftRightInteriorSp():Float = padding.leftRightPadding() + (border.leftRightThickness() / 2)
 }
 

@@ -91,7 +91,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
     fun fix() : WrappedCell {
         val fixedLines: List<WrappedMultiLineWrapped> = renderablesToWrappedMultiLineWrappeds(contents, width)
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
-        var height = cellStyle.boxStyle.topBottomThickness()
+        var height = cellStyle.boxStyle.topBottomInteriorSp()
         for (line in fixedLines) {
             height += line.xyDim.height
 //            maxWidth = maxOf(line.xyDim.width, maxWidth)

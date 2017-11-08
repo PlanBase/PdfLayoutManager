@@ -14,8 +14,8 @@ class BoxStyleTest {
                                       LineStyle(CMYK_WHITE, 17f),
                                       LineStyle(CMYK_WHITE, 19f)))
 
-        assertEquals(42f, bs1.leftRightThickness())
-        assertEquals(34f, bs1.topBottomThickness())
+        assertEquals(20f, bs1.topBottomInteriorSp())
+        assertEquals(26f, bs1.leftRightInteriorSp())
 
         val bs2 = BoxStyle(Padding.NO_PADDING,
                            CMYK_BLACK,
@@ -24,14 +24,14 @@ class BoxStyleTest {
                                        LineStyle(CMYK_WHITE, 17f),
                                        LineStyle(CMYK_WHITE, 19f)))
 
-        assertEquals(32f, bs2.leftRightThickness())
-        assertEquals(28f, bs2.topBottomThickness())
+        assertEquals(14f, bs2.topBottomInteriorSp())
+        assertEquals(16f, bs2.leftRightInteriorSp())
 
         val bs3 = BoxStyle(Padding(1f, 3f, 5f, 7f),
                            CMYK_BLACK,
                            BorderStyle.NO_BORDERS)
 
-        assertEquals(10f, bs3.leftRightThickness())
-        assertEquals(6f, bs3.topBottomThickness())
+        assertEquals(6f, bs3.topBottomInteriorSp())
+        assertEquals(10f, bs3.leftRightInteriorSp())
     }
 }

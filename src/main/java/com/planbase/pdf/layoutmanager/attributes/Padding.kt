@@ -40,11 +40,11 @@ data class Padding(val top: Float,
 
     fun subtractFrom(outer: XyDim): XyDim =
             XyDim(outer.width - (left + right),
-                                                       outer.height - (top + bottom))
+                  outer.height - (top + bottom))
 
     fun addTo(outer: XyDim): XyDim =
             XyDim(outer.width + (left + right),
-                                                       outer.height + (top + bottom))
+                  outer.height + (top + bottom))
 
     fun applyTopLeft(orig: XyOffset): XyOffset = XyOffset(orig.x + left, orig.y - top)
 

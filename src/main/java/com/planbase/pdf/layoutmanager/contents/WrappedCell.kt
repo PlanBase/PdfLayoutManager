@@ -44,18 +44,21 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
 
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         println("render() outerTopLeft=" + outerTopLeft)
-        val padding = cellStyle.boxStyle.padding
+        val boxStyle = cellStyle.boxStyle
+        val padding = boxStyle.padding
+        val border = boxStyle.border
         // XyDim xyDim = padding.addTo(pcrs.dim);
 
         // Draw background first (if necessary) so that everything else ends up on top of it.
-        if (cellStyle.boxStyle.bgColor != null) {
+        if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(outerTopLeft, xyDim, cellStyle.boxStyle.bgColor)
+            lp.fillRect(outerTopLeft, xyDim, boxStyle.bgColor)
             //            System.out.println("\tCell.render back from putRect");
         }
 
         // Draw contents over background, but under border
         var innerTopLeft: XyOffset = padding.applyTopLeft(outerTopLeft)
+                .plusXMinusY(XyOffset(border.left.thickness / 2f, border.top.thickness / 2f))
         val innerDimensions: XyDim = padding.subtractFrom(xyDim)
 
 //        val wrappedBlockDim = xyDim
@@ -82,7 +85,6 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
         println("(inner) bottomY after rendering contents:" + bottomY)
 
         // Draw border last to cover anything that touches it?
-        val border = cellStyle.boxStyle.border
         if (border != BorderStyle.NO_BORDERS) {
             val origX = outerTopLeft.x
             val origY = outerTopLeft.y

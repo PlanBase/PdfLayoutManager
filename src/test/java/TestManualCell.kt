@@ -53,7 +53,7 @@ class TestManualCell {
         println(wrappedCell)
 
 // TODO: Re-enable
-        assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomThickness(),
+        assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedCell.lineHeight)
 
         assertEquals(cellWidth,
