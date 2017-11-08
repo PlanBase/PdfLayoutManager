@@ -90,13 +90,13 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 
     fun fix() : WrappedCell {
         val fixedLines: List<WrappedMultiLineWrapped> = renderablesToWrappedMultiLineWrappeds(contents, width)
-        var maxWidth = 0f
-        var height = 0f
+//        var maxWidth = cellStyle.boxStyle.leftRightThickness()
+        var height = cellStyle.boxStyle.topBottomThickness()
         for (line in fixedLines) {
             height += line.xyDim.height
-            maxWidth = maxOf(line.xyDim.width, maxWidth)
+//            maxWidth = maxOf(line.xyDim.width, maxWidth)
         }
-        return WrappedCell(XyDim(maxWidth, height), this, fixedLines)
+        return WrappedCell(XyDim(width, height), this.cellStyle, fixedLines)
     }
 
     override fun lineWrapper() = MultiLineWrapperWrapper(contents.iterator())

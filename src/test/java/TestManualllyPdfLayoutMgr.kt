@@ -4,6 +4,7 @@ import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.LineStyle.Companion.NO_LINE
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
@@ -47,14 +48,14 @@ class TestManualllyPdfLayoutMgr {
         // Set up some useful styles for later
         val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, RGB_WHITE)
         val headingCell = BoxStyle(textCellPadding, RGB_BLUE,
-                                                                             BorderStyle(null, LineStyle(RGB_WHITE), null, LineStyle(RGB_BLUE)))
+                                   BorderStyle(NO_LINE, LineStyle(RGB_WHITE), NO_LINE, LineStyle(RGB_BLUE)))
         val headingCellR = BoxStyle(textCellPadding, RGB_BLACK,
-                                                                              BorderStyle(null, LineStyle(RGB_BLACK), null, LineStyle(RGB_WHITE)))
+                                    BorderStyle(NO_LINE, LineStyle(RGB_BLACK), NO_LINE, LineStyle(RGB_WHITE)))
 
         val regular = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
         val regularCell = BoxStyle(textCellPadding, null,
-                                                                             BorderStyle(null, LineStyle(RGB_BLACK),
-                                                                                         LineStyle(RGB_BLACK), LineStyle(RGB_BLACK)))
+                                   BorderStyle(NO_LINE, LineStyle(RGB_BLACK),
+                                               LineStyle(RGB_BLACK), LineStyle(RGB_BLACK)))
 
         // Let's draw three tables on our first landscape-style page grouping.
 
@@ -102,7 +103,7 @@ class TestManualllyPdfLayoutMgr {
     companion object {
         internal val RGB_BLACK = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
         internal val RGB_BLUE = PDColor(floatArrayOf(0.2f, 0.2f, 1f), PDDeviceRGB.INSTANCE)
-        internal val RGB_BLUE_GREEN = PDColor(floatArrayOf(0.2f, 0.4f, 1f), PDDeviceRGB.INSTANCE)
+        internal val RGB_BLUE_GREEN = PDColor(floatArrayOf(0.4f, 0.8f, 1f), PDDeviceRGB.INSTANCE)
         internal val RGB_DARK_GRAY = PDColor(floatArrayOf(0.2f, 0.2f, 0.2f), PDDeviceRGB.INSTANCE)
         internal val RGB_LIGHT_GREEN = PDColor(floatArrayOf(0.8f, 1f, 0.8f), PDDeviceRGB.INSTANCE)
         internal val RGB_WHITE = PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)

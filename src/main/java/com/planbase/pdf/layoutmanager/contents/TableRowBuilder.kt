@@ -171,7 +171,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     }
 
-    inner class RowCellBuilder(private val tableRowBuilder: TableRowBuilder) : CellBuilder {
+    class RowCellBuilder(private val tableRowBuilder: TableRowBuilder) : CellBuilder {
         /** {@inheritDoc}  */
         override val width: Float = tableRowBuilder.nextCellSize() // Both require this.
         private var cellStyle: CellStyle = tableRowBuilder.cellStyle // Both require this.

@@ -38,10 +38,10 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
  *
  */
 // Like CSS it's listed Top, Right, Bottom, left
-data class BorderStyle(val top: LineStyle?,
-                       val right: LineStyle?,
-                       val bottom: LineStyle?,
-                       val left: LineStyle?) {
+data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
+                       val right: LineStyle = LineStyle.NO_LINE,
+                       val bottom: LineStyle = LineStyle.NO_LINE,
+                       val left: LineStyle = LineStyle.NO_LINE) {
 
     /**
      * Returns an equal border on all sides
@@ -70,6 +70,10 @@ data class BorderStyle(val top: LineStyle?,
     fun bottom(ls: LineStyle) = BorderStyle(top, right, ls, left)
     fun left(ls: LineStyle) = BorderStyle(top, right, bottom, ls)
 
+    fun topBottomThickness():Float = top.thickness + bottom.thickness
+
+    fun leftRightThickness():Float = left.thickness + right.thickness
+
     override fun toString() =
             if ((top == right) && (top == bottom) && (top == left)) {
                 "BorderStyle($top)"
@@ -78,6 +82,6 @@ data class BorderStyle(val top: LineStyle?,
             }
 
     companion object {
-        val NO_BORDERS = BorderStyle(null, null, null, null)
+        val NO_BORDERS = BorderStyle(LineStyle.NO_LINE)
     }
 }

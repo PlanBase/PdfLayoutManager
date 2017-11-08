@@ -43,12 +43,11 @@ abstract class PdfItem(private val serialNumber: Long, val z: Float) : Comparabl
     // @Override
     override fun compareTo(other: PdfItem): Int {
         // Ascending by Z (draw the lower-order background items first)
-        val zDiff = this.z - other.z
-        if (zDiff > 0) {
-            return 1
-        } else if (zDiff < 0) {
-            return -1
+        val zDiff = this.z.compareTo(other.z)
+        if (zDiff != 0) {
+            return zDiff
         }
+
         // Ascending by creation order
         val oDiff = this.serialNumber - other.serialNumber
         if (oDiff > 0) {

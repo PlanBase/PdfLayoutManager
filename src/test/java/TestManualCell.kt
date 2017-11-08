@@ -44,20 +44,20 @@ class TestManualCell {
 
         val boxStyle = BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))
         val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
+        val cellWidth = 300f
         val cell = Cell(CellStyle(boxStyle, Align.BOTTOM_CENTER),
-                        300f, listOf(Text(textStyle, "Hello")))
+                        cellWidth, listOf(Text(textStyle, "Hello")))
         println(cell)
         println()
         val wrappedCell: WrappedCell = cell.fix()
         println(wrappedCell)
 
 // TODO: Re-enable
-//        assertEquals(textStyle.lineHeight() +
-//                     (cell.cellStyle.boxStyle.padding?.top ?: 0f) +
-//                     (cell.cellStyle.boxStyle.padding?.bottom ?: 0f) +
-//                     (cell.cellStyle.boxStyle.border?.top?.thickness ?: 0f) +
-//                     (cell.cellStyle.boxStyle.border?.bottom?.thickness ?: 0f),
-//                     wrappedCell.lineHeight)
+        assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomThickness(),
+                     wrappedCell.lineHeight)
+
+        assertEquals(cellWidth,
+                     wrappedCell.xyDim.width)
 
         val xyOff : XyOffset = wrappedCell.render(lp, XyOffset(40f, 200f))
 

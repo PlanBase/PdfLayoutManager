@@ -27,16 +27,17 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
  Represents the color and width of a line (line meaning a long narrow mark or band).
  DashStyle (and maybe capStyle or joinStyle?) could be added later.  Immutable.
  */
-data class LineStyle(val color: PDColor, val thickness: Float) {
+data class LineStyle(val color: PDColor?, val thickness: Float) {
     constructor(color: PDColor) : this(color, DEFAULT_WIDTH)
 
     init {
-        if (thickness <= 0) { throw IllegalArgumentException("TextLine Style must have a positive width.") }
+        if (thickness < 0) { throw IllegalArgumentException("LineStyle cannot have a negative width.") }
     }
 
     override fun toString() = "LineStyle(${colorToString(color)}, $thickness)"
 
     companion object {
         val DEFAULT_WIDTH = 1f
+        val NO_LINE = LineStyle(null, 0f)
     }
 }

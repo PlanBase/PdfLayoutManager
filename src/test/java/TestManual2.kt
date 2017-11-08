@@ -181,7 +181,7 @@ fun testBodyMargins() {
         val CMYK_DARK_GRAY = PDColor(floatArrayOf(0f, 0f, 0f, 0.2f), PDDeviceCMYK.INSTANCE)
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
 
-        internal val BULLET_CELL_STYLE = CellStyle(BoxStyle(Padding(0f, 4f, 0f, 0f), null, null), TOP_RIGHT)
+        internal val BULLET_CELL_STYLE = CellStyle(BoxStyle(Padding(0f, 4f, 0f, 0f), null, BorderStyle.NO_BORDERS), TOP_RIGHT)
         internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK)
 
         // adj plNoun verb adj descriptiveNoun
