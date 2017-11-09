@@ -40,7 +40,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
     var textStyle: TextStyle? = tablePart.textStyle
     val cellStyle: CellStyle = tablePart.cellStyle
     private val cells: MutableList<Cell?> = ArrayList(tablePart.cellWidths.size)
-    private var minRowHeight = tablePart.minRowHeight
+    var minRowHeight = tablePart.minRowHeight
     private var nextCellIdx = 0
 
 //    private TableRow(TablePart tp, float[] a, Cell[] b, BoxStyle c, TextStyle d) {
@@ -74,7 +74,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
             throw IllegalStateException("Tried to add a text cell without setting a default text style")
         }
         for (s in ss) {
-            addCellAt(Cell(cellStyle, nextCellSize(), listOf(Text(textStyle!!, s))), nextCellIdx)
+            addCellAt(Cell(cellStyle, nextCellSize(), listOf(Text(textStyle!!, s)), this), nextCellIdx)
             nextCellIdx++
         }
         return this
@@ -83,7 +83,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
     // TODO: This should be add LineWrappable Cells.
     fun addImageCells(vararg js: ScaledImage): TableRowBuilder {
         for (j in js) {
-            addCellAt(Cell(cellStyle, nextCellSize(), listOf(j)), nextCellIdx)
+            addCellAt(Cell(cellStyle, nextCellSize(), listOf(j), this), nextCellIdx)
             nextCellIdx++
         }
         return this
@@ -239,7 +239,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         }
 
         fun buildCell(): TableRowBuilder {
-            val c = Cell(cellStyle, width, rows)
+            val c = Cell(cellStyle, width, rows, tableRowBuilder)
             return tableRowBuilder.addCellAt(c, colIdx)
         }
 

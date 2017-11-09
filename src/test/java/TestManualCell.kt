@@ -39,7 +39,7 @@ class TestManualCell {
         val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
         val cellWidth = 300f
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
-                        cellWidth, listOf(Text(textStyle, "Hello")))
+                        cellWidth, listOf(Text(textStyle, "Hello")), null)
         println(cell)
         println()
         val wrappedCell: WrappedCell = cell.fix()

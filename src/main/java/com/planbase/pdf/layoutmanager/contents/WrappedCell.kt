@@ -104,7 +104,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             //
             // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
             // to see if `return y + pby.adj;` still makes sense.
-            bottomY -= padding.bottom
+            bottomY = outerTopLeft.y - xyDim.height // -= padding.bottom
             println("bottomY after adding padding:" + bottomY)
 
             // Like CSS it's listed Top, Right, Bottom, left

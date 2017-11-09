@@ -35,11 +35,12 @@ import com.planbase.pdf.layoutmanager.utils.XyDim
 data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can override this style
                 val width: Float,
                 // A list of the contents.  It's pretty limiting to have one item per row.
-                private var contents: List<LineWrappable>) : LineWrappable {
+                private var contents: List<LineWrappable>,
+                val tableRow: TableRowBuilder?) : LineWrappable {
     constructor(cs: CellStyle,
                 w: Float,
                 textStyle: TextStyle,
-                text:List<String>) : this(cs, w, text.map{s -> Text(textStyle, s) }.toList())
+                text:List<String>) : this(cs, w, text.map{s -> Text(textStyle, s) }.toList(), null)
 //    private constructor(b:Builder) : this(b.cellStyle ?: CellStyle.DEFAULT, b.width, b.rows)
 
     // Caches XyDims for all content textLines, indexed by desired width (we only have to lay-out again
@@ -92,6 +93,12 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
         val fixedLines: List<WrappedMultiLineWrapped> = renderablesToWrappedMultiLineWrappeds(contents, width)
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
         var height = cellStyle.boxStyle.topBottomInteriorSp()
+
+        if ( (tableRow != null) &&
+             (height < tableRow.minRowHeight) ) {
+            height = tableRow.minRowHeight
+        }
+
         for (line in fixedLines) {
             height += line.xyDim.height
 //            maxWidth = maxOf(line.xyDim.width, maxWidth)
