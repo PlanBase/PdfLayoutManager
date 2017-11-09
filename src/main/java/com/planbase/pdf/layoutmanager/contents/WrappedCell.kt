@@ -90,6 +90,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             val origY = outerTopLeft.y
             val rightX = outerTopLeft.x + xyDim.width
 
+            // TODO: Fix this!
             // This breaks cell rows in order to fix rendering content after images that fall
             // mid-page-break.  Math.min() below is so that when the contents overflow the bottom
             // of the cell, we adjust the cell border downward to match.  We aren't doing the same

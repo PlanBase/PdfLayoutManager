@@ -44,6 +44,7 @@ class Utils private constructor() {
         val CMYK_WHITE = PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)
 
         val RGB_BLACK = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
+        val RGB_WHITE = PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)
 
         /** For implementing briefer toString() methods */
         fun colorToString(color:PDColor?) =
@@ -52,6 +53,7 @@ class Utils private constructor() {
                     pdColorEquator(color, CMYK_BLACK) -> "CMYK_BLACK"
                     pdColorEquator(color, CMYK_WHITE) -> "CMYK_WHITE"
                     pdColorEquator(color, RGB_BLACK) -> "RGB_BLACK"
+                    pdColorEquator(color, RGB_WHITE) -> "RGB_WHITE"
                     else -> {
                         if (color.patternName != null) {
                             color.toString()

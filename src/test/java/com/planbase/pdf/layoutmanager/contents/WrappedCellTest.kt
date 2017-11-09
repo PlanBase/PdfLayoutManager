@@ -1,4 +1,5 @@
-import TestManualllyPdfLayoutMgr.Companion.RGB_BLACK
+package com.planbase.pdf.layoutmanager.contents
+
 import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.Align
@@ -7,20 +8,18 @@ import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.contents.Cell
-import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.contents.WrappedCell
+import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.junit.Assert.*
 import org.junit.Test
 import java.io.FileOutputStream
 import java.io.IOException
-import kotlin.test.assertEquals
 
-class TestManualCell {
+class WrappedCellTest {
     @Test
     @Throws(IOException::class)
     fun testPdf() {
@@ -38,21 +37,27 @@ class TestManualCell {
         val boxStyle = BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))
         val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
         val cellWidth = 300f
+        val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
-                        cellWidth, listOf(Text(textStyle, "Hello")), null)
+                        cellWidth, listOf(hello), null)
         println(cell)
         println()
         val wrappedCell: WrappedCell = cell.fix()
         println(wrappedCell)
 
-// TODO: Re-enable
-        assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedCell.lineHeight)
+        kotlin.test.assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
+                                 wrappedCell.lineHeight)
 
-        assertEquals(cellWidth,
-                     wrappedCell.xyDim.width)
+        kotlin.test.assertEquals(cellWidth,
+                                 wrappedCell.xyDim.width)
 
-        val xyOff : XyOffset = wrappedCell.render(lp, XyOffset(40f, 200f))
+        val upperLeft = XyOffset(100f, 500f)
+
+        kotlin.test.assertEquals(cellWidth,
+                                 wrappedCell.xyDim.width)
+
+        val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
+
 
         lp.commit()
 
