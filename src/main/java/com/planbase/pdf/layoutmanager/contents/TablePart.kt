@@ -88,9 +88,7 @@ class TablePart(private val tableBuilder: TableBuilder) {
         return rightmostLowest
     }
 
-    override fun toString(): String {
-        return "TablePart(" + tableBuilder + " " + System.identityHashCode(this) + ")"
-    }
+    override fun toString(): String = "TablePart($cellWidths, minRowHeight=$minRowHeight, $rows)"
 
     //    public static Builder builder(TableBuilder t) { return new Builder(t); }
     //

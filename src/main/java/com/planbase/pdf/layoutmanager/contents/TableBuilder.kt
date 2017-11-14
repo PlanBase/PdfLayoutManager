@@ -35,7 +35,7 @@ class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
                    var cellStyle: CellStyle = CellStyle.Default,
                    var align: Align = Align.TOP_LEFT,
                    var textStyle: TextStyle? = null,
-                   val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
+                   private val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
     override fun lineWrapper(): LineWrapper {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -79,4 +79,6 @@ class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
     }
 
     fun buildTable() = Table(parts, this.cellStyle)
+
+    override fun toString(): String = "TableBuilder($cellWidths, $cellStyle, $align, $textStyle, $parts)"
 }

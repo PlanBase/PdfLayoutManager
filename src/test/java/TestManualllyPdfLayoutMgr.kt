@@ -10,6 +10,7 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
+import com.planbase.pdf.layoutmanager.contents.TablePart
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_WHITE
@@ -77,7 +78,7 @@ class TestManualllyPdfLayoutMgr {
         // Draw the first table with lots of extra room to show off the vertical and horizontal
         // alignment.
         var tB = TableBuilder()
-        tB.addCellWidths(listOf(120f, 120f, 120f))
+        val tp1 : TablePart = tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder()
                 .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2f),
@@ -95,7 +96,10 @@ class TestManualllyPdfLayoutMgr {
                 .cellBuilder().align(TOP_CENTER).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .cellBuilder().align(TOP_RIGHT).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .buildRow()
-                .rowBuilder()
+
+        println("tp1=" + tp1)
+
+        tp1.rowBuilder()
                 .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()

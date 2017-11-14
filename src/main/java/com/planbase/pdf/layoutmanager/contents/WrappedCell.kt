@@ -43,7 +43,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
     override fun toString() = "WrappedCell($xyDim, $cellStyle, $items)"
 
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
-        println("render() outerTopLeft=" + outerTopLeft)
+//        println("render() outerTopLeft=" + outerTopLeft)
         val boxStyle = cellStyle.boxStyle
         val padding = boxStyle.padding
         val border = boxStyle.border
@@ -74,15 +74,15 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
 
         var outerLowerRight = innerTopLeft
         var bottomY = innerTopLeft.y
-        println("(inner) bottomY starts at top:" + bottomY)
+//        println("(inner) bottomY starts at top:" + bottomY)
         for (line in items) {
             val rowXOffset = cellStyle.align.leftOffset(xyDim.width, line.xyDim.width)
             outerLowerRight = line.render(lp, XyOffset(rowXOffset + innerTopLeft.x, bottomY))
-            println("outerLowerRight:" + outerLowerRight)
+//            println("outerLowerRight:" + outerLowerRight)
             bottomY -= outerLowerRight.y // y is always the lowest item in the cell.
             //            innerTopLeft = outerLowerRight.x(innerTopLeft.x);
         }
-        println("(inner) bottomY after rendering contents:" + bottomY)
+//        println("(inner) bottomY after rendering contents:" + bottomY)
 
         // Draw border last to cover anything that touches it?
         if (border != BorderStyle.NO_BORDERS) {
@@ -106,7 +106,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
             // to see if `return y + pby.adj;` still makes sense.
             bottomY = outerTopLeft.y - xyDim.height // -= padding.bottom
-            println("bottomY after adding padding:" + bottomY)
+//            println("bottomY after adding padding:" + bottomY)
 
             // Like CSS it's listed Top, Right, Bottom, left
             if (border.top.thickness > 0) {

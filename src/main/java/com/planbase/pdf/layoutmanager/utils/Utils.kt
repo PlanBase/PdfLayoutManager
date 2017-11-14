@@ -60,7 +60,7 @@ class Utils private constructor() {
                         } else {
                             var ret = color.colorSpace.toString()
                             if (color.components != null) {
-                                ret += Arrays.toString(color.components)
+                                ret += color.components.asList()
                             }
                             ret
                         }

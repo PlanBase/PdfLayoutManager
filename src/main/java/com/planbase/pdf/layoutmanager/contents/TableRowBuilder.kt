@@ -165,11 +165,8 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return XyOffset(x, outerTopLeft.y - maxDim.height)
     }
 
-    override fun toString(): String {
-        return StringBuilder("TableRowBuilder(").append(tablePart).append(" ")
-                .append(System.identityHashCode(this)).append(")").toString()
-
-    }
+    override fun toString(): String =
+            "TableRowBuilder($cells)"
 
     class RowCellBuilder(private val tableRowBuilder: TableRowBuilder) : CellBuilder {
         /** {@inheritDoc}  */
