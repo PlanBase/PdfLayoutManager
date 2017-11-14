@@ -11,7 +11,7 @@ import org.junit.Test
 //import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class WrappedMultiLineWrappedKtTest {
+class MultiLineWrappedTest {
     private val floatCloseEnough = 0.000002f
 
     @Test fun testLine() {
