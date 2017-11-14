@@ -60,7 +60,7 @@ interface LineWrapper {
      */
     fun getIfFits(remainingWidth: Float): ConTermNone
 
-    companion object NO_LINE_WRAPPER : LineWrapper {
+    object EmptyLineWrapper : LineWrapper {
         override fun hasMore() = false
 
         override fun getSomething(maxWidth: Float): ConTerm {
@@ -69,6 +69,26 @@ interface LineWrapper {
 
         override fun getIfFits(remainingWidth: Float): ConTermNone {
             throw UnsupportedOperationException("Can't call getIfFits on a NullLineWrapper")
+        }
+    }
+
+    companion object {
+        fun preWrappedLineWrapper(item: LineWrapped) = object : LineWrapper {
+            private var hasMore = true
+            override fun hasMore(): Boolean = hasMore
+
+            override fun getSomething(maxWidth: Float): ConTerm {
+                hasMore = false
+                return Continuing(item)
+            }
+
+            override fun getIfFits(remainingWidth: Float): ConTermNone =
+                    if (hasMore && (item.xyDim.width <= remainingWidth)) {
+                        hasMore = false
+                        Continuing(item)
+                    } else {
+                        None
+                    }
         }
     }
 }

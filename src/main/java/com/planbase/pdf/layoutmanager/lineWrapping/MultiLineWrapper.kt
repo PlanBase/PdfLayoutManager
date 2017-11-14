@@ -4,12 +4,12 @@ package com.planbase.pdf.layoutmanager.lineWrapping
 // Not sure yet that it's really needed.
 // The name pronounced, "Multi- LineWrapper Wrapper"  LineWrapper is something that does line breaking.
 // The last word, "Wrapper" means "container"
-class MultiLineWrapperWrapper(private val items: Iterator<LineWrappable>) : LineWrapper {
+class MultiLineWrapper(private val items: Iterator<LineWrappable>) : LineWrapper {
     private var internLineWrapper: LineWrapper =
             if (items.hasNext()) {
                 items.next().lineWrapper()
             } else {
-                LineWrapper
+                LineWrapper.EmptyLineWrapper
             }
 
     private fun ensureValidInternLineWrapper() {

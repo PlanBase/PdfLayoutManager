@@ -20,16 +20,17 @@
 
 package com.planbase.pdf.layoutmanager.lineWrapping
 
-import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.pages.PageGrouping
+import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 
-// TODO: Rename to WrappedLine
 /**
-A mutable data structure to hold a wrapped line.
+A mutable data structure to hold a wrapped line consisting of multiple items.
  @param source
  */
-class WrappedMultiLineWrapped : LineWrapped {
+class MultiLineWrapped : LineWrapped {
     var width: Float = 0f
 
     override val xyDim: XyDim
@@ -45,7 +46,7 @@ class WrappedMultiLineWrapped : LineWrapped {
     val items: MutableList<LineWrapped> = mutableListOf()
 
     fun isEmpty() = items.isEmpty()
-    fun append(fi : LineWrapped): WrappedMultiLineWrapped {
+    fun append(fi : LineWrapped): MultiLineWrapped {
         ascent = maxOf(ascent, fi.ascent)
         descentAndLeading = maxOf(descentAndLeading, fi.descentAndLeading)
         width += fi.xyDim.width
@@ -53,11 +54,37 @@ class WrappedMultiLineWrapped : LineWrapped {
         return this
     }
 
-    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+    /**
+    This page-breaks line-wrapped rows in order to fix content that falls across a page-break.
+    When the contents overflow the bottom of the cell, we adjust the cell border and background downward to match.
+
+    This adjustment is calculated by calling PdfLayoutMgr.appropriatePage().
+
+    TODO:  check PageGrouping.drawImage() and .drawPng() to see if `return y + pby.adj;` still makes sense.
+     */
+    override fun pageBreak(mgr: PdfLayoutMgr, pageGrouping: PageGrouping, topLeft: XyOffset):PageBroken {
+        val y = topLeft.y
+        var maxYAdj = 0f
+        var pageBuffer: SinglePage? = null
+        for (item: LineWrapped in items) {
+            val pby: PageGrouping.PageBufferAndY = mgr.appropriatePage(pageGrouping, y, xyDim.height)
+            if (pby.adj > maxYAdj) {
+                maxYAdj = pby.adj
+            }
+            if (pageBuffer == null) {
+                pageBuffer = pby.pb
+            } else if (pageBuffer.pageNum < pby.pb.pageNum) {
+                pageBuffer = pby.pb
+            }
+        }
+        return PageBrokenHolder(pageBuffer!!, topLeft, xyDim.plus(XyDim(0f, maxYAdj)), items.toList())
+    }
+
+    override fun renderToPage(singlePage: SinglePage, outerTopLeft: XyOffset): XyOffset {
         var x:Float = outerTopLeft.x
         val y = outerTopLeft.y
         for (item: LineWrapped in items) {
-            item.render(lp, XyOffset(x, y - item.ascent))
+            item.renderToPage(singlePage, XyOffset(x, y - item.ascent))
             x += item.xyDim.width
         }
         return XyOffset(x, lineHeight)
@@ -94,25 +121,25 @@ For each renderable
         start a new line.
  */
 
-private fun addLineToWrappedMultiLineWrappedsCheckBlank(WrappedMultiLineWrappeds: MutableList<WrappedMultiLineWrapped>, line: WrappedMultiLineWrapped) {
+private fun addLineToMultiLineWrappedsCheckBlank(MultiLineWrappeds: MutableList<MultiLineWrapped>, line: MultiLineWrapped) {
     // If this item is a blank line, take the height from the previous item (if there is one).
-    if (line.isEmpty() && WrappedMultiLineWrappeds.isNotEmpty())  {
-        val lastRealItem: LineWrapped = WrappedMultiLineWrappeds.last().items.last()
+    if (line.isEmpty() && MultiLineWrappeds.isNotEmpty())  {
+        val lastRealItem: LineWrapped = MultiLineWrappeds.last().items.last()
         line.ascent = lastRealItem.ascent
         line.descentAndLeading = lastRealItem.descentAndLeading
     }
     // Now add the line to the list.
-    WrappedMultiLineWrappeds.add(line)
+    MultiLineWrappeds.add(line)
 }
 
-fun renderablesToWrappedMultiLineWrappeds(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<WrappedMultiLineWrapped> {
+fun renderablesToMultiLineWrappeds(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<MultiLineWrapped> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }
 
     // Really should call this "List of wrapped, wrapped line lists"
-    val listOfWrappedWrappedLineLists: MutableList<WrappedMultiLineWrapped> = mutableListOf()
-    var line = WrappedMultiLineWrapped() // Is this right, putting no source here?
+    val listOfWrappedWrappedLineLists: MutableList<MultiLineWrapped> = mutableListOf()
+    var line = MultiLineWrapped() // Is this right, putting no source here?
 
     for (item in itemsInBlock) {
         val rtor: LineWrapper = item.lineWrapper()
@@ -124,8 +151,8 @@ fun renderablesToWrappedMultiLineWrappeds(itemsInBlock: List<LineWrappable>, max
                 if (something is Terminal) {
 //                    println("=============== TERMINAL")
 //                    println("something:" + something)
-                    addLineToWrappedMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
-                    line = WrappedMultiLineWrapped()
+                    addLineToMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
+                    line = MultiLineWrapped()
                 }
             } else {
                 val ctn: ConTermNone = rtor.getIfFits(maxWidth - line.width)
@@ -138,18 +165,18 @@ fun renderablesToWrappedMultiLineWrappeds(itemsInBlock: List<LineWrappable>, max
 //                        println("=============== TERMINAL 222222222")
 //                        println("ctn:" + ctn)
                         line.append(ctn.item)
-                        line = WrappedMultiLineWrapped()
+                        line = MultiLineWrapped()
                     }
                     None -> {
-//                        WrappedMultiLineWrappeds.add(line)
-                        addLineToWrappedMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
-                        line = WrappedMultiLineWrapped()
+//                        MultiLineWrappeds.add(line)
+                        addLineToMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
+                        line = MultiLineWrapped()
                     }}
             }
         }
     }
     // Don't forget to add last item.
-    addLineToWrappedMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
+    addLineToMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
 
     return listOfWrappedWrappedLineLists.toList()
 }

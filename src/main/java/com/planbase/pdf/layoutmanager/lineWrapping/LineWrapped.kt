@@ -20,12 +20,18 @@
 
 package com.planbase.pdf.layoutmanager.lineWrapping
 
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 
 /**
- Represents a fixed-size item.  Classes implementing this interface should be immutable.
+ Represents a fixed-size item, line-wrapped, but not page broken.
+ If we want to render something on a single page (header, footer, page number, watermark, etc.), we can render from here.
+ If we want to break across multiple pages, call pageBreak().
+ Classes implementing this interface should be immutable.
  */
 interface LineWrapped {
     val xyDim: XyDim
@@ -41,16 +47,17 @@ interface LineWrapped {
     /** Total vertical height this line, both above and below the baseline */
     val lineHeight: Float
 
-    /**
-     Sends the underlying object to PDFBox to be drawn.
+    fun renderToPage(singlePage: SinglePage, outerTopLeft: XyOffset): XyOffset
 
-     @param lp RenderTarget is the SinglePage or PageGrouping to draw to.  This will contain the paper size,
-     orientation, and body area which are necessary in order to calculate page breaking
-     @param outerTopLeft is the offset where this item starts.
-     @return the XyOffset of the outer bottom-right of the rendered item which may include extra (vertical) spacing
-     required to nudge some items onto the next page so they don't end up in the margin or off the page.
+    /**
+    This page-breaks line-wrapped rows in order to fix content that falls across a page-break.
+    When the contents overflow the bottom of the cell, we adjust the cell border and background downward to match.
+
+    This adjustment is calculated by calling PdfLayoutMgr.appropriatePage().
+
+    TODO:  check PageGrouping.drawImage() and .drawPng() to see if `return y + pby.adj;` still makes sense.
      */
-    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset
+    fun pageBreak(mgr: PdfLayoutMgr, pageGrouping: PageGrouping, topLeft: XyOffset):PageBroken
 
     object ZeroLineWrapped: LineWrapped {
         override val xyDim: XyDim = XyDim.ZERO
@@ -61,27 +68,10 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset = outerTopLeft
-    }
+        override fun renderToPage(singlePage: SinglePage, outerTopLeft: XyOffset): XyOffset = outerTopLeft
 
-    companion object {
-
-        fun preWrappedLineWrapper(item: LineWrapped) = object : LineWrapper {
-            private var hasMore = true
-            override fun hasMore(): Boolean = hasMore
-
-            override fun getSomething(maxWidth: Float): ConTerm {
-                hasMore = false
-                return Continuing(item)
-            }
-
-            override fun getIfFits(remainingWidth: Float): ConTermNone =
-                    if (hasMore && (item.xyDim.width <= remainingWidth)) {
-                        hasMore = false
-                        Continuing(item)
-                    } else {
-                        None
-                    }
+        override fun pageBreak(mgr: PdfLayoutMgr, pageGrouping: PageGrouping, topLeft: XyOffset): PageBroken {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
     }
 }

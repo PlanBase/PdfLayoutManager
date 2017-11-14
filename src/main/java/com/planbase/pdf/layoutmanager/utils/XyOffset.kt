@@ -39,6 +39,8 @@ data class XyOffset(val x: Float, val y: Float) {
 
     fun plusXMinusY(that: XyOffset) = XyOffset(x + that.x, y - that.y)
 
+    fun plusXMinusY(that: XyDim) = XyOffset(x + that.width, y - that.height)
+
     //    public XyOffset maxXandY(XyOffset that) {
     //        if ((this.x >= that.x()) && (this.y >= that.y())) { return this; }
     //        if ((this.x <= that.x()) && (this.y <= that.y())) { return that; }

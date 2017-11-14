@@ -51,7 +51,7 @@ class ScaledImage(private val bufferedImage: BufferedImage,
             this(bufferedImage, XyDim(bufferedImage.width * IMAGE_SCALE,
                                       bufferedImage.height * IMAGE_SCALE))
 
-    override fun lineWrapper(): LineWrapper = LineWrapped.preWrappedLineWrapper(WrappedImage(bufferedImage, xyDim))
+    override fun lineWrapper(): LineWrapper = LineWrapper.preWrappedLineWrapper(WrappedImage(bufferedImage, xyDim))
 
     data class WrappedImage(val bufferedImage: BufferedImage,
                             override val xyDim: XyDim) : LineWrapped {

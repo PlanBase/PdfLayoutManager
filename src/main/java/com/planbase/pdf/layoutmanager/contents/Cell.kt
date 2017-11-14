@@ -23,9 +23,9 @@ package com.planbase.pdf.layoutmanager.contents
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
-import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapperWrapper
-import com.planbase.pdf.layoutmanager.lineWrapping.WrappedMultiLineWrapped
-import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToWrappedMultiLineWrappeds
+import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapper
+import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
+import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToMultiLineWrappeds
 import com.planbase.pdf.layoutmanager.utils.XyDim
 
 /**
@@ -90,7 +90,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //    }
 
     fun fix() : WrappedCell {
-        val fixedLines: List<WrappedMultiLineWrapped> = renderablesToWrappedMultiLineWrappeds(contents, width)
+        val fixedLines: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(contents, width)
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
         var height = cellStyle.boxStyle.topBottomInteriorSp()
 
@@ -106,7 +106,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
         return WrappedCell(XyDim(width, height), this.cellStyle, fixedLines)
     }
 
-    override fun lineWrapper() = MultiLineWrapperWrapper(contents.iterator())
+    override fun lineWrapper() = MultiLineWrapper(contents.iterator())
 
     //    fun calcDimensions(maxWidth: Float): XyDim {
 //        // I think zero or negative width cells might be OK to ignore.  I'd like to try to make

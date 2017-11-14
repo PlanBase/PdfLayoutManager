@@ -97,4 +97,5 @@ A sample PDF named `test.pdf` shows up in the root folder of this project when y
 A jar file can be built with `mvn clean package` and ends up in the `target/` sub-folder.  Or type `mvn clean install` to build and install into your local maven repository.
 
 # To Do
+* Add another pass for table cells.  We already have a line-wrapping pass, but these need a page-breaking pass too so that any extra height (to avoid page breaks) can be calculated before drawing background and borders.
 * Make y=0 mean the top of the page instead of the bottom.

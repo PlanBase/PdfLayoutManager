@@ -32,6 +32,6 @@ interface LineWrappable {
 
     companion object ZeroLineWrappable: LineWrappable {
 //        override val boxStyle = BoxStyle.NONE
-        override fun lineWrapper() = LineWrapper.NO_LINE_WRAPPER
+        override fun lineWrapper() = LineWrapper.EmptyLineWrapper
     }
 }
