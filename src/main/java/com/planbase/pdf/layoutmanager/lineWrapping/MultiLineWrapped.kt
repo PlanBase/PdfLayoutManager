@@ -20,9 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.lineWrapping
 
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.pages.PageGrouping
-import com.planbase.pdf.layoutmanager.pages.SinglePage
+import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 
@@ -54,37 +52,11 @@ class MultiLineWrapped : LineWrapped {
         return this
     }
 
-    /**
-    This page-breaks line-wrapped rows in order to fix content that falls across a page-break.
-    When the contents overflow the bottom of the cell, we adjust the cell border and background downward to match.
-
-    This adjustment is calculated by calling PdfLayoutMgr.appropriatePage().
-
-    TODO:  check PageGrouping.drawImage() and .drawPng() to see if `return y + pby.adj;` still makes sense.
-     */
-    override fun pageBreak(mgr: PdfLayoutMgr, pageGrouping: PageGrouping, topLeft: XyOffset):PageBroken {
-        val y = topLeft.y
-        var maxYAdj = 0f
-        var pageBuffer: SinglePage? = null
-        for (item: LineWrapped in items) {
-            val pby: PageGrouping.PageBufferAndY = mgr.appropriatePage(pageGrouping, y, xyDim.height)
-            if (pby.adj > maxYAdj) {
-                maxYAdj = pby.adj
-            }
-            if (pageBuffer == null) {
-                pageBuffer = pby.pb
-            } else if (pageBuffer.pageNum < pby.pb.pageNum) {
-                pageBuffer = pby.pb
-            }
-        }
-        return PageBrokenHolder(pageBuffer!!, topLeft, xyDim.plus(XyDim(0f, maxYAdj)), items.toList())
-    }
-
-    override fun renderToPage(singlePage: SinglePage, outerTopLeft: XyOffset): XyOffset {
+    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         var x:Float = outerTopLeft.x
         val y = outerTopLeft.y
         for (item: LineWrapped in items) {
-            item.renderToPage(singlePage, XyOffset(x, y - item.ascent))
+            item.render(lp, XyOffset(x, y - item.ascent))
             x += item.xyDim.width
         }
         return XyOffset(x, lineHeight)
