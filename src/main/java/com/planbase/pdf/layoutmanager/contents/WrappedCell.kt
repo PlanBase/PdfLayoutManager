@@ -61,12 +61,14 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
                 .plusXMinusY(XyOffset(border.left.thickness / 2f, border.top.thickness / 2f))
         val innerDimensions: XyDim = padding.subtractFrom(xyDim)
 
+        // TODO: We are missing the wrappedBlockDim.
 //        val wrappedBlockDim = xyDim
 //        System.out.println("\tCell.render cellStyle.align()=" + cellStyle.align());
 //        System.out.println("\tCell.render xyDim=" + xyDim);
 //        System.out.println("\tCell.render padding=" + padding);
 //        System.out.println("\tCell.render innerDimensions=" + innerDimensions);
 //        System.out.println("\tCell.render wrappedBlockDim=" + wrappedBlockDim);
+        // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
         val alignPad = cellStyle.align.calcPadding(innerDimensions, xyDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
         innerTopLeft = XyOffset(innerTopLeft.x + alignPad.left,

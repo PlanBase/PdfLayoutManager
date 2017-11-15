@@ -15,7 +15,6 @@ import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.junit.Assert.*
 import org.junit.Test
 import java.io.FileOutputStream
 
@@ -59,7 +58,7 @@ class CellTest {
         kotlin.test.assertEquals((lp.yBodyTop() - squareDim), xya.y)
         lp.commit()
 
-//        val os = FileOutputStream("testTable.pdf")
+//        val os = FileOutputStream("testCell1.pdf")
 //        pageMgr.save(os)
     }
 

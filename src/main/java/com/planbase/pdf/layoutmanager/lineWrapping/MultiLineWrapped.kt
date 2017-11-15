@@ -28,20 +28,15 @@ import com.planbase.pdf.layoutmanager.utils.XyOffset
 A mutable data structure to hold a wrapped line consisting of multiple items.
  @param source
  */
-class MultiLineWrapped : LineWrapped {
-    var width: Float = 0f
-
+class MultiLineWrapped(var width: Float = 0f,
+                       override var ascent: Float = 0f,
+                       override var descentAndLeading: Float = 0f,
+                       val items: MutableList<LineWrapped> = mutableListOf()) : LineWrapped {
     override val xyDim: XyDim
             get() = XyDim(width, lineHeight)
 
-    override var ascent: Float = 0f
-
-    override var descentAndLeading: Float = 0f
-
     override val lineHeight: Float
             get() = ascent + descentAndLeading
-
-    val items: MutableList<LineWrapped> = mutableListOf()
 
     fun isEmpty() = items.isEmpty()
     fun append(fi : LineWrapped): MultiLineWrapped {
@@ -63,8 +58,8 @@ class MultiLineWrapped : LineWrapped {
     }
 
     override fun toString(): String {
-        return "WrappedMultiLineWrapped(width=$width ascent=$ascent descentAndLeading=$descentAndLeading" +
-               " height=$lineHeight items=\n" +
+        return "MultiLineWrapped(width=$width, ascent=$ascent, descentAndLeading=$descentAndLeading," +
+               " items=\n" +
                items.fold(StringBuilder("["),
                           {acc, item ->
                               if (acc.length > 1) acc.append(",\n ")

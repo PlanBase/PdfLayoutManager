@@ -35,9 +35,7 @@ enum class Align {
             } else Padding(0f, outer.width - inner.width, outer.height - inner.height, 0f)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return 0f
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
     },
     TOP_CENTER {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -48,9 +46,8 @@ enum class Align {
             return Padding(0f, dx, outer.height - inner.height, dx)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
+                if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
     },
     TOP_RIGHT {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -59,9 +56,8 @@ enum class Align {
             } else Padding(0f, 0f, outer.height - inner.height, outer.width - inner.width)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
+                if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
     },
     MIDDLE_LEFT {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -72,9 +68,7 @@ enum class Align {
             return Padding(dy, outer.width - inner.width, dy, 0f)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return 0f
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
     },
     MIDDLE_CENTER {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -86,9 +80,8 @@ enum class Align {
             return Padding(dy, dx, dy, dx)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
+                if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
     },
     MIDDLE_RIGHT {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -99,9 +92,8 @@ enum class Align {
             return Padding(dy, 0f, dy, outer.width - inner.width)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
+                if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
     },
     BOTTOM_LEFT {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -110,9 +102,7 @@ enum class Align {
             } else Padding(outer.height - inner.height, outer.width - inner.width, 0f, 0f)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return 0f
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
     },
     BOTTOM_CENTER {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -127,9 +117,8 @@ enum class Align {
             return Padding(outer.height - inner.height, dx, 0f, dx)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
+                if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
     },
     BOTTOM_RIGHT {
         override fun calcPadding(outer: XyDim, inner: XyDim): Padding {
@@ -138,27 +127,26 @@ enum class Align {
             } else Padding(outer.height - inner.height, 0f, 0f, outer.width - inner.width)
         }
 
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float {
-            return if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
-        }
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
+                if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
     };
 
     /**
     Given outer dimensions (make sure to add padding as necessary), and inner dimensions,
-    calculates additional padding to apply.
+    calculates *additional* padding to apply.
      */
     abstract fun calcPadding(outer: XyDim, inner: XyDim): Padding
 
     abstract fun leftOffset(outerWidth: Float, innerWidth: Float): Float
 
-    // NOTE: This lincluded the padding!
-    //    public float calcLeftX(float x, float spareRoom) {
-    //        return HorizAlign.LEFT == align ? x + padding.left() :
-    //               HorizAlign.CENTER == align ? x + (spareRoom / 2) :
-    //               HorizAlign.RIGHT == align ? x + spareRoom - padding.right() :
-    //               x;
-    //    }
-    companion object {
-        val DEFAULT = TOP_LEFT
-    }
+//    // NOTE: This included the padding!
+//    //    public float calcLeftX(float x, float spareRoom) {
+//    //        return HorizAlign.LEFT == align ? x + padding.left() :
+//    //               HorizAlign.CENTER == align ? x + (spareRoom / 2) :
+//    //               HorizAlign.RIGHT == align ? x + spareRoom - padding.right() :
+//    //               x;
+//    //    }
+//    companion object {
+//        val DEFAULT = TOP_LEFT
+//    }
 }
