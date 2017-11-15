@@ -66,4 +66,6 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         }
         return rightmostLowest
     }
+
+    override fun toString(): String = "Table($parts)"
 }

@@ -165,7 +165,7 @@ fun testBodyMargins() {
                                   "best points got the economic waters " +
                                   "and problems gave great. The whole " +
                                   "countries went the best children and " +
-                                  "eyes came able."))), null).fix())
+                                  "eyes came able."))), null).wrap())
     //        table
     //        );
     lp.commit()

@@ -36,7 +36,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
                 val width: Float,
                 // A list of the contents.  It's pretty limiting to have one item per row.
                 private var contents: List<LineWrappable>,
-                val tableRow: TableRowBuilder?) : LineWrappable {
+                private val tableRow: TableRowBuilder?) : LineWrappable {
     constructor(cs: CellStyle,
                 w: Float,
                 textStyle: TextStyle,
@@ -89,20 +89,21 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //        return pcl!!
 //    }
 
-    fun fix() : WrappedCell {
+    fun wrap() : WrappedCell {
         val fixedLines: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(contents, width)
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
         var height = cellStyle.boxStyle.topBottomInteriorSp()
+
+        for (line in fixedLines) {
+            height += line.xyDim.height
+//            maxWidth = maxOf(line.xyDim.width, maxWidth)
+        }
 
         if ( (tableRow != null) &&
              (height < tableRow.minRowHeight) ) {
             height = tableRow.minRowHeight
         }
 
-        for (line in fixedLines) {
-            height += line.xyDim.height
-//            maxWidth = maxOf(line.xyDim.width, maxWidth)
-        }
         return WrappedCell(XyDim(width, height), this.cellStyle, fixedLines)
     }
 

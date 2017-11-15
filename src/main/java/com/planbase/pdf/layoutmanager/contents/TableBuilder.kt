@@ -80,5 +80,5 @@ class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
 
     fun buildTable() = Table(parts, this.cellStyle)
 
-    override fun toString(): String = "TableBuilder($cellWidths, $cellStyle, $align, $textStyle, $parts)"
+    override fun toString(): String = "TableBuilder($cellWidths, $parts)"
 }

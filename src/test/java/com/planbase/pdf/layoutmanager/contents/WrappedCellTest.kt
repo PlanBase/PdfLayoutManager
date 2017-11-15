@@ -15,9 +15,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
 import java.io.IOException
-import kotlin.test.assertEquals
 
 class WrappedCellTest {
     @Test
@@ -42,7 +40,7 @@ class WrappedCellTest {
                         cellWidth, listOf(hello), null)
         println(cell)
         println()
-        val wrappedCell: WrappedCell = cell.fix()
+        val wrappedCell: WrappedCell = cell.wrap()
         println(wrappedCell)
 
         kotlin.test.assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
@@ -97,7 +95,7 @@ class WrappedCellTest {
                         cellWidth, listOf(hello), null)
         println(cell)
         println()
-        val wrappedCell: WrappedCell = cell.fix()
+        val wrappedCell: WrappedCell = cell.wrap()
         println(wrappedCell)
 
         kotlin.test.assertEquals((textStyle.lineHeight() * 3) + cell.cellStyle.boxStyle.topBottomInteriorSp(),

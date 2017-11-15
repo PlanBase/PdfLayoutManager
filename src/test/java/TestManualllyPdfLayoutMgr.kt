@@ -8,10 +8,7 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle.Companion.NO_LINE
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
-import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
-import com.planbase.pdf.layoutmanager.contents.TablePart
-import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_WHITE
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -23,17 +20,12 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.awt.image.BufferedImage
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-import javax.imageio.ImageIO
 
 class TestManualllyPdfLayoutMgr {
 
-    @Test
-    @Throws(IOException::class)
-    fun testPdf() {
+    @Test fun testPdf() {
         // Nothing happens without a PdfLayoutMgr.
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
 
@@ -78,7 +70,7 @@ class TestManualllyPdfLayoutMgr {
         // Draw the first table with lots of extra room to show off the vertical and horizontal
         // alignment.
         var tB = TableBuilder()
-        val tp1 : TablePart = tB.addCellWidths(listOf(120f, 120f, 120f))
+        tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder()
                 .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2f),
@@ -96,10 +88,7 @@ class TestManualllyPdfLayoutMgr {
                 .cellBuilder().align(TOP_CENTER).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .cellBuilder().align(TOP_RIGHT).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .buildRow()
-
-        println("tp1=" + tp1)
-
-        tp1.rowBuilder()
+                .rowBuilder()
                 .cellBuilder().align(MIDDLE_LEFT).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .cellBuilder().align(MIDDLE_CENTER).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
                 .cellBuilder().align(MIDDLE_RIGHT).addStrs("Line 1\n", "Line two\n", "Line three").buildCell()
@@ -219,7 +208,7 @@ class TestManualllyPdfLayoutMgr {
                                            BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
                                  200f,
                                  TextStyle(liberationFont, 12f, RGB_BLACK),
-                                 listOf("Hello Liberation Mono Bold Font!")).fix())
+                                 listOf("Hello Liberation Mono Bold Font!")).wrap())
 
                 tB = TableBuilder()
                 tB.addCellWidths(listOf(100f))
@@ -245,7 +234,7 @@ class TestManualllyPdfLayoutMgr {
                             listOf(("Test Logical Page Three" +
                                     " (physical page " + pageNum + ")")))
 
-            cell.fix().render(pb, XyOffset(pMargin, LETTER.width - 27))
+            cell.wrap().render(pb, XyOffset(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 
@@ -436,7 +425,7 @@ class TestManualllyPdfLayoutMgr {
                             pageHeadTextStyle,
                             listOf(("Test Logical Page Four " +
                                     " (physical page " + pageNum + ")")))
-            cell.fix().render(pb, XyOffset(pMargin, LETTER.width - 27))
+            cell.wrap().render(pb, XyOffset(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 
