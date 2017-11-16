@@ -42,6 +42,16 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
 
     override fun toString() = "WrappedCell($xyDim, $cellStyle, $items)"
 
+    private val wrappedBlockDim: XyDim = {
+        var dim = XyDim.ZERO
+        for (row in items) {
+            val rowDim = row.xyDim
+            dim = XyDim(Math.max(dim.width, rowDim.width),
+                        dim.height + rowDim.height)
+        }
+        dim
+    }()
+
     override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
 //        println("render() outerTopLeft=" + outerTopLeft)
         val boxStyle = cellStyle.boxStyle
@@ -61,15 +71,13 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
                 .plusXMinusY(XyOffset(border.left.thickness / 2f, border.top.thickness / 2f))
         val innerDimensions: XyDim = padding.subtractFrom(xyDim)
 
-        // TODO: We are missing the wrappedBlockDim.
-//        val wrappedBlockDim = xyDim
 //        System.out.println("\tCell.render cellStyle.align()=" + cellStyle.align());
 //        System.out.println("\tCell.render xyDim=" + xyDim);
 //        System.out.println("\tCell.render padding=" + padding);
 //        System.out.println("\tCell.render innerDimensions=" + innerDimensions);
 //        System.out.println("\tCell.render wrappedBlockDim=" + wrappedBlockDim);
         // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
-        val alignPad = cellStyle.align.calcPadding(innerDimensions, xyDim)
+        val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
         innerTopLeft = XyOffset(innerTopLeft.x + alignPad.left,
                                 innerTopLeft.y - alignPad.top)
@@ -78,7 +86,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
         var bottomY = innerTopLeft.y
 //        println("(inner) bottomY starts at top:" + bottomY)
         for (line in items) {
-            val rowXOffset = cellStyle.align.leftOffset(xyDim.width, line.xyDim.width)
+            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.xyDim.width)
             outerLowerRight = line.render(lp, XyOffset(rowXOffset + innerTopLeft.x, bottomY))
 //            println("outerLowerRight:" + outerLowerRight)
             bottomY -= outerLowerRight.y // y is always the lowest item in the cell.

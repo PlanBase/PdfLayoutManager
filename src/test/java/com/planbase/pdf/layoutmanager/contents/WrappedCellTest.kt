@@ -132,7 +132,7 @@ class WrappedCellTest {
 
         // TODO: Enable!
 //        assertEquals(upperLeft.x + cellWidth, xyOff.x)
-//
+
         // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
 //        val xyOff2 : XyOffset = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
