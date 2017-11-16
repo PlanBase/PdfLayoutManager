@@ -8,7 +8,6 @@ import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -18,7 +17,6 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
 import java.io.FileOutputStream
-import java.io.IOException
 import kotlin.test.assertEquals
 
 class WrappedCellTest {
@@ -30,10 +28,9 @@ class WrappedCellTest {
         val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
                         cellWidth, listOf(hello), null)
-        println(cell)
-        println()
+//        println(cell)
         val wrappedCell: WrappedCell = cell.wrap()
-        println(wrappedCell)
+//        println(wrappedCell)
 
         kotlin.test.assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
                                  wrappedCell.lineHeight)
@@ -47,8 +44,8 @@ class WrappedCellTest {
                                  wrappedCell.xyDim.width)
 
         val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
-        println("upperLeft=" + upperLeft)
-        println("xyOff=" + xyOff)
+//        println("upperLeft=" + upperLeft)
+//        println("xyOff=" + xyOff)
 
         // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
 //        val xyOff2 : XyOffset = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
@@ -113,7 +110,7 @@ class WrappedCellTest {
                                                                                          textStyle.lineHeight()),
                                                                                    hello)))))
 //        val wrappedCell = cell.wrap()
-        println("cell.wrap()=${cell.wrap()}")
+//        println("cell.wrap()=${cell.wrap()}")
 
         kotlin.test.assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
                                  wrappedCell.lineHeight)
@@ -127,17 +124,17 @@ class WrappedCellTest {
                                  wrappedCell.xyDim.width)
 
         val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
-        println("upperLeft=" + upperLeft)
-        println("xyOff=" + xyOff)
+//        println("upperLeft=" + upperLeft)
+//        println("xyOff=" + xyOff)
 
         // TODO: Enable!
-//        assertEquals(upperLeft.x + cellWidth, xyOff.x)
+        assertEquals(upperLeft.x + cellWidth, xyOff.x)
 
         // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
 //        val xyOff2 : XyOffset = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
-//        assertEquals(upperLeft.plusXMinusY(XyDim(wrappedCell.xyDim.width, wrappedCell.lineHeight)), xyOff)
+        assertEquals(upperLeft.plusXMinusY(XyDim(wrappedCell.xyDim.width, wrappedCell.lineHeight)), xyOff)
 
 
         lp.commit()

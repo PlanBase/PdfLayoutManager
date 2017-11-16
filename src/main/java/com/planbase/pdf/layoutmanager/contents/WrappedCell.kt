@@ -71,34 +71,24 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
                 .plusXMinusY(XyOffset(border.left.thickness / 2f, border.top.thickness / 2f))
         val innerDimensions: XyDim = padding.subtractFrom(xyDim)
 
-//        System.out.println("\tCell.render cellStyle.align()=" + cellStyle.align());
-//        System.out.println("\tCell.render xyDim=" + xyDim);
-//        System.out.println("\tCell.render padding=" + padding);
-//        System.out.println("\tCell.render innerDimensions=" + innerDimensions);
-//        System.out.println("\tCell.render wrappedBlockDim=" + wrappedBlockDim);
         // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
         val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
         innerTopLeft = XyOffset(innerTopLeft.x + alignPad.left,
                                 innerTopLeft.y - alignPad.top)
 
-        var outerLowerRight = innerTopLeft
         var bottomY = innerTopLeft.y
-//        println("(inner) bottomY starts at top:" + bottomY)
         for (line in items) {
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.xyDim.width)
-            outerLowerRight = line.render(lp, XyOffset(rowXOffset + innerTopLeft.x, bottomY))
-//            println("outerLowerRight:" + outerLowerRight)
-            bottomY -= outerLowerRight.y // y is always the lowest item in the cell.
-            //            innerTopLeft = outerLowerRight.x(innerTopLeft.x);
+            val (_, y) = line.render(lp, XyOffset(rowXOffset + innerTopLeft.x, bottomY))
+            bottomY -= y // y is always the lowest item in the cell.
         }
-//        println("(inner) bottomY after rendering contents:" + bottomY)
 
+        val rightX = outerTopLeft.x + xyDim.width
         // Draw border last to cover anything that touches it?
         if (border != BorderStyle.NO_BORDERS) {
             val origX = outerTopLeft.x
             val origY = outerTopLeft.y
-            val rightX = outerTopLeft.x + xyDim.width
 
             // TODO: Fix this!
             // This breaks cell rows in order to fix rendering content after images that fall
@@ -115,8 +105,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             //
             // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
             // to see if `return y + pby.adj;` still makes sense.
-            bottomY = outerTopLeft.y - xyDim.height // -= padding.bottom
-//            println("bottomY after adding padding:" + bottomY)
+            bottomY = outerTopLeft.y - xyDim.height
 
             // Like CSS it's listed Top, Right, Bottom, left
             if (border.top.thickness > 0) {
@@ -133,6 +122,6 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             }
         }
 
-        return outerLowerRight
+        return XyOffset(rightX, bottomY)
     }
 }

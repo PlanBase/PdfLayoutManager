@@ -53,7 +53,7 @@ fun testBodyMargins() {
     val bodyWidth = PDRectangle.A6.width - 80f
 
     val f = File("target/test-classes/graph2.png")
-    println(f.absolutePath)
+//    println(f.absolutePath)
     val graphPic = ImageIO.read(f)
 
     val lp = pageMgr.logicalPageStart(
