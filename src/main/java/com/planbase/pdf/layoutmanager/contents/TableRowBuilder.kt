@@ -65,10 +65,6 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return this
     }
 
-    fun nextCellIdx(): Int {
-        return nextCellIdx
-    }
-
     fun addTextCells(vararg ss: String): TableRowBuilder {
         if (textStyle == null) {
             throw IllegalStateException("Tried to add a text cell without setting a default text style")
@@ -174,7 +170,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         private var cellStyle: CellStyle = tableRowBuilder.cellStyle // Both require this.
         private val rows = ArrayList<LineWrappable>()
         private var textStyle: TextStyle? = tableRowBuilder.textStyle
-        private val colIdx: Int = tableRowBuilder.nextCellIdx()
+        private val colIdx: Int = tableRowBuilder.nextCellIdx
 
         // I think setting the width after creation is a pretty bad idea for this class since so much
         // is put into getting the width and column correct.
