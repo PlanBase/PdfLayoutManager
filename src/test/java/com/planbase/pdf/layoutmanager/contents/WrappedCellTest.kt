@@ -139,10 +139,10 @@ class WrappedCellTest {
 
         lp.commit()
 
-        // We're just going to write to a file.
-        // Commit it to the output stream!
-        val os = FileOutputStream("wrappedCellRight.pdf")
-        pageMgr.save(os)
+//        // We're just going to write to a file.
+//        // Commit it to the output stream!
+//        val os = FileOutputStream("wrappedCellRight.pdf")
+//        pageMgr.save(os)
     }
 
     companion object {

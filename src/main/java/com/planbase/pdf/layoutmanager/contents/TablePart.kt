@@ -54,18 +54,14 @@ class TablePart(private val tableBuilder: TableBuilder) {
         return this
     }
 
-    fun rowBuilder(): TableRowBuilder {
-        return TableRowBuilder(this)
-    }
+    fun rowBuilder() = TableRowBuilder(this)
 
     fun addRow(trb: TableRowBuilder): TablePart {
         rows.add(trb)
         return this
     }
 
-    fun buildPart(): TableBuilder {
-        return tableBuilder.addPart(this)
-    }
+    fun buildPart(): TableBuilder = tableBuilder.addPart(this)
 
 //    fun calcDimensions(): XyDim {
 //        var maxDim = XyDim.ZERO

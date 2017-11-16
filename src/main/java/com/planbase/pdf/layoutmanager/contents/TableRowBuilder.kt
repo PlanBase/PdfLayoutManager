@@ -145,12 +145,14 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
         var maxDim = XyDim.ZERO.height(minRowHeight)
-        val fixedCells = cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
-        for (fixedCell in fixedCells) {
+        val tempFixedCells = cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
+        for (fixedCell in tempFixedCells) {
             val wh = fixedCell.xyDim
             maxDim = XyDim(maxDim.width + wh.width,
-                                                                Math.max(maxDim.height, wh.height))
+                           Math.max(maxDim.height, wh.height))
         }
+        minRowHeight = maxDim.height
+        val fixedCells = cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
 
         var x = outerTopLeft.x
         for (fixedCell in fixedCells) {
