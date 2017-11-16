@@ -20,7 +20,6 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
-import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
@@ -33,7 +32,6 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
  */
 class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
                    var cellStyle: CellStyle = CellStyle.Default,
-                   var align: Align = Align.TOP_LEFT,
                    var textStyle: TextStyle? = null,
                    private val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
     override fun lineWrapper(): LineWrapper {

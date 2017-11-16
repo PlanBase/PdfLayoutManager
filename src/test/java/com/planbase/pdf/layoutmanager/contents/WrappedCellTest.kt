@@ -16,7 +16,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
 import kotlin.test.assertEquals
 
 class WrappedCellTest {
@@ -43,11 +42,12 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
 
-        val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
+        wrappedCell.render(lp, upperLeft)
+//        val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
-        // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
+        // TODO: This is not right.  Cell should report it's lower-right-hand corner, no?
 //        val xyOff2 : XyOffset = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
@@ -65,10 +65,9 @@ class WrappedCellTest {
         val hello = Text(textStyle, "Hello\nThere\nWorld!")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
                         cellWidth, listOf(hello), null)
-        println(cell)
-        println()
+//        println(cell)
         val wrappedCell: WrappedCell = cell.wrap()
-        println(wrappedCell)
+//        println(wrappedCell)
 
         kotlin.test.assertEquals((textStyle.lineHeight() * 3) + cell.cellStyle.boxStyle.topBottomInteriorSp(),
                                  wrappedCell.lineHeight)
@@ -81,7 +80,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
 
-        val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
+        wrappedCell.render(lp, upperLeft)
         lp.commit()
 
 //        val os = FileOutputStream("test4.pdf")
@@ -97,7 +96,7 @@ class WrappedCellTest {
         val cell = Cell(CellStyle(Align.TOP_RIGHT, boxStyle),
                         cellWidth, listOf(hello), null)
 
-        val wrappedCell : WrappedCell =
+        val wrappedCell =
                 WrappedCell(XyDim(cellWidth,
                                   textStyle.lineHeight() + boxStyle.topBottomInteriorSp()),
                             CellStyle(Align.TOP_RIGHT, boxStyle),

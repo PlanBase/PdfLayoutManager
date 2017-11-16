@@ -124,24 +124,20 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
     // ===================================== Instance Methods =====================================
 
+    fun bodyTopLeft() = XyOffset(bodyRect.lowerLeftX, bodyRect.upperRightY)
+
     /** The Y-value for top of the body section (in document units)  */
-    fun yBodyTop(): Float {
-        return bodyRect.upperRightY
-    }
+    fun yBodyTop(): Float = bodyRect.upperRightY
 
     /**
      * The Y-value for the bottom of the body section (in document units).  The bottom of the page is
      * always zero, so this is always equivalent to the margin body bottom.
      */
-    fun yBodyBottom(): Float {
-        return bodyRect.lowerLeftY
-    }
+    fun yBodyBottom(): Float = bodyRect.lowerLeftY
 
     /** Height (dimension, not offset) of the body section (in document units)  */
     // part of public interface
-    fun bodyHeight(): Float {
-        return bodyRect.height
-    }
+    fun bodyHeight(): Float = bodyRect.height
 
     /**
      * Width of the entire page (in document units).  This is the short dimension for portrait,

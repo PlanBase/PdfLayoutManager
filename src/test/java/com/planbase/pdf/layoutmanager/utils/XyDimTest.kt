@@ -1,12 +1,9 @@
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.utils
 
-import com.planbase.pdf.layoutmanager.utils.XyDim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
-import org.junit.Test
-
 import org.junit.Assert.*
+import org.junit.Test
 import org.organicdesign.testUtils.EqualsContract.equalsDistinctHashCode
-import java.lang.Float
 
 class XyDimTest {
     @Test fun testBasics() {

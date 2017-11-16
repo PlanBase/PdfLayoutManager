@@ -8,7 +8,9 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle.Companion.NO_LINE
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
+import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
+import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_WHITE
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -22,6 +24,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
+import javax.imageio.ImageIO
 
 class TestManualllyPdfLayoutMgr {
 
@@ -239,182 +242,188 @@ class TestManualllyPdfLayoutMgr {
         }
 
         // We're going to reset and reuse this y variable.
-        var y = lp.yBodyTop()
+//        var y = lp.yBodyTop()
 
-//        y = lp.putRow(pMargin, y,
-//                      Cell(headingCell, colWidths[0], heading,
-//                           listOf("Transliterated Russian (with un-transliterated Chinese below)")),
-//                      Cell(headingCellR, colWidths[1], heading, listOf("US English")),
-//                      Cell(headingCellR, colWidths[2], heading, listOf("Finnish")),
-//                      Cell(headingCellR, colWidths[3], heading, listOf("German")))
-//
-//        val f = File("target/test-classes/melon.jpg")
-//        println(f.absolutePath)
-//        val melonPic = ImageIO.read(f)
-//
-//        y = lp.putRow(pMargin, y,
-//                      Cell(regularCell, colWidths[0], regular,
-//                           listOf("This used to have Russian and Chinese text.",
-//                                  "The Russian was transliterated and the",
-//                                  "Chinese was turned into bullets.",
-//                                  "PDFBox 2.x, now handles many characters better,",
-//                                  "but throws exceptions for",
-//                                  "characters it doesn't understand.",
-//                                  "Truth be told, I don't understand so well how",
-//                                  "it works, but I think if you get an exception,",
-//                                  "you need to load a font like:",
-//                                  "PDFont font = PDTrueTypeFont.loadTTF(document, \"Arial.ttf\");",
-//                                  "See:",
-//                                  "https://pdfbox.apache.org/1.8/cookbook/",
-//                                  "workingwithfonts.html",
-//                                  "\n",
-//                                  "here",
-//                                  "are",
-//                                  "more lines",
-//                                   //                                   "Россия – священная наша держава,",
-//                                   //                                   "Россия – любимая наша страна.",
-//                                   //                                   "Могучая воля, великая слава –",
-//                                   //                                   "Твоё достоянье на все времена!",
-//                                   //                                   null,
-//                                   //                                   "Chorus:",
-//                                   //                                   null,
-//                                   //                                   "Славься, Отечество наше свободное, Братских народов союз" +
-//                                   //                                   " вековой, Предками данная мудрость народная! Славься, страна!" +
-//                                   //                                   " Мы гордимся тобой!",
-//                                   //                                   null,
-//                                   //                                   "От южных морей до полярного края Раскинулись наши леса и" +
-//                                   //                                   " поля. Одна ты на свете! Одна ты такая – Хранимая Богом " +
-//                                   //                                   "родная земля!",
-//                                   //                                   null,
-//                                   //                                   "Chorus:",
-//                                   //                                   null,
-//                                   //                                   "Широкий простор для мечты и для жизни",
-//                                   //                                   "Грядущие нам открывают года.",
-//                                   //                                   "Нам силу даёт наша верность Отчизне.",
-//                                   //                                   "Так было, так есть и так будет всегда!",
-//                                   //                                   null,
-//                                   //                                   "Chorus",
-//                                   //                                   null,
-//                                   //                                   null,
-//                                   //                                   null,
-//                                   //                                   "Chinese will not print.  The substitution character is a" +
-//                                   //                                   " bullet, so below should be lots of bullets.",
-//                                   //                                   null,
-//                                   //                                   "起來！不願做奴隸的人們！ " +
-//                                   //                                   "把我們的血肉，築成我們新的長城！ " +
-//                                   //                                   "中華民族到了最危險的時候， " +
-//                                   //                                   "每個人被迫著發出最後的吼聲。 " +
-//                                   //                                   "起來！起來！起來！ " +
-//                                   //                                   "我們萬眾一心， " +
-//                                   //                                   "冒著敵人的炮火，前進！ " +
-//                                   //                                   "冒著敵人的炮火，前進！ " +
-//                                   //                                   "前進！前進！進！",
-//                                  "\n",
-//                                  "Here is a picture with the default and other sizes.  Though" +
-//                                  " it shows up several times, the image data is only attached" +
-//                                  " to the file once and reused."))
-//                              .addAll(listOf(ScaledImage(melonPic),
-//                                             ScaledImage(melonPic, XyDim(50f, 50f)),
-//                                             Text(regular, " Melon "),
-//                                             ScaledImage(melonPic, XyDim(50f, 50f)),
-//                                             Text(regular, " Yum!"),
-//                                             ScaledImage(melonPic, XyDim(170f, 100f)),
-//                                             Text(regular, "Watermelon!"))),
-//                      Cell(regularCell, colWidths[1],
-//                           regular,
-//                           listOf(("O say can you see by the dawn's early light, " +
-//                                   "What so proudly we hailed at the twilight's last gleaming, " +
-//                                   "Whose broad stripes and bright stars " +
-//                                   "through the perilous fight, " +
-//                                   "O'er the ramparts we watched, were so gallantly streaming? " +
-//                                   "And the rockets' red glare, the bombs bursting in air, " +
-//                                   "Gave proof through the night that our flag was still there; " +
-//                                   "O say does that star-spangled banner yet wave, " +
-//                                   "O'er the land of the free and the home of the brave? "),
-//                                  "\n\n",
-//                                  "On the shore dimly seen through the mists of the deep, ",
-//                                  "Where the foe's haughty host in dread silence reposes, ",
-//                                  "What is that which the breeze, o'er the towering steep, ",
-//                                  "As it fitfully blows, half conceals, half discloses? ",
-//                                  "Now it catches the gleam of the morning's first beam, ",
-//                                  "In full glory reflected now shines in the stream: ",
-//                                  "'Tis the star-spangled banner, O! long may it wave ",
-//                                  "O'er the land of the free and the home of the brave. ",
-//                                  "\n",
-//                                  "\n",
-//                                  "\n",
-//                                  "\n",
-//                                  "\n",
-//                                  ("And where is that band who so vauntingly swore " +
-//                                   "That the havoc of war and the battle's confusion, " +
-//                                   "A home and a country, should leave us no more? " +
-//                                   "Their blood has washed out their foul footsteps' pollution. " +
-//                                   "No refuge could save the hireling and slave " +
-//                                   "From the terror of flight, or the gloom of the grave: " +
-//                                   "And the star-spangled banner in triumph doth wave, " +
-//                                   "O'er the land of the free and the home of the brave. " +
-//                                   "\n\n"),
-//                                  ("O thus be it ever, when freemen shall stand " +
-//                                   "Between their loved home and the war's desolation. " +
-//                                   "Blest with vict'ry and peace, may the Heav'n rescued land " +
-//                                   "Praise the Power that hath made and preserved us a nation! " +
-//                                   "Then conquer we must, when our cause it is just, " +
-//                                   "And this be our motto: \"In God is our trust.\" " +
-//                                   "And the star-spangled banner in triumph shall wave " +
-//                                   "O'er the land of the free and the home of the brave!"),
-//                                  "\n\n",
-//                                  "more ",
-//                                  "lines ",
-//                                  "to ",
-//                                  "test")),
-//                      Cell(regularCell, colWidths[2], regular,
-//                           listOf("Maamme",
-//                                  "\n",
-//                                  ("Monument to the Vårt Land poem in Helsinki. " +
-//                                   "Oi maamme, Suomi, synnyinmaa, " +
-//                                   "soi, sana kultainen! " +
-//                                   "Ei laaksoa, ei kukkulaa, " +
-//                                   "ei vettä, rantaa rakkaampaa " +
-//                                   "kuin kotimaa tää pohjoinen, " +
-//                                   "maa kallis isien. " +
-//                                   "Sun kukoistukses kuorestaan " +
-//                                   "kerrankin puhkeaa; " +
-//                                   "viel' lempemme saa nousemaan " +
-//                                   "sun toivos, riemus loistossaan, " +
-//                                   "ja kerran laulus, synnyinmaa " +
-//                                   "korkeemman kaiun saa. "),
-//                                  "\n\n",
-//                                  "Vårt land ",
-//                                  "\n\n",
-//                                  ("(the original, by Johan Ludvig Runeberg) " +
-//                                   "Vårt land, vårt land, vårt fosterland, " +
-//                                   "ljud högt, o dyra ord! " +
-//                                   "Ej lyfts en höjd mot himlens rand, " +
-//                                   "ej sänks en dal, ej sköljs en strand, " +
-//                                   "mer älskad än vår bygd i nord, " +
-//                                   "än våra fäders jord! " +
-//                                   "Din blomning, sluten än i knopp, " +
-//                                   "Skall mogna ur sitt tvång; " +
-//                                   "Se, ur vår kärlek skall gå opp " +
-//                                   "Ditt ljus, din glans, din fröjd, ditt hopp. " +
-//                                   "Och högre klinga skall en gång " +
-//                                   "Vår fosterländska sång.\n\n"))),
-//                      Cell(regularCell, colWidths[3], regular,
-//                           listOf(// Older first 2 verses obsolete.
-//                                   ("Einigkeit und Recht und Freiheit " +
-//                                    "Für das deutsche Vaterland! " +
-//                                    "Danach lasst uns alle streben " +
-//                                    "Brüderlich mit Herz und Hand! " +
-//                                    "Einigkeit und Recht und Freiheit " +
-//                                    "Sind des Glückes Unterpfand;" +
-//                                    "Blüh' im Glanze dieses Glückes, " +
-//                                    "  Blühe, deutsches Vaterland!"))))
-//
-//        lp.putRow(pMargin, y,
-//                  Cell(regularCell, colWidths[0], regular, listOf("Another row of cells")),
-//                  Cell(regularCell, colWidths[1], regular, listOf("On the second page")),
-//                  Cell(regularCell, colWidths[2], regular, listOf("Just like any other page")),
-//                  Cell(regularCell, colWidths[3], regular, listOf("That's it!")))
+        val f = File("target/test-classes/melon.jpg")
+        val melonPic = ImageIO.read(f)
+
+        tB = TableBuilder(colWidths.toMutableList(), headingCell, heading)
+        tB.partBuilder()
+                .rowBuilder()
+                .addCells(Cell(headingCell, colWidths[0], heading,
+                               listOf("Transliterated Russian (with un-transliterated Chinese below)")),
+                          Cell(headingCellR, colWidths[1], heading, listOf("US English")),
+                          Cell(headingCellR, colWidths[2], heading, listOf("Finnish")),
+                          Cell(headingCellR, colWidths[3], heading, listOf("German")))
+                .buildRow()
+                .buildPart()
+                .partBuilder()
+                .rowBuilder()
+                .addCells(Cell(regularCell, colWidths[0], regular,
+                           listOf("This used to have Russian and Chinese text.\n",
+                                  "The Russian was transliterated and the\n",
+                                  "Chinese was turned into bullets.\n",
+                                  "PDFBox 2.x, now handles many characters better,\n",
+                                  "but throws exceptions for\n",
+                                  "characters it doesn't understand.\n",
+                                  "Truth be told, I don't understand so well how\n",
+                                  "it works, but I think if you get an exception,\n",
+                                  "you need to load a font like:\n",
+                                  "PDFont font = PDTrueTypeFont.loadTTF(document, \"Arial.ttf\");\n",
+                                  "See:\n",
+                                  "https://pdfbox.apache.org/1.8/cookbook/\n",
+                                  "workingwithfonts.html\n",
+                                  "\n\n",
+                                  "here\n",
+                                  "are\n",
+                                  "more lines\n",
+                                   //                                   "Россия – священная наша держава,\n",
+                                   //                                   "Россия – любимая наша страна.\n",
+                                   //                                   "Могучая воля, великая слава –\n",
+                                   //                                   "Твоё достоянье на все времена!\n",
+                                   //                                   null,
+                                   //                                   "Chorus:\n",
+                                   //                                   null,
+                                   //                                   "Славься, Отечество наше свободное, Братских народов союз\n" +
+                                   //                                   " вековой, Предками данная мудрость народная! Славься, страна!\n" +
+                                   //                                   " Мы гордимся тобой!\n",
+                                   //                                   null,
+                                   //                                   "От южных морей до полярного края Раскинулись наши леса и\n" +
+                                   //                                   " поля. Одна ты на свете! Одна ты такая – Хранимая Богом \n" +
+                                   //                                   "родная земля!\n",
+                                   //                                   null,
+                                   //                                   "Chorus:\n",
+                                   //                                   null,
+                                   //                                   "Широкий простор для мечты и для жизни\n",
+                                   //                                   "Грядущие нам открывают года.\n",
+                                   //                                   "Нам силу даёт наша верность Отчизне.\n",
+                                   //                                   "Так было, так есть и так будет всегда!\n",
+                                   //                                   null,
+                                   //                                   "Chorus\n",
+                                   //                                   null,
+                                   //                                   null,
+                                   //                                   null,
+                                   //                                   "Chinese will not print.  The substitution character is a\n" +
+                                   //                                   " bullet, so below should be lots of bullets.\n",
+                                   //                                   null,
+                                   //                                   "起來！不願做奴隸的人們！ \n" +
+                                   //                                   "把我們的血肉，築成我們新的長城！ \n" +
+                                   //                                   "中華民族到了最危險的時候， \n" +
+                                   //                                   "每個人被迫著發出最後的吼聲。 \n" +
+                                   //                                   "起來！起來！起來！ \n" +
+                                   //                                   "我們萬眾一心， \n" +
+                                   //                                   "冒著敵人的炮火，前進！ \n" +
+                                   //                                   "冒著敵人的炮火，前進！ \n" +
+                                   //                                   "前進！前進！進！\n",
+                                  "\n\n",
+                                  "Here is a picture with the default and other sizes.  Though\n" +
+                                  " it shows up several times, the image data is only attached\n" +
+                                  " to the file once and reused."))
+                              .addAll(listOf(ScaledImage(melonPic),
+                                             ScaledImage(melonPic, XyDim(50f, 50f)),
+                                             Text(regular, " Melon "),
+                                             ScaledImage(melonPic, XyDim(50f, 50f)),
+                                             Text(regular, " Yum!"),
+                                             ScaledImage(melonPic, XyDim(170f, 100f)),
+                                             Text(regular, "Watermelon!"))),
+                      Cell(regularCell, colWidths[1],
+                           regular,
+                           listOf(("O say can you see by the dawn's early light, \n" +
+                                   "What so proudly we hailed at the twilight's last gleaming, \n" +
+                                   "Whose broad stripes and bright stars \n" +
+                                   "through the perilous fight, \n" +
+                                   "O'er the ramparts we watched, were so gallantly streaming? \n" +
+                                   "And the rockets' red glare, the bombs bursting in air, \n" +
+                                   "Gave proof through the night that our flag was still there; \n" +
+                                   "O say does that star-spangled banner yet wave, \n" +
+                                   "O'er the land of the free and the home of the brave? "),
+                                  "\n\n",
+                                  "On the shore dimly seen through the mists of the deep, \n",
+                                  "Where the foe's haughty host in dread silence reposes, \n",
+                                  "What is that which the breeze, o'er the towering steep, \n",
+                                  "As it fitfully blows, half conceals, half discloses? \n",
+                                  "Now it catches the gleam of the morning's first beam, \n",
+                                  "In full glory reflected now shines in the stream: \n",
+                                  "'Tis the star-spangled banner, O! long may it wave \n",
+                                  "O'er the land of the free and the home of the brave. \n",
+                                  "\n",
+                                  "\n",
+                                  "\n",
+                                  "\n",
+                                  "\n",
+                                  ("And where is that band who so vauntingly swore \n" +
+                                   "That the havoc of war and the battle's confusion, \n" +
+                                   "A home and a country, should leave us no more? \n" +
+                                   "Their blood has washed out their foul footsteps' pollution. \n" +
+                                   "No refuge could save the hireling and slave \n" +
+                                   "From the terror of flight, or the gloom of the grave: \n" +
+                                   "And the star-spangled banner in triumph doth wave, \n" +
+                                   "O'er the land of the free and the home of the brave. \n" +
+                                   "\n\n"),
+                                  ("O thus be it ever, when freemen shall stand \n" +
+                                   "Between their loved home and the war's desolation. \n" +
+                                   "Blest with vict'ry and peace, may the Heav'n rescued land \n" +
+                                   "Praise the Power that hath made and preserved us a nation! \n" +
+                                   "Then conquer we must, when our cause it is just, \n" +
+                                   "And this be our motto: \"In God is our trust.\" \n" +
+                                   "And the star-spangled banner in triumph shall wave \n" +
+                                   "O'er the land of the free and the home of the brave!"),
+                                  "\n\n",
+                                  "more \n",
+                                  "lines \n",
+                                  "to \n",
+                                  "test")),
+                      Cell(regularCell, colWidths[2], regular,
+                           listOf("Maamme\n",
+                                  "\n",
+                                  ("Monument to the Vårt Land poem in Helsinki. \n" +
+                                   "Oi maamme, Suomi, synnyinmaa, \n" +
+                                   "soi, sana kultainen! \n" +
+                                   "Ei laaksoa, ei kukkulaa, \n" +
+                                   "ei vettä, rantaa rakkaampaa \n" +
+                                   "kuin kotimaa tää pohjoinen, \n" +
+                                   "maa kallis isien. \n" +
+                                   "Sun kukoistukses kuorestaan \n" +
+                                   "kerrankin puhkeaa; \n" +
+                                   "viel' lempemme saa nousemaan \n" +
+                                   "sun toivos, riemus loistossaan, \n" +
+                                   "ja kerran laulus, synnyinmaa \n" +
+                                   "korkeemman kaiun saa. "),
+                                  "\n\n",
+                                  "Vårt land ",
+                                  "\n\n",
+                                  ("(the original, by Johan Ludvig Runeberg) \n" +
+                                   "Vårt land, vårt land, vårt fosterland, \n" +
+                                   "ljud högt, o dyra ord! \n" +
+                                   "Ej lyfts en höjd mot himlens rand, \n" +
+                                   "ej sänks en dal, ej sköljs en strand, \n" +
+                                   "mer älskad än vår bygd i nord, \n" +
+                                   "än våra fäders jord! \n" +
+                                   "Din blomning, sluten än i knopp, \n" +
+                                   "Skall mogna ur sitt tvång; \n" +
+                                   "Se, ur vår kärlek skall gå opp \n" +
+                                   "Ditt ljus, din glans, din fröjd, ditt hopp. \n" +
+                                   "Och högre klinga skall en gång \n" +
+                                   "Vår fosterländska sång.\n\n"))),
+                      Cell(regularCell, colWidths[3], regular,
+                           listOf(// Older first 2 verses obsolete.
+                                   ("Einigkeit und Recht und Freiheit \n" +
+                                    "Für das deutsche Vaterland! \n" +
+                                    "Danach lasst uns alle streben \n" +
+                                    "Brüderlich mit Herz und Hand! \n" +
+                                    "Einigkeit und Recht und Freiheit \n" +
+                                    "Sind des Glückes Unterpfand;\n" +
+                                    "Blüh' im Glanze dieses Glückes, \n" +
+                                    "  Blühe, deutsches Vaterland!"))))
+                .buildRow()
+                .rowBuilder()
+                .addCells(Cell(regularCell, colWidths[0], regular, listOf("Another row of cells")),
+                          Cell(regularCell, colWidths[1], regular, listOf("On the second page")),
+                          Cell(regularCell, colWidths[2], regular, listOf("Just like any other page")),
+                          Cell(regularCell, colWidths[3], regular, listOf("That's it!")))
+                .buildRow()
+                .buildPart()
+        tB.buildTable().render(lp, lp.bodyTopLeft())
         lp.commit()
 
         val lineStyle = LineStyle(RGB_BLACK, 1f)
