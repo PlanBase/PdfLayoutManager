@@ -36,10 +36,10 @@ import java.util.SortedSet
 import java.util.TreeSet
 
 /**
- * Caches the contents of a specific, single page for later drawing.  Inner classes are what's added
- * to the cache and what controlls the drawing.  You generally want to use [PageGrouping] when
- * you want automatic page-breaking.  SinglePage is for when you want to force something onto a
- * specific page only.
+ Caches the contents of a specific, single page for later drawing.  Inner classes are what's added
+ to the cache and what controls the drawing.  You generally want to use [PageGrouping] when
+ you want automatic page-breaking.  SinglePage is for when you want to force something onto a
+ specific page only.
  */
 class SinglePage(val pageNum: Int,
                  private val mgr: PdfLayoutMgr,

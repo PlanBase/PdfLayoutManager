@@ -145,7 +145,7 @@ class WrappedCellTest {
     }
 
     companion object {
-        private val boxStyle = BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))
+        val boxStyle = BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))
         private val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
     }
 }
