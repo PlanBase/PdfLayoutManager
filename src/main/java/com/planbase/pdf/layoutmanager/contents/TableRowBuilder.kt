@@ -26,6 +26,7 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import java.util.ArrayList
 
@@ -80,9 +81,17 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return tablePart.addRow(this)
     }
 
-    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+    fun finalRowHeight():Float {
         cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
                 .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.xyDim.height)}
+        return minRowHeight
+    }
+
+    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+//        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
+//                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.xyDim.height)}
+
+        finalRowHeight()
 
         val fixedCells = cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
 

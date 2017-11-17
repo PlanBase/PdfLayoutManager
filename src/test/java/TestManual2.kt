@@ -98,15 +98,16 @@ fun testBodyMargins() {
             .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "text that has a number")))
             .buildRow()
 
+    // TODO: actually display these bullets!
     // After the loop, build the table.
-    //        Table table = tpb.buildPart().buildTable();
+//    val bullets = tpb.buildPart().buildTable()
 
     lp.drawCell(0f, PDRectangle.A6.height - 40f,
                 Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
                      bodyWidth,
                      listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                                  "The long "),
-                            Text(TextStyle(PDType1Font.HELVETICA_BOLD, 12f, Utils.CMYK_BLACK),
+                            Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18f, Utils.CMYK_BLACK),
                                  "families"),
                             Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                                  " needed the national " +

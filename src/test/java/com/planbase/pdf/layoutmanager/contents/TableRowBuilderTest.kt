@@ -20,7 +20,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
 
 class TableRowBuilderTest {
     @Test fun testBasics() {
@@ -62,7 +61,7 @@ class TableRowBuilderTest {
 //                .cellBuilder().align(Align.TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
                 .buildPart()
                 .buildTable()
-                .render(lp, upperLeft)
+                .wrap().render(lp, upperLeft)
 
         lp.commit()
         // We're just going to write to a file.
@@ -108,10 +107,10 @@ class TableRowBuilderTest {
                 .cell(headingCellR, listOf(Text(heading, "German")))
                 .buildRow()
                 .buildPart()
-        tB.buildTable().render(lp, lp.bodyTopLeft())
+        tB.buildTable().wrap().render(lp, lp.bodyTopLeft())
         lp.commit()
 
-        val os = FileOutputStream("rowHeight2.pdf")
-        pageMgr.save(os)
+//        val os = FileOutputStream("rowHeight2.pdf")
+//        pageMgr.save(os)
     }
 }

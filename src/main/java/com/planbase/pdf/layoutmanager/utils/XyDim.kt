@@ -85,5 +85,6 @@ data class XyDim(val width: Float, val height: Float) {
 
     companion object {
         val ZERO = XyDim(0f, 0f)
+        fun sum(xys:Iterable<XyDim>) = xys.fold(ZERO, {acc, xy -> acc.plus(xy)})
     }
 }

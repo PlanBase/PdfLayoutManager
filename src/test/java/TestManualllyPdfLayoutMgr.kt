@@ -120,7 +120,7 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xya:XyOffset = tB.buildTable()
+        val xya:XyOffset = tB.buildTable().wrap()
                 .render(lp, XyOffset(40f, lp.yBodyTop()))
 
         // The second table uses the x and y offsets from the previous table to position it to the
@@ -171,7 +171,7 @@ class TestManualllyPdfLayoutMgr {
                                               "Line three")
                 .buildRow()
                 .buildPart()
-        val xyb:XyOffset = tB.buildTable()
+        val xyb:XyOffset = tB.buildTable().wrap()
                 .render(lp, XyOffset(xya.x + 10, lp.yBodyTop()))
 
         // The third table uses the x and y offsets from the previous tables to position it to the
@@ -207,6 +207,7 @@ class TestManualllyPdfLayoutMgr {
                 .align(TOP_LEFT).addTextCells("Line 1").buildRow()
                 .buildPart()
                 .buildTable()
+                .wrap()
                 .render(lp, XyOffset(xya.x + 10, xyb.y - 10))
 
         lp.commit()
@@ -260,6 +261,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         val xyOff = tB.buildTable()
+                .wrap()
                 .render(lp, XyOffset(40f, lp.yBodyTop()))
 
         // This was very hastily added to this test to prove that font loading works (it does).
@@ -282,6 +284,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         // Where's the lower-right-hand corner?  Put a cell there.
         tB.buildTable()
+                .wrap()
                 .render(lp, XyOffset(lp.pageWidth() - (100 + pMargin),
                                      lp.yBodyBottom() + 15 + pMargin))
 
@@ -483,7 +486,9 @@ class TestManualllyPdfLayoutMgr {
                 .cell(regularCell, listOf(Text(regular, "That's it!")))
                 .buildRow()
                 .buildPart()
-        tB.buildTable().render(lp, lp.bodyTopLeft())
+        tB.buildTable()
+                .wrap()
+                .render(lp, lp.bodyTopLeft())
         lp.commit()
 
         val lineStyle = LineStyle(RGB_BLACK, 1f)

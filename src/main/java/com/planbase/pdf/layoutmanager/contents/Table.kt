@@ -22,50 +22,47 @@ package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 
-/**
- *
- * It used to be that you'd build a table and that act would commit it to a logical page.
- */
-// TODO: This should probably freeze all the underlying stuff
+/** Represents a table.  It used to be that you'd build a table and that act would commit it to a logical page. */
 class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : LineWrappable {
-    override fun lineWrapper(): LineWrapper {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun lineWrapper() = LineWrapper.preWrappedLineWrapper(WrappedTable(this.parts))
 
-//    val xyDim: XyDim = parts.fold(XyDim.ZERO,
-//                                           { acc, part -> acc.plus(part.xyDim()) })
-//    override val ascent: Float = xyDim.height
-//    val descentAndLeading: Float = 0f
-//    override val lineHeight: Float = xyDim.height
-    //    @Override  public XyDim calcDimensions(float maxWidth) {
-    //        XyDim maxDim = XyDim.ZERO;
-    //        for (TablePart part : parts) {
-    //            XyDim wh = part.calcDimensions();
-    //            maxDim = XyDim.of(Math.max(wh.width(), maxDim.width()),
-    //                              maxDim.height() + wh.height());
-    //        }
-    //        return maxDim;
-    //    }
-
+    fun wrap():WrappedTable = WrappedTable(this.parts)
 
     /*
+    Renders item and all child-items with given width and returns the x-y pair of the
+    lower-right-hand corner of the last line (e.g. of text).
+    */
+    override fun toString(): String = "Table($parts)"
+
+    data class WrappedTable(private val parts:List<TablePart>) : LineWrapped {
+        override val xyDim:XyDim = XyDim.sum(parts.map { part -> part.finalXyDim() })
+        override val ascent: Float = xyDim.height
+        override val descentAndLeading: Float = 0f
+        override val lineHeight: Float = xyDim.height
+        // TODO: We should probably wrap the parts individually to ensure they are "frozen"
+//        private val parts: List<WrappedTablePart>
+
+        /*
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
-        var rightmostLowest = outerTopLeft
-        for (part in parts) {
-            //            System.out.println("About to render part: " + part);
-            val rl = part.render(lp, XyOffset(outerTopLeft.x, rightmostLowest.y))
-            rightmostLowest = XyOffset(Math.max(rl.x, rightmostLowest.x),
-                                                                            Math.min(rl.y, rightmostLowest.y))
+        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+            var rightmostLowest = outerTopLeft
+            for (part in parts) {
+                //            System.out.println("About to render part: " + part);
+                val rl = part.render(lp, XyOffset(outerTopLeft.x, rightmostLowest.y))
+                rightmostLowest = XyOffset(Math.max(rl.x, rightmostLowest.x),
+                                           Math.min(rl.y, rightmostLowest.y))
+            }
+            return rightmostLowest
         }
-        return rightmostLowest
-    }
 
-    override fun toString(): String = "Table($parts)"
+        override fun toString(): String = "WrappedTable($parts)"
+    }
 }

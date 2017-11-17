@@ -23,6 +23,7 @@ package com.planbase.pdf.layoutmanager.contents
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import java.util.ArrayList
 
@@ -36,6 +37,9 @@ class TablePart(private val tableBuilder: TableBuilder) {
     var textStyle: TextStyle? = tableBuilder.textStyle
     var minRowHeight = 0f
     private val rows = ArrayList<TableRowBuilder>(1)
+
+    fun finalXyDim() = XyDim(cellWidths.sum(),
+                             rows.map{ r -> r.finalRowHeight()}.sum())
 
     fun cellStyle(x: CellStyle): TablePart {
         cellStyle = x

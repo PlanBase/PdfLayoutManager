@@ -49,7 +49,7 @@ class CellTest {
                 .buildPart()
         val table: Table = tB.buildTable()
 
-        val xya: XyOffset = table.render(lp, XyOffset(40f, lp.yBodyTop()))
+        val xya: XyOffset = table.wrap().render(lp, XyOffset(40f, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")
