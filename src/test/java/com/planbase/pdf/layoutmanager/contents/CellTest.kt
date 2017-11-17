@@ -16,7 +16,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
 
 class CellTest {
 
@@ -38,7 +37,7 @@ class CellTest {
                 .minRowHeight(squareDim)
                 .rowBuilder()
         val cell = Cell(cellStyle, squareDim, listOf(theText), trb)
-        trb.addCell(cell)
+        trb.cell(cell.cellStyle, listOf(theText))
         kotlin.test.assertEquals(squareDim, trb.minRowHeight)
 //        println("trb=" + trb)
 

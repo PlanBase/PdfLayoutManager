@@ -1,5 +1,6 @@
 package com.planbase.pdf.layoutmanager.contents
 
+import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE
 import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
 import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
@@ -9,6 +10,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.utils.Utils
@@ -17,7 +19,6 @@ import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.junit.Assert.*
 import org.junit.Test
 import java.io.FileOutputStream
 
@@ -43,16 +44,21 @@ class TableRowBuilderTest {
                                                    BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
                 .textStyle(TextStyle(PDType1Font.COURIER, 12f, Utils.RGB_BLACK))
-                .rowBuilder().cellBuilder().align(Align.BOTTOM_RIGHT).addStrs("Line 1").buildCell()
-                .cellBuilder().align(Align.BOTTOM_CENTER).addStrs("Line 1\n", "Line two").buildCell()
-                .cellBuilder().align(Align.BOTTOM_LEFT)
-                .addStrs("Line 1\n", "Line two\n", "[Line three is long enough to wrap]").buildCell()
+                .rowBuilder()
+                .align(Align.BOTTOM_RIGHT).addTextCells("Line 1")
+                .align(Align.BOTTOM_CENTER).addTextCells("Line 1\n" +
+                                                         "Line two")
+                .align(Align.BOTTOM_LEFT).addTextCells("Line 1\n" +
+                                                       "Line two\n" +
+                                                       "[Line three is long enough to wrap]")
                 .buildRow()
-//                .rowBuilder().cellBuilder().align(Align.MIDDLE_RIGHT).addStrs("Line 1\n", "Line two").buildCell()
+//                .rowBuilder().cellBuilder().align(Align.MIDDLE_RIGHT).addStrs("Line 1\n" +
+//        "Line two").buildCell()
 //                .cellBuilder().align(Align.MIDDLE_CENTER).addStrs("").buildCell()
 //                .cellBuilder().align(Align.MIDDLE_LEFT).addStrs("Line 1").buildCell().buildRow()
 //                .rowBuilder().cellBuilder().align(Align.TOP_RIGHT).addStrs("L1").buildCell()
-//                .cellBuilder().align(Align.TOP_CENTER).addStrs("Line 1\n", "Line two").buildCell()
+//                .cellBuilder().align(Align.TOP_CENTER).addStrs("Line 1\n" +
+//    "Line two").buildCell()
 //                .cellBuilder().align(Align.TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
                 .buildPart()
                 .buildTable()
@@ -64,5 +70,48 @@ class TableRowBuilderTest {
 //        val os = FileOutputStream("rowHeight.pdf")
 //        pageMgr.save(os)
 
+    }
+
+    @Test fun testJustHeadings() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+
+        val pMargin = PdfLayoutMgr.DOC_UNITS_PER_INCH / 2
+        var lp = pageMgr.logicalPageStart()
+
+        // Set up some useful constants for later.
+        val tableWidth = lp.pageWidth() - 2 * pMargin
+        val colWidth = tableWidth / 4f
+        val colWidths = floatArrayOf(colWidth + 10, colWidth + 10, colWidth + 10, colWidth - 30)
+        val textCellPadding = Padding(2f)
+
+        // Set up some useful styles for later
+        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, Utils.RGB_WHITE)
+        val headingCell = CellStyle(Align.BOTTOM_CENTER,
+                                    BoxStyle(textCellPadding, RGB_BLUE,
+                                             BorderStyle(LineStyle.NO_LINE, LineStyle(Utils.RGB_WHITE),
+                                                         LineStyle.NO_LINE, LineStyle(RGB_BLUE))))
+        val headingCellR = CellStyle(Align.BOTTOM_CENTER,
+                                     BoxStyle(textCellPadding, Utils.RGB_BLACK,
+                                              BorderStyle(LineStyle.NO_LINE, LineStyle(Utils.RGB_BLACK),
+                                                          LineStyle.NO_LINE, LineStyle(Utils.RGB_WHITE))))
+
+        // Let's do a portrait page now.  I just copied this from the previous page.
+        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.PORTRAIT)
+
+        val tB = TableBuilder(colWidths.toMutableList(), headingCell, heading)
+        tB.partBuilder()
+                .rowBuilder()
+                .cell(headingCell,
+                      listOf(Text(heading, "Transliterated Russian (with un-transliterated Chinese below)")))
+                .cell(headingCellR, listOf(Text(heading, "US English")))
+                .cell(headingCellR, listOf(Text(heading, "Finnish")))
+                .cell(headingCellR, listOf(Text(heading, "German")))
+                .buildRow()
+                .buildPart()
+        tB.buildTable().render(lp, lp.bodyTopLeft())
+        lp.commit()
+
+        val os = FileOutputStream("rowHeight2.pdf")
+        pageMgr.save(os)
     }
 }

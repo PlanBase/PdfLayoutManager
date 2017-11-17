@@ -89,20 +89,14 @@ fun testBodyMargins() {
             .addCellWidths(20f, 80f).partBuilder()
 
     // This could be in a loop that prints out list items.
-    var rcb: TableRowBuilder.RowCellBuilder = tpb.rowBuilder().cellBuilder()
-    rcb.cellStyle(BULLET_CELL_STYLE)
-            .add(BULLET_TEXT_STYLE, listOf(Utils.BULLET_CHAR))
-    rcb = rcb.buildCell().cellBuilder()
-    rcb.add(BULLET_TEXT_STYLE, listOf("This is some text that has a bullet"))
-    rcb.buildCell().buildRow()
-
+    tpb.rowBuilder().cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, Utils.BULLET_CHAR)))
+            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
+            .buildRow()
     // Next iteration in the loop
-    rcb = tpb.rowBuilder().cellBuilder()
-    rcb.cellStyle(BULLET_CELL_STYLE)
-            .add(BULLET_TEXT_STYLE, listOf("2."))
-    rcb = rcb.buildCell().cellBuilder()
-    rcb.add(BULLET_TEXT_STYLE, listOf("text that has a number"))
-    rcb.buildCell().buildRow()
+            .rowBuilder()
+            .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, "2.")))
+            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "text that has a number")))
+            .buildRow()
 
     // After the loop, build the table.
     //        Table table = tpb.buildPart().buildTable();
