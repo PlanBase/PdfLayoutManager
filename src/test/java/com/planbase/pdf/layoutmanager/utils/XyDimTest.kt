@@ -41,4 +41,11 @@ class XyDimTest {
     fun testEx2() {
         XyDim(-3.5f, 1f)
     }
+
+    @Test fun testSum() {
+        // I'm picking decimal parts that are binary divisions: 1/2, 3/4, 1/8, 1/16
+        // To avoid rounding errors.
+        assertEquals(XyDim(12.625f, 18.8125f),
+                     XyDim.sum(listOf(XyDim(3.5f, 5.75f), XyDim(9.125f, 13.0625f))))
+    }
 }
