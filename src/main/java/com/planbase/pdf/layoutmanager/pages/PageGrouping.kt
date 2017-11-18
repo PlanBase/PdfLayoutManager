@@ -95,7 +95,7 @@ import java.util.TreeSet
  * @param bodyDim the dimensions of the body area.
  * @return a new PageGrouping with the given settings.
  */
-class PageGrouping(val mgr: PdfLayoutMgr,
+class PageGrouping(private val mgr: PdfLayoutMgr,
                    val orientation: Orientation,
                    bodyOff: XyOffset,
                    bodyDim: XyDim) : RenderTarget { // AKA Document Section
@@ -167,37 +167,37 @@ class PageGrouping(val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float {
+    override fun drawStyledText(bottomLeft:XyOffset, text: String, textStyle: TextStyle): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
-        val pby = appropriatePage(topLeft.y, 0f)
-        pby.pb.drawStyledText(topLeft.y(pby.y), text, textStyle)
+        val pby = appropriatePage(bottomLeft.y, 0f)
+        pby.pb.drawStyledText(bottomLeft.y(pby.y), text, textStyle)
         // TODO: Is this right?
         return textStyle.lineHeight() + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun drawImage(topLeft:XyOffset, wi: WrappedImage): Float {
+    override fun drawImage(bottomLeft:XyOffset, wi: WrappedImage): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = appropriatePage(topLeft.y, wi.xyDim.height)
+        val pby = appropriatePage(bottomLeft.y, wi.xyDim.height)
         // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawImage(topLeft.y(pby.y), wi)
+        pby.pb.drawImage(bottomLeft.y(pby.y), wi)
         return wi.xyDim.height + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(topLeft: XyOffset, outerDim: XyDim, c: PDColor): PageGrouping {
+    override fun fillRect(bottomLeft: XyOffset, outerDim: XyDim, c: PDColor): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         //        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
         //                           Utils.toString(c) + ")");
-        val left = topLeft.x
-        val topY = topLeft.y
+        val left = bottomLeft.x
+        val topY = bottomLeft.y
         val width = outerDim.width
         val maxHeight = outerDim.height
         val bottomY = topY - maxHeight
@@ -247,10 +247,11 @@ class PageGrouping(val mgr: PdfLayoutMgr,
             }
         }
 
-        return this
+        return maxHeight + pby2.adj
     }
 
     /** {@inheritDoc}  */
+    // TODO: This should go back to being x1, y1, x2, y2 because lines can be drawn in any direction.
     override fun drawLine(topLeft: XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")

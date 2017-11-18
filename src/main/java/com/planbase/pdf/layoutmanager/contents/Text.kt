@@ -46,10 +46,10 @@ data class Text(val textStyle: TextStyle,
     val text = cleanStr(initialText)
 
     // TODO: Should match order of params in Text.  String should either be first or last.
-    internal data class WrappedText(val textStyle: TextStyle,
-                                    val string: String,
-                                    override val xyDim: XyDim,
-                                    val source: LineWrappable) : LineWrapped {
+    data class WrappedText(val textStyle: TextStyle,
+                           val string: String,
+                           override val xyDim: XyDim,
+                           val source: LineWrappable) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle,
                     src: LineWrappable): this(ts, s, XyDim(x, ts.lineHeight()), src)

@@ -21,7 +21,6 @@
 package com.planbase.pdf.layoutmanager.pages
 
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -41,34 +40,36 @@ interface RenderTarget {
      @param lineStyle the style to draw the line with
      @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
+    // TODO: This should go back to being x1, y1, x2, y2 because lines can be drawn in any direction.
     fun drawLine(topLeft:XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): RenderTarget
 
     /**
      Puts styled text on this RenderTarget
-     @param topLeft the XyOffset of the topmost y and leftmost x
+     @param bottomLeft the XyOffset of the lower-left-hand corner
      @param text the text
      @param textStyle the style
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float
+    fun drawStyledText(bottomLeft:XyOffset, text: String, textStyle: TextStyle): Float
 
     /**
      Puts an image on this RenderTarget
-     @param topLeft the XyOffset of the topmost y and leftmost x
+     @param bottomLeft the XyOffset of the lower-left-hand corner
      @param wi the scaled, "wrapped" jpeg/png image
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawImage(topLeft:XyOffset, wi: WrappedImage): Float
+    fun drawImage(bottomLeft:XyOffset, wi: WrappedImage): Float
 
     /**
      Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
      separately with textLines).
-     @param topLeft x and y values of the upper-left corner
+     @param bottomLeft the XyOffset of the lower-left-hand corner
      @param outerDim width and height (dimensions) of rectangle
      @param c color
-     @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     @return the effective height after page breaking
+     (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(topLeft: XyOffset, outerDim: XyDim, c: PDColor): RenderTarget
+    fun fillRect(bottomLeft: XyOffset, outerDim: XyDim, c: PDColor): Float
 }

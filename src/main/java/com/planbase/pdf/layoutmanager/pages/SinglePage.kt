@@ -54,27 +54,16 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(topLeft: XyOffset, outerDim: XyDim, c: PDColor): SinglePage {
-        fillRect(topLeft.x, topLeft.y, outerDim.width, outerDim.height, c, -1f)
-        return this
+    override fun fillRect(bottomLeft: XyOffset, outerDim: XyDim, c: PDColor): Float {
+        fillRect(bottomLeft.x, bottomLeft.y, outerDim.width, outerDim.height, c, -1f)
+        return outerDim.height
     }
-    //        public void fillRect(final float xVal, final float yVal, final float w, final PDColor c,
-    //                             final float h) {
-    //            fillRect(xVal, yVal, w, h, c, PdfItem.DEFAULT_Z_INDEX);
-    //        }
-    //
-    //        public void drawImage(final float xVal, final float yVal, final BufferedImage bi,
-    //                             final PdfLayoutMgr mgr, final float z) {
-    //            items.add(DrawImage.of(xVal, yVal, bi, mgr, lastOrd++, z));
-    //        }
 
     /** {@inheritDoc}  */
-    override fun drawImage(topLeft:XyOffset, wi: WrappedImage): Float {
-        items.add(DrawImage(topLeft.x + xOff, topLeft.y, wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+    override fun drawImage(bottomLeft:XyOffset, wi: WrappedImage): Float {
+        items.add(DrawImage(bottomLeft.x + xOff, bottomLeft.y, wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
         // This does not account for a page break because this class represents a single page.
-        // TODO: Which is right?
-        // return wi.xyDim.height
-        return topLeft.y - wi.xyDim.height
+        return wi.xyDim.height
     }
 
     private fun drawLine(xa: Float, ya: Float, xb: Float, yb: Float, ls: LineStyle, z: Float) {
@@ -82,6 +71,7 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
+    // TODO: This should go back to being x1, y1, x2, y2 because lines can be drawn in any direction.
     override fun drawLine(topLeft: XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): SinglePage {
         val (x1, y1) = topLeft
         val (x2, y2) = bottomRight
@@ -95,8 +85,8 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float {
-        drawStyledText(topLeft.x, topLeft.y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+    override fun drawStyledText(bottomLeft:XyOffset, text: String, textStyle: TextStyle): Float {
+        drawStyledText(bottomLeft.x, bottomLeft.y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
         return textStyle.lineHeight()
     }
 

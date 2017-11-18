@@ -13,6 +13,16 @@ See the [FAQ](#faq) below
 
 Example: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayoutMgr.java)
 
+Remember that everything is based on the lower-left-hand corner.
+The lower-left-hand corner of the page is always (0,0)
+Text, images, and rectangles are specified by their lower-left-hand corner.
+Be aware that for text, the lower-left-hand-corner is below the leading which is below the descent which is below the baseline.
+Lines are still aligned based on the baseline of the text.
+
+P.S. This is different from PDFBox which bases these things on the lower-right corner.
+
+PPS: Would this be easier to understand if everything was based on the upper-left corner?
+
 [API Docs](https://PlanBase.github.io/PdfLayoutMgr2/apidocs/)
 
 # Maven Dependency
