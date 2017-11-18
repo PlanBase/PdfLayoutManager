@@ -171,7 +171,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
-        val pby = mgr.appropriatePage(this, topLeft.y, 0f)
+        val pby = appropriatePage(topLeft.y, 0f)
         pby.pb.drawStyledText(topLeft.y(pby.y), text, textStyle)
         // TODO: Is this right?
         return topLeft.y + pby.adj
@@ -183,7 +183,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = mgr.appropriatePage(this, topLeft.y, wi.xyDim.height)
+        val pby = appropriatePage(topLeft.y, wi.xyDim.height)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(topLeft.y(pby.y), wi)
 
@@ -215,8 +215,8 @@ class PageGrouping(val mgr: PdfLayoutMgr,
             throw IllegalStateException("height must be positive")
         }
         // logger.info("About to put line: (" + x1 + "," + y1 + "), (" + x2 + "," + y2 + ")");
-        val pby1 = mgr.appropriatePage(this, topY, 0f)
-        val pby2 = mgr.appropriatePage(this, bottomY, 0f)
+        val pby1 = appropriatePage(topY, 0f)
+        val pby2 = appropriatePage(bottomY, 0f)
         if (pby1 == pby2) {
             pby1.pb.fillRect(XyOffset(left, pby1.y), XyDim(width, maxHeight), c)
         } else {
@@ -251,7 +251,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
                 // pageNum actually gets the next page.  Don't get another one after we already
                 // processed the last page!
                 if (pageNum < totalPages) {
-                    currPage = mgr.pages()[currPage.pageNum]
+                    currPage = mgr.page(currPage.pageNum)
                 }
             }
         }
@@ -273,8 +273,8 @@ class PageGrouping(val mgr: PdfLayoutMgr,
             throw IllegalStateException("y1 param must be >= y2 param")
         }
         // logger.info("About to put line: (" + x1 + "," + y1 + "), (" + x2 + "," + y2 + ")");
-        val pby1 = mgr.appropriatePage(this, y1, 0f)
-        val pby2 = mgr.appropriatePage(this, y2, 0f)
+        val pby1 = appropriatePage(y1, 0f)
+        val pby2 = appropriatePage(y2, 0f)
         if (pby1 == pby2) {
             pby1.pb.drawLine(XyOffset(x1, pby1.y), XyOffset(x2, pby2.y), lineStyle)
         } else {
@@ -330,12 +330,42 @@ class PageGrouping(val mgr: PdfLayoutMgr,
                 // pageNum actually gets the next page.  Don't get another one after we already
                 // processed the last page!
                 if (pageNum < totalPages) {
-                    currPage = mgr.pages()[currPage.pageNum]
+                    currPage = mgr.page(currPage.pageNum)
                 }
             }
         }
 
         return this
+    }
+
+    /**
+     Returns the correct page for the given value of y.  This lets the user use any Y value and
+     we continue extending their canvas downward (negative) by adding extra pages.
+     @param origY the un-adjusted y value.
+     @return the proper page and adjusted y value for that page.
+     */
+    private fun appropriatePage(origY: Float, height: Float): PageBufferAndY {
+        var y = origY
+        if (!mgr.hasAnyPages()) {
+            throw IllegalStateException("Cannot work with the any pages until one has been" +
+                                        " created by calling mgr.ensurePageIdx(1).")
+        }
+        var idx = mgr.unCommittedPageIdx()
+        // Get the first possible page.  Just keep moving to the top of the next page until it's in
+        // the printable area.
+        while (y < yBodyBottom()) {
+            y += bodyHeight()
+            idx++
+            mgr.ensurePageIdx(idx)
+        }
+        val ps = mgr.page(idx)
+        var adj = 0f
+        if (y + height > yBodyTop()) {
+            val oldY = y
+            y = yBodyTop() - height
+            adj = y - oldY
+        }
+        return PageBufferAndY(ps, y, adj)
     }
 
     /*
@@ -398,7 +428,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
     //        if (!valid) { throw new IllegalStateException("Logical page accessed after commit"); }
     //        float outerWidth = cell.width();
     //        XyDim innerDim = cell.calcDimensions(outerWidth);
-    //        PageBufferAndY pby = mgr.appropriatePage(this, origY);
+    //        PageBufferAndY pby = appropriatePage(origY);
     //        return cell.render(pby.pb, XyOffset.of(x, pby.y), innerDim.width(outerWidth)).y();
     //    }
 
@@ -419,6 +449,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
      * has package scope so that Text can access it for one thing.  It may become private in the
      * future.
      */
+    // TODO: Should take an XyOffset
     internal fun borderStyledText(xCoord: Float, yCoord: Float, text: String, s: TextStyle) {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
@@ -426,13 +457,6 @@ class PageGrouping(val mgr: PdfLayoutMgr,
         borderItems.add(SinglePage.Text(xCoord, yCoord, text, s, borderOrd++.toLong(),
                                         PdfItem.DEFAULT_Z_INDEX))
     }
-
-    /**
-    @param pb specific page item will be put on
-    @param y the y-value on that page
-    @param adj the height of the adjustment used to keep the line on one page.
-     */
-    data class PageBufferAndY(val pb: SinglePage, val y: Float, val adj: Float)
 
     companion object {
         private val DEFAULT_DOUBLE_MARGIN_DIM = XyDim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)

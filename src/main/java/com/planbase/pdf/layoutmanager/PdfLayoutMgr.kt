@@ -21,7 +21,6 @@
 package com.planbase.pdf.layoutmanager
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
@@ -38,7 +37,6 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
-import java.util.Collections
 import java.util.HashMap
 
 /**
@@ -82,7 +80,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                     */
                    val pageDim: XyDim,
                    /** Takes a page number and returns an x-offset for that page. */
-                   var pageReactor:((Int, SinglePage) -> Float)? = null) {
+                   private var pageReactor:((Int, SinglePage) -> Float)? = null) {
     private val doc = PDDocument()
 //    val pageDim = XyDim(mb ?: PDRectangle.LETTER)
 
@@ -99,7 +97,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     //    public PDRectangle printableArea() { return printableArea; }
 
     // You can have many DrawJpegs backed by only a few images - it is a flyweight, and this
-    // hash map keeps track of the few underlying images, even as intances of DrawJpeg
+    // hash map keeps track of the few underlying images, even as instances of DrawJpeg
     // represent all the places where these images are used.
     // CRITICAL: This means that the the set of jpgs must be thrown out and created anew for each
     // document!  Thus, a private final field on the PdfLayoutMgr instead of DrawJpeg, and DrawJpeg
@@ -109,7 +107,9 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     private val pages:MutableList<SinglePage> = mutableListOf()
 
     // pages.size() counts the first page as 1, so 0 is the appropriate sentinel value
-    private var unCommittedPageIdx = 0
+    private var unCommittedPageIdx:Int = 0
+
+    fun unCommittedPageIdx():Int = unCommittedPageIdx
 
     enum class Orientation {
         PORTRAIT,
@@ -132,41 +132,14 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         return temp!!
     }
 
-    internal fun pages(): List<SinglePage> {
-        return Collections.unmodifiableList(pages)
-    }
+    fun hasAnyPages():Boolean = pages.size > 0
 
-/**
- * Returns the correct page for the given value of y.  This lets the user use any Y value and
- * we continue extending their canvas downward (negative) by adding extra pages.
- * @param origY the un-adjusted y value.
- * @return the proper page and adjusted y value for that page.
- */
-// TODO: Should this be on PageGrouping?
-    internal fun appropriatePage(lp: PageGrouping, origY: Float, height: Float): PageGrouping.PageBufferAndY {
-        var y = origY
-        if (pages.size < 1) {
-            throw IllegalStateException("Cannot work with the any pages until one has been" + " created by calling newPage().")
+    fun page(idx:Int) = pages[idx]
+
+    fun ensurePageIdx(idx:Int) {
+        while (pages.size <= idx) {
+            pages.add(SinglePage(pages.size + 1, this, pageReactor))
         }
-        var idx = unCommittedPageIdx
-        // Get the first possible page.  Just keep moving to the top of the next page until it's in
-        // the printable area.
-        while (y < lp.yBodyBottom()) {
-            y += lp.bodyHeight()
-            idx++
-            if (pages.size <= idx) {
-//                println("PageReactor before adding a page: " + pageReactor)
-                pages.add(SinglePage(pages.size + 1, this, pageReactor))
-            }
-        }
-        val ps = pages[idx]
-        var adj = 0f
-        if (y + height > lp.yBodyTop()) {
-            val oldY = y
-            y = lp.yBodyTop() - height
-            adj = y - oldY
-        }
-        return PageGrouping.PageBufferAndY(ps, y, adj)
     }
 
     /**
@@ -196,25 +169,19 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * Tells this PdfLayoutMgr that you want to start a new logical page (which may be broken across
      * two or more physical pages) in the requested page orientation.
      */
-    fun logicalPageStart(o: Orientation): PageGrouping {
-        return logicalPageStart(o, null)
-    }
+    fun logicalPageStart(o: Orientation): PageGrouping = logicalPageStart(o, null)
 
     /**
      * Get a new logical page (which may be broken across two or more physical pages) in Landscape orientation.
      */
-    fun logicalPageStart(): PageGrouping {
-        return logicalPageStart(LANDSCAPE, null)
-    }
+    fun logicalPageStart(): PageGrouping = logicalPageStart(LANDSCAPE, null)
 
     /**
      * Loads a TrueType font (and embeds it into the document?) from the given file into a
      * PDType0Font object.
      */
     @Throws(IOException::class)
-    fun loadTrueTypeFont(fontFile: File): PDType0Font {
-        return PDType0Font.load(doc, fontFile)
-    }
+    fun loadTrueTypeFont(fontFile: File): PDType0Font = PDType0Font.load(doc, fontFile)
 
     /**
      * Call this when you are through with your current set of pages to commit all pending text and
@@ -277,9 +244,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         return this.doc == other.doc && this.pages == other.pages
     }
 
-    override fun hashCode(): Int {
-        return doc.hashCode() + pages.hashCode()
-    }
+    override fun hashCode(): Int = doc.hashCode() + pages.hashCode()
 
     companion object {
 
