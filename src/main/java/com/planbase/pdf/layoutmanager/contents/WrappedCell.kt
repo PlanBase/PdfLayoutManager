@@ -52,8 +52,8 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
         dim
     }()
 
-    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim {
-//        println("render() outerTopLeft=" + outerTopLeft)
+    override fun render(lp: RenderTarget, topLeft: XyOffset): XyDim {
+//        println("render() topLeft=" + topLeft)
         val boxStyle = cellStyle.boxStyle
         val padding = boxStyle.padding
         val border = boxStyle.border
@@ -62,12 +62,12 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(outerTopLeft, xyDim, boxStyle.bgColor)
+            lp.fillRect(topLeft, xyDim, boxStyle.bgColor)
             //            System.out.println("\tCell.render back from putRect");
         }
 
         // Draw contents over background, but under border
-        var innerTopLeft: XyOffset = padding.applyTopLeft(outerTopLeft)
+        var innerTopLeft: XyOffset = padding.applyTopLeft(topLeft)
                 .plusXMinusY(XyOffset(border.left.thickness / 2f, border.top.thickness / 2f))
         val innerDimensions: XyDim = padding.subtractFrom(xyDim)
 
@@ -84,14 +84,11 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             bottomY -= y // y is always the lowest item in the cell.
         }
 
-        val rightX = outerTopLeft.x + xyDim.width
+        val rightX = topLeft.x + xyDim.width
         // Draw border last to cover anything that touches it?
         if (border != BorderStyle.NO_BORDERS) {
-            val origX = outerTopLeft.x
-            val origY = outerTopLeft.y
-            val bottomRight = XyOffset(rightX, bottomY)
-            val upperRight = XyOffset(rightX, origY)
-            val bottomLeft = XyOffset(origX, bottomY)
+            val origX = topLeft.x
+            val origY = topLeft.y
 
             // TODO: Fix this!
             // This breaks cell rows in order to fix rendering content after images that fall
@@ -108,24 +105,28 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             //
             // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
             // to see if `return y + pby.adj;` still makes sense.
-            bottomY = outerTopLeft.y - xyDim.height
+            bottomY = topLeft.y - xyDim.height
+
+            val topRight = XyOffset(rightX, origY)
+            val bottomRight = XyOffset(rightX, bottomY)
+            val bottomLeft = XyOffset(origX, bottomY)
 
             // Like CSS it's listed Top, Right, Bottom, left
             if (border.top.thickness > 0) {
-                lp.drawLine(outerTopLeft, upperRight, border.top)
+                lp.drawLine(topLeft, topRight, border.top)
             }
             if (border.right.thickness > 0) {
-                lp.drawLine(upperRight, bottomRight, border.right)
+                lp.drawLine(topRight, bottomRight, border.right)
             }
             if (border.bottom.thickness > 0) {
                 lp.drawLine(bottomLeft, bottomRight, border.bottom)
             }
             if (border.left.thickness > 0) {
-                lp.drawLine(outerTopLeft, bottomLeft, border.left)
+                lp.drawLine(topLeft, bottomLeft, border.left)
             }
         }
 
-        return XyDim(rightX - outerTopLeft.x,
-                     outerTopLeft.y - bottomY)
+        return XyDim(rightX - topLeft.x,
+                     topLeft.y - bottomY)
     }
 }

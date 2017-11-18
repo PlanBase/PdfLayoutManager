@@ -50,7 +50,7 @@ interface LineWrapped {
      @return the adjusted XyDim which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim
+    fun render(lp: RenderTarget, topLeft: XyOffset): XyDim
 
     object ZeroLineWrapped: LineWrapped {
         override val xyDim: XyDim = XyDim.ZERO
@@ -61,7 +61,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim = xyDim
+        override fun render(lp: RenderTarget, topLeft: XyOffset): XyDim = xyDim
     }
 
     companion object {
