@@ -92,6 +92,9 @@ class SinglePage(val pageNum: Int,
     /** {@inheritDoc}  */
     override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): Float {
         drawStyledText(x, y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+        // TODO: Which is right!?
+//        return textStyle.lineHeight()
+//        return y - textStyle.lineHeight()
         return y
     }
 
@@ -103,6 +106,8 @@ class SinglePage(val pageNum: Int,
             item.commit(stream)
         }
     }
+
+    override fun toString(): String = "SinglePage($pageNum)"
 
     private class DrawLine(private val x1: Float,
                            private val y1: Float,

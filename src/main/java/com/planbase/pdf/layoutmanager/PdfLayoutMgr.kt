@@ -142,7 +142,8 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
  * @param origY the un-adjusted y value.
  * @return the proper page and adjusted y value for that page.
  */
-    fun appropriatePage(lp: PageGrouping, origY: Float, height: Float): PageGrouping.PageBufferAndY {
+// TODO: Should this be on PageGrouping?
+    internal fun appropriatePage(lp: PageGrouping, origY: Float, height: Float): PageGrouping.PageBufferAndY {
         var y = origY
         if (pages.size < 1) {
             throw IllegalStateException("Cannot work with the any pages until one has been" + " created by calling newPage().")

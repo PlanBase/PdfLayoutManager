@@ -96,7 +96,7 @@ import java.util.TreeSet
  * @param bodyDim the dimensions of the body area.
  * @return a new PageGrouping with the given settings.
  */
-class PageGrouping(private val mgr: PdfLayoutMgr,
+class PageGrouping(val mgr: PdfLayoutMgr,
                    val orientation: Orientation,
                    bodyOff: XyOffset,
                    bodyDim: XyDim) : RenderTarget { // AKA Document Section
@@ -428,7 +428,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     @param y the y-value on that page
     @param adj the height of the adjustment used to keep the line on one page.
      */
-    class PageBufferAndY(val pb: SinglePage, val y: Float, val adj: Float)
+    data class PageBufferAndY(val pb: SinglePage, val y: Float, val adj: Float)
 
     companion object {
         private val DEFAULT_DOUBLE_MARGIN_DIM = XyDim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
