@@ -174,7 +174,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
         val pby = appropriatePage(topLeft.y, 0f)
         pby.pb.drawStyledText(topLeft.y(pby.y), text, textStyle)
         // TODO: Is this right?
-        return topLeft.y + pby.adj
+        return textStyle.lineHeight() + pby.adj
     }
 
     /** {@inheritDoc}  */
@@ -186,16 +186,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
         val pby = appropriatePage(topLeft.y, wi.xyDim.height)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(topLeft.y(pby.y), wi)
-
-        // The y value is the distance from the bottom of the first page to the bottom of the image.
-        // We want to return the corrected version of the same distance.  On the first page, y is
-        // positive and needs no correction.  On subsequent pages it is negative and only needs
-        // correction if the image is requested to be outside of the bounds of the body section.
-        // In which case, we subtract just enough from the y value to bring it back into the body
-        // section.  The amount to subtract is yImageTop - yBodyTop using the y value from this page
-        // (pby.y).
-        // TODO: Is this right?
-        return topLeft.y + pby.adj
+        return wi.xyDim.height + pby.adj
     }
 
     /** {@inheritDoc}  */

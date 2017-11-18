@@ -97,10 +97,7 @@ class SinglePage(val pageNum: Int,
     /** {@inheritDoc}  */
     override fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float {
         drawStyledText(topLeft.x, topLeft.y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
-        // TODO: Which is right!?
-//        return textStyle.lineHeight()
-        return topLeft.y - textStyle.lineHeight()
-//        return y
+        return textStyle.lineHeight()
     }
 
     @Throws(IOException::class)

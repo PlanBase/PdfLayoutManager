@@ -48,7 +48,8 @@ interface RenderTarget {
      @param topLeft the XyOffset of the topmost y and leftmost x
      @param text the text
      @param textStyle the style
-     @return the lowest y-value. TODO: Or maybe the height?
+     @return the effective height after page breaking
+     (may include some extra space above to push items onto the next page).
      */
     fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float
 
@@ -56,7 +57,8 @@ interface RenderTarget {
      Puts an image on this RenderTarget
      @param topLeft the XyOffset of the topmost y and leftmost x
      @param wi the scaled, "wrapped" jpeg/png image
-     @return the lowest y-value. TODO: Or maybe the height?
+     @return the effective height after page breaking
+     (may include some extra space above to push items onto the next page).
      */
     fun drawImage(topLeft:XyOffset, wi: WrappedImage): Float
 
