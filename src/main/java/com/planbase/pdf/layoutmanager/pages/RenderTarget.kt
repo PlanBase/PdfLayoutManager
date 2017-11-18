@@ -45,31 +45,29 @@ interface RenderTarget {
     fun drawLine(x1: Float, y1: Float, x2: Float, y2: Float, lineStyle: LineStyle): RenderTarget
 
     /**
-     * Puts styled text on this RenderTarget
-     * @param x the left-most X-value
-     * @param y the (bottom?) Y-value
-     * @param text the text
-     * @param textStyle the style
-     * @return the lowest y-value.
+     Puts styled text on this RenderTarget
+     @param topLeft the XyOffset of the topmost y and leftmost x
+     @param text the text
+     @param textStyle the style
+     @return the lowest y-value. TODO: Or maybe the height?
      */
-    fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): Float
+    fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float
 
     /**
-     * Puts an image on this RenderTarget
-     * @param x left offset
-     * @param y bottom offset
-     * @param wi the scaled, "wrapped" jpeg/png image
-     * @return the lowest y-value.
+     Puts an image on this RenderTarget
+     @param topLeft the XyOffset of the topmost y and leftmost x
+     @param wi the scaled, "wrapped" jpeg/png image
+     @return the lowest y-value. TODO: Or maybe the height?
      */
-    fun drawImage(x: Float, y: Float, wi: WrappedImage): Float
+    fun drawImage(topLeft:XyOffset, wi: WrappedImage): Float
 
     /**
-     * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
-     * separately with textLines).
-     * @param outerTopLeft exterior x and y values of the upper-left corner
-     * @param outerDim width and height (dimensions) of rectangle
-     * @param c color
-     * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
+     separately with textLines).
+     @param topLeft x and y values of the upper-left corner
+     @param outerDim width and height (dimensions) of rectangle
+     @param c color
+     @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun fillRect(outerTopLeft: XyOffset, outerDim: XyDim, c: PDColor): RenderTarget
+    fun fillRect(topLeft: XyOffset, outerDim: XyDim, c: PDColor): RenderTarget
 }

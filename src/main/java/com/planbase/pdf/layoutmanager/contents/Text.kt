@@ -61,7 +61,7 @@ data class Text(val textStyle: TextStyle,
         override val lineHeight: Float = textStyle.lineHeight()
 
         override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim {
-            val bottomY:Float = lp.drawStyledText(outerTopLeft.x, outerTopLeft.y, string, textStyle)
+            val bottomY:Float = lp.drawStyledText(outerTopLeft, string, textStyle)
             return XyDim(xyDim.width,
                          outerTopLeft.y - bottomY)
         }

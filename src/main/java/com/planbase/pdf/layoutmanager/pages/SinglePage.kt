@@ -54,8 +54,8 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(outerTopLeft: XyOffset, outerDim: XyDim, c: PDColor): SinglePage {
-        fillRect(outerTopLeft.x, outerTopLeft.y, outerDim.width, outerDim.height, c, -1f)
+    override fun fillRect(topLeft: XyOffset, outerDim: XyDim, c: PDColor): SinglePage {
+        fillRect(topLeft.x, topLeft.y, outerDim.width, outerDim.height, c, -1f)
         return this
     }
     //        public void fillRect(final float xVal, final float yVal, final float w, final PDColor c,
@@ -69,10 +69,12 @@ class SinglePage(val pageNum: Int,
     //        }
 
     /** {@inheritDoc}  */
-    override fun drawImage(x: Float, y: Float, wi: WrappedImage): Float {
-        items.add(DrawImage(x + xOff, y, wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+    override fun drawImage(topLeft:XyOffset, wi: WrappedImage): Float {
+        items.add(DrawImage(topLeft.x + xOff, topLeft.y, wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
         // This does not account for a page break because this class represents a single page.
-        return wi.xyDim.height
+        // TODO: Which is right?
+        // return wi.xyDim.height
+        return topLeft.y - wi.xyDim.height
     }
 
     private fun drawLine(xa: Float, ya: Float, xb: Float, yb: Float, ls: LineStyle, z: Float) {
@@ -90,12 +92,12 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): Float {
-        drawStyledText(x, y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+    override fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float {
+        drawStyledText(topLeft.x, topLeft.y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
         // TODO: Which is right!?
 //        return textStyle.lineHeight()
-//        return y - textStyle.lineHeight()
-        return y
+        return topLeft.y - textStyle.lineHeight()
+//        return y
     }
 
     @Throws(IOException::class)

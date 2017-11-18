@@ -12,10 +12,10 @@
  // See the License for the specific language governing permissions and
  // limitations under the License.
 
-import com.planbase.pdf.layoutmanager.*
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT
 import com.planbase.pdf.layoutmanager.attributes.Align.TOP_RIGHT
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
@@ -25,7 +25,6 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
-import com.planbase.pdf.layoutmanager.contents.TableRowBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Utils
@@ -38,7 +37,6 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
-import java.security.SecureRandom
 import javax.imageio.ImageIO
 
 /**
@@ -65,7 +63,7 @@ fun testBodyMargins() {
                 //            System.out.println("pageNum " + pageNum);
                 pb.drawLine(leftMargin, 30f, leftMargin + bodyWidth, 30f,
                             LineStyle(Utils.CMYK_BLACK))
-                pb.drawStyledText(leftMargin, 20f, "Page # " + pageNum,
+                pb.drawStyledText(XyOffset(leftMargin, 20f), "Page # " + pageNum,
                                   TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK))
                 leftMargin })
 
@@ -184,43 +182,43 @@ fun testBodyMargins() {
         // and
         // subject verb pronoun matching descriptive noun
 
-        internal val adjs:List<String> = listOf("able", "bad", "best", "better", "big", "black", "certain", "clear", "different",
-                                                "early", "easy", "economic", "federal", "free", "full", "good", "great", "hard",
-                                                "high", "human", "important", "international", "large", "late", "little", "local",
-                                                "long", "low", "major", "military", "national", "new", "old", "only", "other",
-                                                "political", "possible", "public", "real", "recent", "right", "small", "social",
-                                                "special", "strong", "sure", "true", "white", "whole", "young")
-
-        internal val verbs:List<String> = listOf("asked", "was", "became", "began", "called", "could", "came", "did", "felt",
-                                                 "found", "got", "gave", "went", "had", "heard", "helped", "kept", "knew", "left",
-                                                 "let", "liked", "lived", "looked", "made", "meant", "moved", "needed",
-                                                 "played", "put", "ran", "said", "saw", "seemed", "showed", "started", "took",
-                                                 "talked", "told", "thought", "tried", "turned", "used", "wanted", "willed",
-                                                 "worked")
-
-        internal val nouns:List<String> = listOf("areas", "books", "businesses", "cases", "children", "companies", "countries",
-                                                 "days", "eyes", "facts", "families", "governments", "groups", "hands", "homes",
-                                                 "jobs", "lives", "lots", "men", "money", "months", "mothers", "Mrs", "nights",
-                                                 "numbers", "parts", "people", "places", "points", "problems", "programs",
-                                                 "questions", "rights", "rooms", "schools", "states", "stories", "students",
-                                                 "studies", "systems", "things", "times", "waters", "ways",
-                                                 "weeks", "women", "words", "work", "worlds", "years")
-
-        internal fun mumble(times:Int):String {
-            val rand = SecureRandom()
-            val sB = StringBuilder()
-            for (i in 0 until times)
-            {
-                sB.append("The ").append(adjs[rand.nextInt(adjs.size)]).append(" ")
-                        .append(nouns[rand.nextInt(nouns.size)]).append(" ")
-                        .append(verbs[rand.nextInt(verbs.size)]).append(" the ")
-                        .append(adjs[rand.nextInt(adjs.size)]).append(" ")
-                        .append(nouns[rand.nextInt(nouns.size)]).append(" and ")
-                        .append(nouns[rand.nextInt(nouns.size)]).append(" ")
-                        .append(verbs[rand.nextInt(verbs.size)]).append(" ")
-                        .append(adjs[rand.nextInt(adjs.size)]).append(".  ")
-            }
-            return sB.toString()
-        }
+//        internal val adjs:List<String> = listOf("able", "bad", "best", "better", "big", "black", "certain", "clear", "different",
+//                                                "early", "easy", "economic", "federal", "free", "full", "good", "great", "hard",
+//                                                "high", "human", "important", "international", "large", "late", "little", "local",
+//                                                "long", "low", "major", "military", "national", "new", "old", "only", "other",
+//                                                "political", "possible", "public", "real", "recent", "right", "small", "social",
+//                                                "special", "strong", "sure", "true", "white", "whole", "young")
+//
+//        internal val verbs:List<String> = listOf("asked", "was", "became", "began", "called", "could", "came", "did", "felt",
+//                                                 "found", "got", "gave", "went", "had", "heard", "helped", "kept", "knew", "left",
+//                                                 "let", "liked", "lived", "looked", "made", "meant", "moved", "needed",
+//                                                 "played", "put", "ran", "said", "saw", "seemed", "showed", "started", "took",
+//                                                 "talked", "told", "thought", "tried", "turned", "used", "wanted", "willed",
+//                                                 "worked")
+//
+//        internal val nouns:List<String> = listOf("areas", "books", "businesses", "cases", "children", "companies", "countries",
+//                                                 "days", "eyes", "facts", "families", "governments", "groups", "hands", "homes",
+//                                                 "jobs", "lives", "lots", "men", "money", "months", "mothers", "Mrs", "nights",
+//                                                 "numbers", "parts", "people", "places", "points", "problems", "programs",
+//                                                 "questions", "rights", "rooms", "schools", "states", "stories", "students",
+//                                                 "studies", "systems", "things", "times", "waters", "ways",
+//                                                 "weeks", "women", "words", "work", "worlds", "years")
+//
+//        internal fun mumble(times:Int):String {
+//            val rand = SecureRandom()
+//            val sB = StringBuilder()
+//            for (i in 0 until times)
+//            {
+//                sB.append("The ").append(adjs[rand.nextInt(adjs.size)]).append(" ")
+//                        .append(nouns[rand.nextInt(nouns.size)]).append(" ")
+//                        .append(verbs[rand.nextInt(verbs.size)]).append(" the ")
+//                        .append(adjs[rand.nextInt(adjs.size)]).append(" ")
+//                        .append(nouns[rand.nextInt(nouns.size)]).append(" and ")
+//                        .append(nouns[rand.nextInt(nouns.size)]).append(" ")
+//                        .append(verbs[rand.nextInt(verbs.size)]).append(" ")
+//                        .append(adjs[rand.nextInt(adjs.size)]).append(".  ")
+//            }
+//            return sB.toString()
+//        }
     }
 }

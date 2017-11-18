@@ -64,7 +64,7 @@ class ScaledImage(private val bufferedImage: BufferedImage,
 
         /** {@inheritDoc}  */
         override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim {
-            val y = lp.drawImage(outerTopLeft.x, outerTopLeft.y, this)
+            val y = lp.drawImage(outerTopLeft, this)
             return XyDim(xyDim.width, outerTopLeft.y - y)
         }
 

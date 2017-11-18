@@ -20,13 +20,12 @@
 
 package com.planbase.pdf.layoutmanager.pages
 
-import com.planbase.pdf.layoutmanager.contents.WrappedCell
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.PdfItem
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -168,24 +167,25 @@ class PageGrouping(val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): Float {
+    override fun drawStyledText(topLeft:XyOffset, text: String, textStyle: TextStyle): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
-        val pby = mgr.appropriatePage(this, y, 0f)
-        pby.pb.drawStyledText(x, pby.y, text, textStyle)
-        return y + pby.adj
+        val pby = mgr.appropriatePage(this, topLeft.y, 0f)
+        pby.pb.drawStyledText(topLeft.y(pby.y), text, textStyle)
+        // TODO: Is this right?
+        return topLeft.y + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun drawImage(x: Float, y: Float, wi: WrappedImage): Float {
+    override fun drawImage(topLeft:XyOffset, wi: WrappedImage): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = mgr.appropriatePage(this, y, wi.xyDim.height)
+        val pby = mgr.appropriatePage(this, topLeft.y, wi.xyDim.height)
         // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawImage(x, pby.y, wi)
+        pby.pb.drawImage(topLeft.y(pby.y), wi)
 
         // The y value is the distance from the bottom of the first page to the bottom of the image.
         // We want to return the corrected version of the same distance.  On the first page, y is
@@ -194,18 +194,19 @@ class PageGrouping(val mgr: PdfLayoutMgr,
         // In which case, we subtract just enough from the y value to bring it back into the body
         // section.  The amount to subtract is yImageTop - yBodyTop using the y value from this page
         // (pby.y).
-        return y + pby.adj
+        // TODO: Is this right?
+        return topLeft.y + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(outerTopLeft: XyOffset, outerDim: XyDim, c: PDColor): PageGrouping {
+    override fun fillRect(topLeft: XyOffset, outerDim: XyDim, c: PDColor): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         //        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
         //                           Utils.toString(c) + ")");
-        val left = outerTopLeft.x
-        val topY = outerTopLeft.y
+        val left = topLeft.x
+        val topY = topLeft.y
         val width = outerDim.width
         val maxHeight = outerDim.height
         val bottomY = topY - maxHeight
