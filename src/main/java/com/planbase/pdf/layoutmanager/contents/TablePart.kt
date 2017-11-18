@@ -83,7 +83,7 @@ class TablePart(private val tableBuilder: TableBuilder) {
             //            System.out.println("\tAbout to render row: " + row);
             val (x, y) = row.render(lp, XyOffset(outerTopLeft.x, rightmostLowest.y))
             rightmostLowest = XyOffset(Math.max(x, rightmostLowest.x),
-                                                                            Math.min(y, rightmostLowest.y))
+                                       Math.min(y, rightmostLowest.y))
         }
         return rightmostLowest
     }

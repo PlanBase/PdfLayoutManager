@@ -52,7 +52,7 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim {
             var rightmostLowest = outerTopLeft
             for (part in parts) {
                 //            System.out.println("About to render part: " + part);
@@ -60,7 +60,8 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
                 rightmostLowest = XyOffset(Math.max(rl.x, rightmostLowest.x),
                                            Math.min(rl.y, rightmostLowest.y))
             }
-            return rightmostLowest
+            return XyDim(rightmostLowest.x - outerTopLeft.x,
+                         outerTopLeft.y - rightmostLowest.y)
         }
 
         override fun toString(): String = "WrappedTable($parts)"

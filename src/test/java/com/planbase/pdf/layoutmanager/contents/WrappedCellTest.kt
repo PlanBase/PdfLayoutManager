@@ -12,6 +12,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
+import junit.framework.TestCase.assertTrue
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -122,19 +123,18 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
 
-        val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
+        val xyDim : XyDim = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
         // TODO: Enable!
-        assertEquals(upperLeft.x + cellWidth, xyOff.x)
+        assertEquals(cellWidth, xyDim.width)
 
         // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
 //        val xyOff2 : XyOffset = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
-        assertEquals(upperLeft.plusXMinusY(XyDim(wrappedCell.xyDim.width, wrappedCell.lineHeight)), xyOff)
-
+        assertTrue(XyDim.within(0.00002f, wrappedCell.xyDim, xyDim))
 
         lp.commit()
 

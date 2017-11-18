@@ -30,6 +30,7 @@ import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -102,65 +103,65 @@ fun testBodyMargins() {
     // After the loop, build the table.
 //    val bullets = tpb.buildPart().buildTable()
 
-    lp.drawCell(0f, PDRectangle.A6.height - 40f,
-                Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
-                     bodyWidth,
-                     listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                 "The long "),
-                            Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18f, Utils.CMYK_BLACK),
-                                 "families"),
-                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                 " needed the national " +
-                                 "words and women said new. The new " +
-                                 "companies told the possible hands " +
-                                 "and books was low. The other " +
-                                 "questions got the recent children and " +
-                                 "lots felt important. The sure hands " +
-                                 "moved the major stories and countries " +
-                                 "showed possible. The major students " +
-                                 "began the international rights and " +
-                                 "places got free. The able homes said " +
-                                 "the better work and cases went free."),
-                            ScaledImage(graphPic),
-                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                 ("The hard eyes seemed the clear " +
-                                  "mothers and systems came economic. " +
-                                  "The high months showed the possible " +
-                                  "money and eyes heard certain. The " +
-                                  "true men played the different facts and " +
-                                  "areas showed large. The good ways " +
-                                  "lived the different countries and " +
-                                  "stories found good. The certain " +
-                                  "places found the political months and " +
-                                  "facts told easy. The long homes ran " +
-                                  "the good governments and cases " +
-                                  "lived social.")),
-                            ScaledImage(graphPic),
-                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                 ("The social people ran the " +
-                                  "local cases and men left local. The " +
-                                  "easy areas saw the whole times and " +
-                                  "systems became national. The whole " +
-                                  "Page # 1questions lived the white points and " +
-                                  "governments had national. The real " +
-                                  "families saw the hard stories and Mrs " +
-                                  "looked late. The young studies had " +
-                                  "the other times and families started " +
-                                  "late. The public years saw the hard " +
-                                  "stories and waters used sure. The " +
-                                  "clear lives showed the white work and " +
-                                  "people used long. The major rights " +
-                                  "was the important children and " +
-                                  "mothers turned able. The " +
-                                  "international men kept the real " +
-                                  "questions and nights made big.")),
-                            ScaledImage(graphPic),
-                            Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
-                                 ("The " +
-                                  "best points got the economic waters " +
-                                  "and problems gave great. The whole " +
-                                  "countries went the best children and " +
-                                  "eyes came able."))), null).wrap())
+    Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
+         bodyWidth,
+         listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                     "The long "),
+                Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18f, Utils.CMYK_BLACK),
+                     "families"),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                     " needed the national " +
+                     "words and women said new. The new " +
+                     "companies told the possible hands " +
+                     "and books was low. The other " +
+                     "questions got the recent children and " +
+                     "lots felt important. The sure hands " +
+                     "moved the major stories and countries " +
+                     "showed possible. The major students " +
+                     "began the international rights and " +
+                     "places got free. The able homes said " +
+                     "the better work and cases went free."),
+                ScaledImage(graphPic),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                     ("The hard eyes seemed the clear " +
+                      "mothers and systems came economic. " +
+                      "The high months showed the possible " +
+                      "money and eyes heard certain. The " +
+                      "true men played the different facts and " +
+                      "areas showed large. The good ways " +
+                      "lived the different countries and " +
+                      "stories found good. The certain " +
+                      "places found the political months and " +
+                      "facts told easy. The long homes ran " +
+                      "the good governments and cases " +
+                      "lived social.")),
+                ScaledImage(graphPic),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                     ("The social people ran the " +
+                      "local cases and men left local. The " +
+                      "easy areas saw the whole times and " +
+                      "systems became national. The whole " +
+                      "Page # 1questions lived the white points and " +
+                      "governments had national. The real " +
+                      "families saw the hard stories and Mrs " +
+                      "looked late. The young studies had " +
+                      "the other times and families started " +
+                      "late. The public years saw the hard " +
+                      "stories and waters used sure. The " +
+                      "clear lives showed the white work and " +
+                      "people used long. The major rights " +
+                      "was the important children and " +
+                      "mothers turned able. The " +
+                      "international men kept the real " +
+                      "questions and nights made big.")),
+                ScaledImage(graphPic),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                     ("The " +
+                      "best points got the economic waters " +
+                      "and problems gave great. The whole " +
+                      "countries went the best children and " +
+                      "eyes came able."))), null).wrap()
+            .render(lp, XyOffset(0f, PDRectangle.A6.height - 40f))
     //        table
     //        );
     lp.commit()

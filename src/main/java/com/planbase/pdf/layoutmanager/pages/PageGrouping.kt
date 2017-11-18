@@ -168,13 +168,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): PageGrouping {
+    override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         val pby = mgr.appropriatePage(this, y, 0f)
         pby.pb.drawStyledText(x, pby.y, text, textStyle)
-        return this
+        return y + pby.adj
     }
 
     /** {@inheritDoc}  */
@@ -334,14 +334,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return this
     }
 
-    /**
+    /*
      * You can draw a cell without a table (for a heading, or paragraph of same-format text, or
      * whatever).
      */
-    fun drawCell(x: Float, y: Float, cell: WrappedCell): XyOffset {
-        // render the row with that maxHeight.
-        return cell.render(this, XyOffset(x, y))
-    }
+//    fun drawCell(x: Float, y: Float, cell: WrappedCell): XyDim =
+//            // render the row with that maxHeight.
+//            cell.render(this, XyOffset(x, y))
 
 //    /**
 //     * Shows the given cells plus either a background or an outline as appropriate.

@@ -21,6 +21,7 @@
 package com.planbase.pdf.layoutmanager.utils
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle
+import java.lang.Math.abs
 
 /**
  * Immutable 2D dimension in terms of non-negative width and height.
@@ -79,12 +80,15 @@ data class XyDim(val width: Float, val height: Float) {
 
     /** Compares dimensions and returns true if that dimension doesn't extend beyond this one.  */
     fun lte(that: XyDim): Boolean = this.width <= that.width &&
-                                                                         this.height <= that.height
+                                    this.height <= that.height
 
     override fun toString() = "XyDim($width, $height)"
 
     companion object {
         val ZERO = XyDim(0f, 0f)
         fun sum(xys:Iterable<XyDim>) = xys.fold(ZERO, {acc, xy -> acc.plus(xy)})
+        fun within(latitude:Float, xya:XyDim, xyb:XyDim):Boolean =
+                (abs(xya.height - xyb.height) <= latitude) &&
+                (abs(xya.width - xyb.width) <= latitude)
     }
 }

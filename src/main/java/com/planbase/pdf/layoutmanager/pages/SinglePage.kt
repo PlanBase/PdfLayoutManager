@@ -20,10 +20,9 @@
 
 package com.planbase.pdf.layoutmanager.pages
 
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.PdfItem
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.contents.ScaledImage
+import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
@@ -91,9 +90,9 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): SinglePage {
+    override fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): Float {
         drawStyledText(x, y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
-        return this
+        return y
     }
 
     @Throws(IOException::class)

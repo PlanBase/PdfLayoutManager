@@ -120,8 +120,8 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xya:XyOffset = tB.buildTable().wrap()
-                .render(lp, XyOffset(40f, lp.yBodyTop()))
+        val xya:XyDim = tB.buildTable().wrap()
+                .render(lp, lp.bodyTopLeft())
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
@@ -171,8 +171,8 @@ class TestManualllyPdfLayoutMgr {
                                               "Line three")
                 .buildRow()
                 .buildPart()
-        val xyb:XyOffset = tB.buildTable().wrap()
-                .render(lp, XyOffset(xya.x + 10, lp.yBodyTop()))
+        val xyb:XyDim = tB.buildTable().wrap()
+                .render(lp, XyOffset(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop()))
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -208,7 +208,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
                 .buildTable()
                 .wrap()
-                .render(lp, XyOffset(xya.x + 10, xyb.y - 10))
+                .render(lp, XyOffset(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
 
         lp.commit()
 
@@ -260,19 +260,20 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xyOff = tB.buildTable()
+        val xyc:XyDim = tB.buildTable()
                 .wrap()
-                .render(lp, XyOffset(40f, lp.yBodyTop()))
+                .render(lp, lp.bodyTopLeft())
 
         // This was very hastily added to this test to prove that font loading works (it does).
         val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
-        lp.drawCell(xyOff.x, xyOff.y,
-                    Cell(CellStyle(MIDDLE_CENTER,
-                                   BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
-                         200f,
-                         TextStyle(liberationFont, 12f, RGB_BLACK),
-                         listOf("Hello Liberation Mono Bold Font!")).wrap())
+        Cell(CellStyle(MIDDLE_CENTER,
+                       BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
+             200f,
+             TextStyle(liberationFont, 12f, RGB_BLACK),
+             listOf("Hello Liberation Mono Bold Font!"))
+                .wrap()
+                .render(lp, lp.bodyTopLeft().plusXMinusY(xyc))
 
         tB = TableBuilder()
         tB.addCellWidths(listOf(100f))

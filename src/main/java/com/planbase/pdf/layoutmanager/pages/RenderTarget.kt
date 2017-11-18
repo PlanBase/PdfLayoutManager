@@ -50,12 +50,12 @@ interface RenderTarget {
      * @param y the (bottom?) Y-value
      * @param text the text
      * @param textStyle the style
-     * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     * @return the lowest y-value.
      */
-    fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): RenderTarget
+    fun drawStyledText(x: Float, y: Float, text: String, textStyle: TextStyle): Float
 
     /**
-     * Puts a jpeg on this RenderTarget
+     * Puts an image on this RenderTarget
      * @param x left offset
      * @param y bottom offset
      * @param wi the scaled, "wrapped" jpeg/png image

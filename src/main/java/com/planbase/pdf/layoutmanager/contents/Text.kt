@@ -60,10 +60,10 @@ data class Text(val textStyle: TextStyle,
 
         override val lineHeight: Float = textStyle.lineHeight()
 
-        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
-            lp.drawStyledText(outerTopLeft.x, outerTopLeft.y, string, textStyle)
-            return XyOffset(outerTopLeft.x + xyDim.width,
-                            outerTopLeft.y - xyDim.height - textStyle.leading())
+        override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim {
+            val bottomY:Float = lp.drawStyledText(outerTopLeft.x, outerTopLeft.y, string, textStyle)
+            return XyDim(xyDim.width,
+                         outerTopLeft.y - bottomY)
         }
 
         override fun toString() = "WrappedText(\"$string\", $xyDim, $textStyle)"

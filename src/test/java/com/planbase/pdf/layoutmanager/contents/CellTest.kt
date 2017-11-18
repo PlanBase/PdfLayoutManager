@@ -49,12 +49,12 @@ class CellTest {
                 .buildPart()
         val table: Table = tB.buildTable()
 
-        val xya: XyOffset = table.wrap().render(lp, XyOffset(40f, lp.yBodyTop()))
+        val xya: XyDim = table.wrap().render(lp, XyOffset(40f, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")
 
-        kotlin.test.assertEquals((lp.yBodyTop() - squareDim), xya.y)
+        kotlin.test.assertEquals(squareDim, xya.height)
         lp.commit()
 
 //        val os = FileOutputStream("testCell1.pdf")

@@ -1,14 +1,21 @@
 package com.planbase.pdf.layoutmanager
 
 //import kotlin.test.assertEquals
+import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToMultiLineWrappeds
 import com.planbase.pdf.layoutmanager.utils.Utils
+import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.XyOffset
+import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.FileOutputStream
 import kotlin.test.assertTrue
 
 class MultiLineWrappedTest {
@@ -32,17 +39,21 @@ class MultiLineWrappedTest {
         assertEquals(tStyle2.lineHeight(), line.xyDim.height, floatCloseEnough)
 
         // This is for the baseline!
-//        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
-//        val lp = pageMgr.logicalPageStart()
-//        val yTop = lp.yBodyTop() - 10f
-//        val yBottom = yTop - tStyle2.lineHeight()
-//        val upperLeft = XyOffset(100f, yTop)
-//        lp.drawLine(0f, yTop, lp.pageWidth(), yTop, LineStyle(RGB_BLACK, 0.125f))
-//        lp.drawLine(0f, yBottom, lp.pageWidth(), yBottom, LineStyle(RGB_BLACK, 0.125f))
-//        line.render(lp, upperLeft)
-//        lp.commit()
-//        val os = FileOutputStream("testBaseline.pdf")
-//        pageMgr.save(os)
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val lp = pageMgr.logicalPageStart()
+        val yTop = lp.yBodyTop() - 10f
+        val yBottom = yTop - tStyle2.lineHeight()
+        val upperLeft = XyOffset(100f, yTop)
+        lp.drawLine(0f, yTop, lp.pageWidth(), yTop, LineStyle(RGB_BLACK, 0.125f))
+        lp.drawLine(0f, yBottom, lp.pageWidth(), yBottom, LineStyle(RGB_BLACK, 0.125f))
+        val xyOff = line.render(lp, upperLeft)
+
+        // TODO: Figure this out!
+//        assertEquals(XyOffset(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
+
+        lp.commit()
+        val os = FileOutputStream("testBaseline.pdf")
+        pageMgr.save(os)
     }
 
 //    @Ignore

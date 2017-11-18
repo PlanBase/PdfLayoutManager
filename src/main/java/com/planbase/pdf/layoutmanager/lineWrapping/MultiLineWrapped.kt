@@ -47,7 +47,7 @@ class MultiLineWrapped(var width: Float = 0f,
         return this
     }
 
-    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim {
         var x:Float = outerTopLeft.x
         val y = outerTopLeft.y
         for (item: LineWrapped in items) {
@@ -56,7 +56,7 @@ class MultiLineWrapped(var width: Float = 0f,
             item.render(lp, outerTopLeft = XyOffset(x, y - ascent))
             x += item.xyDim.width
         }
-        return XyOffset(x, lineHeight)
+        return XyDim(x - outerTopLeft.x, lineHeight)
     }
 
     override fun toString(): String {

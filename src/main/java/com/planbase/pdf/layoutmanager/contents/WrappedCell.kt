@@ -52,7 +52,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
         dim
     }()
 
-    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+    override fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyDim {
 //        println("render() outerTopLeft=" + outerTopLeft)
         val boxStyle = cellStyle.boxStyle
         val padding = boxStyle.padding
@@ -122,6 +122,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             }
         }
 
-        return XyOffset(rightX, bottomY)
+        return XyDim(rightX - outerTopLeft.x,
+                     outerTopLeft.y - bottomY)
     }
 }
