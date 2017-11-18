@@ -460,5 +460,14 @@ class PageGrouping(val mgr: PdfLayoutMgr,
 
     companion object {
         private val DEFAULT_DOUBLE_MARGIN_DIM = XyDim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
+
+        /**
+        @param pb specific page item will be put on
+        @param y the y-value on that page
+        @param adj the height of the adjustment used to keep the line on one page.
+         */
+        private data class PageBufferAndY(val pb: SinglePage,
+                                          val y: Float,
+                                          val adj: Float)
     }
 }
