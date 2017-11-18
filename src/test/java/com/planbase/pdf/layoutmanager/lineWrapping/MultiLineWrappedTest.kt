@@ -1,11 +1,10 @@
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.lineWrapping
 
 //import kotlin.test.assertEquals
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
-import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToMultiLineWrappeds
 import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.XyDim

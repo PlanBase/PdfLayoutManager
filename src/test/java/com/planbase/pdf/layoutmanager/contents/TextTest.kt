@@ -1,4 +1,4 @@
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
 import com.planbase.pdf.layoutmanager.contents.Text.RowIdx

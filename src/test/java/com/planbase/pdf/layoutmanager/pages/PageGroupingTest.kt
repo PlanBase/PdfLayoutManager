@@ -1,5 +1,6 @@
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.pages
 
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceGray
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -10,7 +11,6 @@ import java.io.IOException
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*

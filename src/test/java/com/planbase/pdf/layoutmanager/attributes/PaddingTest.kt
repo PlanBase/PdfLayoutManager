@@ -1,4 +1,4 @@
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import org.junit.Assert.assertEquals
