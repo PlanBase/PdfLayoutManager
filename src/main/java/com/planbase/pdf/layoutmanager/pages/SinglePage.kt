@@ -82,7 +82,10 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun drawLine(x1: Float, y1: Float, x2: Float, y2: Float, lineStyle: LineStyle): SinglePage {
+    override fun drawLine(topLeft: XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): SinglePage {
+        val (x1, y1) = topLeft
+        val (x2, y2) = bottomRight
+
         drawLine(x1, y1, x2, y2, lineStyle, PdfItem.DEFAULT_Z_INDEX)
         return this
     }

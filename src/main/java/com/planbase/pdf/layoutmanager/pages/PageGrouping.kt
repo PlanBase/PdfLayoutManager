@@ -260,11 +260,14 @@ class PageGrouping(val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawLine(x1: Float, y1: Float, x2: Float, y2: Float, lineStyle: LineStyle): PageGrouping {
+    override fun drawLine(topLeft: XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         //        mgr.putLine(x1, y1, x2, y2, ls);
+
+        val (x1, y1) = topLeft
+        val (x2, y2) = bottomRight
 
         if (y1 < y2) {
             throw IllegalStateException("y1 param must be >= y2 param")
@@ -273,7 +276,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
         val pby1 = mgr.appropriatePage(this, y1, 0f)
         val pby2 = mgr.appropriatePage(this, y2, 0f)
         if (pby1 == pby2) {
-            pby1.pb.drawLine(x1, pby1.y, x2, pby2.y, lineStyle)
+            pby1.pb.drawLine(XyOffset(x1, pby1.y), XyOffset(x2, pby2.y), lineStyle)
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
             val xDiff = x2 - x1
@@ -321,7 +324,7 @@ class PageGrouping(val mgr: PdfLayoutMgr,
                     xb = xa + xDiff * ((ya - yb) / yDiff)
                 }
 
-                currPage.drawLine(xa, ya, xb, yb, lineStyle)
+                currPage.drawLine(XyOffset(xa, ya), XyOffset(xb, yb), lineStyle)
 
                 // pageNum is one-based while get is zero-based, so passing get the current
                 // pageNum actually gets the next page.  Don't get another one after we already

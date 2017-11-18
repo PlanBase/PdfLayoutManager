@@ -44,8 +44,8 @@ class MultiLineWrappedTest {
         val yTop = lp.yBodyTop() - 10f
         val yBottom = yTop - tStyle2.lineHeight()
         val upperLeft = XyOffset(100f, yTop)
-        lp.drawLine(0f, yTop, lp.pageWidth(), yTop, LineStyle(RGB_BLACK, 0.125f))
-        lp.drawLine(0f, yBottom, lp.pageWidth(), yBottom, LineStyle(RGB_BLACK, 0.125f))
+        lp.drawLine(XyOffset(0f, yTop), XyOffset(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f))
+        lp.drawLine(XyOffset(0f, yBottom), XyOffset(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f))
         val xyOff = line.render(lp, upperLeft)
 
         // TODO: Figure this out!

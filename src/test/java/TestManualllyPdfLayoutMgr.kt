@@ -508,19 +508,24 @@ class TestManualllyPdfLayoutMgr {
         // API adds two more pages as needed.  This is a great test for how geometric shapes break
         // across pages.
 
+        val topLeft = XyOffset(pMargin, lp.yBodyTop())
+        val topRight = XyOffset(pageRMargin, lp.yBodyTop())
+        val bottomRight = XyOffset(pageRMargin, -lp.yBodyTop())
+        val bottomLeft = XyOffset(pMargin, -lp.yBodyTop())
+
         // top lne
-        lp.drawLine(pMargin, lp.yBodyTop(), pageRMargin, lp.yBodyTop(), lineStyle)
+        lp.drawLine(topLeft, topRight, lineStyle)
         // left line
-        lp.drawLine(pMargin, lp.yBodyTop(), pMargin, -lp.yBodyTop(), lineStyle)
+        lp.drawLine(topLeft, bottomLeft, lineStyle)
         // 3-page-long X
-        lp.drawLine(pMargin, lp.yBodyTop(), pageRMargin, -lp.yBodyTop(), lineStyle)
+        lp.drawLine(topLeft, bottomRight, lineStyle)
         // middle line
-        lp.drawLine(pMargin, 0f, pageRMargin, 0f, lineStyle)
-        lp.drawLine(pageRMargin, lp.yBodyTop(), pMargin, -lp.yBodyTop(), lineStyle)
+        lp.drawLine(XyOffset(pMargin, 0f), XyOffset(pageRMargin, 0f), lineStyle)
+        lp.drawLine(topRight, bottomLeft, lineStyle)
         // right line
-        lp.drawLine(pageRMargin, lp.yBodyTop(), pageRMargin, -lp.yBodyTop(), lineStyle)
+        lp.drawLine(topRight, bottomRight, lineStyle)
         // bottom line
-        lp.drawLine(pMargin, -lp.yBodyTop(), pageRMargin, -lp.yBodyTop(), lineStyle)
+        lp.drawLine(bottomLeft, bottomRight, lineStyle)
         lp.commit()
 
         // All done - write it out!

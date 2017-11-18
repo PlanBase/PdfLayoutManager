@@ -34,15 +34,14 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
  */
 interface RenderTarget {
     /**
-     * Must draw from higher to lower.  Thus y1 must be &gt;= y2 (remember, higher y values
-     * are up).
-     * @param x1 first x-value
-     * @param y1 first (upper) y-value
-     * @param x2 second x-value
-     * @param y2 second (lower or same) y-value
-     * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     Must draw from higher to lower.  Thus y1 must be &gt;= y2 (remember, higher y values
+     are up).
+     @param topLeft the XyOffset of the topmost y and leftmost x
+     @param bottomRight the XyOffset of the bottommost y and rightmost x
+     @param lineStyle the style to draw the line with
+     @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(x1: Float, y1: Float, x2: Float, y2: Float, lineStyle: LineStyle): RenderTarget
+    fun drawLine(topLeft:XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): RenderTarget
 
     /**
      Puts styled text on this RenderTarget

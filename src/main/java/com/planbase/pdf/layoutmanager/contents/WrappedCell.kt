@@ -89,6 +89,9 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
         if (border != BorderStyle.NO_BORDERS) {
             val origX = outerTopLeft.x
             val origY = outerTopLeft.y
+            val bottomRight = XyOffset(rightX, bottomY)
+            val upperRight = XyOffset(rightX, origY)
+            val bottomLeft = XyOffset(origX, bottomY)
 
             // TODO: Fix this!
             // This breaks cell rows in order to fix rendering content after images that fall
@@ -109,16 +112,16 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
 
             // Like CSS it's listed Top, Right, Bottom, left
             if (border.top.thickness > 0) {
-                lp.drawLine(origX, origY, rightX, origY, border.top)
+                lp.drawLine(outerTopLeft, upperRight, border.top)
             }
             if (border.right.thickness > 0) {
-                lp.drawLine(rightX, origY, rightX, bottomY, border.right)
+                lp.drawLine(upperRight, bottomRight, border.right)
             }
             if (border.bottom.thickness > 0) {
-                lp.drawLine(origX, bottomY, rightX, bottomY, border.bottom)
+                lp.drawLine(bottomLeft, bottomRight, border.bottom)
             }
             if (border.left.thickness > 0) {
-                lp.drawLine(origX, origY, origX, bottomY, border.left)
+                lp.drawLine(outerTopLeft, bottomLeft, border.left)
             }
         }
 

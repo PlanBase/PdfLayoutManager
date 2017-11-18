@@ -61,7 +61,7 @@ fun testBodyMargins() {
                 val isLeft = pageNum % 2 == 1
                 val leftMargin:Float = if (isLeft) 37f else 45f
                 //            System.out.println("pageNum " + pageNum);
-                pb.drawLine(leftMargin, 30f, leftMargin + bodyWidth, 30f,
+                pb.drawLine(XyOffset(leftMargin, 30f), XyOffset(leftMargin + bodyWidth, 30f),
                             LineStyle(Utils.CMYK_BLACK))
                 pb.drawStyledText(XyOffset(leftMargin, 20f), "Page # " + pageNum,
                                   TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK))
