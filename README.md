@@ -13,17 +13,25 @@ See the [FAQ](#faq) below
 
 Example: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayoutMgr.java)
 
-Remember that everything is based on the lower-left-hand corner.
-The lower-left-hand corner of the page is always (0,0)
+[API Docs](https://PlanBase.github.io/PdfLayoutMgr2/apidocs/)
+
+### Positioning
+
+To get started, it's worth being aware of a few PDF defaults that PdfLayoutMgr2 inherits from the [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf):
+
+* **User Space:** Everything is positioned on the page according to User Space which uses the familiar [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system).
+Most people learned about this by drawing graphs in basic algebra in elementary school.
+* **1/72"** The default unit is 1/72 of an inch.
+This corresponds to one definition of a "point" and to a common screen resolution for older monitors.
+* **Lower-Left:** Everything is positioned by its lower-left-hand corner.
+The point (0,0) is the lower-left-hand corner of the page (in portrait orientation).
+Positive Y is up.  Positive X is right.
 Text, images, and rectangles are specified by their lower-left-hand corner.
-Be aware that for text, the lower-left-hand-corner is below the leading which is below the descent which is below the baseline.
+
+For text, the lower-left-hand-corner is below the leading which is below the descent which is below the baseline.
 Lines are still aligned based on the baseline of the text.
 
-P.S. This is different from PDFBox which bases these things on the lower-right corner.
-
-PPS: Would this be easier to understand if everything was based on the upper-left corner?
-
-[API Docs](https://PlanBase.github.io/PdfLayoutMgr2/apidocs/)
+TODO: Does PDFBox base some things on the lower-RIGHT corner?  If so, what?
 
 # Maven Dependency
 ```xml
@@ -73,7 +81,7 @@ Maybe some day we will provide some sample code so you can do truncation yoursel
 #### Q: Why doesn't PdfLayoutManager line-wrap my insanely long single-word test string properly?
 **A:** For text wrapping to work, the text needs occasional whitespace.  In HTML, strings without whitespace do not wrap at all!  In PdfLayoutManager, a long enough string will wrap at some point wider than the cell.
 
-The text wrapping algorithm picks a slightly long starting guess for where to wrap the text, then steps backward looking for whitespace. If it doesn't find any whitspace, it splits the first line at it's original guess length and continues trying to wrap the rest of the text on the next line.
+The text wrapping algorithm picks a slightly long starting guess for where to wrap the text, then steps backward looking for whitespace. If it doesn't find any whitspace, it splits the first line at its original guess length and continues trying to wrap the rest of the text on the next line.
 
 # License
 GNU Affero General Public License
