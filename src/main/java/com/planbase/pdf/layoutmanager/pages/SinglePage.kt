@@ -49,19 +49,19 @@ class SinglePage(val pageNum: Int,
     // THIS MUST COME LAST as items will not be initialized if it comes before.
     private val xOff: Float = pageReactor?.invoke(pageNum, this) ?: 0f
 
-    private fun fillRect(x: Float, y: Float, width: Float, height: Float, c: PDColor, zIdx: Float) {
-        items.add(FillRect(x + xOff, y, width, height, c, lastOrd++, zIdx))
+    private fun fillRect(bottomLeft: XyOffset, xyDim: XyDim, c: PDColor, zIdx: Float) {
+        items.add(FillRect(bottomLeft.plusX(xOff), xyDim, c, lastOrd++, zIdx))
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: XyOffset, outerDim: XyDim, c: PDColor): Float {
-        fillRect(bottomLeft.x, bottomLeft.y, outerDim.width, outerDim.height, c, -1f)
-        return outerDim.height
+    override fun fillRect(bottomLeft: XyOffset, xyDim: XyDim, c: PDColor): Float {
+        fillRect(bottomLeft, xyDim, c, -1f)
+        return xyDim.height
     }
 
     /** {@inheritDoc}  */
     override fun drawImage(bottomLeft:XyOffset, wi: WrappedImage): Float {
-        items.add(DrawImage(bottomLeft.x + xOff, bottomLeft.y, wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+        items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
         // This does not account for a page break because this class represents a single page.
         return wi.xyDim.height
     }
@@ -80,13 +80,13 @@ class SinglePage(val pageNum: Int,
         return this
     }
 
-    private fun drawStyledText(x: Float, y: Float, text: String, s: TextStyle, z: Float) {
-        items.add(Text(x + xOff, y, text, s, lastOrd++, z))
+    private fun drawStyledText(bottomLeft:XyOffset, text: String, s: TextStyle, z: Float) {
+        items.add(Text(bottomLeft.plusX(xOff), text, s, lastOrd++, z))
     }
 
     /** {@inheritDoc}  */
     override fun drawStyledText(bottomLeft:XyOffset, text: String, textStyle: TextStyle): Float {
-        drawStyledText(bottomLeft.x, bottomLeft.y, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+        drawStyledText(bottomLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
         return textStyle.lineHeight()
     }
 
@@ -118,36 +118,33 @@ class SinglePage(val pageNum: Int,
         }
     }
 
-    private class FillRect(val x: Float,
-                           val y: Float,
-                           val width: Float,
-                           val height: Float,
+    private class FillRect(val bottomLeft: XyOffset,
+                           val xyDim: XyDim,
                            val color: PDColor,
                            ord: Long,
                            z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             stream.setNonStrokingColor(color)
-            stream.addRect(x, y, width, height)
+            stream.addRect(bottomLeft.x, bottomLeft.y, xyDim.width, xyDim.height)
             stream.fill()
         }
     }
 
-    internal class Text(val x: Float, val y: Float, val t: String, val style: TextStyle,
+    internal class Text(private val bottomLeft: XyOffset, val t: String, val style: TextStyle,
                         ord: Long, z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             stream.beginText()
             stream.setNonStrokingColor(style.textColor)
             stream.setFont(style.font, style.fontSize)
-            stream.newLineAtOffset(x, y)
+            stream.newLineAtOffset(bottomLeft.x, bottomLeft.y)
             stream.showText(t)
             stream.endText()
         }
     }
 
-    private class DrawImage(val x: Float,
-                            val y: Float,
+    private class DrawImage(val bottomLeft: XyOffset,
                             val scaledImage: WrappedImage,
                             mgr: PdfLayoutMgr,
                             ord: Long, z: Float) : PdfItem(ord, z) {
@@ -157,7 +154,7 @@ class SinglePage(val pageNum: Int,
         override fun commit(stream: PDPageContentStream) {
             // stream.drawImage(jpeg, x, y);
             val (width, height) = scaledImage.xyDim
-            stream.drawImage(img, x, y, width, height)
+            stream.drawImage(img, bottomLeft.x, bottomLeft.y, width, height)
         }
     }
 }

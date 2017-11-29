@@ -118,7 +118,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                                                     bodyDim.width, bodyDim.height)
     // borderItems apply to a logical section
     private val borderItems = TreeSet<PdfItem>()
-    private var borderOrd = 0
+//    private var borderOrd = 0
     private var valid = true
 
     // ===================================== Instance Methods =====================================
@@ -190,17 +190,17 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: XyOffset, outerDim: XyDim, c: PDColor): Float {
+    override fun fillRect(bottomLeft: XyOffset, xyDim: XyDim, c: PDColor): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         //        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
         //                           Utils.toString(c) + ")");
         val left = bottomLeft.x
-        val topY = bottomLeft.y
-        val width = outerDim.width
-        val maxHeight = outerDim.height
-        val bottomY = topY - maxHeight
+        val topY = bottomLeft.y + xyDim.height
+        val width = xyDim.width
+        val maxHeight = xyDim.height
+        val bottomY = bottomLeft.y
 
         if (topY < bottomY) {
             throw IllegalStateException("height must be positive")
@@ -290,11 +290,11 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     xa = xb
                 }
 
-                if (pby1.pb.pageNum < currPage.pageNum) {
+                ya = if (pby1.pb.pageNum < currPage.pageNum) {
                     // On all except the first page the first y will start at the top of the page.
-                    ya = yBodyTop()
+                    yBodyTop()
                 } else { // equals, because can never be greater than
-                    ya = pby1.y
+                    pby1.y
                 }
 
                 if (pageNum == totalPages) {
@@ -436,19 +436,18 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         }
     }
 
-    /**
-     * Adds items to every page in page grouping.  You should not need to use this directly.  It only
-     * has package scope so that Text can access it for one thing.  It may become private in the
-     * future.
-     */
-    // TODO: Should take an XyOffset
-    internal fun borderStyledText(xCoord: Float, yCoord: Float, text: String, s: TextStyle) {
-        if (!valid) {
-            throw IllegalStateException("Logical page accessed after commit")
-        }
-        borderItems.add(SinglePage.Text(xCoord, yCoord, text, s, borderOrd++.toLong(),
-                                        PdfItem.DEFAULT_Z_INDEX))
-    }
+//    /**
+//     * Adds items to every page in page grouping.  You should not need to use this directly.  It only
+//     * has package scope so that Text can access it for one thing.  It may become private in the
+//     * future.
+//     */
+//    internal fun borderStyledText(bottomLeft: XyOffset, text: String, s: TextStyle) {
+//        if (!valid) {
+//            throw IllegalStateException("Logical page accessed after commit")
+//        }
+//        borderItems.add(SinglePage.Text(bottomLeft, text, s, borderOrd++.toLong(),
+//                                        PdfItem.DEFAULT_Z_INDEX))
+//    }
 
     companion object {
         private val DEFAULT_DOUBLE_MARGIN_DIM = XyDim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)

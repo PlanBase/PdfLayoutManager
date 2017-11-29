@@ -66,10 +66,10 @@ interface RenderTarget {
      Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
      separately with textLines).
      @param bottomLeft the XyOffset of the lower-left-hand corner
-     @param outerDim width and height (dimensions) of rectangle
+     @param xyDim width and height (dimensions) of rectangle
      @param c color
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(bottomLeft: XyOffset, outerDim: XyDim, c: PDColor): Float
+    fun fillRect(bottomLeft: XyOffset, xyDim: XyDim, c: PDColor): Float
 }
