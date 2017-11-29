@@ -38,7 +38,9 @@ data class XyOffset(val x: Float, val y: Float) {
     //    public XyOffset minus(XyOffset that) { return of(this.x - that.x(), this.y - that.y()); }
     //    public XyOffset plus(XyOffset that) { return of(this.x + that.x(), this.y + that.y()); }
 
-    fun plusX(addedX: Float) = if (x == 0f) { this } else { XyOffset(x + addedX, y) }
+    fun plusX(offset: Float) = if (offset == 0f) { this } else { XyOffset(x + offset, y) }
+
+    fun minusY(offset: Float) = if (offset == 0f) { this } else { XyOffset(x, y - offset) }
 
     fun plusXMinusY(that: XyOffset) = XyOffset(x + that.x, y - that.y)
 

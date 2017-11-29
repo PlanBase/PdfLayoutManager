@@ -62,7 +62,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(topLeft, xyDim, boxStyle.bgColor)
+            lp.fillRect(topLeft.minusY(xyDim.height), xyDim, boxStyle.bgColor)
             //            System.out.println("\tCell.render back from putRect");
         }
 
