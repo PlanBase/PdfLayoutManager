@@ -66,17 +66,13 @@ class SinglePage(val pageNum: Int,
         return wi.xyDim.height
     }
 
-    private fun drawLine(xa: Float, ya: Float, xb: Float, yb: Float, ls: LineStyle, z: Float) {
-        items.add(DrawLine(xa + xOff, ya, xb + xOff, yb, ls, lastOrd++, z))
+    private fun drawLine(start: XyOffset, end:XyOffset, ls: LineStyle, z: Float) {
+        items.add(DrawLine(start.plusX(xOff), end.plusX(xOff), ls, lastOrd++, z))
     }
 
     /** {@inheritDoc}  */
-    // TODO: This should go back to being x1, y1, x2, y2 because lines can be drawn in any direction.
-    override fun drawLine(topLeft: XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): SinglePage {
-        val (x1, y1) = topLeft
-        val (x2, y2) = bottomRight
-
-        drawLine(x1, y1, x2, y2, lineStyle, PdfItem.DEFAULT_Z_INDEX)
+    override fun drawLine(start: XyOffset, end:XyOffset, lineStyle: LineStyle): SinglePage {
+        drawLine(start, end, lineStyle, PdfItem.DEFAULT_Z_INDEX)
         return this
     }
 
@@ -101,10 +97,8 @@ class SinglePage(val pageNum: Int,
 
     override fun toString(): String = "SinglePage($pageNum)"
 
-    private class DrawLine(private val x1: Float,
-                           private val y1: Float,
-                           private val x2: Float,
-                           private val y2: Float,
+    private class DrawLine(private val start: XyOffset,
+                           private val end:XyOffset,
                            private val style: LineStyle,
                            ord: Long,
                            z: Float) : PdfItem(ord, z) {
@@ -112,8 +106,8 @@ class SinglePage(val pageNum: Int,
         override fun commit(stream: PDPageContentStream) {
             stream.setStrokingColor(style.color)
             stream.setLineWidth(style.thickness)
-            stream.moveTo(x1, y1)
-            stream.lineTo(x2, y2)
+            stream.moveTo(start.x, start.y)
+            stream.lineTo(end.x, end.y)
             stream.stroke()
         }
     }

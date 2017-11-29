@@ -22,6 +22,7 @@ package com.planbase.pdf.layoutmanager.utils
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 
+// TODO: Consider renaming to Point, Point2d or something
 /**
  * Represents a 2D coordinate in terms of X and Y where negative y is down from the upper left-hand
  * corner.  Do not confuse this with an XyDim which represents positive width and height.

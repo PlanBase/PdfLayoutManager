@@ -119,10 +119,10 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
                 lp.drawLine(topRight, bottomRight, border.right)
             }
             if (border.bottom.thickness > 0) {
-                lp.drawLine(bottomLeft, bottomRight, border.bottom)
+                lp.drawLine(bottomRight, bottomLeft, border.bottom)
             }
             if (border.left.thickness > 0) {
-                lp.drawLine(topLeft, bottomLeft, border.left)
+                lp.drawLine(bottomLeft, topLeft, border.left)
             }
         }
 

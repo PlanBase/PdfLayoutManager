@@ -33,15 +33,14 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
  */
 interface RenderTarget {
     /**
-     Must draw from higher to lower.  Thus y1 must be &gt;= y2 (remember, higher y values
-     are up).
-     @param topLeft the XyOffset of the topmost y and leftmost x
-     @param bottomRight the XyOffset of the bottommost y and rightmost x
+     Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
+
+     @param start the XyOffset of the starting point
+     @param end the XyOffset of the ending point
      @param lineStyle the style to draw the line with
      @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    // TODO: This should go back to being x1, y1, x2, y2 because lines can be drawn in any direction.
-    fun drawLine(topLeft:XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): RenderTarget
+    fun drawLine(start:XyOffset, end:XyOffset, lineStyle: LineStyle): RenderTarget
 
     /**
      Puts styled text on this RenderTarget

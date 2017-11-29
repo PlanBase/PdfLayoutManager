@@ -251,36 +251,30 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    // TODO: This should go back to being x1, y1, x2, y2 because lines can be drawn in any direction.
-    override fun drawLine(topLeft: XyOffset, bottomRight:XyOffset, lineStyle: LineStyle): PageGrouping {
+    // TODO: Mitering might not work across pages.
+    override fun drawLine(start: XyOffset, end:XyOffset, lineStyle: LineStyle): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         //        mgr.putLine(x1, y1, x2, y2, ls);
 
-        val (x1, y1) = topLeft
-        val (x2, y2) = bottomRight
-
-        if (y1 < y2) {
-            throw IllegalStateException("y1 param must be >= y2 param")
-        }
         // logger.info("About to put line: (" + x1 + "," + y1 + "), (" + x2 + "," + y2 + ")");
-        val pby1 = appropriatePage(y1, 0f)
-        val pby2 = appropriatePage(y2, 0f)
+        val pby1 = appropriatePage(start.y, 0f)
+        val pby2 = appropriatePage(end.y, 0f)
         if (pby1 == pby2) {
-            pby1.pb.drawLine(XyOffset(x1, pby1.y), XyOffset(x2, pby2.y), lineStyle)
+            pby1.pb.drawLine(start.y(pby1.y), end.y(pby2.y), lineStyle)
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
-            val xDiff = x2 - x1
-            val yDiff = y1 - y2
+            val xDiff = end.x - start.x
+            val yDiff = start.y - end.y
             // totalY
 
             var currPage = pby1.pb
             // The first x and y are correct for the first page.  The second x and y will need to
             // be adjusted below.
-            var xa = x1
+            var xa = start.x
             var ya:Float
-            var xb = 0f
+            var xb = 0f // left of page.
             var yb:Float
 
             for (pageNum in 1..totalPages) {
@@ -298,7 +292,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                 }
 
                 if (pageNum == totalPages) {
-                    xb = x2
+                    xb = end.x
                     // the second Y must be adjusted by the height of the pages already printed.
                     yb = pby2.y
                 } else {
