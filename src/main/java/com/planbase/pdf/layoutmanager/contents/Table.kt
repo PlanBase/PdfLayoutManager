@@ -53,15 +53,21 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         lower-right-hand corner of the last line (e.g. of text).
         */
         override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
-            var rightmostLowest = topLeft.minusY(-dimensions.height)
+            // Used to work:
+            // var rightmostLowest = topLeft
+            // Works the way other render() methods do.
+            // var rightmostLowest = topLeft.minusY(-dimensions.height)
+
+            var rightmostX = topLeft.x
+            var y = topLeft.y
             for (part in parts) {
                 //            System.out.println("About to render part: " + part);
-                val rl = part.render(lp, Point2d(topLeft.x, rightmostLowest.y))
-                rightmostLowest = Point2d(Math.max(rl.x, rightmostLowest.x),
-                                          Math.min(rl.y, rightmostLowest.y))
+                val rl = part.render(lp, topLeft.y(y))
+                rightmostX = Math.max(rl.x, rightmostX)
+                y = Math.min(rl.y, y)
             }
-            return Dimensions(rightmostLowest.x - topLeft.x,
-                         topLeft.y - rightmostLowest.y)
+            return Dimensions(rightmostX - topLeft.x,
+                              topLeft.y - y)
         }
 
         override fun toString(): String = "WrappedTable($parts)"
