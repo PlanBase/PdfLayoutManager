@@ -186,7 +186,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         val pby = appropriatePage(bottomLeft.y, wi.dimensions.height)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(bottomLeft.y(pby.y), wi)
-        return wi.dimensions.height + pby.adj
+        return wi.dimensions.height - pby.adj
     }
 
     /** {@inheritDoc}  */

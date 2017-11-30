@@ -24,6 +24,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.junit.Assert.assertEquals
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.Float.max
+import java.util.Collections
 import javax.imageio.ImageIO
 
 class PageGroupingTest {
@@ -138,6 +140,23 @@ class PageGroupingTest {
             lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
 
             y -= melonHeight
+        }
+
+        while(y >= lp.yBodyBottom() - 300) {
+            val imgY:Float = lp.drawImage(Point2d(melonX, y), bigMelon)
+//            assertEquals(melonHeight, imgY)
+
+            val txtY:Float = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
+//            assertEquals(text.textStyle.lineHeight(), txtY)
+
+            val rectY:Float = lp.fillRect(Point2d(squareX, y), squareDim, Utils.RGB_BLACK)
+//            assertEquals(squareSide, rectY)
+
+            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
+
+            println("imgY=$imgY, txtY=$txtY, rectY=$rectY")
+
+            y -= listOf(imgY, txtY, rectY).max() as Float
         }
 
         lp.commit()
