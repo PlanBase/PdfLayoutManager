@@ -44,7 +44,7 @@ class TestMultiPageLines {
         // right line
         lp.drawLine(topRight, bottomRight, lineStyle)
         // bottom line
-        lp.drawLine(bottomLeft, bottomRight, lineStyle)
+        lp.drawLine(bottomRight, bottomLeft, lineStyle)
         // left line
         lp.drawLine(bottomLeft, topLeft, lineStyle)
 
