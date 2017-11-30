@@ -24,12 +24,14 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
+import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Utils.Companion.BULLET_CHAR
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -67,35 +69,34 @@ fun testBodyMargins() {
                                   TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK))
                 leftMargin })
 
-    //        TableBuilder tB = new TableBuilder();
-    //        Table table = tB.addCellWidths(20f, 80f)
-    //                        .partBuilder()
-    //                        .rowBuilder()
-    //                        .cellBuilder().cellStyle(BULLET_CELL_STYLE)
-    //                        .add(BULLET_TEXT_STYLE, vec(BULLET_CHAR)).buildCell()
-    //                        .cellBuilder().add(new TextStyle(PDType1Font.HELVETICA, 12f, Utils.Companion.getCMYK_BLACK()), vec("This is some text that has a bullet")).buildCell()
-    //                        .buildRow()
-    //                        .rowBuilder()
-    //                        .cellBuilder().cellStyle(BULLET_CELL_STYLE)
-    //                        .add(BULLET_TEXT_STYLE, vec("2.")).buildCell()
-    //                        .cellBuilder().add(new TextStyle(PDType1Font.HELVETICA, 12f, Utils.Companion.getCMYK_BLACK()), vec("text that has a number")).buildCell()
-    //                        .buildRow()
-    //                        .buildPart()
-    //                        .buildTable();
+    val tB = TableBuilder()
 
-
-    val tpb = TableBuilder()
-            .addCellWidths(20f, 80f).partBuilder()
-
-    // This could be in a loop that prints out list items.
-    tpb.rowBuilder().cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, Utils.BULLET_CHAR)))
-            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
+    val table: Table = tB.addCellWidths(30f, 200f)
+            .partBuilder()
+            .rowBuilder()
+            .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, BULLET_CHAR)))
+            .cell(CellStyle.Default, listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
             .buildRow()
-    // Next iteration in the loop
             .rowBuilder()
             .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, "2.")))
-            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "text that has a number")))
+            .cell(CellStyle.Default, listOf(Text(BULLET_TEXT_STYLE, "Text that has a number")))
             .buildRow()
+            .buildPart()
+            .buildTable()
+
+
+//    val tpb = TableBuilder()
+//            .addCellWidths(20f, 80f).partBuilder()
+//
+//    // This could be in a loop that prints out list items.
+//    tpb.rowBuilder().cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, Utils.BULLET_CHAR)))
+//            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
+//            .buildRow()
+//    // Next iteration in the loop
+//            .rowBuilder()
+//            .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, "2.")))
+//            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "text that has a number")))
+//            .buildRow()
 
     // TODO: actually display these bullets!
     // After the loop, build the table.
@@ -111,14 +112,14 @@ fun testBodyMargins() {
                      " needed the national " +
                      "words and women said new. The new " +
                      "companies told the possible hands " +
+                     "and books was low.\n\n"),
+                table,
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                     "The new " +
+                     "companies told the possible hands " +
                      "and books was low. The other " +
                      "questions got the recent children and " +
-                     "lots felt important. The sure hands " +
-                     "moved the major stories and countries " +
-                     "showed possible. The major students " +
-                     "began the international rights and " +
-                     "places got free. The able homes said " +
-                     "the better work and cases went free."),
+                     "lots felt important."),
                 ScaledImage(graphPic),
                 Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                      ("The hard eyes seemed the clear " +
@@ -175,7 +176,7 @@ fun testBodyMargins() {
         val CMYK_DARK_GRAY = PDColor(floatArrayOf(0f, 0f, 0f, 0.2f), PDDeviceCMYK.INSTANCE)
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
 
-        internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT, BoxStyle(Padding(0f, 4f, 0f, 0f), null, BorderStyle.NO_BORDERS))
+        internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT, BoxStyle(Padding(0f, 4f, 15f, 0f), null, BorderStyle.NO_BORDERS))
         internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK)
 
         // adj plNoun verb adj descriptiveNoun

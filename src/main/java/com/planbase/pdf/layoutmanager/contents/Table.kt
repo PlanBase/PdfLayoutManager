@@ -53,7 +53,7 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         lower-right-hand corner of the last line (e.g. of text).
         */
         override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
-            var rightmostLowest = topLeft
+            var rightmostLowest = topLeft.minusY(-dimensions.height)
             for (part in parts) {
                 //            System.out.println("About to render part: " + part);
                 val rl = part.render(lp, Point2d(topLeft.x, rightmostLowest.y))
