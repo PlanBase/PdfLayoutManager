@@ -7,7 +7,7 @@ import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -42,16 +42,16 @@ class SinglePageTest {
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
-            val imgY = page.drawImage(XyOffset(melonX, y), bigMelon)
+            val imgY = page.drawImage(Point2(melonX, y), bigMelon)
             assertEquals(melonHeight, imgY)
 
-            val txtY = page.drawStyledText(XyOffset(textX, y), text.text, text.textStyle)
+            val txtY = page.drawStyledText(Point2(textX, y), text.text, text.textStyle)
             assertEquals(text.textStyle.lineHeight(), txtY)
 
-            val rectY = page.fillRect(XyOffset(squareX, y), squareDim, RGB_BLACK)
+            val rectY = page.fillRect(Point2(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            page.drawLine(XyOffset(lineX1, y), XyOffset(lineX2, y), LineStyle(RGB_BLACK, 1f))
+            page.drawLine(Point2(lineX1, y), Point2(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
             y -= melonHeight
         }

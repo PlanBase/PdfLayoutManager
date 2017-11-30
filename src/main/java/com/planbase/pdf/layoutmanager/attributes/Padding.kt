@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 
 /**
  * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
@@ -46,7 +46,7 @@ data class Padding(val top: Float,
             XyDim(outer.width + (left + right),
                   outer.height + (top + bottom))
 
-    fun applyTopLeft(orig: XyOffset): XyOffset = XyOffset(orig.x + left, orig.y - top)
+    fun applyTopLeft(orig: Point2): Point2 = Point2(orig.x + left, orig.y - top)
 
     fun topBottomPadding() = top + bottom
 
@@ -59,8 +59,8 @@ data class Padding(val top: Float,
                 super.toString()
             }
 
-    //    public XyOffset topLeftPadOffset() { return XyOffset(left, -top); }
-    //    public XyOffset botRightPadOffset() { return XyOffset(right, -bottom); }
+    //    public Point2 topLeftPadOffset() { return Point2(left, -top); }
+    //    public Point2 botRightPadOffset() { return Point2(right, -bottom); }
 
     companion object {
         /**

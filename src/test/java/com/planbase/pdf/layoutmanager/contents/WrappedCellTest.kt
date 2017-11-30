@@ -11,7 +11,7 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import junit.framework.TestCase.assertTrue
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -38,18 +38,18 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
 
-        val upperLeft = XyOffset(100f, 500f)
+        val upperLeft = Point2(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
 
         wrappedCell.render(lp, upperLeft)
-//        val xyOff : XyOffset = wrappedCell.render(lp, upperLeft)
+//        val xyOff : Point2 = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
         // TODO: This is not right.  Cell should report it's lower-right-hand corner, no?
-//        val xyOff2 : XyOffset = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
+//        val xyOff2 : Point2 = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
 //        assertEquals(upperLeft.plusXMinusY(XyDim(wrappedCell.xyDim.width, wrappedCell.lineHeight)), xyOff)
@@ -76,7 +76,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
 
-        val upperLeft = XyOffset(100f, 500f)
+        val upperLeft = Point2(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
@@ -118,7 +118,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
 
-        val upperLeft = XyOffset(100f, 500f)
+        val upperLeft = Point2(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.xyDim.width)
@@ -131,7 +131,7 @@ class WrappedCellTest {
         assertEquals(cellWidth, xyDim.width)
 
         // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
-//        val xyOff2 : XyOffset = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
+//        val xyOff2 : Point2 = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
         assertTrue(XyDim.within(0.00002f, wrappedCell.xyDim, xyDim))

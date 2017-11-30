@@ -128,7 +128,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //
 //    {@inheritDoc}
 //    */
-//    fun render(lp: RenderTarget, outerTopLeft: XyOffset, outerDimensions: XyDim): XyOffset {
+//    fun render(lp: RenderTarget, outerTopLeft: Point2, outerDimensions: XyDim): Point2 {
 //        //        System.out.println("Cell.render(" + this.toString());
 //        //        new Exception().printStackTrace();
 //
@@ -145,7 +145,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //        }
 //
 //        // Draw contents over background, but under border
-//        var innerTopLeft: XyOffset
+//        var innerTopLeft: Point2
 //        val innerDimensions: XyDim
 //        if (padding == null) {
 //            innerTopLeft = outerTopLeft
@@ -164,7 +164,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //        //        System.out.println("\tCell.render wrappedBlockDim=" + wrappedBlockDim);
 //        val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
 //        //        System.out.println("\tCell.render alignPad=" + alignPad);
-//        innerTopLeft = XyOffset(innerTopLeft.x + alignPad.left,
+//        innerTopLeft = Point2(innerTopLeft.x + alignPad.left,
 //                                innerTopLeft.y - alignPad.top)
 //
 //        var outerLowerRight = innerTopLeft
@@ -173,7 +173,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //            val rowXOffset = cellStyle.align
 //                    .leftOffset(wrappedBlockDim.width, line.width)
 //            outerLowerRight = line.render(lp,
-//                                          XyOffset(rowXOffset + innerTopLeft.x, y))
+//                                          Point2(rowXOffset + innerTopLeft.x, y))
 //            y -= line.height()
 //            //            innerTopLeft = outerLowerRight.x(innerTopLeft.x());
 //        }

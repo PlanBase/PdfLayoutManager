@@ -24,7 +24,7 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**
@@ -35,40 +35,40 @@ interface RenderTarget {
     /**
      Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
 
-     @param start the XyOffset of the starting point
-     @param end the XyOffset of the ending point
+     @param start the Point2 of the starting point
+     @param end the Point2 of the ending point
      @param lineStyle the style to draw the line with
      @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(start:XyOffset, end:XyOffset, lineStyle: LineStyle): RenderTarget
+    fun drawLine(start: Point2, end: Point2, lineStyle: LineStyle): RenderTarget
 
     /**
      Puts styled text on this RenderTarget
-     @param bottomLeft the XyOffset of the lower-left-hand corner
+     @param bottomLeft the Point2 of the lower-left-hand corner
      @param text the text
      @param textStyle the style
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(bottomLeft:XyOffset, text: String, textStyle: TextStyle): Float
+    fun drawStyledText(bottomLeft: Point2, text: String, textStyle: TextStyle): Float
 
     /**
      Puts an image on this RenderTarget
-     @param bottomLeft the XyOffset of the lower-left-hand corner
+     @param bottomLeft the Point2 of the lower-left-hand corner
      @param wi the scaled, "wrapped" jpeg/png image
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawImage(bottomLeft:XyOffset, wi: WrappedImage): Float
+    fun drawImage(bottomLeft: Point2, wi: WrappedImage): Float
 
     /**
      Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
      separately with textLines).
-     @param bottomLeft the XyOffset of the lower-left-hand corner
+     @param bottomLeft the Point2 of the lower-left-hand corner
      @param xyDim width and height (dimensions) of rectangle
      @param c color
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(bottomLeft: XyOffset, xyDim: XyDim, c: PDColor): Float
+    fun fillRect(bottomLeft: Point2, xyDim: XyDim, c: PDColor): Float
 }

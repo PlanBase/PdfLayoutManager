@@ -26,8 +26,7 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import java.util.ArrayList
 
 /**
@@ -87,7 +86,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return minRowHeight
     }
 
-    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+    fun render(lp: RenderTarget, outerTopLeft: Point2): Point2 {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
 //                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.xyDim.height)}
 
@@ -98,10 +97,10 @@ class TableRowBuilder(private val tablePart: TablePart) {
         var x = outerTopLeft.x
         for (fixedCell in fixedCells) {
             // TODO: Account for page breaks!
-            fixedCell.render(lp, XyOffset(x, outerTopLeft.y))
+            fixedCell.render(lp, Point2(x, outerTopLeft.y))
             x += fixedCell.xyDim.width
         }
-        return XyOffset(x, outerTopLeft.y - minRowHeight)
+        return Point2(x, outerTopLeft.y - minRowHeight)
     }
 
     override fun toString(): String = "TableRowBuilder($cells)"

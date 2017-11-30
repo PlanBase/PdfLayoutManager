@@ -287,11 +287,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         val DEFAULT_MARGIN = 37f
     }
 
-    //    public XyOffset putRect(XyOffset outerTopLeft, XyDim outerDimensions, final PDColor c) {
+    //    public Point2 putRect(Point2 outerTopLeft, XyDim outerDimensions, final PDColor c) {
     ////        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
     ////                           Utils.toString(c) + ")");
     //        putRect(outerTopLeft.x(), outerTopLeft.y(), outerDimensions.x(), outerDimensions.y(), c);
-    //        return XyOffset.of(outerTopLeft.x() + outerDimensions.x(),
+    //        return Point2.of(outerTopLeft.x() + outerDimensions.x(),
     //                           outerTopLeft.y() - outerDimensions.y());
     //    }
 

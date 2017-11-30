@@ -20,54 +20,50 @@
 
 package com.planbase.pdf.layoutmanager.utils
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle
-
-// TODO: Consider renaming to Point, Point2d or something
 /**
- * Represents a 2D coordinate in terms of X and Y where negative y is down from the upper left-hand
- * corner.  Do not confuse this with an XyDim which represents positive width and height.
+ An immutable 2D coordinate in terms of X and Y measured from the lower-left corner.
+ Do not confuse this with an XyDim which represents positive width and height.
+ This is called Point2 because Point2D is already a class in Java and it's mutable.
  */
-data class XyOffset(val x: Float, val y: Float) {
+data class Point2(val x: Float, val y: Float) {
 
-    constructor(rect: PDRectangle) : this(rect.lowerLeftX, rect.lowerLeftY)
+    fun x(newX: Float) = Point2(newX, y)
 
-    fun x(newX: Float) = XyOffset(newX, y)
+    fun y(newY: Float) = Point2(x, newY)
 
-    fun y(newY: Float) = XyOffset(x, newY)
+    //    public Point2 minus(Point2 that) { return of(this.x - that.x(), this.y - that.y()); }
+    //    public Point2 plus(Point2 that) { return of(this.x + that.x(), this.y + that.y()); }
 
-    //    public XyOffset minus(XyOffset that) { return of(this.x - that.x(), this.y - that.y()); }
-    //    public XyOffset plus(XyOffset that) { return of(this.x + that.x(), this.y + that.y()); }
+    fun plusX(offset: Float) = if (offset == 0f) { this } else { Point2(x + offset, y) }
 
-    fun plusX(offset: Float) = if (offset == 0f) { this } else { XyOffset(x + offset, y) }
+    fun minusY(offset: Float) = if (offset == 0f) { this } else { Point2(x, y - offset) }
 
-    fun minusY(offset: Float) = if (offset == 0f) { this } else { XyOffset(x, y - offset) }
+    fun plusXMinusY(that: Point2) = Point2(x + that.x, y - that.y)
 
-    fun plusXMinusY(that: XyOffset) = XyOffset(x + that.x, y - that.y)
+    fun plusXMinusY(that: XyDim) = Point2(x + that.width, y - that.height)
 
-    fun plusXMinusY(that: XyDim) = XyOffset(x + that.width, y - that.height)
-
-    //    public XyOffset maxXandY(XyOffset that) {
+    //    public Point2 maxXandY(Point2 that) {
     //        if ((this.x >= that.x()) && (this.y >= that.y())) { return this; }
     //        if ((this.x <= that.x()) && (this.y <= that.y())) { return that; }
     //        return of((this.x > that.x()) ? this.x : that.x(),
     //                  (this.y > that.y()) ? this.y : that.y());
     //    }
-    fun maxXMinY(that: XyOffset): XyOffset =
+    fun maxXMinY(that: Point2): Point2 =
             if (this.x >= that.x && this.y <= that.y) {
                 this
             } else if (this.x <= that.x && this.y >= that.y) {
                 that
             } else {
-                XyOffset(if (this.x > that.x) this.x else that.x,
-                                                              if (this.y < that.y) this.y else that.y)
+                Point2(if (this.x > that.x) this.x else that.x,
+                       if (this.y < that.y) this.y else that.y)
             }
 
     /** Compares dimensions  */
-    fun lte(that: XyOffset): Boolean = this.x <= that.x && this.y >= that.y
+    fun lte(that: Point2): Boolean = this.x <= that.x && this.y >= that.y
 
-    override fun toString(): String = "XyOffset(${x}f, ${y}f)"
+    override fun toString(): String = "Point2(${x}f, ${y}f)"
 
     companion object {
-        val ORIGIN = XyOffset(0f, 0f)
+        val ORIGIN = Point2(0f, 0f)
     }
 }

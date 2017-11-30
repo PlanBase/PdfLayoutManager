@@ -26,7 +26,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import java.awt.image.BufferedImage
 
 /**
@@ -65,7 +65,7 @@ class ScaledImage(private val bufferedImage: BufferedImage,
         override val lineHeight: Float = xyDim.height
 
         /** {@inheritDoc}  */
-        override fun render(lp: RenderTarget, topLeft: XyOffset): XyDim =
+        override fun render(lp: RenderTarget, topLeft: Point2): XyDim =
                 xyDim.height(lp.drawImage(topLeft, this))
     }
 

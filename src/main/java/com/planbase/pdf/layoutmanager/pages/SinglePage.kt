@@ -26,7 +26,7 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
@@ -49,39 +49,39 @@ class SinglePage(val pageNum: Int,
     // THIS MUST COME LAST as items will not be initialized if it comes before.
     private val xOff: Float = pageReactor?.invoke(pageNum, this) ?: 0f
 
-    private fun fillRect(bottomLeft: XyOffset, xyDim: XyDim, c: PDColor, zIdx: Float) {
+    private fun fillRect(bottomLeft: Point2, xyDim: XyDim, c: PDColor, zIdx: Float) {
         items.add(FillRect(bottomLeft.plusX(xOff), xyDim, c, lastOrd++, zIdx))
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: XyOffset, xyDim: XyDim, c: PDColor): Float {
+    override fun fillRect(bottomLeft: Point2, xyDim: XyDim, c: PDColor): Float {
         fillRect(bottomLeft, xyDim, c, -1f)
         return xyDim.height
     }
 
     /** {@inheritDoc}  */
-    override fun drawImage(bottomLeft:XyOffset, wi: WrappedImage): Float {
+    override fun drawImage(bottomLeft: Point2, wi: WrappedImage): Float {
         items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
         // This does not account for a page break because this class represents a single page.
         return wi.xyDim.height
     }
 
-    private fun drawLine(start: XyOffset, end:XyOffset, ls: LineStyle, z: Float) {
+    private fun drawLine(start: Point2, end: Point2, ls: LineStyle, z: Float) {
         items.add(DrawLine(start.plusX(xOff), end.plusX(xOff), ls, lastOrd++, z))
     }
 
     /** {@inheritDoc}  */
-    override fun drawLine(start: XyOffset, end:XyOffset, lineStyle: LineStyle): SinglePage {
+    override fun drawLine(start: Point2, end: Point2, lineStyle: LineStyle): SinglePage {
         drawLine(start, end, lineStyle, PdfItem.DEFAULT_Z_INDEX)
         return this
     }
 
-    private fun drawStyledText(bottomLeft:XyOffset, text: String, s: TextStyle, z: Float) {
+    private fun drawStyledText(bottomLeft: Point2, text: String, s: TextStyle, z: Float) {
         items.add(Text(bottomLeft.plusX(xOff), text, s, lastOrd++, z))
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(bottomLeft:XyOffset, text: String, textStyle: TextStyle): Float {
+    override fun drawStyledText(bottomLeft: Point2, text: String, textStyle: TextStyle): Float {
         drawStyledText(bottomLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
         return textStyle.lineHeight()
     }
@@ -97,8 +97,8 @@ class SinglePage(val pageNum: Int,
 
     override fun toString(): String = "SinglePage($pageNum)"
 
-    private class DrawLine(private val start: XyOffset,
-                           private val end:XyOffset,
+    private class DrawLine(private val start: Point2,
+                           private val end: Point2,
                            private val style: LineStyle,
                            ord: Long,
                            z: Float) : PdfItem(ord, z) {
@@ -112,7 +112,7 @@ class SinglePage(val pageNum: Int,
         }
     }
 
-    private class FillRect(val bottomLeft: XyOffset,
+    private class FillRect(val bottomLeft: Point2,
                            val xyDim: XyDim,
                            val color: PDColor,
                            ord: Long,
@@ -125,7 +125,7 @@ class SinglePage(val pageNum: Int,
         }
     }
 
-    internal class Text(private val bottomLeft: XyOffset, val t: String, val style: TextStyle,
+    internal class Text(private val bottomLeft: Point2, val t: String, val style: TextStyle,
                         ord: Long, z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
@@ -138,7 +138,7 @@ class SinglePage(val pageNum: Int,
         }
     }
 
-    private class DrawImage(val bottomLeft: XyOffset,
+    private class DrawImage(val bottomLeft: Point2,
                             val scaledImage: WrappedImage,
                             mgr: PdfLayoutMgr,
                             ord: Long, z: Float) : PdfItem(ord, z) {

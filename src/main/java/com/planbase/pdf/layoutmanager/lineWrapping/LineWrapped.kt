@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 
 /**
  Represents a fixed-size item.  Classes implementing this interface should be immutable.
@@ -50,7 +50,7 @@ interface LineWrapped {
      @return the adjusted XyDim which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: XyOffset): XyDim
+    fun render(lp: RenderTarget, topLeft: Point2): XyDim
 
     object ZeroLineWrapped: LineWrapped {
         override val xyDim: XyDim = XyDim.ZERO
@@ -61,7 +61,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, topLeft: XyOffset): XyDim = xyDim
+        override fun render(lp: RenderTarget, topLeft: Point2): XyDim = xyDim
     }
 
     companion object {

@@ -17,7 +17,7 @@ import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -75,7 +75,7 @@ class PageGroupingTest {
         val bottomM = 60f
         // Make a new manager for a new test.
         pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, XyDim(A6))
-        lp = PageGrouping(pageMgr, PORTRAIT, XyOffset(PdfLayoutMgr.DEFAULT_MARGIN, bottomM),
+        lp = PageGrouping(pageMgr, PORTRAIT, Point2(PdfLayoutMgr.DEFAULT_MARGIN, bottomM),
                           pageMgr.pageDim.minus(XyDim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
 
         assertEquals((A6.height - topM).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
@@ -89,7 +89,7 @@ class PageGroupingTest {
 
         // Make a new manager for a new test.
         pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, XyDim(A6))
-        lp = PageGrouping(pageMgr, LANDSCAPE, XyOffset(PdfLayoutMgr.DEFAULT_MARGIN, bottomM),
+        lp = PageGrouping(pageMgr, LANDSCAPE, Point2(PdfLayoutMgr.DEFAULT_MARGIN, bottomM),
                           pageMgr.pageDim.swapWh()
                                                                        .minus(XyDim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
 
@@ -126,16 +126,16 @@ class PageGroupingTest {
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
-            val imgY = lp.drawImage(XyOffset(melonX, y), bigMelon)
+            val imgY = lp.drawImage(Point2(melonX, y), bigMelon)
             assertEquals(melonHeight, imgY)
 
-            val txtY = lp.drawStyledText(XyOffset(textX, y), text.text, text.textStyle)
+            val txtY = lp.drawStyledText(Point2(textX, y), text.text, text.textStyle)
             assertEquals(text.textStyle.lineHeight(), txtY)
 
-            val rectY = lp.fillRect(XyOffset(squareX, y), squareDim, Utils.RGB_BLACK)
+            val rectY = lp.fillRect(Point2(squareX, y), squareDim, Utils.RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            lp.drawLine(XyOffset(lineX1, y), XyOffset(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
+            lp.drawLine(Point2(lineX1, y), Point2(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
 
             y -= melonHeight
         }

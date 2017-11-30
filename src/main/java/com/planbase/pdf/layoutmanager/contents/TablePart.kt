@@ -24,7 +24,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import java.util.ArrayList
 
 /**
@@ -77,13 +77,13 @@ class TablePart(private val tableBuilder: TableBuilder) {
 //        return maxDim
 //    }
 
-    fun render(lp: RenderTarget, outerTopLeft: XyOffset): XyOffset {
+    fun render(lp: RenderTarget, outerTopLeft: Point2): Point2 {
         var rightmostLowest = outerTopLeft
         for (row in rows) {
             //            System.out.println("\tAbout to render row: " + row);
-            val (x, y) = row.render(lp, XyOffset(outerTopLeft.x, rightmostLowest.y))
-            rightmostLowest = XyOffset(Math.max(x, rightmostLowest.x),
-                                       Math.min(y, rightmostLowest.y))
+            val (x, y) = row.render(lp, Point2(outerTopLeft.x, rightmostLowest.y))
+            rightmostLowest = Point2(Math.max(x, rightmostLowest.x),
+                                     Math.min(y, rightmostLowest.y))
         }
         return rightmostLowest
     }

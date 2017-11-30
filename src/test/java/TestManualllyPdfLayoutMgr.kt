@@ -14,7 +14,7 @@ import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_WHITE
 import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.XyOffset
+import com.planbase.pdf.layoutmanager.utils.Point2
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
 import org.apache.pdfbox.pdmodel.font.PDType0Font
@@ -172,7 +172,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         val xyb:XyDim = tB.buildTable().wrap()
-                .render(lp, XyOffset(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop()))
+                .render(lp, Point2(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop()))
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -208,7 +208,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
                 .buildTable()
                 .wrap()
-                .render(lp, XyOffset(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
+                .render(lp, Point2(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
 
         lp.commit()
 
@@ -286,7 +286,7 @@ class TestManualllyPdfLayoutMgr {
         // Where's the lower-right-hand corner?  Put a cell there.
         tB.buildTable()
                 .wrap()
-                .render(lp, XyOffset(lp.pageWidth() - (100 + pMargin),
+                .render(lp, Point2(lp.pageWidth() - (100 + pMargin),
                                      lp.yBodyBottom() + 15 + pMargin))
 
         lp.commit()
@@ -300,7 +300,7 @@ class TestManualllyPdfLayoutMgr {
                             listOf(("Test Logical Page Three" +
                                     " (physical page " + pageNum + ")")))
 
-            cell.wrap().render(pb, XyOffset(pMargin, LETTER.width - 27))
+            cell.wrap().render(pb, Point2(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 
@@ -500,7 +500,7 @@ class TestManualllyPdfLayoutMgr {
                             pageHeadTextStyle,
                             listOf(("Test Logical Page Four " +
                                     " (physical page " + pageNum + ")")))
-            cell.wrap().render(pb, XyOffset(pMargin, LETTER.width - 27))
+            cell.wrap().render(pb, Point2(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 
@@ -508,10 +508,10 @@ class TestManualllyPdfLayoutMgr {
         // API adds two more pages as needed.  This is a great test for how geometric shapes break
         // across pages.
 
-        val topLeft = XyOffset(pMargin, lp.yBodyTop())
-        val topRight = XyOffset(pageRMargin, lp.yBodyTop())
-        val bottomRight = XyOffset(pageRMargin, -lp.yBodyTop())
-        val bottomLeft = XyOffset(pMargin, -lp.yBodyTop())
+        val topLeft = Point2(pMargin, lp.yBodyTop())
+        val topRight = Point2(pageRMargin, lp.yBodyTop())
+        val bottomRight = Point2(pageRMargin, -lp.yBodyTop())
+        val bottomLeft = Point2(pMargin, -lp.yBodyTop())
 
         // top lne
         lp.drawLine(topLeft, topRight, lineStyle)
@@ -528,7 +528,7 @@ class TestManualllyPdfLayoutMgr {
         lp.drawLine(bottomLeft, topRight, lineStyle)
 
         // middle line
-        lp.drawLine(XyOffset(pMargin, 0f), XyOffset(pageRMargin, 0f), lineStyle)
+        lp.drawLine(Point2(pMargin, 0f), Point2(pageRMargin, 0f), lineStyle)
         lp.commit()
 
         // All done - write it out!

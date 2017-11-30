@@ -25,7 +25,7 @@ import java.lang.Math.abs
 
 /**
  * Immutable 2D dimension in terms of non-negative width and height.
- * Do not confuse a dimension (measurement) with an XyOffset which represents coordinates where
+ * Do not confuse a dimension (measurement) with an Point2 which represents coordinates where
  * the bottom of the page is zero and positive height is up from there.
  * Remember: an XyDim on a Portrait orientation page has the width and height *reversed*.
  */
@@ -59,7 +59,7 @@ data class XyDim(val width: Float, val height: Float) {
     fun toRect() = PDRectangle(width, height)
 
     //    /** Returns a PDRectangle with the given width and height (but no/0 offset) */
-    //    public PDRectangle toRect(XyOffset off) {
+    //    public PDRectangle toRect(Point2 off) {
     //        return new PDRectangle(off.x(), off.y(), width, height);
     //    }
 
