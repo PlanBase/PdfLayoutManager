@@ -48,22 +48,22 @@ data class Point2d(val x: Float, val y: Float) {
     //        return of((this.x > that.x()) ? this.x : that.x(),
     //                  (this.y > that.y()) ? this.y : that.y());
     //    }
-    fun maxXMinY(that: Point2d): Point2d =
-            if (this.x >= that.x && this.y <= that.y) {
-                this
-            } else if (this.x <= that.x && this.y >= that.y) {
-                that
-            } else {
-                Point2d(if (this.x > that.x) this.x else that.x,
-                        if (this.y < that.y) this.y else that.y)
-            }
+//    fun maxXMinY(that: Point2d): Point2d =
+//            if (this.x >= that.x && this.y <= that.y) {
+//                this
+//            } else if (this.x <= that.x && this.y >= that.y) {
+//                that
+//            } else {
+//                Point2d(if (this.x > that.x) this.x else that.x,
+//                        if (this.y < that.y) this.y else that.y)
+//            }
 
     /** Compares dimensions  */
-    fun lte(that: Point2d): Boolean = this.x <= that.x && this.y >= that.y
+//    fun lte(that: Point2d): Boolean = this.x <= that.x && this.y >= that.y
 
     override fun toString(): String = "Point2d(${x}f, ${y}f)"
 
-    companion object {
-        val ORIGIN = Point2d(0f, 0f)
-    }
+//    companion object {
+//        val ORIGIN = Point2d(0f, 0f)
+//    }
 }

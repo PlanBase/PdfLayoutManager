@@ -55,7 +55,7 @@ interface CellBuilder {
     /**
      * Adds text, but you must have textStyle set properly (or inherited) before calling this.
      */
-    fun addStrs(vararg ss: String): CellBuilder
+//    fun addStrs(vararg ss: String): CellBuilder
 
     /** Adds a list of text with the given textStyle  */
     fun add(ts: TextStyle, ls: Iterable<String>): CellBuilder

@@ -52,10 +52,10 @@ class TableBuilder(val cellWidths:MutableList<Float> = mutableListOf(),
         return this
     }
 
-    fun addCellWidth(x: Float): TableBuilder {
-        cellWidths.add(x)
-        return this
-    }
+//    fun addCellWidth(x: Float): TableBuilder {
+//        cellWidths.add(x)
+//        return this
+//    }
 
     fun cellStyle(x: CellStyle): TableBuilder {
         cellStyle = x

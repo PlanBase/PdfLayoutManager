@@ -64,25 +64,25 @@ interface LineWrapped {
         override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions = dimensions
     }
 
-    companion object {
-
-        fun preWrappedLineWrapper(item: LineWrapped) = object : LineWrapper {
-            private var hasMore = true
-            override fun hasMore(): Boolean = hasMore
-
-            override fun getSomething(maxWidth: Float): ConTerm {
-                hasMore = false
-                return Continuing(item)
-            }
-
-            override fun getIfFits(remainingWidth: Float): ConTermNone =
-                    if (hasMore && (item.dimensions.width <= remainingWidth)) {
-                        hasMore = false
-                        Continuing(item)
-                    } else {
-                        None
-                    }
-        }
-    }
+//    companion object {
+//
+//        fun preWrappedLineWrapper(item: LineWrapped) = object : LineWrapper {
+//            private var hasMore = true
+//            override fun hasMore(): Boolean = hasMore
+//
+//            override fun getSomething(maxWidth: Float): ConTerm {
+//                hasMore = false
+//                return Continuing(item)
+//            }
+//
+//            override fun getIfFits(remainingWidth: Float): ConTermNone =
+//                    if (hasMore && (item.dimensions.width <= remainingWidth)) {
+//                        hasMore = false
+//                        Continuing(item)
+//                    } else {
+//                        None
+//                    }
+//        }
+//    }
 }
 

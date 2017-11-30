@@ -42,9 +42,9 @@ data class Padding(val top: Float,
             Dimensions(outer.width - (left + right),
                   outer.height - (top + bottom))
 
-    fun addTo(outer: Dimensions): Dimensions =
-            Dimensions(outer.width + (left + right),
-                  outer.height + (top + bottom))
+//    fun addTo(outer: Dimensions): Dimensions =
+//            Dimensions(outer.width + (left + right),
+//                  outer.height + (top + bottom))
 
     fun applyTopLeft(orig: Point2d): Point2d = Point2d(orig.x + left, orig.y - top)
 

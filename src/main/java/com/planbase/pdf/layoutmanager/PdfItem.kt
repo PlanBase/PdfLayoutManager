@@ -32,7 +32,8 @@ import java.io.IOException
  * and their natural ordering is the same order as they will be drawn: ascending by z-index,
  * then by creation order.  The default z-index is zero.
  */
-abstract class PdfItem(private val serialNumber: Long, val z: Float) : Comparable<PdfItem> {
+abstract class PdfItem(private val serialNumber: Long,
+                       private val z: Float) : Comparable<PdfItem> {
     //    public static PdfItem of(final long ord, final float zIndex) {
     //        return new PdfItem(ord, zIndex);
     //    }

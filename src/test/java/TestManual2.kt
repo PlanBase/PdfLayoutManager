@@ -71,7 +71,7 @@ fun testBodyMargins() {
 
     val tB = TableBuilder()
 
-    val table: Table = tB.addCellWidths(30f, 200f)
+    val bulletTable: Table = tB.addCellWidths(30f, 200f)
             .partBuilder()
             .rowBuilder()
             .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, BULLET_CHAR)))
@@ -84,24 +84,6 @@ fun testBodyMargins() {
             .buildPart()
             .buildTable()
 
-
-//    val tpb = TableBuilder()
-//            .addCellWidths(20f, 80f).partBuilder()
-//
-//    // This could be in a loop that prints out list items.
-//    tpb.rowBuilder().cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, Utils.BULLET_CHAR)))
-//            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
-//            .buildRow()
-//    // Next iteration in the loop
-//            .rowBuilder()
-//            .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, "2.")))
-//            .cell(contents = listOf(Text(BULLET_TEXT_STYLE, "text that has a number")))
-//            .buildRow()
-
-    // TODO: actually display these bullets!
-    // After the loop, build the table.
-//    val bullets = tpb.buildPart().buildTable()
-
     Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
          bodyWidth,
          listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
@@ -113,7 +95,7 @@ fun testBodyMargins() {
                      "words and women said new. The new " +
                      "companies told the possible hands " +
                      "and books was low.\n\n"),
-                table,
+                bulletTable,
                 Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
                      "The new " +
                      "companies told the possible hands " +

@@ -77,15 +77,15 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
      @param text ISO_8859_1 encoded text
      @return the width of this text rendered in this font.
      */
-    fun stringWidthInDocUnits(text: String): Float {
-        try {
-            return font.getStringWidth(text) * factor
-        } catch (ioe: IOException) {
-            // logger.error("IOException probably means an issue reading font metrics from the underlying font file used in this PDF");
-            // Calculate our default if there's an exception.
-            return text.length * avgCharWidth
-        }
-    }
+    fun stringWidthInDocUnits(text: String): Float =
+            try {
+                font.getStringWidth(text) * factor
+            } catch (ioe: IOException) {
+                // logger.error("IOException probably means an issue reading font metrics from the underlying" +
+                //              "font file used in this PDF");
+                // Calculate our default if there's an exception.
+                text.length * avgCharWidth
+            }
 
 //    fun font(): PDFont = font
 //
@@ -93,7 +93,7 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
 //
 //    fun textColor(): PDColor = textColor
 
-    fun textColor(c: PDColor): TextStyle = TextStyle(font, fontSize, c)
+//    fun textColor(c: PDColor): TextStyle = TextStyle(font, fontSize, c)
 
 //    fun avgCharWidth(): Float = avgCharWidth
 
