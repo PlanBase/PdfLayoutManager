@@ -27,7 +27,7 @@ class SinglePageTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
-        val text = Text(TextStyle(PDType1Font.HELVETICA, 90f, RGB_BLACK), "gxNh")
+        val text = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
 
         val squareSide = 70f
         val squareDim = Dimensions(squareSide, squareSide)
