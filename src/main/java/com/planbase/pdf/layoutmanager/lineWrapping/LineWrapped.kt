@@ -21,14 +21,14 @@
 package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 
 /**
  Represents a fixed-size item.  Classes implementing this interface should be immutable.
  */
 interface LineWrapped {
-    val xyDim: XyDim
+    val dimensions: Dimensions
 //    fun width(): Float = width
 //    fun totalHeight(): Float = heightAboveBase + depthBelowBase
 
@@ -47,13 +47,13 @@ interface LineWrapped {
      @param lp RenderTarget is the SinglePage or PageGrouping to draw to.  This will contain the paper size,
      orientation, and body area which are necessary in order to calculate page breaking
      @param outerTopLeft is the offset where this item starts.
-     @return the adjusted XyDim which may include extra (vertical) spacing required to nudge some items onto the next
+     @return the adjusted Dimensions which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Point2): XyDim
+    fun render(lp: RenderTarget, topLeft: Point2d): Dimensions
 
     object ZeroLineWrapped: LineWrapped {
-        override val xyDim: XyDim = XyDim.ZERO
+        override val dimensions: Dimensions = Dimensions.ZERO
 
         override val ascent: Float = 0f
 
@@ -61,7 +61,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, topLeft: Point2): XyDim = xyDim
+        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions = dimensions
     }
 
     companion object {
@@ -76,7 +76,7 @@ interface LineWrapped {
             }
 
             override fun getIfFits(remainingWidth: Float): ConTermNone =
-                    if (hasMore && (item.xyDim.width <= remainingWidth)) {
+                    if (hasMore && (item.dimensions.width <= remainingWidth)) {
                         hasMore = false
                         Continuing(item)
                     } else {

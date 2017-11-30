@@ -14,8 +14,8 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.utils.Utils
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -23,10 +23,10 @@ import org.junit.Test
 
 class TableRowBuilderTest {
     @Test fun testBasics() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
 
-        val upperLeft = Point2(100f, 500f)
+        val upperLeft = Point2d(100f, 500f)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -72,7 +72,7 @@ class TableRowBuilderTest {
     }
 
     @Test fun testJustHeadings() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
 
         val pMargin = PdfLayoutMgr.DOC_UNITS_PER_INCH / 2
         var lp = pageMgr.logicalPageStart()

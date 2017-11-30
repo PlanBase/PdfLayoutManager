@@ -7,8 +7,8 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -29,26 +29,26 @@ class MultiLineWrappedTest {
         val line = MultiLineWrapped()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
         line.append(txt1.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle1.lineHeight(), line.xyDim.height, floatCloseEnough)
+        assertEquals(tStyle1.lineHeight(), line.dimensions.height, floatCloseEnough)
 
         line.append(txt2.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight(), line.xyDim.height, floatCloseEnough)
+        assertEquals(tStyle2.lineHeight(), line.dimensions.height, floatCloseEnough)
 
         line.append(txt3.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight(), line.xyDim.height, floatCloseEnough)
+        assertEquals(tStyle2.lineHeight(), line.dimensions.height, floatCloseEnough)
 
         // This is for the baseline!
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
         val yTop = lp.yBodyTop() - 10f
         val yBottom = yTop - tStyle2.lineHeight()
-        val upperLeft = Point2(100f, yTop)
-        lp.drawLine(Point2(0f, yTop), Point2(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f))
-        lp.drawLine(Point2(0f, yBottom), Point2(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f))
+        val upperLeft = Point2d(100f, yTop)
+        lp.drawLine(Point2d(0f, yTop), Point2d(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f))
+        lp.drawLine(Point2d(0f, yBottom), Point2d(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f))
         val xyOff = line.render(lp, upperLeft)
 
         // TODO: Figure this out!
-//        assertEquals(Point2(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
+//        assertEquals(Point2d(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
 
         lp.commit()
         val os = FileOutputStream("testBaseline.pdf")
@@ -59,7 +59,7 @@ class MultiLineWrappedTest {
 
     fun verifyLine(line: MultiLineWrapped, lineHeight:Float, maxWidth:Float, text:String) {
 //        println("line: " + line)
-        assertEquals(lineHeight, line.xyDim.height, floatCloseEnough)
+        assertEquals(lineHeight, line.dimensions.height, floatCloseEnough)
         assertTrue(line.width < maxWidth)
         assertEquals(text,
                      line.items

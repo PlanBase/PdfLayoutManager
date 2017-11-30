@@ -24,68 +24,68 @@ import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 
 // TODO: This should be a private inner class of Cell
-class WrappedCell(override val xyDim: XyDim, // measured on the border lines
+class WrappedCell(override val dimensions: Dimensions, // measured on the border lines
                   val cellStyle: CellStyle,
                   private val items: List<LineWrapped>) : LineWrapped {
 
     override val ascent: Float
-        get() = xyDim.height
+        get() = dimensions.height
 
     override val descentAndLeading: Float = 0f
 
     override val lineHeight: Float
-        get() = xyDim.height
+        get() = dimensions.height
 
-    override fun toString() = "WrappedCell($xyDim, $cellStyle, $items)"
+    override fun toString() = "WrappedCell($dimensions, $cellStyle, $items)"
 
-    private val wrappedBlockDim: XyDim = {
-        var dim = XyDim.ZERO
+    private val wrappedBlockDim: Dimensions = {
+        var dim = Dimensions.ZERO
         for (row in items) {
-            val rowDim = row.xyDim
-            dim = XyDim(Math.max(dim.width, rowDim.width),
+            val rowDim = row.dimensions
+            dim = Dimensions(Math.max(dim.width, rowDim.width),
                         dim.height + rowDim.height)
         }
         dim
     }()
 
     // TODO: Why does this take a topLeft?  Nothing should take a topLeft.  Should be bottomLeft only!
-    override fun render(lp: RenderTarget, topLeft: Point2): XyDim {
+    override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
 //        println("render() topLeft=" + topLeft)
         val boxStyle = cellStyle.boxStyle
         val padding = boxStyle.padding
         val border = boxStyle.border
-        // XyDim xyDim = padding.addTo(pcrs.dim);
+        // Dimensions dimensions = padding.addTo(pcrs.dim);
 
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(topLeft.minusY(xyDim.height), xyDim, boxStyle.bgColor)
+            lp.fillRect(topLeft.minusY(dimensions.height), dimensions, boxStyle.bgColor)
             //            System.out.println("\tCell.render back from putRect");
         }
 
         // Draw contents over background, but under border
-        var innerTopLeft: Point2 = padding.applyTopLeft(topLeft)
-                .plusXMinusY(Point2(border.left.thickness / 2f, border.top.thickness / 2f))
-        val innerDimensions: XyDim = padding.subtractFrom(xyDim)
+        var innerTopLeft: Point2d = padding.applyTopLeft(topLeft)
+                .plusXMinusY(Point2d(border.left.thickness / 2f, border.top.thickness / 2f))
+        val innerDimensions: Dimensions = padding.subtractFrom(dimensions)
 
         // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
         val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
-        innerTopLeft = Point2(innerTopLeft.x + alignPad.left,
+        innerTopLeft = Point2d(innerTopLeft.x + alignPad.left,
                                 innerTopLeft.y - alignPad.top)
 
         var bottomY = innerTopLeft.y
         for (line in items) {
-            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.xyDim.width)
-            val (_, y) = line.render(lp, Point2(rowXOffset + innerTopLeft.x, bottomY))
+            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dimensions.width)
+            val (_, y) = line.render(lp, Point2d(rowXOffset + innerTopLeft.x, bottomY))
             bottomY -= y // y is always the lowest item in the cell.
         }
 
-        val rightX = topLeft.x + xyDim.width
+        val rightX = topLeft.x + dimensions.width
         // Draw border last to cover anything that touches it?
         if (border != BorderStyle.NO_BORDERS) {
             val origX = topLeft.x
@@ -106,11 +106,11 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             //
             // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
             // to see if `return y + pby.adj;` still makes sense.
-            bottomY = topLeft.y - xyDim.height
+            bottomY = topLeft.y - dimensions.height
 
-            val topRight = Point2(rightX, origY)
-            val bottomRight = Point2(rightX, bottomY)
-            val bottomLeft = Point2(origX, bottomY)
+            val topRight = Point2d(rightX, origY)
+            val bottomRight = Point2d(rightX, bottomY)
+            val bottomLeft = Point2d(origX, bottomY)
 
             // Like CSS it's listed Top, Right, Bottom, left
             if (border.top.thickness > 0) {
@@ -127,7 +127,7 @@ class WrappedCell(override val xyDim: XyDim, // measured on the border lines
             }
         }
 
-        return XyDim(rightX - topLeft.x,
+        return Dimensions(rightX - topLeft.x,
                      topLeft.y - bottomY)
     }
 }

@@ -10,8 +10,8 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import junit.framework.TestCase.assertTrue
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 class WrappedCellTest {
 
     @Test fun testBasics() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
         val cellWidth = 200f
         val hello = Text(textStyle, "Hello")
@@ -36,23 +36,23 @@ class WrappedCellTest {
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.xyDim.width)
+                                 wrappedCell.dimensions.width)
 
-        val upperLeft = Point2(100f, 500f)
+        val upperLeft = Point2d(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.xyDim.width)
+                                 wrappedCell.dimensions.width)
 
         wrappedCell.render(lp, upperLeft)
-//        val xyOff : Point2 = wrappedCell.render(lp, upperLeft)
+//        val xyOff : Point2d = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
         // TODO: This is not right.  Cell should report it's lower-right-hand corner, no?
-//        val xyOff2 : Point2 = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
+//        val xyOff2 : Point2d = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
-//        assertEquals(upperLeft.plusXMinusY(XyDim(wrappedCell.xyDim.width, wrappedCell.lineHeight)), xyOff)
+//        assertEquals(upperLeft.plusXMinusY(Dimensions(wrappedCell.dimensions.width, wrappedCell.lineHeight)), xyOff)
 
         lp.commit()
 //        val os = FileOutputStream("test3.pdf")
@@ -60,7 +60,7 @@ class WrappedCellTest {
     }
 
     @Test fun testMultiLine() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
         val cellWidth = 300f
         val hello = Text(textStyle, "Hello\nThere\nWorld!")
@@ -74,12 +74,12 @@ class WrappedCellTest {
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.xyDim.width)
+                                 wrappedCell.dimensions.width)
 
-        val upperLeft = Point2(100f, 500f)
+        val upperLeft = Point2d(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.xyDim.width)
+                                 wrappedCell.dimensions.width)
 
         wrappedCell.render(lp, upperLeft)
         lp.commit()
@@ -89,7 +89,7 @@ class WrappedCellTest {
     }
 
     @Test fun testRightAlign() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
 
         val cellWidth = 200f
@@ -98,7 +98,7 @@ class WrappedCellTest {
                         cellWidth, listOf(hello), null)
 
         val wrappedCell =
-                WrappedCell(XyDim(cellWidth,
+                WrappedCell(Dimensions(cellWidth,
                                   textStyle.lineHeight() + boxStyle.topBottomInteriorSp()),
                             CellStyle(Align.TOP_RIGHT, boxStyle),
                             listOf(MultiLineWrapped(hello.maxWidth(),
@@ -106,8 +106,8 @@ class WrappedCellTest {
                                                     textStyle.descent() + textStyle.leading(),
                                                     mutableListOf(Text.WrappedText(textStyle,
                                                                                    hello.text,
-                                                                                   XyDim(hello.maxWidth(),
-                                                                                         textStyle.lineHeight()),
+                                                                                   Dimensions(hello.maxWidth(),
+                                                                                              textStyle.lineHeight()),
                                                                                    hello)))))
 //        val wrappedCell = cell.wrap()
 //        println("cell.wrap()=${cell.wrap()}")
@@ -116,25 +116,25 @@ class WrappedCellTest {
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.xyDim.width)
+                                 wrappedCell.dimensions.width)
 
-        val upperLeft = Point2(100f, 500f)
+        val upperLeft = Point2d(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.xyDim.width)
+                                 wrappedCell.dimensions.width)
 
-        val xyDim : XyDim = wrappedCell.render(lp, upperLeft)
+        val dimensions: Dimensions = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
         // TODO: Enable!
-        assertEquals(cellWidth, xyDim.width)
+        assertEquals(cellWidth, dimensions.width)
 
         // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
-//        val xyOff2 : Point2 = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
+//        val xyOff2 : Point2d = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
-        assertTrue(XyDim.within(0.00002f, wrappedCell.xyDim, xyDim))
+        assertTrue(Dimensions.within(0.00002f, wrappedCell.dimensions, dimensions))
 
         lp.commit()
 

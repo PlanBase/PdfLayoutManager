@@ -24,7 +24,7 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
-import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.Dimensions
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -78,11 +78,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                     * good idea to use this directly.  Use the corrected values through a [PageGrouping]
                     * instead.
                     */
-                   val pageDim: XyDim,
+                   val pageDim: Dimensions,
                    /** Takes a page number and returns an x-offset for that page. */
                    private var pageReactor:((Int, SinglePage) -> Float)? = null) {
     private val doc = PDDocument()
-//    val pageDim = XyDim(mb ?: PDRectangle.LETTER)
+//    val pageDim = Dimensions(mb ?: PDRectangle.LETTER)
 
 
     // TODO: add Sensible defaults, such as textStyle?
@@ -287,11 +287,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         val DEFAULT_MARGIN = 37f
     }
 
-    //    public Point2 putRect(Point2 outerTopLeft, XyDim outerDimensions, final PDColor c) {
+    //    public Point2d putRect(Point2d outerTopLeft, Dimensions outerDimensions, final PDColor c) {
     ////        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
     ////                           Utils.toString(c) + ")");
     //        putRect(outerTopLeft.x(), outerTopLeft.y(), outerDimensions.x(), outerDimensions.y(), c);
-    //        return Point2.of(outerTopLeft.x() + outerDimensions.x(),
+    //        return Point2d.of(outerTopLeft.x() + outerDimensions.x(),
     //                           outerTopLeft.y() - outerDimensions.y());
     //    }
 

@@ -22,48 +22,48 @@ package com.planbase.pdf.layoutmanager.utils
 
 /**
  An immutable 2D coordinate in terms of X and Y measured from the lower-left corner.
- Do not confuse this with an XyDim which represents positive width and height.
- This is called Point2 because Point2D is already a class in Java and it's mutable.
+ Do not confuse this with an Dimensions which represents positive width and height.
+ This is called Point2d because Point2D is already a class in Java and it's mutable.
  */
-data class Point2(val x: Float, val y: Float) {
+data class Point2d(val x: Float, val y: Float) {
 
-    fun x(newX: Float) = Point2(newX, y)
+    fun x(newX: Float) = Point2d(newX, y)
 
-    fun y(newY: Float) = Point2(x, newY)
+    fun y(newY: Float) = Point2d(x, newY)
 
-    //    public Point2 minus(Point2 that) { return of(this.x - that.x(), this.y - that.y()); }
-    //    public Point2 plus(Point2 that) { return of(this.x + that.x(), this.y + that.y()); }
+    //    public Point2d minus(Point2d that) { return of(this.x - that.x(), this.y - that.y()); }
+    //    public Point2d plus(Point2d that) { return of(this.x + that.x(), this.y + that.y()); }
 
-    fun plusX(offset: Float) = if (offset == 0f) { this } else { Point2(x + offset, y) }
+    fun plusX(offset: Float) = if (offset == 0f) { this } else { Point2d(x + offset, y) }
 
-    fun minusY(offset: Float) = if (offset == 0f) { this } else { Point2(x, y - offset) }
+    fun minusY(offset: Float) = if (offset == 0f) { this } else { Point2d(x, y - offset) }
 
-    fun plusXMinusY(that: Point2) = Point2(x + that.x, y - that.y)
+    fun plusXMinusY(that: Point2d) = Point2d(x + that.x, y - that.y)
 
-    fun plusXMinusY(that: XyDim) = Point2(x + that.width, y - that.height)
+    fun plusXMinusY(that: Dimensions) = Point2d(x + that.width, y - that.height)
 
-    //    public Point2 maxXandY(Point2 that) {
+    //    public Point2d maxXandY(Point2d that) {
     //        if ((this.x >= that.x()) && (this.y >= that.y())) { return this; }
     //        if ((this.x <= that.x()) && (this.y <= that.y())) { return that; }
     //        return of((this.x > that.x()) ? this.x : that.x(),
     //                  (this.y > that.y()) ? this.y : that.y());
     //    }
-    fun maxXMinY(that: Point2): Point2 =
+    fun maxXMinY(that: Point2d): Point2d =
             if (this.x >= that.x && this.y <= that.y) {
                 this
             } else if (this.x <= that.x && this.y >= that.y) {
                 that
             } else {
-                Point2(if (this.x > that.x) this.x else that.x,
-                       if (this.y < that.y) this.y else that.y)
+                Point2d(if (this.x > that.x) this.x else that.x,
+                        if (this.y < that.y) this.y else that.y)
             }
 
     /** Compares dimensions  */
-    fun lte(that: Point2): Boolean = this.x <= that.x && this.y >= that.y
+    fun lte(that: Point2d): Boolean = this.x <= that.x && this.y >= that.y
 
-    override fun toString(): String = "Point2(${x}f, ${y}f)"
+    override fun toString(): String = "Point2d(${x}f, ${y}f)"
 
     companion object {
-        val ORIGIN = Point2(0f, 0f)
+        val ORIGIN = Point2d(0f, 0f)
     }
 }

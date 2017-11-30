@@ -10,8 +10,8 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.utils.Utils
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -21,7 +21,7 @@ class CellTest {
 
     @Test
     fun testWrap() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
 
         val cellStyle = CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f),
@@ -43,13 +43,13 @@ class CellTest {
 
         val wrappedCell:WrappedCell = cell.wrap()
 //        println("wrappedCell=$wrappedCell")
-        kotlin.test.assertEquals(squareDim, wrappedCell.xyDim.height)
+        kotlin.test.assertEquals(squareDim, wrappedCell.dimensions.height)
 
         trb.buildRow()
                 .buildPart()
         val table: Table = tB.buildTable()
 
-        val xya: XyDim = table.wrap().render(lp, Point2(40f, lp.yBodyTop()))
+        val xya: Dimensions = table.wrap().render(lp, Point2d(40f, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")

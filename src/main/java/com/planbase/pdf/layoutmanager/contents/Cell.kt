@@ -26,7 +26,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToMultiLineWrappeds
-import com.planbase.pdf.layoutmanager.utils.XyDim
+import com.planbase.pdf.layoutmanager.utils.Dimensions
 
 /**
  A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated
@@ -49,7 +49,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 
     // A cache for all pre-calculated textLines.
 //    class PreCalcLines(val textLines: List<TextLine> = ArrayList(1),
-//                       val totalDim: XyDim)
+//                       val totalDim: Dimensions)
 
     init {
         if (width < 0) {
@@ -75,9 +75,9 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //        var height = 0f
 //        for (line in textLines) {
 //            width = max(width, line.width)
-//            height += line.xyDim.height
+//            height += line.dimensions.height
 //        }
-//        widthCache.put(maxWidth, PreCalcLines(textLines, XyDim(width, height)))
+//        widthCache.put(maxWidth, PreCalcLines(textLines, Dimensions(width, height)))
 //    }
 
 //    private fun ensurePreCalcLines(maxWidth: Float): PreCalcLines {
@@ -95,8 +95,8 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
         var height = cellStyle.boxStyle.topBottomInteriorSp()
 
         for (line in fixedLines) {
-            height += line.xyDim.height
-//            maxWidth = maxOf(line.xyDim.width, maxWidth)
+            height += line.dimensions.height
+//            maxWidth = maxOf(line.dimensions.width, maxWidth)
         }
 
         if ( (tableRow != null) &&
@@ -104,12 +104,12 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
             height = tableRow.minRowHeight
         }
 
-        return WrappedCell(XyDim(width, height), this.cellStyle, fixedLines)
+        return WrappedCell(Dimensions(width, height), this.cellStyle, fixedLines)
     }
 
     override fun lineWrapper() = MultiLineWrapper(contents.iterator())
 
-    //    fun calcDimensions(maxWidth: Float): XyDim {
+    //    fun calcDimensions(maxWidth: Float): Dimensions {
 //        // I think zero or negative width cells might be OK to ignore.  I'd like to try to make
 //        // Text.calcDimensionsForReal() handle this situation before throwing an error here.
 //        //        if (maxWidth < 0) {
@@ -128,14 +128,14 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //
 //    {@inheritDoc}
 //    */
-//    fun render(lp: RenderTarget, outerTopLeft: Point2, outerDimensions: XyDim): Point2 {
+//    fun render(lp: RenderTarget, outerTopLeft: Point2d, outerDimensions: Dimensions): Point2d {
 //        //        System.out.println("Cell.render(" + this.toString());
 //        //        new Exception().printStackTrace();
 //
 //        val maxWidth:Float = outerDimensions.width
 //        val pcls = ensurePreCalcLines(maxWidth)
 //        val padding = cellStyle.padding
-//        // XyDim outerDimensions = padding.addTo(pcrs.dim);
+//        // Dimensions outerDimensions = padding.addTo(pcrs.dim);
 //
 //        // Draw background first (if necessary) so that everything else ends up on top of it.
 //        if (cellStyle.bgColor != null) {
@@ -145,8 +145,8 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //        }
 //
 //        // Draw contents over background, but under border
-//        var innerTopLeft: Point2
-//        val innerDimensions: XyDim
+//        var innerTopLeft: Point2d
+//        val innerDimensions: Dimensions
 //        if (padding == null) {
 //            innerTopLeft = outerTopLeft
 //            innerDimensions = outerDimensions
@@ -164,7 +164,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //        //        System.out.println("\tCell.render wrappedBlockDim=" + wrappedBlockDim);
 //        val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
 //        //        System.out.println("\tCell.render alignPad=" + alignPad);
-//        innerTopLeft = Point2(innerTopLeft.x + alignPad.left,
+//        innerTopLeft = Point2d(innerTopLeft.x + alignPad.left,
 //                                innerTopLeft.y - alignPad.top)
 //
 //        var outerLowerRight = innerTopLeft
@@ -173,7 +173,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //            val rowXOffset = cellStyle.align
 //                    .leftOffset(wrappedBlockDim.width, line.width)
 //            outerLowerRight = line.render(lp,
-//                                          Point2(rowXOffset + innerTopLeft.x, y))
+//                                          Point2d(rowXOffset + innerTopLeft.x, y))
 //            y -= line.height()
 //            //            innerTopLeft = outerLowerRight.x(innerTopLeft.x());
 //        }

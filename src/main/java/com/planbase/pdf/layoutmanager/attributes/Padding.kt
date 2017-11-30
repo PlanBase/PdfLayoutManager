@@ -20,8 +20,8 @@
 
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 
 /**
  * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
@@ -34,19 +34,19 @@ data class Padding(val top: Float,
     /** Sets all padding values equally  */
     constructor(a:Float) : this(a, a, a, a)
 
-//    fun topLeftPadDim(): XyDim = XyDim(left, top)
+//    fun topLeftPadDim(): Dimensions = Dimensions(left, top)
 //
-//    fun botRightPadDim(): XyDim = XyDim(right, bottom)
+//    fun botRightPadDim(): Dimensions = Dimensions(right, bottom)
 
-    fun subtractFrom(outer: XyDim): XyDim =
-            XyDim(outer.width - (left + right),
+    fun subtractFrom(outer: Dimensions): Dimensions =
+            Dimensions(outer.width - (left + right),
                   outer.height - (top + bottom))
 
-    fun addTo(outer: XyDim): XyDim =
-            XyDim(outer.width + (left + right),
+    fun addTo(outer: Dimensions): Dimensions =
+            Dimensions(outer.width + (left + right),
                   outer.height + (top + bottom))
 
-    fun applyTopLeft(orig: Point2): Point2 = Point2(orig.x + left, orig.y - top)
+    fun applyTopLeft(orig: Point2d): Point2d = Point2d(orig.x + left, orig.y - top)
 
     fun topBottomPadding() = top + bottom
 
@@ -59,8 +59,8 @@ data class Padding(val top: Float,
                 super.toString()
             }
 
-    //    public Point2 topLeftPadOffset() { return Point2(left, -top); }
-    //    public Point2 botRightPadOffset() { return Point2(right, -bottom); }
+    //    public Point2d topLeftPadOffset() { return Point2d(left, -top); }
+    //    public Point2d botRightPadOffset() { return Point2d(right, -bottom); }
 
     companion object {
         /**

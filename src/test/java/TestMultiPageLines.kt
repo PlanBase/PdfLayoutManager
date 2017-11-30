@@ -1,8 +1,8 @@
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.utils.Utils
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
@@ -10,7 +10,7 @@ import java.io.FileOutputStream
 
 class TestMultiPageLines {
     @Test fun testMultiPageLines() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
 
         // One inch is 72 document units.  36 is about a half-inch - enough margin to satisfy most
         // printers. A typical monitor has 72 dots per inch, so you can think of these as pixels
@@ -34,10 +34,10 @@ class TestMultiPageLines {
         // API adds two more pages as needed.  This is a great test for how geometric shapes break
         // across pages.
 
-        val topLeft = Point2(pMargin, lp.yBodyTop())
-        val topRight = Point2(pageRMargin, lp.yBodyTop())
-        val bottomRight = Point2(pageRMargin, -lp.yBodyTop())
-        val bottomLeft = Point2(pMargin, -lp.yBodyTop())
+        val topLeft = Point2d(pMargin, lp.yBodyTop())
+        val topRight = Point2d(pageRMargin, lp.yBodyTop())
+        val bottomRight = Point2d(pageRMargin, -lp.yBodyTop())
+        val bottomLeft = Point2d(pMargin, -lp.yBodyTop())
 
         // top lne
         lp.drawLine(topLeft, topRight, lineStyle)
@@ -54,7 +54,7 @@ class TestMultiPageLines {
         lp.drawLine(bottomLeft, topRight, lineStyle)
 
         // middle line
-        lp.drawLine(Point2(pMargin, 0f), Point2(pageRMargin, 0f), lineStyle)
+        lp.drawLine(Point2d(pMargin, 0f), Point2d(pageRMargin, 0f), lineStyle)
         lp.commit()
 
         val os = FileOutputStream("multiPageLines.pdf")

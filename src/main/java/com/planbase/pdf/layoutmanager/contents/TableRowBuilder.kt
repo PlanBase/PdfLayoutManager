@@ -26,7 +26,7 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import java.util.ArrayList
 
 /**
@@ -82,13 +82,13 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     fun finalRowHeight():Float {
         cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
-                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.xyDim.height)}
+                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
         return minRowHeight
     }
 
-    fun render(lp: RenderTarget, outerTopLeft: Point2): Point2 {
+    fun render(lp: RenderTarget, outerTopLeft: Point2d): Point2d {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
-//                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.xyDim.height)}
+//                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
 
         finalRowHeight()
 
@@ -97,10 +97,10 @@ class TableRowBuilder(private val tablePart: TablePart) {
         var x = outerTopLeft.x
         for (fixedCell in fixedCells) {
             // TODO: Account for page breaks!
-            fixedCell.render(lp, Point2(x, outerTopLeft.y))
-            x += fixedCell.xyDim.width
+            fixedCell.render(lp, Point2d(x, outerTopLeft.y))
+            x += fixedCell.dimensions.width
         }
-        return Point2(x, outerTopLeft.y - minRowHeight)
+        return Point2d(x, outerTopLeft.y - minRowHeight)
     }
 
     override fun toString(): String = "TableRowBuilder($cells)"

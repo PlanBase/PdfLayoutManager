@@ -21,8 +21,8 @@
 package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 
 /**
 A mutable data structure to hold a wrapped line consisting of multiple items.
@@ -32,8 +32,8 @@ class MultiLineWrapped(var width: Float = 0f,
                        override var ascent: Float = 0f,
                        override var descentAndLeading: Float = 0f,
                        val items: MutableList<LineWrapped> = mutableListOf()) : LineWrapped {
-    override val xyDim: XyDim
-            get() = XyDim(width, lineHeight)
+    override val dimensions: Dimensions
+            get() = Dimensions(width, lineHeight)
 
     override val lineHeight: Float
             get() = ascent + descentAndLeading
@@ -42,23 +42,23 @@ class MultiLineWrapped(var width: Float = 0f,
     fun append(fi : LineWrapped): MultiLineWrapped {
         ascent = maxOf(ascent, fi.ascent)
         descentAndLeading = maxOf(descentAndLeading, fi.descentAndLeading)
-        width += fi.xyDim.width
+        width += fi.dimensions.width
         items.add(fi)
         return this
     }
 
-    override fun render(lp: RenderTarget, topLeft: Point2): XyDim {
+    override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
         var x:Float = topLeft.x
         val y = topLeft.y
-        var maxHeight = xyDim.height
+        var maxHeight = dimensions.height
         for (item: LineWrapped in items) {
             // ascent is the maximum ascent for anything on this line.  Subtracting that from the top-y
             // yields the baseline, which is what we want to align on.
-            val (_, fixedHeight) = item.render(lp, topLeft = Point2(x, y - ascent))
+            val (_, fixedHeight) = item.render(lp, topLeft = Point2d(x, y - ascent))
             maxHeight = maxOf(maxHeight, fixedHeight)
-            x += item.xyDim.width
+            x += item.dimensions.width
         }
-        return XyDim(x - topLeft.x, maxHeight)
+        return Dimensions(x - topLeft.x, maxHeight)
     }
 
     override fun toString(): String {

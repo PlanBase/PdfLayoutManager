@@ -28,8 +28,8 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -97,8 +97,8 @@ import java.util.TreeSet
  */
 class PageGrouping(private val mgr: PdfLayoutMgr,
                    val orientation: Orientation,
-                   bodyOff: Point2,
-                   bodyDim: XyDim) : RenderTarget { // AKA Document Section
+                   bodyOff: Point2d,
+                   bodyDim: Dimensions) : RenderTarget { // AKA Document Section
 
     /**
      * Create a PageGrouping with default margins for body top and bottom.
@@ -107,7 +107,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * @return a new PageGrouping with the given settings.
      */
     constructor(m: PdfLayoutMgr, orientation: Orientation):
-            this(m, orientation, Point2(DEFAULT_MARGIN, DEFAULT_MARGIN),
+            this(m, orientation, Point2d(DEFAULT_MARGIN, DEFAULT_MARGIN),
                  if (orientation == PORTRAIT)
                      m.pageDim.minus(DEFAULT_DOUBLE_MARGIN_DIM)
                  else
@@ -123,7 +123,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
     // ===================================== Instance Methods =====================================
 
-    fun bodyTopLeft() = Point2(bodyRect.lowerLeftX, bodyRect.upperRightY)
+    fun bodyTopLeft() = Point2d(bodyRect.lowerLeftX, bodyRect.upperRightY)
 
     /** The Y-value for top of the body section (in document units)  */
     fun yBodyTop(): Float = bodyRect.upperRightY
@@ -167,7 +167,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(bottomLeft: Point2, text: String, textStyle: TextStyle): Float {
+    override fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -178,28 +178,28 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawImage(bottomLeft: Point2, wi: WrappedImage): Float {
+    override fun drawImage(bottomLeft: Point2d, wi: WrappedImage): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = appropriatePage(bottomLeft.y, wi.xyDim.height)
+        val pby = appropriatePage(bottomLeft.y, wi.dimensions.height)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(bottomLeft.y(pby.y), wi)
-        return wi.xyDim.height + pby.adj
+        return wi.dimensions.height + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: Point2, xyDim: XyDim, c: PDColor): Float {
+    override fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         //        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
         //                           Utils.toString(c) + ")");
         val left = bottomLeft.x
-        val topY = bottomLeft.y + xyDim.height
-        val width = xyDim.width
-        val maxHeight = xyDim.height
+        val topY = bottomLeft.y + dimensions.height
+        val width = dimensions.width
+        val maxHeight = dimensions.height
         val bottomY = bottomLeft.y
 
         if (topY < bottomY) {
@@ -209,7 +209,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         val pby1 = appropriatePage(topY, 0f)
         val pby2 = appropriatePage(bottomY, 0f)
         if (pby1 == pby2) {
-            pby1.pb.fillRect(Point2(left, pby1.y), XyDim(width, maxHeight), c)
+            pby1.pb.fillRect(Point2d(left, pby1.y), Dimensions(width, maxHeight), c)
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
 
@@ -236,7 +236,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     yBodyBottom()
                 }
 
-                currPage.fillRect(Point2(left, yb), XyDim(width, ya - yb), c)
+                currPage.fillRect(Point2d(left, yb), Dimensions(width, ya - yb), c)
 
                 // pageNum is one-based while get is zero-based, so passing get the current
                 // pageNum actually gets the next page.  Don't get another one after we already
@@ -251,7 +251,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawLine(start: Point2, end: Point2, lineStyle: LineStyle): PageGrouping {
+    override fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -321,9 +321,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                 // In that case, the last endpoint of the previous line must equal the starting point of this line.
                 // So if we detected that we had to flip the line to break it across pages, flip it back here!
                 if (flip) {
-                    currPage.drawLine(Point2(xb, yb), Point2(xa, ya), lineStyle)
+                    currPage.drawLine(Point2d(xb, yb), Point2d(xa, ya), lineStyle)
                 } else {
-                    currPage.drawLine(Point2(xa, ya), Point2(xb, yb), lineStyle)
+                    currPage.drawLine(Point2d(xa, ya), Point2d(xb, yb), lineStyle)
                 }
 
                 // pageNum is one-based while get is zero-based, so passing get the current
@@ -372,9 +372,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * You can draw a cell without a table (for a heading, or paragraph of same-format text, or
      * whatever).
      */
-//    fun drawCell(x: Float, y: Float, cell: WrappedCell): XyDim =
+//    fun drawCell(x: Float, y: Float, cell: WrappedCell): Dimensions =
 //            // render the row with that maxHeight.
-//            cell.render(this, Point2(x, y))
+//            cell.render(this, Point2d(x, y))
 
 //    /**
 //     * Shows the given cells plus either a background or an outline as appropriate.
@@ -392,10 +392,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //        }
 //
 //        // Similar to TableBuilder and TableRowBuilder.calcDimensions().  Should be combined?
-//        var maxDim = XyDim.ZERO
+//        var maxDim = Dimensions.ZERO
 //        for (cell in cells) {
 //            val wh = cell.calcDimensions(cell.width)
-//            maxDim = XyDim(wh!!.width + maxDim.width,
+//            maxDim = Dimensions(wh!!.width + maxDim.width,
 //                           Math.max(maxDim.height, wh.height))
 //        }
 //        val maxHeight = maxDim.height
@@ -405,7 +405,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //        // render the row with that maxHeight.
 //        var x = initialX
 //        for (cell in cells) {
-//            cell.render(this, Point2(x, origY), XyDim(cell.width, maxHeight))
+//            cell.render(this, Point2d(x, origY), Dimensions(cell.width, maxHeight))
 //            x += cell.width
 //        }
 //
@@ -427,9 +427,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     //    public float drawCellAsWatermark(float x, float origY, Cell cell) {
     //        if (!valid) { throw new IllegalStateException("Logical page accessed after commit"); }
     //        float outerWidth = cell.width();
-    //        XyDim innerDim = cell.calcDimensions(outerWidth);
+    //        Dimensions innerDim = cell.calcDimensions(outerWidth);
     //        PageBufferAndY pby = appropriatePage(origY);
-    //        return cell.render(pby.pb, Point2.of(x, pby.y), innerDim.width(outerWidth)).y();
+    //        return cell.render(pby.pb, Point2d.of(x, pby.y), innerDim.width(outerWidth)).y();
     //    }
 
     @Throws(IOException::class)
@@ -449,7 +449,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //     * has package scope so that Text can access it for one thing.  It may become private in the
 //     * future.
 //     */
-//    internal fun borderStyledText(bottomLeft: Point2, text: String, s: TextStyle) {
+//    internal fun borderStyledText(bottomLeft: Point2d, text: String, s: TextStyle) {
 //        if (!valid) {
 //            throw IllegalStateException("Logical page accessed after commit")
 //        }
@@ -458,7 +458,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //    }
 
     companion object {
-        private val DEFAULT_DOUBLE_MARGIN_DIM = XyDim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
+        private val DEFAULT_DOUBLE_MARGIN_DIM = Dimensions(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
 
         /**
         @param pb specific page item will be put on

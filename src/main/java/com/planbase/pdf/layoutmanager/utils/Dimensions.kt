@@ -25,11 +25,11 @@ import java.lang.Math.abs
 
 /**
  * Immutable 2D dimension in terms of non-negative width and height.
- * Do not confuse a dimension (measurement) with an Point2 which represents coordinates where
+ * Do not confuse a dimension (measurement) with an Point2d which represents coordinates where
  * the bottom of the page is zero and positive height is up from there.
- * Remember: an XyDim on a Portrait orientation page has the width and height *reversed*.
+ * Remember: an Dimensions on a Portrait orientation page has the width and height *reversed*.
  */
-data class XyDim(val width: Float, val height: Float) {
+data class Dimensions(val width: Float, val height: Float) {
     init {
         if (width < 0 || height < 0) {
             throw IllegalArgumentException("Dimensions must be positive")
@@ -37,41 +37,41 @@ data class XyDim(val width: Float, val height: Float) {
     }
 
     /**
-     * Returns an XyDim with the width and height taken from the same-named fields on the given
+     * Returns an Dimensions with the width and height taken from the same-named fields on the given
      * rectangle.
      */
     constructor(rect: PDRectangle) : this(rect.width, rect.height)
 
-    fun width(newX: Float) = XyDim(newX, height)
+    fun width(newX: Float) = Dimensions(newX, height)
 
-    fun height(newY: Float) = XyDim(width, newY)
+    fun height(newY: Float) = Dimensions(width, newY)
 
     /**
-     * If true, returns this, if false, returns a new XyDim with width and height values swapped.
+     * If true, returns this, if false, returns a new Dimensions with width and height values swapped.
      * PDFs think the long dimension is always the height of the page, regardless of portrait vs.
      * landscape, so we need to conditionally adjust what we call width and height.
      */
     // This is suspicious because we're swapping width and height and the compiler thinks
     // we might be doing so by accident.
-    fun swapWh() = XyDim(height, width)
+    fun swapWh() = Dimensions(height, width)
 
     /** Returns a PDRectangle with the given width and height (but no/0 offset)  */
     fun toRect() = PDRectangle(width, height)
 
     //    /** Returns a PDRectangle with the given width and height (but no/0 offset) */
-    //    public PDRectangle toRect(Point2 off) {
+    //    public PDRectangle toRect(Point2d off) {
     //        return new PDRectangle(off.x(), off.y(), width, height);
     //    }
 
-    /** Subtracts the given XyDim from this one (remember, these can't be negative).  */
-    operator fun minus(that: XyDim) = XyDim(this.width - that.width, this.height - that.height)
+    /** Subtracts the given Dimensions from this one (remember, these can't be negative).  */
+    operator fun minus(that: Dimensions) = Dimensions(this.width - that.width, this.height - that.height)
 
-    /** Adds the given XyDim from this one  */
-    operator fun plus(that: XyDim) = XyDim(this.width + that.width, this.height + that.height)
+    /** Adds the given Dimensions from this one  */
+    operator fun plus(that: Dimensions) = Dimensions(this.width + that.width, this.height + that.height)
 
     //    public XyPair plusXMinusY(XyPair that) { return of(this.width + that.width(), this.height - that.height()); }
 
-    //    public XyDim maxXandY(XyDim that) {
+    //    public Dimensions maxXandY(Dimensions that) {
     //        if ((this.width >= that.width()) && (this.height >= that.height())) { return this; }
     //        if ((this.width <= that.width()) && (this.height <= that.height())) { return that; }
     //        return of((this.width > that.width()) ? this.width : that.width(),
@@ -79,15 +79,15 @@ data class XyDim(val width: Float, val height: Float) {
     //    }
 
     /** Compares dimensions and returns true if that dimension doesn't extend beyond this one.  */
-    fun lte(that: XyDim): Boolean = this.width <= that.width &&
-                                    this.height <= that.height
+    fun lte(that: Dimensions): Boolean = this.width <= that.width &&
+                                         this.height <= that.height
 
-    override fun toString() = "XyDim($width, $height)"
+    override fun toString() = "Dimensions($width, $height)"
 
     companion object {
-        val ZERO = XyDim(0f, 0f)
-        fun sum(xys:Iterable<XyDim>) = xys.fold(ZERO, {acc, xy -> acc.plus(xy)})
-        fun within(latitude:Float, xya:XyDim, xyb:XyDim):Boolean =
+        val ZERO = Dimensions(0f, 0f)
+        fun sum(xys:Iterable<Dimensions>) = xys.fold(ZERO, { acc, xy -> acc.plus(xy)})
+        fun within(latitude:Float, xya: Dimensions, xyb: Dimensions):Boolean =
                 (abs(xya.height - xyb.height) <= latitude) &&
                 (abs(xya.width - xyb.width) <= latitude)
     }

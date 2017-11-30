@@ -83,7 +83,7 @@ interface LineWrapper {
             }
 
             override fun getIfFits(remainingWidth: Float): ConTermNone =
-                    if (hasMore && (item.xyDim.width <= remainingWidth)) {
+                    if (hasMore && (item.dimensions.width <= remainingWidth)) {
                         hasMore = false
                         Continuing(item)
                     } else {

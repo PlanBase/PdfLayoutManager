@@ -4,7 +4,6 @@ import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
 import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
 import com.planbase.pdf.layoutmanager.contents.Text.WrappedText
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
@@ -28,10 +27,10 @@ class TextTest {
         var idx = ri.idx
         assertEquals("This is a", wrappedText.string)
         assertEquals(10, idx)
-        assertEquals(34.903126f, wrappedText.xyDim.width)
+        assertEquals(34.903126f, wrappedText.dimensions.width)
         assertEquals(tStyle.ascent(), wrappedText.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedText.xyDim.height)
+        assertEquals(tStyle.lineHeight(), wrappedText.dimensions.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -64,10 +63,10 @@ class TextTest {
         var idx = ri.idx
         assertEquals("This is", wrappedText.string)
         assertEquals(8, idx)
-        assertEquals(27.084375f, wrappedText.xyDim.width)
+        assertEquals(27.084375f, wrappedText.dimensions.width)
         assertEquals(tStyle.ascent(), wrappedText.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedText.xyDim.height)
+        assertEquals(tStyle.lineHeight(), wrappedText.dimensions.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -125,8 +124,8 @@ class TextTest {
         assertEquals(tStyle.descent() + tStyle.leading(),
                 row.descentAndLeading)
         assertEquals(tStyle.lineHeight(), row.lineHeight)
-        assertEquals(tStyle.lineHeight(), row.xyDim.height)
-        assertEquals(28.250002f, row.xyDim.width)
+        assertEquals(tStyle.lineHeight(), row.dimensions.height)
+        assertEquals(28.250002f, row.dimensions.width)
 
         assertTrue(rend.getIfFits(5f) is None)
 
@@ -137,7 +136,7 @@ class TextTest {
             None -> null
         }
         assertNotNull(row3)
-        assertEquals(14.816668f, row3!!.xyDim.width)
+        assertEquals(14.816668f, row3!!.dimensions.width)
     }
 
     @Test fun testRenderator2() {
@@ -152,8 +151,8 @@ class TextTest {
         assertEquals(tStyle.descent() + tStyle.leading(),
                      row.descentAndLeading)
         assertEquals(tStyle.lineHeight(), row.lineHeight)
-        assertEquals(tStyle.lineHeight(), row.xyDim.height)
-        assertEquals(28.250002f, row.xyDim.width)
+        assertEquals(tStyle.lineHeight(), row.dimensions.height)
+        assertEquals(28.250002f, row.dimensions.width)
 
         assertTrue(rend.getIfFits(5f) is None)
 
@@ -164,15 +163,15 @@ class TextTest {
             None -> null
         }
         assertNotNull(row3)
-        assertEquals(14.816668f, row3!!.xyDim.width)
-        assertEquals(tStyle.lineHeight(), row3.xyDim.height)
+        assertEquals(14.816668f, row3!!.dimensions.width)
+        assertEquals(tStyle.lineHeight(), row3.dimensions.height)
     }
 
 //    @Test fun testCalcDimensions() {
 //        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
 //        val txt = Text.of(tStyle, "This is a long enough line of text.")
 //
-//        val dim: XyDim = txt.calcDimensions(40f)
+//        val dim: Dimensions = txt.calcDimensions(40f)
 //        println(dim)
 //        assertEquals(tStyle.lineHeight() * 2, dim.height())
 //        assertEquals(28.250002f, dim.width())

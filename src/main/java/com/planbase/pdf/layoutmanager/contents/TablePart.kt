@@ -23,8 +23,8 @@ package com.planbase.pdf.layoutmanager.contents
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 import java.util.ArrayList
 
 /**
@@ -38,8 +38,8 @@ class TablePart(private val tableBuilder: TableBuilder) {
     var minRowHeight = 0f
     private val rows = ArrayList<TableRowBuilder>(1)
 
-    fun finalXyDim() = XyDim(cellWidths.sum(),
-                             rows.map{ r -> r.finalRowHeight()}.sum())
+    fun finalXyDim() = Dimensions(cellWidths.sum(),
+                                  rows.map{ r -> r.finalRowHeight()}.sum())
 
     fun cellStyle(x: CellStyle): TablePart {
         cellStyle = x
@@ -67,23 +67,23 @@ class TablePart(private val tableBuilder: TableBuilder) {
 
     fun buildPart(): TableBuilder = tableBuilder.addPart(this)
 
-//    fun calcDimensions(): XyDim {
-//        var maxDim = XyDim.ZERO
+//    fun calcDimensions(): Dimensions {
+//        var maxDim = Dimensions.ZERO
 //        for (row in rows) {
 //            val (width, height) = row.calcDimensions()
-//            maxDim = XyDim(Math.max(width, maxDim.width),
+//            maxDim = Dimensions(Math.max(width, maxDim.width),
 //                           maxDim.height + height)
 //        }
 //        return maxDim
 //    }
 
-    fun render(lp: RenderTarget, outerTopLeft: Point2): Point2 {
+    fun render(lp: RenderTarget, outerTopLeft: Point2d): Point2d {
         var rightmostLowest = outerTopLeft
         for (row in rows) {
             //            System.out.println("\tAbout to render row: " + row);
-            val (x, y) = row.render(lp, Point2(outerTopLeft.x, rightmostLowest.y))
-            rightmostLowest = Point2(Math.max(x, rightmostLowest.x),
-                                     Math.min(y, rightmostLowest.y))
+            val (x, y) = row.render(lp, Point2d(outerTopLeft.x, rightmostLowest.y))
+            rightmostLowest = Point2d(Math.max(x, rightmostLowest.x),
+                                      Math.min(y, rightmostLowest.y))
         }
         return rightmostLowest
     }

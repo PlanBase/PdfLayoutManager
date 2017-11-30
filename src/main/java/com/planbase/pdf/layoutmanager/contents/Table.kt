@@ -25,8 +25,8 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.XyDim
-import com.planbase.pdf.layoutmanager.utils.Point2
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Point2d
 
 /** Represents a table.  It used to be that you'd build a table and that act would commit it to a logical page. */
 class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : LineWrappable {
@@ -41,10 +41,10 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
     override fun toString(): String = "Table($parts)"
 
     data class WrappedTable(private val parts:List<TablePart>) : LineWrapped {
-        override val xyDim:XyDim = XyDim.sum(parts.map { part -> part.finalXyDim() })
-        override val ascent: Float = xyDim.height
+        override val dimensions: Dimensions = Dimensions.sum(parts.map { part -> part.finalXyDim() })
+        override val ascent: Float = dimensions.height
         override val descentAndLeading: Float = 0f
-        override val lineHeight: Float = xyDim.height
+        override val lineHeight: Float = dimensions.height
         // TODO: We should probably wrap the parts individually to ensure they are "frozen"
 //        private val parts: List<WrappedTablePart>
 
@@ -52,15 +52,15 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-        override fun render(lp: RenderTarget, topLeft: Point2): XyDim {
+        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
             var rightmostLowest = topLeft
             for (part in parts) {
                 //            System.out.println("About to render part: " + part);
-                val rl = part.render(lp, Point2(topLeft.x, rightmostLowest.y))
-                rightmostLowest = Point2(Math.max(rl.x, rightmostLowest.x),
-                                         Math.min(rl.y, rightmostLowest.y))
+                val rl = part.render(lp, Point2d(topLeft.x, rightmostLowest.y))
+                rightmostLowest = Point2d(Math.max(rl.x, rightmostLowest.x),
+                                          Math.min(rl.y, rightmostLowest.y))
             }
-            return XyDim(rightmostLowest.x - topLeft.x,
+            return Dimensions(rightmostLowest.x - topLeft.x,
                          topLeft.y - rightmostLowest.y)
         }
 
