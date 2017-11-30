@@ -34,6 +34,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
+import java.lang.Math.abs
 import java.util.TreeSet
 
 
@@ -258,15 +259,24 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         }
         //        mgr.putLine(x1, y1, x2, y2, ls);
 
-        // logger.info("About to put line: (" + x1 + "," + y1 + "), (" + x2 + "," + y2 + ")");
-        val pby1 = appropriatePage(start.y, 0f)
-        val pby2 = appropriatePage(end.y, 0f)
+        println("About to put line: start=$start end=$end")
+        val flip:Boolean = end.y > start.y
+
+        val pby1 = appropriatePage(if (flip) { end.y } else { start.y }, 0f)
+        val pby2 = appropriatePage(if (flip) { start.y } else { end.y }, 0f)
+        println("pby1=$pby1, pby2=$pby2")
         if (pby1 == pby2) {
-            pby1.pb.drawLine(start.y(pby1.y), end.y(pby2.y), lineStyle)
+            if (flip) {
+                pby1.pb.drawLine(end.y(pby1.y), start.y(pby2.y), lineStyle)
+            } else {
+                pby1.pb.drawLine(start.y(pby1.y), end.y(pby2.y), lineStyle)
+            }
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
             val xDiff = end.x - start.x
             val yDiff = start.y - end.y
+            println("xDiff=$xDiff")
+            println("yDiff=$yDiff")
             // totalY
 
             var currPage = pby1.pb
@@ -309,6 +319,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     // (ya - yb) / yDiff is the proportion of the line shown on this page.
                     xb = xa + xDiff * ((ya - yb) / yDiff)
                 }
+
+                println("(xa=$xa, ya=$ya), (xb=$xb, yb=$yb)")
 
                 currPage.drawLine(XyOffset(xa, ya), XyOffset(xb, yb), lineStyle)
 

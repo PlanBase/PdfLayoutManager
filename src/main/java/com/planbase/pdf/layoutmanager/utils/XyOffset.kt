@@ -65,7 +65,7 @@ data class XyOffset(val x: Float, val y: Float) {
     /** Compares dimensions  */
     fun lte(that: XyOffset): Boolean = this.x <= that.x && this.y >= that.y
 
-    override fun toString(): String = "XyOffset(185.83958f, 13.927605f)"
+    override fun toString(): String = "XyOffset(${x}f, ${y}f)"
 
     companion object {
         val ORIGIN = XyOffset(0f, 0f)
