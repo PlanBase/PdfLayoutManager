@@ -252,19 +252,17 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    // TODO: Mitering might not work across pages.
     override fun drawLine(start: XyOffset, end:XyOffset, lineStyle: LineStyle): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
-        //        mgr.putLine(x1, y1, x2, y2, ls);
 
-        println("About to put line: start=$start end=$end")
+//        println("About to put line: start=$start end=$end")
         val flip:Boolean = end.y > start.y
 
         val pby1 = appropriatePage(if (flip) { end.y } else { start.y }, 0f)
         val pby2 = appropriatePage(if (flip) { start.y } else { end.y }, 0f)
-        println("pby1=$pby1, pby2=$pby2")
+//        println("pby1=$pby1, pby2=$pby2")
         if (pby1 == pby2) {
             if (flip) {
                 pby1.pb.drawLine(end.y(pby1.y), start.y(pby2.y), lineStyle)
@@ -275,17 +273,14 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
             val xDiff = end.x - start.x
             val yDiff = start.y - end.y
-            println("xDiff=$xDiff")
-            println("yDiff=$yDiff")
-            // totalY
+//            println("xDiff=$xDiff")
+//            println("yDiff=$yDiff")
 
             var currPage = pby1.pb
             // The first x and y are correct for the first page.  The second x and y will need to
             // be adjusted below.
-            var xa = start.x
-            var ya:Float
+            var xa = if (flip) { end.x } else { start.x }
             var xb = 0f // left of page.
-            var yb:Float
 
             for (pageNum in 1..totalPages) {
                 if (pageNum > 1) {
@@ -294,15 +289,16 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     xa = xb
                 }
 
-                ya = if (pby1.pb.pageNum < currPage.pageNum) {
+                val ya = if (pby1.pb.pageNum < currPage.pageNum) {
                     // On all except the first page the first y will start at the top of the page.
                     yBodyTop()
                 } else { // equals, because can never be greater than
                     pby1.y
                 }
 
+                val yb:Float
                 if (pageNum == totalPages) {
-                    xb = end.x
+                    xb = if (flip) { start.x } else { end.x }
                     // the second Y must be adjusted by the height of the pages already printed.
                     yb = pby2.y
                 } else {
@@ -320,9 +316,16 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     xb = xa + xDiff * ((ya - yb) / yDiff)
                 }
 
-                println("(xa=$xa, ya=$ya), (xb=$xb, yb=$yb)")
+//                println("(xa=$xa, ya=$ya), (xb=$xb, yb=$yb)")
 
-                currPage.drawLine(XyOffset(xa, ya), XyOffset(xb, yb), lineStyle)
+                // This may look silly, but if we're doing mitering, the direction of lines is important.
+                // In that case, the last endpoint of the previous line must equal the starting point of this line.
+                // So if we detected that we had to flip the line to break it across pages, flip it back here!
+                if (flip) {
+                    currPage.drawLine(XyOffset(xb, yb), XyOffset(xa, ya), lineStyle)
+                } else {
+                    currPage.drawLine(XyOffset(xa, ya), XyOffset(xb, yb), lineStyle)
+                }
 
                 // pageNum is one-based while get is zero-based, so passing get the current
                 // pageNum actually gets the next page.  Don't get another one after we already

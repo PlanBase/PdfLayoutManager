@@ -1,22 +1,15 @@
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.XyDim
 import com.planbase.pdf.layoutmanager.utils.XyOffset
 import org.apache.pdfbox.pdmodel.common.PDRectangle
-import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
 import java.io.FileOutputStream
 
 class TestMultiPageLines {
-    @Test
-    fun testPdf() {
+    @Test fun testMultiPageLines() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, XyDim(PDRectangle.LETTER))
 
         // One inch is 72 document units.  36 is about a half-inch - enough margin to satisfy most
@@ -48,20 +41,20 @@ class TestMultiPageLines {
 
         // top lne
         lp.drawLine(topLeft, topRight, lineStyle)
-        // 3-page-long X
-        lp.drawLine(topLeft, bottomRight, lineStyle)
-        // TODO: Reverse the first two params
-        lp.drawLine(topRight, bottomLeft, lineStyle)
-
-        // middle line
-        lp.drawLine(XyOffset(pMargin, 0f), XyOffset(pageRMargin, 0f), lineStyle)
         // right line
         lp.drawLine(topRight, bottomRight, lineStyle)
         // bottom line
         lp.drawLine(bottomLeft, bottomRight, lineStyle)
-
         // left line
         lp.drawLine(bottomLeft, topLeft, lineStyle)
+
+        // 3-page-long X
+        lp.drawLine(topLeft, bottomRight, lineStyle)
+        // Note reversed params
+        lp.drawLine(bottomLeft, topRight, lineStyle)
+
+        // middle line
+        lp.drawLine(XyOffset(pMargin, 0f), XyOffset(pageRMargin, 0f), lineStyle)
         lp.commit()
 
         val os = FileOutputStream("multiPageLines.pdf")

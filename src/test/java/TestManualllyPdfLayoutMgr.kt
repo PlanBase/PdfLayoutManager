@@ -515,17 +515,20 @@ class TestManualllyPdfLayoutMgr {
 
         // top lne
         lp.drawLine(topLeft, topRight, lineStyle)
-        // left line
-        lp.drawLine(topLeft, bottomLeft, lineStyle)
-        // 3-page-long X
-        lp.drawLine(topLeft, bottomRight, lineStyle)
-        // middle line
-        lp.drawLine(XyOffset(pMargin, 0f), XyOffset(pageRMargin, 0f), lineStyle)
-        lp.drawLine(topRight, bottomLeft, lineStyle)
         // right line
         lp.drawLine(topRight, bottomRight, lineStyle)
         // bottom line
         lp.drawLine(bottomLeft, bottomRight, lineStyle)
+        // left line
+        lp.drawLine(bottomLeft, topLeft, lineStyle)
+
+        // 3-page-long X
+        lp.drawLine(topLeft, bottomRight, lineStyle)
+        // Note reversed params
+        lp.drawLine(bottomLeft, topRight, lineStyle)
+
+        // middle line
+        lp.drawLine(XyOffset(pMargin, 0f), XyOffset(pageRMargin, 0f), lineStyle)
         lp.commit()
 
         // All done - write it out!
