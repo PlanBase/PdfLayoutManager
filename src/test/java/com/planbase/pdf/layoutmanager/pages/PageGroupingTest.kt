@@ -22,11 +22,13 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Float.max
 import java.util.Collections
 import javax.imageio.ImageIO
+import kotlin.test.assertTrue
 
 class PageGroupingTest {
     @Test
@@ -113,7 +115,7 @@ class PageGroupingTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
-        val text = Text(TextStyle(PDType1Font.HELVETICA_BOLD, 11f, Utils.RGB_BLACK), "Hello")
+        val text = Text(TextStyle(PDType1Font.HELVETICA, 90f, Utils.RGB_BLACK), "gxNh")
 
         val squareSide = 70f
         val squareDim = Dimensions(squareSide, squareSide)
@@ -142,19 +144,40 @@ class PageGroupingTest {
             y -= melonHeight
         }
 
-        while(y >= lp.yBodyBottom() - 300) {
-            val imgY:Float = lp.drawImage(Point2d(melonX, y), bigMelon)
-//            assertEquals(melonHeight, imgY)
+        // This is the page-break.
+        {
+            // Images must vertically fit entirely on one page,
+            // So they are pushed down as necessary to fit.
+            val imgY: Float = lp.drawImage(Point2d(melonX, y), bigMelon)
+            assertTrue(melonHeight < imgY) // When the picture breaks across the page, extra height is added.
 
-            val txtY:Float = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
-//            assertEquals(text.textStyle.lineHeight(), txtY)
+            // Words must vertically fit entirely on one page,
+            // So they are pushed down as necessary to fit.
+            val txtY: Float = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
+            assertTrue(text.textStyle.lineHeight() < txtY)
 
-            val rectY:Float = lp.fillRect(Point2d(squareX, y), squareDim, Utils.RGB_BLACK)
-//            assertEquals(squareSide, rectY)
+            // Rectangles span multiple pages, so their height should be unchanged.
+            val rectY: Float = lp.fillRect(Point2d(squareX, y), squareDim, Utils.RGB_BLACK)
+            assertEquals(squareSide, rectY)
 
+            // Lines span multiple pages, so their height should be unchanged.
+            // Also, lines don't have a height.
             lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
 
-            println("imgY=$imgY, txtY=$txtY, rectY=$rectY")
+            y -= listOf(imgY, txtY, rectY).max() as Float
+        }()
+
+        while(y >= lp.yBodyBottom() - 400) {
+            val imgY:Float = lp.drawImage(Point2d(melonX, y), bigMelon)
+            assertEquals(melonHeight, imgY)
+
+            val txtY:Float = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
+            assertEquals(text.textStyle.lineHeight(), txtY)
+
+            val rectY:Float = lp.fillRect(Point2d(squareX, y), squareDim, Utils.RGB_BLACK)
+            assertEquals(squareSide, rectY)
+
+            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }
