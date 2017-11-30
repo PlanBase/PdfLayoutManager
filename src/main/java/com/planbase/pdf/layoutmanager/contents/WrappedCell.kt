@@ -60,13 +60,6 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         val border = boxStyle.border
         // Dimensions dimensions = padding.addTo(pcrs.dim);
 
-        // Draw background first (if necessary) so that everything else ends up on top of it.
-        if (boxStyle.bgColor != null) {
-            //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(topLeft.minusY(dimensions.height), dimensions, boxStyle.bgColor)
-            //            System.out.println("\tCell.render back from putRect");
-        }
-
         // Draw contents over background, but under border
         var innerTopLeft: Point2d = padding.applyTopLeft(topLeft)
                 .plusXMinusY(Point2d(border.left.thickness / 2f, border.top.thickness / 2f))
@@ -83,6 +76,15 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dimensions.width)
             val (_, y) = line.render(lp, Point2d(rowXOffset + innerTopLeft.x, bottomY))
             bottomY -= y // y is always the lowest item in the cell.
+        }
+
+        bottomY = minOf(bottomY, topLeft.y - dimensions.height)
+
+        // Draw background first (if necessary) so that everything else ends up on top of it.
+        if (boxStyle.bgColor != null) {
+            //            System.out.println("\tCell.render calling putRect...");
+            lp.fillRect(topLeft.y(bottomY), dimensions.height(topLeft.y - bottomY), boxStyle.bgColor)
+            //            System.out.println("\tCell.render back from putRect");
         }
 
         val rightX = topLeft.x + dimensions.width
@@ -106,7 +108,7 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             //
             // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
             // to see if `return y + pby.adj;` still makes sense.
-            bottomY = topLeft.y - dimensions.height
+//            bottomY = topLeft.y - dimensions.height
 
             val topRight = Point2d(rightX, origY)
             val bottomRight = Point2d(rightX, bottomY)
