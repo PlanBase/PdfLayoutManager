@@ -11,13 +11,23 @@ See the [FAQ](#faq) below
 
 ## Usage
 
-Example: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayoutMgr.java)
+Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayoutMgr.java)
 
 [API Docs](https://PlanBase.github.io/PdfLayoutMgr2/apidocs/)
 
+# Maven Dependency
+```xml
+    <!-- Affero GPL - contact PlanBase for commercial version. -->
+    <dependency>
+        <groupId>com.planbase.pdf</groupId>
+        <artifactId>PdfLayoutMgr2</artifactId>
+        <version>2.0.0-STAGING</version>
+    </dependency>
+```
+
 ### Positioning
 
-To get started, it's worth being aware of a few PDF defaults that PdfLayoutMgr2 inherits from the [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf):
+It's worth being aware of a few PDF defaults that PdfLayoutMgr2 inherits from the [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf):
 
 * **User Space:** Everything is positioned on the page according to User Space which uses the familiar [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system).
 Most people learned about this by drawing graphs in basic algebra in elementary school.
@@ -32,16 +42,6 @@ For text, the lower-left-hand-corner is below the leading which is below the des
 Lines are still aligned based on the baseline of the text.
 
 TODO: Does PDFBox base some things on the lower-RIGHT corner?  If so, what?
-
-# Maven Dependency
-```xml
-    <!-- Affero GPL - contact PlanBase for commercial version. -->
-    <dependency>
-        <groupId>com.planbase.pdf</groupId>
-        <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.0.0-STAGING</version>
-    </dependency>
-```
 
 # FAQ
 
@@ -113,7 +113,3 @@ API documentation can be built with `mvn javadoc:javadoc` and is then found at `
 A sample PDF named `test.pdf` shows up in the root folder of this project when you run `mvn test`.
 
 A jar file can be built with `mvn clean package` and ends up in the `target/` sub-folder.  Or type `mvn clean install` to build and install into your local maven repository.
-
-# To Do
-* Add another pass for table cells.  We already have a line-wrapping pass, but these need a page-breaking pass too so that any extra height (to avoid page breaks) can be calculated before drawing background and borders.
-* Make y=0 mean the top of the page instead of the bottom.
