@@ -135,40 +135,45 @@ class PageGroupingTest {
 
             diamondRect(lp, Point2d(lineX1, y), squareSide)
 
-            qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+            val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+            assertEquals(qbfCell.dimensions, cellDim)
 
-            qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
+            val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
+            assertEquals(qbfTable.dimensions, tableDim)
 
             y -= melonHeight
         }
 
         // This is the page-break.
-        {
-            // Images must vertically fit entirely on one page,
-            // So they are pushed down as necessary to fit.
-            val imgY: Float = lp.drawImage(Point2d(melonX, y), bigMelon)
-            assertTrue(melonHeight < imgY) // When the picture breaks across the page, extra height is added.
+        // Images must vertically fit entirely on one page,
+        // So they are pushed down as necessary to fit.
+        val imgY2: Float = lp.drawImage(Point2d(melonX, y), bigMelon)
+        assertTrue(melonHeight < imgY2) // When the picture breaks across the page, extra height is added.
 
-            // Words must vertically fit entirely on one page,
-            // So they are pushed down as necessary to fit.
-            val txtY: Float = lp.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle)
-            assertTrue(bigText.textStyle.lineHeight() < txtY)
+        // Words must vertically fit entirely on one page,
+        // So they are pushed down as necessary to fit.
+        val txtY2: Float = lp.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle)
+        assertTrue(bigText.textStyle.lineHeight() < txtY2)
 
-            // Rectangles span multiple pages, so their height should be unchanged.
-            val rectY: Float = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
-            assertEquals(squareSide, rectY)
+        // Rectangles span multiple pages, so their height should be unchanged.
+        val rectY2: Float = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
+        assertEquals(squareSide, rectY2)
 
-            // Lines span multiple pages, so their height should be unchanged.
-            // Also, lines don't have a height.
-            diamondRect(lp, Point2d(lineX1, y), squareSide)
+        // Lines span multiple pages, so their height should be unchanged.
+        // Also, lines don't have a height.
+        diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+        val cellDim2 = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+        assertTrue(qbfCell.dimensions.height < cellDim2.height)
 
-            qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
+        val tableDim2 = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
 
-            y -= listOf(imgY, txtY, rectY).max() as Float
-        }()
+        // TODO: Fix bug!
+        println("qbfTable.dimensions=${qbfTable.dimensions} tableDim2=${tableDim2}")
+//        assertTrue(qbfTable.dimensions.height < tableDim2.height)
+
+        y -= listOf(imgY2, txtY2, rectY2).max() as Float
 
         while(y >= lp.yBodyBottom() - 400) {
             val imgY:Float = lp.drawImage(Point2d(melonX, y), bigMelon)
@@ -183,9 +188,11 @@ class PageGroupingTest {
             diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+            val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+            assertEquals(qbfCell.dimensions, cellDim)
 
-            qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
+            val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
+            assertEquals(qbfTable.dimensions, tableDim)
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }
