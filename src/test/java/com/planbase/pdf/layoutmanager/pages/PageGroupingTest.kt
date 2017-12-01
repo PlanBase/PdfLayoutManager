@@ -3,7 +3,6 @@ package com.planbase.pdf.layoutmanager.pages
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
@@ -110,31 +109,32 @@ class PageGroupingTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
-        val text = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
 
-        val squareSide = 70f
         val squareDim = Dimensions(squareSide, squareSide)
 
         // TODO: The topLeft parameters on RenderTarget are actually LOWER-left.
 
         val melonX = lp.bodyTopLeft().x
         val textX = melonX + melonWidth + 10
-        val squareX = textX + text.maxWidth() + 10
+        val squareX = textX + bigText.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10
-        val lineX2 = lineX1 + 100
+        val cellX1 = lineX1 + squareSide + 10
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
             val imgY = lp.drawImage(Point2d(melonX, y), bigMelon)
             assertEquals(melonHeight, imgY)
 
-            val txtY = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
-            assertEquals(text.textStyle.lineHeight(), txtY)
+            val txtY = lp.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle)
+            assertEquals(bigText.textStyle.lineHeight(), txtY)
 
             val rectY = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            diamondRect(lp, Point2d(lineX1, y), 70f)
+            diamondRect(lp, Point2d(lineX1, y), squareSide)
+
+            quickBrownFoxCell.render(lp, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
 
             y -= melonHeight
         }
@@ -148,8 +148,8 @@ class PageGroupingTest {
 
             // Words must vertically fit entirely on one page,
             // So they are pushed down as necessary to fit.
-            val txtY: Float = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
-            assertTrue(text.textStyle.lineHeight() < txtY)
+            val txtY: Float = lp.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle)
+            assertTrue(bigText.textStyle.lineHeight() < txtY)
 
             // Rectangles span multiple pages, so their height should be unchanged.
             val rectY: Float = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
@@ -157,8 +157,10 @@ class PageGroupingTest {
 
             // Lines span multiple pages, so their height should be unchanged.
             // Also, lines don't have a height.
-            diamondRect(lp, Point2d(lineX1, y), 70f)
+            diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
+
+            quickBrownFoxCell.render(lp, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }()
@@ -167,14 +169,16 @@ class PageGroupingTest {
             val imgY:Float = lp.drawImage(Point2d(melonX, y), bigMelon)
             assertEquals(melonHeight, imgY)
 
-            val txtY:Float = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
-            assertEquals(text.textStyle.lineHeight(), txtY)
+            val txtY:Float = lp.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle)
+            assertEquals(bigText.textStyle.lineHeight(), txtY)
 
             val rectY:Float = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            diamondRect(lp, Point2d(lineX1, y), 70f)
+            diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
+
+            quickBrownFoxCell.render(lp, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }

@@ -1,13 +1,20 @@
 package com.planbase.pdf.layoutmanager.pages
 
+import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.BorderStyle
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -27,30 +34,30 @@ class SinglePageTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
-        val text = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
 
-        val squareSide = 70f
         val squareDim = Dimensions(squareSide, squareSide)
-
-        // TODO: The topLeft parameters on RenderTarget are actually LOWER-left.
 
         val melonX = lp.bodyTopLeft().x
         val textX = melonX + melonWidth + 10
-        val squareX = textX + text.maxWidth() + 10
+        val squareX = textX + bigText.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10
+        val cellX1 = lineX1 + squareSide + 10
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
             val imgY = page.drawImage(Point2d(melonX, y), bigMelon)
             assertEquals(melonHeight, imgY)
 
-            val txtY = page.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
-            assertEquals(text.textStyle.lineHeight(), txtY)
+            val txtY = page.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle)
+            assertEquals(bigText.textStyle.lineHeight(), txtY)
 
             val rectY = page.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            diamondRect(page, Point2d(lineX1, y), 70f)
+            diamondRect(page, Point2d(lineX1, y), squareSide)
+
+            quickBrownFoxCell.render(page, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
 
             y -= melonHeight
         }
@@ -86,3 +93,10 @@ fun diamondRect(page:RenderTarget, lowerLeft:Point2d, size:Float) {
                               midTop),
                        ls)
 }
+
+val squareSide = 70f
+val times15 = TextStyle(PDType1Font.TIMES_ROMAN, 15f, RGB_BLACK)
+val paleGreenLeft = CellStyle(Align.TOP_LEFT,
+                              BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK)))
+val quickBrownFoxCell = Cell(paleGreenLeft, squareSide, times15,
+                             listOf("The quick brown fox jumps over the lazy dog")).wrap()
