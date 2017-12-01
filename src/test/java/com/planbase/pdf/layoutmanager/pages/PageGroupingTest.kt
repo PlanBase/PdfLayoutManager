@@ -109,7 +109,7 @@ class PageGroupingTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
 
         val squareDim = Dimensions(squareSide, squareSide)
 
@@ -120,6 +120,7 @@ class PageGroupingTest {
         val squareX = textX + bigText.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10
         val cellX1 = lineX1 + squareSide + 10
+        val tableX1 = cellX1 + squareSide + 10
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
@@ -134,7 +135,9 @@ class PageGroupingTest {
 
             diamondRect(lp, Point2d(lineX1, y), squareSide)
 
-            quickBrownFoxCell.render(lp, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
+            qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+
+            qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
 
             y -= melonHeight
         }
@@ -160,7 +163,9 @@ class PageGroupingTest {
             diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            quickBrownFoxCell.render(lp, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
+            qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+
+            qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }()
@@ -178,7 +183,9 @@ class PageGroupingTest {
             diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            quickBrownFoxCell.render(lp, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
+            qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+
+            qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }

@@ -1,5 +1,6 @@
 package com.planbase.pdf.layoutmanager.pages
 
+import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_BLUE
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.Align
@@ -11,6 +12,8 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
+import com.planbase.pdf.layoutmanager.contents.Table
+import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
@@ -34,7 +37,7 @@ class SinglePageTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
 
         val squareDim = Dimensions(squareSide, squareSide)
 
@@ -43,6 +46,7 @@ class SinglePageTest {
         val squareX = textX + bigText.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10
         val cellX1 = lineX1 + squareSide + 10
+        val tableX1 = cellX1 + squareSide + 10
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
@@ -57,7 +61,9 @@ class SinglePageTest {
 
             diamondRect(page, Point2d(lineX1, y), squareSide)
 
-            quickBrownFoxCell.render(page, Point2d(cellX1, y + quickBrownFoxCell.dimensions.height))
+            qbfCell.render(page, Point2d(cellX1, y + qbfCell.dimensions.height))
+
+            qbfTable.render(page, Point2d(tableX1, y + qbfCell.dimensions.height))
 
             y -= melonHeight
         }
@@ -98,5 +104,18 @@ val squareSide = 70f
 val times15 = TextStyle(PDType1Font.TIMES_ROMAN, 15f, RGB_BLACK)
 val paleGreenLeft = CellStyle(Align.TOP_LEFT,
                               BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK)))
-val quickBrownFoxCell = Cell(paleGreenLeft, squareSide, times15,
-                             listOf("The quick brown fox jumps over the lazy dog")).wrap()
+val paleBlueLeft = CellStyle(Align.TOP_LEFT,
+                             BoxStyle(Padding(2f), RGB_LIGHT_BLUE, BorderStyle(RGB_BLACK)))
+val qbfCell = Cell(paleGreenLeft, squareSide, times15,
+                   listOf("The quick brown fox jumps over the lazy dog")).wrap()
+
+val qbfTable: Table.WrappedTable =
+        TableBuilder(mutableListOf(squareSide, squareSide))
+                .partBuilder()
+                .rowBuilder()
+                .cell(paleBlueLeft, listOf(Text(times15, "The quick brown fox jumps over the lazy dog")))
+                .cell(paleBlueLeft, listOf(Text(times15, "Etaoin shrdlu cmfwyp")))
+                .buildRow()
+                .buildPart()
+                .buildTable()
+                .wrap()
