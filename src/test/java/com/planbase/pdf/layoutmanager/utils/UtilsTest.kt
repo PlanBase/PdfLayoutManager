@@ -1,10 +1,5 @@
 package com.planbase.pdf.layoutmanager.utils
 
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.CMYK_BLACK
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.CMYK_WHITE
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_WHITE
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.colorToString
 import org.apache.pdfbox.cos.COSName
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK

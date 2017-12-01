@@ -11,8 +11,8 @@ import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_WHITE
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
 import org.apache.pdfbox.pdmodel.common.PDRectangle

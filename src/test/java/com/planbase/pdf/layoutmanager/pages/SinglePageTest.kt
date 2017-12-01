@@ -5,7 +5,7 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -21,7 +21,7 @@ class SinglePageTest {
     @Test fun testBasics() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
-        val page = pageMgr.page(0)
+        val page:SinglePage = pageMgr.page(0)
         val f = File("target/test-classes/melon.jpg")
         val melonPic = ImageIO.read(f)
         val melonHeight = 100f
@@ -38,7 +38,6 @@ class SinglePageTest {
         val textX = melonX + melonWidth + 10
         val squareX = textX + text.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10
-        val lineX2 = lineX1 + 100
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
@@ -51,7 +50,7 @@ class SinglePageTest {
             val rectY = page.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            page.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
+            diamondRect(page, Point2d(lineX1, y), 70f)
 
             y -= melonHeight
         }
@@ -60,4 +59,30 @@ class SinglePageTest {
         val os = FileOutputStream("singlePage.pdf")
         pageMgr.save(os)
     }
+}
+fun diamondRect(page:RenderTarget, lowerLeft:Point2d, size:Float) {
+    val ls = LineStyle(RGB_BLACK, 1f)
+    val (xLeft, yBot) = lowerLeft
+    val xRight = xLeft + size
+    val yTop = yBot + size
+    val halfSize = size / 2f
+    val xMid = xLeft + halfSize
+    val yMid = yBot + halfSize
+
+    // Square drawn counter-clockwise (widdershins) from lowerLeft
+    page.drawLineStrip(listOf(lowerLeft,
+                              Point2d(xRight, yBot),
+                              Point2d(xRight, yTop),
+                              Point2d(xLeft, yTop),
+                              lowerLeft),
+                       ls)
+
+    val midTop = Point2d(xMid, yTop)
+    // Diamond drawn clockwise (deosil) from top
+    page.drawLineStrip(listOf(midTop,
+                              Point2d(xRight, yMid),
+                              Point2d(xMid, yBot),
+                              Point2d(xLeft, yMid),
+                              midTop),
+                       ls)
 }

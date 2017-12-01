@@ -66,13 +66,13 @@ class SinglePage(val pageNum: Int,
         return wi.dimensions.height
     }
 
-    private fun drawLine(start: Point2d, end: Point2d, ls: LineStyle, z: Float) {
-        items.add(DrawLine(start.plusX(xOff), end.plusX(xOff), ls, lastOrd++, z))
+    private fun drawLineStrip(points: List<Point2d>, ls: LineStyle, z: Float) {
+        items.add(DrawLine(points.map{ it.plusX(xOff) }.toList(), ls, lastOrd++, z))
     }
 
-    /** {@inheritDoc}  */
-    override fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle): SinglePage {
-        drawLine(start, end, lineStyle, PdfItem.DEFAULT_Z_INDEX)
+    /** [@inheritDoc]  */
+    override fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle): SinglePage {
+        drawLineStrip(points, lineStyle, PdfItem.DEFAULT_Z_INDEX)
         return this
     }
 
@@ -97,8 +97,7 @@ class SinglePage(val pageNum: Int,
 
     override fun toString(): String = "SinglePage($pageNum)"
 
-    private class DrawLine(private val start: Point2d,
-                           private val end: Point2d,
+    private class DrawLine(private val points:List<Point2d>,
                            private val style: LineStyle,
                            ord: Long,
                            z: Float) : PdfItem(ord, z) {
@@ -106,8 +105,12 @@ class SinglePage(val pageNum: Int,
         override fun commit(stream: PDPageContentStream) {
             stream.setStrokingColor(style.color)
             stream.setLineWidth(style.thickness)
-            stream.moveTo(start.x, start.y)
-            stream.lineTo(end.x, end.y)
+            var point = points[0]
+            stream.moveTo(point.x, point.y)
+            for (i in 1..points.lastIndex) {
+                point = points[i]
+                stream.lineTo(point.x, point.y)
+            }
             stream.stroke()
         }
     }

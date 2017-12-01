@@ -250,6 +250,22 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return maxHeight + pby2.adj
     }
 
+    // TODO: this should be the have all the gory details.  drawLine should inherit from the default implementation
+    override fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle): PageGrouping {
+        if (!valid) {
+            throw IllegalStateException("Logical page accessed after commit")
+        }
+
+        // TODO: Find min and max Y.  If they are on the same page, just pass params to SinglePage.drawLineStrip
+        var start:Point2d = points[0]
+        for (i in 1..points.lastIndex) {
+            val end = points[i]
+            drawLine(start, end, lineStyle)
+            start = end
+        }
+        return this
+    }
+
     /** {@inheritDoc}  */
     override fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle): PageGrouping {
         if (!valid) {

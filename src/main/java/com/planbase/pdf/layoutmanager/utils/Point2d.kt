@@ -36,6 +36,8 @@ data class Point2d(val x: Float, val y: Float) {
 
     fun plusX(offset: Float) = if (offset == 0f) { this } else { Point2d(x + offset, y) }
 
+    fun plusY(offset: Float) = if (offset == 0f) { this } else { Point2d(x, y + offset) }
+
     fun minusY(offset: Float) = if (offset == 0f) { this } else { Point2d(x, y - offset) }
 
     fun plusXMinusY(that: Point2d) = Point2d(x + that.x, y - that.y)

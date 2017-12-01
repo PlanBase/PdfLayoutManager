@@ -1,7 +1,7 @@
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.CMYK_BLACK
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.CMYK_WHITE
+import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
+import com.planbase.pdf.layoutmanager.utils.CMYK_WHITE
 import org.junit.Assert.*
 import org.junit.Test
 

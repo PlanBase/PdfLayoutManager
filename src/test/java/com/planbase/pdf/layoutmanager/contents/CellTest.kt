@@ -9,9 +9,9 @@ import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -27,7 +27,7 @@ class CellTest {
         val cellStyle = CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f),
                                                            RGB_LIGHT_GREEN,
                                                            BorderStyle(RGB_DARK_GRAY)))
-        val theText = Text(TextStyle(PDType1Font.COURIER, 12f, Utils.RGB_BLACK), "Line 1")
+        val theText = Text(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK), "Line 1")
 
         val squareDim = 120f
 

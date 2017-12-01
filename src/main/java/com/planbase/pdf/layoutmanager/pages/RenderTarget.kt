@@ -40,7 +40,20 @@ interface RenderTarget {
      @param lineStyle the style to draw the line with
      @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle): RenderTarget
+    fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle): RenderTarget {
+        drawLineStrip(listOf(start, end), lineStyle)
+        return this
+    }
+
+    /**
+    Draws lines from the first point to the last.  Direction is important if using mitering.
+
+    @param points the list of Point2d to draw lines between.  This does *not* connect the last point to the first.
+    If you want that, add the first point again at the end of the list.
+    @param lineStyle the style to draw the line with
+    @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     */
+    fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle): RenderTarget
 
     /**
      Puts styled text on this RenderTarget

@@ -134,7 +134,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     fun hasAnyPages():Boolean = pages.size > 0
 
-    fun page(idx:Int) = pages[idx]
+    fun page(idx:Int):SinglePage = pages[idx]
 
     fun ensurePageIdx(idx:Int) {
         while (pages.size <= idx) {

@@ -9,7 +9,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
-import com.planbase.pdf.layoutmanager.utils.Utils
+import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 
 class TextTest {
     @Test fun testText() {
-        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
         val txt = Text(tStyle, "This is a long enough line of text.")
         var ri : RowIdx = Text.tryGettingText(50f, 0, txt)
         assertFalse(ri.foundCr)
@@ -55,7 +55,7 @@ class TextTest {
     }
 
     @Test fun testTextTerminal() {
-        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
         val txt = Text(tStyle, "This is\na long enough line of text.")
         var ri = Text.tryGettingText(50f, 0, txt)
         assertTrue(ri.foundCr)
@@ -113,7 +113,7 @@ class TextTest {
 //    }
 
     @Test fun testRenderator() {
-        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, CMYK_BLACK)
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
@@ -140,7 +140,7 @@ class TextTest {
     }
 
     @Test fun testRenderator2() {
-        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, CMYK_BLACK)
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
@@ -168,7 +168,7 @@ class TextTest {
     }
 
 //    @Test fun testCalcDimensions() {
-//        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, Utils.CMYK_BLACK)
+//        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, CMYK_BLACK)
 //        val txt = Text.of(tStyle, "This is a long enough line of text.")
 //
 //        val dim: Dimensions = txt.calcDimensions(40f)

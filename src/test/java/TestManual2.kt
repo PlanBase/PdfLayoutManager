@@ -28,10 +28,10 @@ import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
-import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.BULLET_CHAR
+import com.planbase.pdf.layoutmanager.utils.BULLET_CHAR
+import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -64,9 +64,9 @@ fun testBodyMargins() {
                 val leftMargin:Float = if (isLeft) 37f else 45f
                 //            System.out.println("pageNum " + pageNum);
                 pb.drawLine(Point2d(leftMargin, 30f), Point2d(leftMargin + bodyWidth, 30f),
-                            LineStyle(Utils.CMYK_BLACK))
+                            LineStyle(CMYK_BLACK))
                 pb.drawStyledText(Point2d(leftMargin, 20f), "Page # " + pageNum,
-                                  TextStyle(PDType1Font.HELVETICA, 9f, Utils.CMYK_BLACK))
+                                  TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK))
                 leftMargin })
 
     val tB = TableBuilder()
@@ -86,24 +86,24 @@ fun testBodyMargins() {
 
     Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
          bodyWidth,
-         listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+         listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
                      "The long "),
-                Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18f, Utils.CMYK_BLACK),
+                Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18f, CMYK_BLACK),
                      "families"),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
                      " needed the national " +
                      "words and women said new. The new " +
                      "companies told the possible hands " +
                      "and books was low.\n\n"),
                 bulletTable,
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
                      "The new " +
                      "companies told the possible hands " +
                      "and books was low. The other " +
                      "questions got the recent children and " +
                      "lots felt important."),
                 ScaledImage(graphPic),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
                      ("The hard eyes seemed the clear " +
                       "mothers and systems came economic. " +
                       "The high months showed the possible " +
@@ -117,7 +117,7 @@ fun testBodyMargins() {
                       "the good governments and cases " +
                       "lived social.")),
                 ScaledImage(graphPic),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
                      ("The social people ran the " +
                       "local cases and men left local. The " +
                       "easy areas saw the whole times and " +
@@ -136,7 +136,7 @@ fun testBodyMargins() {
                       "international men kept the real " +
                       "questions and nights made big.")),
                 ScaledImage(graphPic),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK),
+                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
                      ("The " +
                       "best points got the economic waters " +
                       "and problems gave great. The whole " +
@@ -159,7 +159,7 @@ fun testBodyMargins() {
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
 
         internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT, BoxStyle(Padding(0f, 4f, 15f, 0f), null, BorderStyle.NO_BORDERS))
-        internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, Utils.CMYK_BLACK)
+        internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK)
 
         // adj plNoun verb adj descriptiveNoun
         // and

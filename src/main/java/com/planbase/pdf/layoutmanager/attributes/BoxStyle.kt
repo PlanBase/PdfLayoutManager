@@ -1,6 +1,6 @@
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.utils.Utils.Companion.colorToString
+import com.planbase.pdf.layoutmanager.utils.colorToString
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**

@@ -1,34 +1,29 @@
 package com.planbase.pdf.layoutmanager.pages
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceGray
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.junit.Test
-
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.Utils
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceGray
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Test
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Float.max
-import java.util.Collections
+import java.io.IOException
 import javax.imageio.ImageIO
-import kotlin.test.assertTrue
 
 class PageGroupingTest {
     @Test
@@ -115,7 +110,7 @@ class PageGroupingTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
-        val text = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, Utils.RGB_BLACK), "gxNh")
+        val text = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gxNh")
 
         val squareSide = 70f
         val squareDim = Dimensions(squareSide, squareSide)
@@ -136,10 +131,10 @@ class PageGroupingTest {
             val txtY = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
             assertEquals(text.textStyle.lineHeight(), txtY)
 
-            val rectY = lp.fillRect(Point2d(squareX, y), squareDim, Utils.RGB_BLACK)
+            val rectY = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
+            diamondRect(lp, Point2d(lineX1, y), 70f)
 
             y -= melonHeight
         }
@@ -157,12 +152,13 @@ class PageGroupingTest {
             assertTrue(text.textStyle.lineHeight() < txtY)
 
             // Rectangles span multiple pages, so their height should be unchanged.
-            val rectY: Float = lp.fillRect(Point2d(squareX, y), squareDim, Utils.RGB_BLACK)
+            val rectY: Float = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
             // Lines span multiple pages, so their height should be unchanged.
             // Also, lines don't have a height.
-            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
+            diamondRect(lp, Point2d(lineX1, y), 70f)
+//            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }()
@@ -174,10 +170,11 @@ class PageGroupingTest {
             val txtY:Float = lp.drawStyledText(Point2d(textX, y), text.text, text.textStyle)
             assertEquals(text.textStyle.lineHeight(), txtY)
 
-            val rectY:Float = lp.fillRect(Point2d(squareX, y), squareDim, Utils.RGB_BLACK)
+            val rectY:Float = lp.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
             assertEquals(squareSide, rectY)
 
-            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(Utils.RGB_BLACK, 1f))
+            diamondRect(lp, Point2d(lineX1, y), 70f)
+//            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }
