@@ -87,7 +87,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
     fun finalRowHeight():Float {
         cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
                 .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
-        println("finalRowHeight() returns: ${minRowHeight}")
+//        println("finalRowHeight() returns: ${minRowHeight}")
         return minRowHeight
     }
 

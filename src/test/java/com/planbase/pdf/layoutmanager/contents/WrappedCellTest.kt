@@ -43,7 +43,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dimensions.width)
 
-        wrappedCell.render(lp, upperLeft, true)
+        wrappedCell.render(lp, upperLeft)
 //        val xyOff : Point2d = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
@@ -81,7 +81,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dimensions.width)
 
-        wrappedCell.render(lp, upperLeft, true)
+        wrappedCell.render(lp, upperLeft)
         lp.commit()
 
 //        val os = FileOutputStream("test4.pdf")
@@ -123,7 +123,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dimensions.width)
 
-        val dimensions: Dimensions = wrappedCell.render(lp, upperLeft, true)
+        val dimensions: Dimensions = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 

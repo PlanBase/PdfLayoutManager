@@ -61,10 +61,10 @@ class SinglePageTest {
 
             diamondRect(page, Point2d(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(page, Point2d(cellX1, y + qbfCell.dimensions.height), true)
+            val cellDim = qbfCell.render(page, Point2d(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
-            val tableDim = qbfTable.render(page, Point2d(tableX1, y + qbfCell.dimensions.height), true)
+            val tableDim = qbfTable.render(page, Point2d(tableX1, y + qbfCell.dimensions.height))
             assertEquals(qbfTable.dimensions, tableDim)
 
             y -= melonHeight

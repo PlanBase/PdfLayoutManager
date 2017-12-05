@@ -53,12 +53,12 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-        override fun render(lp: RenderTarget, topLeft: Point2d, reallyRender:Boolean): Dimensions {
+        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
             var y = topLeft.y
             var maxWidth = 0f
             for (part in parts) {
                 //            System.out.println("About to render part: " + part);
-                val (width, height) = part.render(lp, topLeft.y(y), reallyRender)
+                val (width, height) = part.render(lp, topLeft.y(y), true)
                 maxWidth = max(maxWidth, width)
                 y -= height
             }

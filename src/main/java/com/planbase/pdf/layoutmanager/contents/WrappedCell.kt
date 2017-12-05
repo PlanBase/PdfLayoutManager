@@ -52,11 +52,10 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         dim
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Point2d, reallyRender:Boolean): Dimensions {
+    override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
         return tableRender(lp, topLeft, dimensions.height, true)
     }
 
-        // TODO: Why does this take a topLeft?  Nothing should take a topLeft.  Should be bottomLeft only!
     fun tableRender(lp: RenderTarget, topLeft: Point2d, height:Float, reallyRender:Boolean): Dimensions {
 //        println("render() topLeft=" + topLeft)
         val boxStyle = cellStyle.boxStyle
@@ -78,11 +77,21 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         var bottomY = innerTopLeft.y
         for (line in items) {
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dimensions.width)
-            val (_, y) = line.render(lp, Point2d(rowXOffset + innerTopLeft.x, bottomY), reallyRender)
-            bottomY -= y // y is always the lowest item in the cell.
+            val thisLineHeight = if (reallyRender) {
+//                println("render")
+                line.render(lp, Point2d(rowXOffset + innerTopLeft.x, bottomY)).height
+            } else {
+//                println("try")
+                lp.pageBreakingTopMargin(bottomY + line.descentAndLeading, line.lineHeight) + line.lineHeight
+//                println("try adjY=$adjY line.lineHeight=${line.lineHeight}")
+            }
+//            println("thisLineHeight=$thisLineHeight")
+            bottomY -= thisLineHeight // y is always the lowest item in the cell.
+//            println("line=$line")
         }
-
+        // TODO: Where do we add bottom padding to bottomY?
         bottomY = minOf(bottomY, topLeft.y - height)
+//        println("height=${innerTopLeft.y - bottomY}")
 
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
@@ -97,27 +106,11 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             val origX = topLeft.x
             val origY = topLeft.y
 
-            // TODO: Fix this!
-            // This breaks cell rows in order to fix rendering content after images that fall
-            // mid-page-break.  Math.min() below is so that when the contents overflow the bottom
-            // of the cell, we adjust the cell border downward to match.  We aren't doing the same
-            // for the background color, or for the rest of the row, so that's going to look bad.
-            //
-            // To fix these issues, I think we need to make that adjustment in the pre-calc instead
-            // of here.  Which means that the pre-calc needs to be aware of page breaking because
-            // the code that causes this adjustment is PdfLayoutMgr.appropriatePage().  So we
-            // probably need a fake version of that that doesn't cache anything for display on the
-            // page, then refactor backward from there until we enter this code with pre-corrected
-            // outerLowerRight and can get rid of Math.min.
-            //
-            // When we do that, we also want to check PageGrouping.drawImage() and .drawPng()
-            // to see if `return y + pby.adj;` still makes sense.
-//            bottomY = topLeft.y - dimensions.height
-
             val topRight = Point2d(rightX, origY)
             val bottomRight = Point2d(rightX, bottomY)
             val bottomLeft = Point2d(origX, bottomY)
 
+            // TODO use multi-line drawing
             // Like CSS it's listed Top, Right, Bottom, left
             if (border.top.thickness > 0) {
                 lp.drawLine(topLeft, topRight, border.top, reallyRender)

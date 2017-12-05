@@ -94,6 +94,13 @@ class SinglePage(val pageNum: Int,
         return textStyle.lineHeight()
     }
 
+    /**
+    Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
+    A single page always returns zero suggesting that something won't flow onto another page, but it may
+    still be truncated when it goes off the edge of this one.
+     */
+    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float = 0f
+
     @Throws(IOException::class)
     fun commit(stream: PDPageContentStream) {
         // Since items are z-ordered, then sub-ordered by entry-order, we will draw

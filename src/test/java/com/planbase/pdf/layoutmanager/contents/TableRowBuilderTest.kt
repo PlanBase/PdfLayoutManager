@@ -62,7 +62,7 @@ class TableRowBuilderTest {
 //                .cellBuilder().align(Align.TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
                 .buildPart()
                 .buildTable()
-                .wrap().render(lp, upperLeft, true)
+                .wrap().render(lp, upperLeft)
 
         lp.commit()
         // We're just going to write to a file.
@@ -108,7 +108,7 @@ class TableRowBuilderTest {
                 .cell(headingCellR, listOf(Text(heading, "German")))
                 .buildRow()
                 .buildPart()
-        tB.buildTable().wrap().render(lp, lp.bodyTopLeft(), true)
+        tB.buildTable().wrap().render(lp, lp.bodyTopLeft())
         lp.commit()
 
 //        val os = FileOutputStream("rowHeight2.pdf")

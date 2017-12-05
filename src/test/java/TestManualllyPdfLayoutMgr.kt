@@ -121,7 +121,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         val xya: Dimensions = tB.buildTable().wrap()
-                .render(lp, lp.bodyTopLeft(), true)
+                .render(lp, lp.bodyTopLeft())
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
@@ -172,7 +172,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         val xyb: Dimensions = tB.buildTable().wrap()
-                .render(lp, Point2d(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop()), true)
+                .render(lp, Point2d(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop()))
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -208,7 +208,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
                 .buildTable()
                 .wrap()
-                .render(lp, Point2d(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10), true)
+                .render(lp, Point2d(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
 
         lp.commit()
 
@@ -262,7 +262,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         val xyc: Dimensions = tB.buildTable()
                 .wrap()
-                .render(lp, lp.bodyTopLeft(), true)
+                .render(lp, lp.bodyTopLeft())
 
         // This was very hastily added to this test to prove that font loading works (it does).
         val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
@@ -273,7 +273,7 @@ class TestManualllyPdfLayoutMgr {
              TextStyle(liberationFont, 12f, RGB_BLACK),
              listOf("Hello Liberation Mono Bold Font!"))
                 .wrap()
-                .render(lp, lp.bodyTopLeft().plusXMinusY(xyc), true)
+                .render(lp, lp.bodyTopLeft().plusXMinusY(xyc))
 
         tB = TableBuilder()
         tB.addCellWidths(listOf(100f))
@@ -287,7 +287,7 @@ class TestManualllyPdfLayoutMgr {
         tB.buildTable()
                 .wrap()
                 .render(lp, Point2d(lp.pageWidth() - (100 + pMargin),
-                                     lp.yBodyBottom() + 15 + pMargin), true)
+                                     lp.yBodyBottom() + 15 + pMargin))
 
         lp.commit()
 
@@ -300,7 +300,7 @@ class TestManualllyPdfLayoutMgr {
                             listOf(("Test Logical Page Three" +
                                     " (physical page " + pageNum + ")")))
 
-            cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27), true)
+            cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 
@@ -489,7 +489,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         tB.buildTable()
                 .wrap()
-                .render(lp, lp.bodyTopLeft(), true)
+                .render(lp, lp.bodyTopLeft())
         lp.commit()
 
         val lineStyle = LineStyle(RGB_BLACK, 1f)
@@ -500,7 +500,7 @@ class TestManualllyPdfLayoutMgr {
                             pageHeadTextStyle,
                             listOf(("Test Logical Page Four " +
                                     " (physical page " + pageNum + ")")))
-            cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27), true)
+            cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 

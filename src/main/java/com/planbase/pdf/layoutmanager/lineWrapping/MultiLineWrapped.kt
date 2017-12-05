@@ -47,14 +47,14 @@ class MultiLineWrapped(var width: Float = 0f,
         return this
     }
 
-    override fun render(lp: RenderTarget, topLeft: Point2d, reallyRender:Boolean): Dimensions {
+    override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
         var x:Float = topLeft.x
         val y = topLeft.y
         var maxHeight = dimensions.height
         for (item: LineWrapped in items) {
             // ascent is the maximum ascent for anything on this line.  Subtracting that from the top-y
             // yields the baseline, which is what we want to align on.
-            val (_, fixedHeight) = item.render(lp, Point2d(x, y - ascent), reallyRender)
+            val fixedHeight = item.render(lp, Point2d(x, y - ascent)).height
             maxHeight = maxOf(maxHeight, fixedHeight)
             x += item.dimensions.width
         }

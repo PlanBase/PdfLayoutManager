@@ -354,9 +354,16 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /**
+     Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
+     If it will fit, simply returns 0.
+     */
+    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float =
+            appropriatePage(bottomY, height).adj
+
+    /**
      Returns the correct page for the given value of y.  This lets the user use any Y value and
      we continue extending their canvas downward (negative) by adding extra pages.
-     @param origY the un-adjusted y value.
+     @param origY the un-adjusted (bottom) y value.
      @return the proper page and adjusted y value for that page.
      */
     private fun appropriatePage(origY: Float, height: Float): PageBufferAndY {

@@ -142,7 +142,7 @@ fun testBodyMargins() {
                       "and problems gave great. The whole " +
                       "countries went the best children and " +
                       "eyes came able."))), null).wrap()
-            .render(lp, Point2d(0f, PDRectangle.A6.height - 40f), true)
+            .render(lp, Point2d(0f, PDRectangle.A6.height - 40f))
     //        table
     //        );
     lp.commit()

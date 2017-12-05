@@ -135,10 +135,10 @@ class PageGroupingTest {
 
             diamondRect(lp, Point2d(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height), true)
+            val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
-            val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height), true)
+            val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
             assertEquals(qbfTable.dimensions, tableDim)
 
             y -= melonHeight
@@ -164,13 +164,13 @@ class PageGroupingTest {
         diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-        val cellDim2 = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height), true)
-        println("qbfCell.dimensions=${qbfCell.dimensions} tableDim2=${cellDim2}")
+        val cellDim2 = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
+//        println("qbfCell.dimensions=${qbfCell.dimensions} tableDim2=${cellDim2}")
         assertTrue(qbfCell.dimensions.height < cellDim2.height)
 
-        val tableDim2 = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height), true)
+        val tableDim2 = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
 
-        println("qbfTable.dimensions=${qbfTable.dimensions} tableDim2=${tableDim2}")
+//        println("qbfTable.dimensions=${qbfTable.dimensions} tableDim2=${tableDim2}")
         assertTrue(qbfTable.dimensions.height < tableDim2.height)
         assertEquals(cellDim2.height, tableDim2.height)
 
@@ -189,10 +189,10 @@ class PageGroupingTest {
             diamondRect(lp, Point2d(lineX1, y), squareSide)
 //            lp.drawLine(Point2d(lineX1, y), Point2d(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height), true)
+            val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
-            val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height), true)
+            val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
             assertEquals(qbfTable.dimensions, tableDim)
 
             y -= listOf(imgY, txtY, rectY).max() as Float

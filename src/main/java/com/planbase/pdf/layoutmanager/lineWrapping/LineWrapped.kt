@@ -42,6 +42,7 @@ interface LineWrapped {
     /** Total vertical height this line, both above and below the baseline */
     val lineHeight: Float
 
+    // TODO: Why does this take a topLeft?  Nothing should take a topLeft.  Should be bottomLeft only!
     /**
      Sends the underlying object to PDFBox to be drawn.
 
@@ -51,7 +52,7 @@ interface LineWrapped {
      @return the adjusted Dimensions which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Point2d, reallyRender: Boolean): Dimensions
+    fun render(lp: RenderTarget, topLeft: Point2d): Dimensions
 
     object ZeroLineWrapped: LineWrapped {
         override val dimensions: Dimensions = Dimensions.ZERO
@@ -62,7 +63,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, topLeft: Point2d, reallyRender: Boolean): Dimensions = dimensions
+        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions = dimensions
     }
 
 //    companion object {
