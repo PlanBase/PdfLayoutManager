@@ -52,8 +52,12 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         dim
     }()
 
-    // TODO: Why does this take a topLeft?  Nothing should take a topLeft.  Should be bottomLeft only!
-    override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
+    override fun render(lp: RenderTarget, topLeft: Point2d, reallyRender:Boolean): Dimensions {
+        return tableRender(lp, topLeft, dimensions.height, true)
+    }
+
+        // TODO: Why does this take a topLeft?  Nothing should take a topLeft.  Should be bottomLeft only!
+    fun tableRender(lp: RenderTarget, topLeft: Point2d, height:Float, reallyRender:Boolean): Dimensions {
 //        println("render() topLeft=" + topLeft)
         val boxStyle = cellStyle.boxStyle
         val padding = boxStyle.padding
@@ -74,16 +78,16 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         var bottomY = innerTopLeft.y
         for (line in items) {
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dimensions.width)
-            val (_, y) = line.render(lp, Point2d(rowXOffset + innerTopLeft.x, bottomY))
+            val (_, y) = line.render(lp, Point2d(rowXOffset + innerTopLeft.x, bottomY), reallyRender)
             bottomY -= y // y is always the lowest item in the cell.
         }
 
-        bottomY = minOf(bottomY, topLeft.y - dimensions.height)
+        bottomY = minOf(bottomY, topLeft.y - height)
 
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(topLeft.y(bottomY), dimensions.height(topLeft.y - bottomY), boxStyle.bgColor)
+            lp.fillRect(topLeft.y(bottomY), dimensions.height(topLeft.y - bottomY), boxStyle.bgColor, reallyRender)
             //            System.out.println("\tCell.render back from putRect");
         }
 
@@ -116,16 +120,16 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
 
             // Like CSS it's listed Top, Right, Bottom, left
             if (border.top.thickness > 0) {
-                lp.drawLine(topLeft, topRight, border.top)
+                lp.drawLine(topLeft, topRight, border.top, reallyRender)
             }
             if (border.right.thickness > 0) {
-                lp.drawLine(topRight, bottomRight, border.right)
+                lp.drawLine(topRight, bottomRight, border.right, reallyRender)
             }
             if (border.bottom.thickness > 0) {
-                lp.drawLine(bottomRight, bottomLeft, border.bottom)
+                lp.drawLine(bottomRight, bottomLeft, border.bottom, reallyRender)
             }
             if (border.left.thickness > 0) {
-                lp.drawLine(bottomLeft, topLeft, border.left)
+                lp.drawLine(bottomLeft, topLeft, border.left, reallyRender)
             }
         }
 

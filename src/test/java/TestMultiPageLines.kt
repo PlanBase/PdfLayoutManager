@@ -40,21 +40,21 @@ class TestMultiPageLines {
         val bottomLeft = Point2d(pMargin, -lp.yBodyTop())
 
         // top lne
-        lp.drawLine(topLeft, topRight, lineStyle)
+        lp.drawLine(topLeft, topRight, lineStyle, true)
         // right line
-        lp.drawLine(topRight, bottomRight, lineStyle)
+        lp.drawLine(topRight, bottomRight, lineStyle, true)
         // bottom line
-        lp.drawLine(bottomRight, bottomLeft, lineStyle)
+        lp.drawLine(bottomRight, bottomLeft, lineStyle, true)
         // left line
-        lp.drawLine(bottomLeft, topLeft, lineStyle)
+        lp.drawLine(bottomLeft, topLeft, lineStyle, true)
 
         // 3-page-long X
-        lp.drawLine(topLeft, bottomRight, lineStyle)
+        lp.drawLine(topLeft, bottomRight, lineStyle, true)
         // Note reversed params
-        lp.drawLine(bottomLeft, topRight, lineStyle)
+        lp.drawLine(bottomLeft, topRight, lineStyle, true)
 
         // middle line
-        lp.drawLine(Point2d(pMargin, 0f), Point2d(pageRMargin, 0f), lineStyle)
+        lp.drawLine(Point2d(pMargin, 0f), Point2d(pageRMargin, 0f), lineStyle, true)
         lp.commit()
 
         val os = FileOutputStream("multiPageLines.pdf")

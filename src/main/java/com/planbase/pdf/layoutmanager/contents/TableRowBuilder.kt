@@ -26,9 +26,13 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
 import java.util.ArrayList
+import kotlin.math.max
+import kotlin.math.min
 
+// TODO: Rename to TableRow
 /**
  * Unsynchronized mutable class which is not thread-safe.  The internal tracking of cells and widths
  * allows you to make a cell builder for a cell at a given column, add cells in subsequent columns,
@@ -83,24 +87,41 @@ class TableRowBuilder(private val tablePart: TablePart) {
     fun finalRowHeight():Float {
         cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
                 .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
+        println("finalRowHeight() returns: ${minRowHeight}")
         return minRowHeight
     }
 
-    fun render(lp: RenderTarget, outerTopLeft: Point2d): Point2d {
+    class WrappedTableRow(rowBuilder:TableRowBuilder) {
+        private val minRowHeight:Float = rowBuilder.minRowHeight
+        private val fixedCells:List<WrappedCell> =
+                rowBuilder.cells.map { c -> c!!.wrap() }
+                        .toList()
+
+        fun render(lp: RenderTarget, outerTopLeft: Point2d, reallyRender:Boolean): Dimensions {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
 //                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
 
-        finalRowHeight()
+            var x = outerTopLeft.x
+            var maxRowHeight = minRowHeight
+            // Find the height of the tallest cell before rendering any cells.
+            for (fixedCell in fixedCells) {
+                val (width, height) = fixedCell.tableRender(lp, Point2d(x, outerTopLeft.y), maxRowHeight, false)
+                maxRowHeight = max(maxRowHeight, height)
+                x += width
+            }
+            val maxWidth = x - outerTopLeft.x
 
-        val fixedCells = cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
+            if (reallyRender) {
+                // Now render the cells
+                x = outerTopLeft.x
+                for (fixedCell in fixedCells) {
+                    val (width, _) = fixedCell.tableRender(lp, Point2d(x, outerTopLeft.y), maxRowHeight, true)
+                    x += width
+                }
+            }
 
-        var x = outerTopLeft.x
-        for (fixedCell in fixedCells) {
-            // TODO: Account for page breaks!
-            fixedCell.render(lp, Point2d(x, outerTopLeft.y))
-            x += fixedCell.dimensions.width
+            return Dimensions(maxWidth, maxRowHeight)
         }
-        return Point2d(x, outerTopLeft.y - minRowHeight)
     }
 
     override fun toString(): String = "TableRowBuilder($cells)"

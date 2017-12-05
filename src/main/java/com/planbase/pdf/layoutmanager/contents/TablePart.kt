@@ -22,10 +22,12 @@ package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.TableRowBuilder.WrappedTableRow
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
 import java.util.ArrayList
+import kotlin.math.max
 
 /**
  * A set of styles to be the default for a table header or footer, or whatever other kind of group of table rows you
@@ -77,15 +79,26 @@ class TablePart(private val tableBuilder: TableBuilder) {
 //        return maxDim
 //    }
 
-    fun render(lp: RenderTarget, outerTopLeft: Point2d): Point2d {
-        var rightmostLowest = outerTopLeft
-        for (row in rows) {
-            //            System.out.println("\tAbout to render row: " + row);
-            val (x, y) = row.render(lp, Point2d(outerTopLeft.x, rightmostLowest.y))
-            rightmostLowest = Point2d(Math.max(x, rightmostLowest.x),
-                                      Math.min(y, rightmostLowest.y))
+    class WrappedTablePart(part:TablePart) {
+        val dimensions: Dimensions = part.finalXyDim()
+//        val ascent:Float = dimensions.height
+//        val lineHeight: Float = dimensions.height
+
+        private val rows: List<WrappedTableRow> =
+                part.rows.map { WrappedTableRow(it) }
+                        .toList()
+
+        fun render(lp: RenderTarget, topLeft: Point2d, reallyRender:Boolean): Dimensions {
+            var y = topLeft.y
+            var maxWidth = 0f
+            for (row in rows) {
+                //            System.out.println("\tAbout to render row: " + row);
+                val (width, height) = row.render(lp, Point2d(topLeft.x, y), reallyRender)
+                maxWidth = max(maxWidth, width)
+                y -= height
+            }
+            return Dimensions(maxWidth, topLeft.y - y)
         }
-        return rightmostLowest
     }
 
     override fun toString(): String = "TablePart($cellWidths, minRowHeight=$minRowHeight, $rows)"

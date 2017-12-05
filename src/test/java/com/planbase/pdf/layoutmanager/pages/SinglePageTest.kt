@@ -50,21 +50,21 @@ class SinglePageTest {
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
-            val imgY = page.drawImage(Point2d(melonX, y), bigMelon)
+            val imgY = page.drawImage(Point2d(melonX, y), bigMelon, true)
             assertEquals(melonHeight, imgY)
 
-            val txtY = page.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle)
+            val txtY = page.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle, true)
             assertEquals(bigText.textStyle.lineHeight(), txtY)
 
-            val rectY = page.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK)
+            val rectY = page.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK, true)
             assertEquals(squareSide, rectY)
 
             diamondRect(page, Point2d(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(page, Point2d(cellX1, y + qbfCell.dimensions.height))
+            val cellDim = qbfCell.render(page, Point2d(cellX1, y + qbfCell.dimensions.height), true)
             assertEquals(qbfCell.dimensions, cellDim)
 
-            val tableDim = qbfTable.render(page, Point2d(tableX1, y + qbfCell.dimensions.height))
+            val tableDim = qbfTable.render(page, Point2d(tableX1, y + qbfCell.dimensions.height), true)
             assertEquals(qbfTable.dimensions, tableDim)
 
             y -= melonHeight
@@ -90,7 +90,7 @@ fun diamondRect(page:RenderTarget, lowerLeft:Point2d, size:Float) {
                               Point2d(xRight, yTop),
                               Point2d(xLeft, yTop),
                               lowerLeft),
-                       ls)
+                       ls, true)
 
     val midTop = Point2d(xMid, yTop)
     // Diamond drawn clockwise (deosil) from top
@@ -99,7 +99,7 @@ fun diamondRect(page:RenderTarget, lowerLeft:Point2d, size:Float) {
                               Point2d(xMid, yBot),
                               Point2d(xLeft, yMid),
                               midTop),
-                       ls)
+                       ls, true)
 }
 
 val squareSide = 70f

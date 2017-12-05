@@ -69,6 +69,9 @@ data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
     fun right(ls: LineStyle) = BorderStyle(top, ls, bottom, left)
     fun bottom(ls: LineStyle) = BorderStyle(top, right, ls, left)
     fun left(ls: LineStyle) = BorderStyle(top, right, bottom, ls)
+    fun allSame() = top == right &&
+                    right == bottom &&
+                    bottom == left
 
     fun topBottomThickness():Float = top.thickness + bottom.thickness
 

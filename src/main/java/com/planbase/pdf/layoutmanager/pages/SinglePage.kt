@@ -54,14 +54,18 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor): Float {
-        fillRect(bottomLeft, dimensions, c, -1f)
+    override fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float {
+        if (reallyRender) {
+            fillRect(bottomLeft, dimensions, c, -1f)
+        }
         return dimensions.height
     }
 
     /** {@inheritDoc}  */
-    override fun drawImage(bottomLeft: Point2d, wi: WrappedImage): Float {
-        items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+    override fun drawImage(bottomLeft: Point2d, wi: WrappedImage, reallyRender: Boolean): Float {
+        if (reallyRender) {
+            items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+        }
         // This does not account for a page break because this class represents a single page.
         return wi.dimensions.height
     }
@@ -71,8 +75,10 @@ class SinglePage(val pageNum: Int,
     }
 
     /** [@inheritDoc]  */
-    override fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle): SinglePage {
-        drawLineStrip(points, lineStyle, PdfItem.DEFAULT_Z_INDEX)
+    override fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle, reallyRender: Boolean): SinglePage {
+        if (reallyRender) {
+            drawLineStrip(points, lineStyle, PdfItem.DEFAULT_Z_INDEX)
+        }
         return this
     }
 
@@ -81,8 +87,10 @@ class SinglePage(val pageNum: Int,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle): Float {
-        drawStyledText(bottomLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+    override fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
+        if (reallyRender) {
+            drawStyledText(bottomLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+        }
         return textStyle.lineHeight()
     }
 

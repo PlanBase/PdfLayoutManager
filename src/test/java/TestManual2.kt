@@ -64,9 +64,9 @@ fun testBodyMargins() {
                 val leftMargin:Float = if (isLeft) 37f else 45f
                 //            System.out.println("pageNum " + pageNum);
                 pb.drawLine(Point2d(leftMargin, 30f), Point2d(leftMargin + bodyWidth, 30f),
-                            LineStyle(CMYK_BLACK))
+                            LineStyle(CMYK_BLACK), true)
                 pb.drawStyledText(Point2d(leftMargin, 20f), "Page # " + pageNum,
-                                  TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK))
+                                  TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK), true)
                 leftMargin })
 
     val tB = TableBuilder()
@@ -142,7 +142,7 @@ fun testBodyMargins() {
                       "and problems gave great. The whole " +
                       "countries went the best children and " +
                       "eyes came able."))), null).wrap()
-            .render(lp, Point2d(0f, PDRectangle.A6.height - 40f))
+            .render(lp, Point2d(0f, PDRectangle.A6.height - 40f), true)
     //        table
     //        );
     lp.commit()

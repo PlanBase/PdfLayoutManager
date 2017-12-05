@@ -20,6 +20,8 @@
 
 package com.planbase.pdf.layoutmanager.utils
 
+import kotlin.math.abs
+
 /**
  An immutable 2D coordinate in terms of X and Y measured from the lower-left corner.
  Do not confuse this with an Dimensions which represents positive width and height.
@@ -43,6 +45,8 @@ data class Point2d(val x: Float, val y: Float) {
     fun plusXMinusY(that: Point2d) = Point2d(x + that.x, y - that.y)
 
     fun plusXMinusY(that: Dimensions) = Point2d(x + that.width, y - that.height)
+
+    fun dimensionTo(that:Point2d) = Dimensions(abs(x - that.x), abs(y - that.y))
 
     //    public Point2d maxXandY(Point2d that) {
     //        if ((this.x >= that.x()) && (this.y >= that.y())) { return this; }

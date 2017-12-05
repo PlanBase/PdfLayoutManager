@@ -167,30 +167,29 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle): Float {
+    override fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         val pby = appropriatePage(bottomLeft.y, textStyle.lineHeight())
-        pby.pb.drawStyledText(bottomLeft.y(pby.y), text, textStyle)
-        // TODO: Is this right?
+        pby.pb.drawStyledText(bottomLeft.y(pby.y), text, textStyle, reallyRender)
         return textStyle.lineHeight() + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun drawImage(bottomLeft: Point2d, wi: WrappedImage): Float {
+    override fun drawImage(bottomLeft: Point2d, wi: WrappedImage, reallyRender: Boolean): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
         val pby = appropriatePage(bottomLeft.y, wi.dimensions.height)
         // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawImage(bottomLeft.y(pby.y), wi)
+        pby.pb.drawImage(bottomLeft.y(pby.y), wi, reallyRender)
         return wi.dimensions.height + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor): Float {
+    override fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -209,7 +208,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         val pby1 = appropriatePage(topY, 0f)
         val pby2 = appropriatePage(bottomY, 0f)
         if (pby1 == pby2) {
-            pby1.pb.fillRect(Point2d(left, pby1.y), Dimensions(width, maxHeight), c)
+            pby1.pb.fillRect(Point2d(left, pby1.y), Dimensions(width, maxHeight), c, reallyRender)
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
 
@@ -236,7 +235,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     yBodyBottom()
                 }
 
-                currPage.fillRect(Point2d(left, yb), Dimensions(width, ya - yb), c)
+                currPage.fillRect(Point2d(left, yb), Dimensions(width, ya - yb), c, reallyRender)
 
                 // pageNum is one-based while get is zero-based, so passing get the current
                 // pageNum actually gets the next page.  Don't get another one after we already
@@ -251,7 +250,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     // TODO: this should be the have all the gory details.  drawLine should inherit from the default implementation
-    override fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle): PageGrouping {
+    override fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle, reallyRender: Boolean): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -260,14 +259,14 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         var start:Point2d = points[0]
         for (i in 1..points.lastIndex) {
             val end = points[i]
-            drawLine(start, end, lineStyle)
+            drawLine(start, end, lineStyle, reallyRender)
             start = end
         }
         return this
     }
 
     /** {@inheritDoc}  */
-    override fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle): PageGrouping {
+    override fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle, reallyRender: Boolean): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -280,9 +279,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //        println("pby1=$pby1, pby2=$pby2")
         if (pby1 == pby2) {
             if (flip) {
-                pby1.pb.drawLine(end.y(pby1.y), start.y(pby2.y), lineStyle)
+                pby1.pb.drawLine(end.y(pby1.y), start.y(pby2.y), lineStyle, reallyRender)
             } else {
-                pby1.pb.drawLine(start.y(pby1.y), end.y(pby2.y), lineStyle)
+                pby1.pb.drawLine(start.y(pby1.y), end.y(pby2.y), lineStyle, reallyRender)
             }
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
@@ -337,9 +336,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                 // In that case, the last endpoint of the previous line must equal the starting point of this line.
                 // So if we detected that we had to flip the line to break it across pages, flip it back here!
                 if (flip) {
-                    currPage.drawLine(Point2d(xb, yb), Point2d(xa, ya), lineStyle)
+                    currPage.drawLine(Point2d(xb, yb), Point2d(xa, ya), lineStyle, reallyRender)
                 } else {
-                    currPage.drawLine(Point2d(xa, ya), Point2d(xb, yb), lineStyle)
+                    currPage.drawLine(Point2d(xa, ya), Point2d(xb, yb), lineStyle, reallyRender)
                 }
 
                 // pageNum is one-based while get is zero-based, so passing get the current

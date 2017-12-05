@@ -43,9 +43,9 @@ class MultiLineWrappedTest {
         val yTop = lp.yBodyTop() - 10f
         val yBottom = yTop - tStyle2.lineHeight()
         val upperLeft = Point2d(100f, yTop)
-        lp.drawLine(Point2d(0f, yTop), Point2d(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f))
-        lp.drawLine(Point2d(0f, yBottom), Point2d(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f))
-        val xyOff = line.render(lp, upperLeft)
+        lp.drawLine(Point2d(0f, yTop), Point2d(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f), true)
+        lp.drawLine(Point2d(0f, yBottom), Point2d(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
+        val xyOff = line.render(lp, upperLeft, true)
 
         // TODO: Figure this out!
 //        assertEquals(Point2d(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)

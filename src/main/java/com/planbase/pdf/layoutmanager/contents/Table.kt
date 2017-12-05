@@ -21,18 +21,21 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.contents.TablePart.WrappedTablePart
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Point2d
+import kotlin.math.max
 
 /** Represents a table.  It used to be that you'd build a table and that act would commit it to a logical page. */
 class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : LineWrappable {
-    override fun lineWrapper() = LineWrapper.preWrappedLineWrapper(WrappedTable(this.parts))
+    override fun lineWrapper() =
+            LineWrapper.preWrappedLineWrapper(WrappedTable(this.parts.map{ WrappedTablePart(it) }))
 
-    fun wrap():WrappedTable = WrappedTable(this.parts)
+    fun wrap():WrappedTable = WrappedTable(this.parts.map{ WrappedTablePart(it) })
 
     /*
     Renders item and all child-items with given width and returns the x-y pair of the
@@ -40,34 +43,26 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
     */
     override fun toString(): String = "Table($parts)"
 
-    data class WrappedTable(private val parts:List<TablePart>) : LineWrapped {
-        override val dimensions: Dimensions = Dimensions.sum(parts.map { part -> part.finalXyDim() })
+    data class WrappedTable(private val parts:List<WrappedTablePart>) : LineWrapped {
+        override val dimensions: Dimensions = Dimensions.sum(parts.map { part -> part.dimensions })
         override val ascent: Float = dimensions.height
         override val descentAndLeading: Float = 0f
         override val lineHeight: Float = dimensions.height
-        // TODO: We should probably wrap the parts individually to ensure they are "frozen"
-//        private val parts: List<WrappedTablePart>
 
         /*
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
-            // Used to work:
-            // var rightmostLowest = topLeft
-            // Works the way other render() methods do.
-            // var rightmostLowest = topLeft.minusY(-dimensions.height)
-
-            var rightmostX = topLeft.x
+        override fun render(lp: RenderTarget, topLeft: Point2d, reallyRender:Boolean): Dimensions {
             var y = topLeft.y
+            var maxWidth = 0f
             for (part in parts) {
                 //            System.out.println("About to render part: " + part);
-                val rl = part.render(lp, topLeft.y(y))
-                rightmostX = Math.max(rl.x, rightmostX)
-                y = Math.min(rl.y, y)
+                val (width, height) = part.render(lp, topLeft.y(y), reallyRender)
+                maxWidth = max(maxWidth, width)
+                y -= height
             }
-            return Dimensions(rightmostX - topLeft.x,
-                              topLeft.y - y)
+            return Dimensions(maxWidth, topLeft.y - y)
         }
 
         override fun toString(): String = "WrappedTable($parts)"

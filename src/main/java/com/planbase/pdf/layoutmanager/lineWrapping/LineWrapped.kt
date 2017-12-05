@@ -28,6 +28,7 @@ import com.planbase.pdf.layoutmanager.utils.Point2d
  Represents a fixed-size item.  Classes implementing this interface should be immutable.
  */
 interface LineWrapped {
+    /** These are the dimensions *without/before* page-breaking adjustments. */
     val dimensions: Dimensions
 //    fun width(): Float = width
 //    fun totalHeight(): Float = heightAboveBase + depthBelowBase
@@ -50,7 +51,7 @@ interface LineWrapped {
      @return the adjusted Dimensions which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Point2d): Dimensions
+    fun render(lp: RenderTarget, topLeft: Point2d, reallyRender: Boolean): Dimensions
 
     object ZeroLineWrapped: LineWrapped {
         override val dimensions: Dimensions = Dimensions.ZERO
@@ -61,7 +62,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions = dimensions
+        override fun render(lp: RenderTarget, topLeft: Point2d, reallyRender: Boolean): Dimensions = dimensions
     }
 
 //    companion object {

@@ -40,8 +40,8 @@ interface RenderTarget {
      @param lineStyle the style to draw the line with
      @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle): RenderTarget {
-        drawLineStrip(listOf(start, end), lineStyle)
+    fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget {
+        drawLineStrip(listOf(start, end), lineStyle, reallyRender)
         return this
     }
 
@@ -53,7 +53,7 @@ interface RenderTarget {
     @param lineStyle the style to draw the line with
     @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle): RenderTarget
+    fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget
 
     /**
      Puts styled text on this RenderTarget
@@ -63,7 +63,7 @@ interface RenderTarget {
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle): Float
+    fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle, reallyRender: Boolean): Float
 
     /**
      Puts an image on this RenderTarget
@@ -72,7 +72,7 @@ interface RenderTarget {
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawImage(bottomLeft: Point2d, wi: WrappedImage): Float
+    fun drawImage(bottomLeft: Point2d, wi: WrappedImage, reallyRender: Boolean): Float
 
     /**
      Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
@@ -83,5 +83,5 @@ interface RenderTarget {
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor): Float
+    fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float
 }
