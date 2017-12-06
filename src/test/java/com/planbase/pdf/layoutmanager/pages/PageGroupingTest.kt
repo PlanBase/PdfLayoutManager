@@ -138,6 +138,8 @@ class PageGroupingTest {
             val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
+            // TODO: Tables must render from top left.
+//            val tableDim = qbfTable.render(lp, Point2d(tableX1, y))
             val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
             assertEquals(qbfTable.dimensions, tableDim)
 
@@ -168,6 +170,8 @@ class PageGroupingTest {
 //        println("qbfCell.dimensions=${qbfCell.dimensions} tableDim2=${cellDim2}")
         assertTrue(qbfCell.dimensions.height < cellDim2.height)
 
+        // TODO: Tables must render from top left.
+//        val tableDim2 = qbfTable.render(lp, Point2d(tableX1, y))
         val tableDim2 = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
 
 //        println("qbfTable.dimensions=${qbfTable.dimensions} tableDim2=${tableDim2}")
@@ -192,6 +196,8 @@ class PageGroupingTest {
             val cellDim = qbfCell.render(lp, Point2d(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
+            // TODO: Tables must render from top left.
+//            val tableDim = qbfTable.render(lp, Point2d(tableX1, y))
             val tableDim = qbfTable.render(lp, Point2d(tableX1, y + qbfCell.dimensions.height))
             assertEquals(qbfTable.dimensions, tableDim)
 

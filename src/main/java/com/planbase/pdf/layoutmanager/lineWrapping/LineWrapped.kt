@@ -48,7 +48,7 @@ interface LineWrapped {
 
      @param lp RenderTarget is the SinglePage or PageGrouping to draw to.  This will contain the paper size,
      orientation, and body area which are necessary in order to calculate page breaking
-     @param outerTopLeft is the offset where this item starts.
+     @param topLeft is the offset where this item starts.
      @return the adjusted Dimensions which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */

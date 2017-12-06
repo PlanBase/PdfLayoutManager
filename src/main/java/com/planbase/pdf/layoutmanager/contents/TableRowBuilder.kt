@@ -72,6 +72,10 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     fun cell(cs: CellStyle = cellStyle,
              contents: List<LineWrappable>): TableRowBuilder {
+        if (tablePart.cellWidths.size < (nextCellIdx + 1)) {
+            throw IllegalStateException("Can't add another cell because there are only ${tablePart.cellWidths.size}" +
+                                        " cell widths and already $nextCellIdx cells")
+        }
         cells.add(Cell(cs, tablePart.cellWidths[nextCellIdx++], contents, this))
         return this
     }
@@ -79,7 +83,8 @@ class TableRowBuilder(private val tablePart: TablePart) {
     fun buildRow(): TablePart {
         // Do we want to fill out the row with blank cells?
         if (cells.contains(null)) {
-            throw IllegalStateException("Cannot build row when some TableRowCellBuilders have been created but the cells not built and added back to the row.")
+            throw IllegalStateException("Cannot build row when some TableRowCellBuilders have been" +
+                                        " created but the cells not built and added back to the row.")
         }
         return tablePart.addRow(this)
     }

@@ -64,7 +64,7 @@ class SinglePageTest {
             val cellDim = qbfCell.render(page, Point2d(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
-            val tableDim = qbfTable.render(page, Point2d(tableX1, y + qbfCell.dimensions.height))
+            val tableDim = qbfTable.render(page, Point2d(tableX1, y))
             assertEquals(qbfTable.dimensions, tableDim)
 
             y -= melonHeight
@@ -108,8 +108,8 @@ val paleGreenLeft = CellStyle(Align.TOP_LEFT,
                               BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK)))
 val paleBlueLeft = CellStyle(Align.TOP_LEFT,
                              BoxStyle(Padding(2f), RGB_LIGHT_BLUE, BorderStyle(RGB_BLACK)))
-val qbfCell = Cell(paleGreenLeft, squareSide, times15,
-                   listOf("The quick brown fox jumps over the lazy dog")).wrap()
+val qbfCell = Cell(paleGreenLeft, squareSide,
+                   listOf(Text(times15, "The quick brown fox jumps over the lazy dog"))).wrap()
 
 val qbfTable: Table.WrappedTable =
         TableBuilder(mutableListOf(squareSide, squareSide))

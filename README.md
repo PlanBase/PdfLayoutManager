@@ -41,6 +41,11 @@ Text, images, and rectangles are specified by their lower-left-hand corner.
 For text, the lower-left-hand-corner is below the leading which is below the descent which is below the baseline.
 Lines are still aligned based on the baseline of the text.
 
+Despite this, LineWrapped.render() takes a topLeft.  Also, images even within PDFs have (0,0) in their top-left corner
+(just like a screen).
+
+TODO: LineWrapped.render() is topLeft for a table, but not for anything else yet.  ARRRRGH
+
 TODO: Does PDFBox base some things on the lower-RIGHT corner?  If so, what?
 
 # FAQ

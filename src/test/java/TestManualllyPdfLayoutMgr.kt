@@ -123,6 +123,8 @@ class TestManualllyPdfLayoutMgr {
         val xya: Dimensions = tB.buildTable().wrap()
                 .render(lp, lp.bodyTopLeft())
 
+        println("xya=$xya")
+
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
         tB = TableBuilder()
@@ -172,7 +174,9 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         val xyb: Dimensions = tB.buildTable().wrap()
-                .render(lp, Point2d(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop()))
+                .render(lp, lp.bodyTopLeft().plusX(xya.width + 10))
+
+        println("xyb=$xyb")
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -183,7 +187,7 @@ class TestManualllyPdfLayoutMgr {
                                      RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
                                                    BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+                .rowBuilder().addTextCells("Uno", "Dos", "Tres").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
                                                    BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
@@ -270,8 +274,7 @@ class TestManualllyPdfLayoutMgr {
         Cell(CellStyle(MIDDLE_CENTER,
                        BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
              200f,
-             TextStyle(liberationFont, 12f, RGB_BLACK),
-             listOf("Hello Liberation Mono Bold Font!"))
+             listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Liberation Mono Bold Font!")))
                 .wrap()
                 .render(lp, lp.bodyTopLeft().plusXMinusY(xyc))
 
@@ -296,9 +299,8 @@ class TestManualllyPdfLayoutMgr {
         val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NONE)
         lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.LANDSCAPE
         ) { pageNum, pb->
-            val cell = Cell(pageHeadCellStyle, tableWidth, pageHeadTextStyle,
-                            listOf(("Test Logical Page Three" +
-                                    " (physical page " + pageNum + ")")))
+            val cell = Cell(pageHeadCellStyle, tableWidth,
+                            listOf(Text(pageHeadTextStyle, "Test Logical Page Three (physical page $pageNum)")))
 
             cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
@@ -497,9 +499,8 @@ class TestManualllyPdfLayoutMgr {
         lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.LANDSCAPE
         ) { pageNum, pb->
             val cell = Cell(pageHeadCellStyle, tableWidth,
-                            pageHeadTextStyle,
-                            listOf(("Test Logical Page Four " +
-                                    " (physical page " + pageNum + ")")))
+                            listOf(Text(pageHeadTextStyle,
+                                        "Test Logical Page Four  (physical page $pageNum)")))
             cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }

@@ -22,6 +22,7 @@ package com.planbase.pdf.layoutmanager.utils
 
 import kotlin.math.abs
 
+// TODO: Rename to Coord (inate)
 /**
  An immutable 2D coordinate in terms of X and Y measured from the lower-left corner.
  Do not confuse this with an Dimensions which represents positive width and height.

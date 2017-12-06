@@ -16,11 +16,35 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
+import java.io.FileOutputStream
+import kotlin.test.assertEquals
+
+val twoHundred:Float = 200f
+val cellStyle = CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f),
+                                                   RGB_LIGHT_GREEN,
+                                                   BorderStyle(RGB_DARK_GRAY)))
+val textStyle = TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK)
+val hello = Text(textStyle, "Hello")
+val helloSpace = Text(textStyle, "Hello ")
+val helloHello = Text(textStyle, "Hello Hello")
+val helloHelloWidth:Float = helloHello.maxWidth() * 0.7f
 
 class CellTest {
+    @Test fun testBasics() {
+        val cell = Cell(cellStyle, twoHundred, listOf(hello))
+        val wrappedCell:WrappedCell = cell.wrap()
+        assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+                     wrappedCell.dimensions.height)
+    }
 
-    @Test
-    fun testWrap() {
+    @Test fun testOneWrappedLine() {
+        val cell = Cell(cellStyle, helloHelloWidth, listOf(helloHello))
+        val wrappedCell:WrappedCell = cell.wrap()
+        assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
+                     wrappedCell.dimensions.height)
+    }
+
+    @Test fun testWrapTable() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
         val lp = pageMgr.logicalPageStart()
 
@@ -38,27 +62,27 @@ class CellTest {
                 .rowBuilder()
         val cell = Cell(cellStyle, squareDim, listOf(theText), trb)
         trb.cell(cell.cellStyle, listOf(theText))
-        kotlin.test.assertEquals(squareDim, trb.minRowHeight)
+        assertEquals(squareDim, trb.minRowHeight)
 //        println("trb=" + trb)
 
         val wrappedCell:WrappedCell = cell.wrap()
 //        println("wrappedCell=$wrappedCell")
-        kotlin.test.assertEquals(squareDim, wrappedCell.dimensions.height)
+        assertEquals(squareDim, wrappedCell.dimensions.height)
 
         trb.buildRow()
                 .buildPart()
         val table: Table = tB.buildTable()
 
-        val xya: Dimensions = table.wrap().render(lp, Point2d(40f, lp.yBodyTop()))
+        val dim: Dimensions = table.wrap().render(lp, Point2d(40f, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")
 
-        kotlin.test.assertEquals(squareDim, xya.height)
+        assertEquals(squareDim, dim.height)
         lp.commit()
 
-//        val os = FileOutputStream("testCell1.pdf")
-//        pageMgr.save(os)
+        val os = FileOutputStream("testCell1.pdf")
+        pageMgr.save(os)
     }
 
 }
