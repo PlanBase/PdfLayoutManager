@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 
 /**
  Represents a fixed-size item.  Classes implementing this interface should be immutable.
@@ -52,7 +52,7 @@ interface LineWrapped {
      @return the adjusted Dimensions which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Point2d): Dimensions
+    fun render(lp: RenderTarget, topLeft: Coord): Dimensions
 
     object ZeroLineWrapped: LineWrapped {
         override val dimensions: Dimensions = Dimensions.ZERO
@@ -63,7 +63,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions = dimensions
+        override fun render(lp: RenderTarget, topLeft: Coord): Dimensions = dimensions
     }
 
 //    companion object {

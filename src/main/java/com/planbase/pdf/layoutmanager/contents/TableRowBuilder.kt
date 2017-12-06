@@ -27,10 +27,9 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import java.util.ArrayList
 import kotlin.math.max
-import kotlin.math.min
 
 // TODO: Rename to TableRow
 /**
@@ -102,7 +101,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
                 rowBuilder.cells.map { c -> c!!.wrap() }
                         .toList()
 
-        fun render(lp: RenderTarget, outerTopLeft: Point2d, reallyRender:Boolean): Dimensions {
+        fun render(lp: RenderTarget, outerTopLeft: Coord, reallyRender:Boolean): Dimensions {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
 //                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
 
@@ -110,7 +109,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
             var maxRowHeight = minRowHeight
             // Find the height of the tallest cell before rendering any cells.
             for (fixedCell in fixedCells) {
-                val (width, height) = fixedCell.tableRender(lp, Point2d(x, outerTopLeft.y), maxRowHeight, false)
+                val (width, height) = fixedCell.tableRender(lp, Coord(x, outerTopLeft.y), maxRowHeight, false)
                 maxRowHeight = max(maxRowHeight, height)
                 x += width
             }
@@ -120,7 +119,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
                 // Now render the cells
                 x = outerTopLeft.x
                 for (fixedCell in fixedCells) {
-                    val (width, _) = fixedCell.tableRender(lp, Point2d(x, outerTopLeft.y), maxRowHeight, true)
+                    val (width, _) = fixedCell.tableRender(lp, Coord(x, outerTopLeft.y), maxRowHeight, true)
                     x += width
                 }
             }

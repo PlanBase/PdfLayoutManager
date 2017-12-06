@@ -25,7 +25,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 
 // TODO: This should be a private inner class of Cell
 class WrappedCell(override val dimensions: Dimensions, // measured on the border lines
@@ -52,11 +52,11 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         dim
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
+    override fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
         return tableRender(lp, topLeft, dimensions.height, true)
     }
 
-    fun tableRender(lp: RenderTarget, topLeft: Point2d, height:Float, reallyRender:Boolean): Dimensions {
+    fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dimensions {
 //        println("render() topLeft=" + topLeft)
         val boxStyle = cellStyle.boxStyle
         val padding = boxStyle.padding
@@ -64,14 +64,14 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         // Dimensions dimensions = padding.addTo(pcrs.dim);
 
         // Draw contents over background, but under border
-        var innerTopLeft: Point2d = padding.applyTopLeft(topLeft)
-                .plusXMinusY(Point2d(border.left.thickness / 2f, border.top.thickness / 2f))
+        var innerTopLeft: Coord = padding.applyTopLeft(topLeft)
+                .plusXMinusY(Coord(border.left.thickness / 2f, border.top.thickness / 2f))
         val innerDimensions: Dimensions = padding.subtractFrom(dimensions)
 
         // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
         val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
-        innerTopLeft = Point2d(innerTopLeft.x + alignPad.left,
+        innerTopLeft = Coord(innerTopLeft.x + alignPad.left,
                                 innerTopLeft.y - alignPad.top)
 
         var bottomY = innerTopLeft.y
@@ -79,7 +79,7 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dimensions.width)
             val thisLineHeight = if (reallyRender) {
 //                println("render")
-                line.render(lp, Point2d(rowXOffset + innerTopLeft.x, bottomY)).height
+                line.render(lp, Coord(rowXOffset + innerTopLeft.x, bottomY)).height
             } else {
 //                println("try")
                 lp.pageBreakingTopMargin(bottomY + line.descentAndLeading, line.lineHeight) + line.lineHeight
@@ -106,9 +106,9 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             val origX = topLeft.x
             val origY = topLeft.y
 
-            val topRight = Point2d(rightX, origY)
-            val bottomRight = Point2d(rightX, bottomY)
-            val bottomLeft = Point2d(origX, bottomY)
+            val topRight = Coord(rightX, origY)
+            val bottomRight = Coord(rightX, bottomY)
+            val bottomLeft = Coord(origX, bottomY)
 
             // TODO use multi-line drawing
             // Like CSS it's listed Top, Right, Bottom, left

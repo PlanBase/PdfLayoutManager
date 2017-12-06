@@ -23,9 +23,10 @@ package com.planbase.pdf.layoutmanager.utils
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import java.lang.Math.abs
 
+// TODO: Rename to "Dim"
 /**
  * Immutable 2D dimension in terms of non-negative width and height.
- * Do not confuse a dimension (measurement) with an Point2d which represents coordinates where
+ * Do not confuse a dimension (measurement) with an Coord which represents coordinates where
  * the bottom of the page is zero and positive height is up from there.
  * Remember: an Dimensions on a Portrait orientation page has the width and height *reversed*.
  */
@@ -59,7 +60,7 @@ data class Dimensions(val width: Float, val height: Float) {
     fun toRect() = PDRectangle(width, height)
 
     //    /** Returns a PDRectangle with the given width and height (but no/0 offset) */
-    //    public PDRectangle toRect(Point2d off) {
+    //    public PDRectangle toRect(Coord off) {
     //        return new PDRectangle(off.x(), off.y(), width, height);
     //    }
 
@@ -82,7 +83,7 @@ data class Dimensions(val width: Float, val height: Float) {
     fun lte(that: Dimensions): Boolean = this.width <= that.width &&
                                          this.height <= that.height
 
-    override fun toString() = "Dimensions($width, $height)"
+    override fun toString() = "Dimensions(${width}f, ${height}f)"
 
     companion object {
         val ZERO = Dimensions(0f, 0f)

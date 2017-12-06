@@ -8,7 +8,7 @@ import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -42,13 +42,13 @@ class MultiLineWrappedTest {
         val lp = pageMgr.logicalPageStart()
         val yTop = lp.yBodyTop() - 10f
         val yBottom = yTop - tStyle2.lineHeight()
-        val upperLeft = Point2d(100f, yTop)
-        lp.drawLine(Point2d(0f, yTop), Point2d(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f), true)
-        lp.drawLine(Point2d(0f, yBottom), Point2d(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
+        val upperLeft = Coord(100f, yTop)
+        lp.drawLine(Coord(0f, yTop), Coord(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f), true)
+        lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
         val xyOff = line.render(lp, upperLeft)
 
         // TODO: Figure this out!
-//        assertEquals(Point2d(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
+//        assertEquals(Coord(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
 
         lp.commit()
         val os = FileOutputStream("testBaseline.pdf")

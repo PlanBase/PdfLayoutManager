@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 
 /**
 A mutable data structure to hold a wrapped line consisting of multiple items.
@@ -47,14 +47,14 @@ class MultiLineWrapped(var width: Float = 0f,
         return this
     }
 
-    override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
+    override fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
         var x:Float = topLeft.x
         val y = topLeft.y
         var maxHeight = dimensions.height
         for (item: LineWrapped in items) {
             // ascent is the maximum ascent for anything on this line.  Subtracting that from the top-y
             // yields the baseline, which is what we want to align on.
-            val fixedHeight = item.render(lp, Point2d(x, y - ascent)).height
+            val fixedHeight = item.render(lp, Coord(x, y - ascent)).height
             maxHeight = maxOf(maxHeight, fixedHeight)
             x += item.dimensions.width
         }

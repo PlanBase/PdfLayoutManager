@@ -27,7 +27,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import kotlin.math.max
 
 /** Represents a table.  It used to be that you'd build a table and that act would commit it to a logical page. */
@@ -53,7 +53,7 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions {
+        override fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
             // TODO: Tables must render from top left.
 //            val origY = topLeft.y + ascent
 //            var y = origY

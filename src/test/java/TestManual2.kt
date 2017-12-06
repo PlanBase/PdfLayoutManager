@@ -29,7 +29,7 @@ import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.BULLET_CHAR
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -63,9 +63,9 @@ fun testBodyMargins() {
                 val isLeft = pageNum % 2 == 1
                 val leftMargin:Float = if (isLeft) 37f else 45f
                 //            System.out.println("pageNum " + pageNum);
-                pb.drawLine(Point2d(leftMargin, 30f), Point2d(leftMargin + bodyWidth, 30f),
+                pb.drawLine(Coord(leftMargin, 30f), Coord(leftMargin + bodyWidth, 30f),
                             LineStyle(CMYK_BLACK), true)
-                pb.drawStyledText(Point2d(leftMargin, 20f), "Page # " + pageNum,
+                pb.drawStyledText(Coord(leftMargin, 20f), "Page # " + pageNum,
                                   TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK), true)
                 leftMargin })
 
@@ -142,7 +142,7 @@ fun testBodyMargins() {
                       "and problems gave great. The whole " +
                       "countries went the best children and " +
                       "eyes came able."))), null).wrap()
-            .render(lp, Point2d(0f, PDRectangle.A6.height - 40f))
+            .render(lp, Coord(0f, PDRectangle.A6.height - 40f))
     //        table
     //        );
     lp.commit()

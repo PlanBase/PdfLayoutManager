@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 
 /**
  * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
@@ -46,7 +46,7 @@ data class Padding(val top: Float,
 //            Dimensions(outer.width + (left + right),
 //                  outer.height + (top + bottom))
 
-    fun applyTopLeft(orig: Point2d): Point2d = Point2d(orig.x + left, orig.y - top)
+    fun applyTopLeft(orig: Coord): Coord = Coord(orig.x + left, orig.y - top)
 
     fun topBottomPadding() = top + bottom
 
@@ -59,8 +59,8 @@ data class Padding(val top: Float,
                 super.toString()
             }
 
-    //    public Point2d topLeftPadOffset() { return Point2d(left, -top); }
-    //    public Point2d botRightPadOffset() { return Point2d(right, -bottom); }
+    //    public Coord topLeftPadOffset() { return Coord(left, -top); }
+    //    public Coord botRightPadOffset() { return Coord(right, -bottom); }
 
     companion object {
         /**

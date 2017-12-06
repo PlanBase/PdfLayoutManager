@@ -31,7 +31,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 
 // TODO: Should match order of params in WrappedText.  String should either be first or last.
 /**
@@ -60,7 +60,7 @@ data class Text(val textStyle: TextStyle,
 
         override val lineHeight: Float = textStyle.lineHeight()
 
-        override fun render(lp: RenderTarget, topLeft: Point2d): Dimensions =
+        override fun render(lp: RenderTarget, topLeft: Coord): Dimensions =
                 dimensions.height(lp.drawStyledText(topLeft, string, textStyle, true))
 
         override fun toString() = "WrappedText(\"$string\", $dimensions, $textStyle)"

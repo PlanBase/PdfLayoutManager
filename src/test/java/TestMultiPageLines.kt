@@ -1,7 +1,7 @@
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -34,10 +34,10 @@ class TestMultiPageLines {
         // API adds two more pages as needed.  This is a great test for how geometric shapes break
         // across pages.
 
-        val topLeft = Point2d(pMargin, lp.yBodyTop())
-        val topRight = Point2d(pageRMargin, lp.yBodyTop())
-        val bottomRight = Point2d(pageRMargin, -lp.yBodyTop())
-        val bottomLeft = Point2d(pMargin, -lp.yBodyTop())
+        val topLeft = Coord(pMargin, lp.yBodyTop())
+        val topRight = Coord(pageRMargin, lp.yBodyTop())
+        val bottomRight = Coord(pageRMargin, -lp.yBodyTop())
+        val bottomLeft = Coord(pMargin, -lp.yBodyTop())
 
         // top lne
         lp.drawLine(topLeft, topRight, lineStyle, true)
@@ -54,7 +54,7 @@ class TestMultiPageLines {
         lp.drawLine(bottomLeft, topRight, lineStyle, true)
 
         // middle line
-        lp.drawLine(Point2d(pMargin, 0f), Point2d(pageRMargin, 0f), lineStyle, true)
+        lp.drawLine(Coord(pMargin, 0f), Coord(pageRMargin, 0f), lineStyle, true)
         lp.commit()
 
         val os = FileOutputStream("multiPageLines.pdf")

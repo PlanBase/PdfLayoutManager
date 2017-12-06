@@ -16,7 +16,7 @@ import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -50,21 +50,21 @@ class SinglePageTest {
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom()) {
-            val imgY = page.drawImage(Point2d(melonX, y), bigMelon, true)
+            val imgY = page.drawImage(Coord(melonX, y), bigMelon, true)
             assertEquals(melonHeight, imgY)
 
-            val txtY = page.drawStyledText(Point2d(textX, y), bigText.text, bigText.textStyle, true)
+            val txtY = page.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
             assertEquals(bigText.textStyle.lineHeight(), txtY)
 
-            val rectY = page.fillRect(Point2d(squareX, y), squareDim, RGB_BLACK, true)
+            val rectY = page.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
             assertEquals(squareSide, rectY)
 
-            diamondRect(page, Point2d(lineX1, y), squareSide)
+            diamondRect(page, Coord(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(page, Point2d(cellX1, y + qbfCell.dimensions.height))
+            val cellDim = qbfCell.render(page, Coord(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
-            val tableDim = qbfTable.render(page, Point2d(tableX1, y))
+            val tableDim = qbfTable.render(page, Coord(tableX1, y))
             assertEquals(qbfTable.dimensions, tableDim)
 
             y -= melonHeight
@@ -75,7 +75,7 @@ class SinglePageTest {
         pageMgr.save(os)
     }
 }
-fun diamondRect(page:RenderTarget, lowerLeft:Point2d, size:Float) {
+fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Float) {
     val ls = LineStyle(RGB_BLACK, 1f)
     val (xLeft, yBot) = lowerLeft
     val xRight = xLeft + size
@@ -86,18 +86,18 @@ fun diamondRect(page:RenderTarget, lowerLeft:Point2d, size:Float) {
 
     // Square drawn counter-clockwise (widdershins) from lowerLeft
     page.drawLineStrip(listOf(lowerLeft,
-                              Point2d(xRight, yBot),
-                              Point2d(xRight, yTop),
-                              Point2d(xLeft, yTop),
+                              Coord(xRight, yBot),
+                              Coord(xRight, yTop),
+                              Coord(xLeft, yTop),
                               lowerLeft),
                        ls, true)
 
-    val midTop = Point2d(xMid, yTop)
+    val midTop = Coord(xMid, yTop)
     // Diamond drawn clockwise (deosil) from top
     page.drawLineStrip(listOf(midTop,
-                              Point2d(xRight, yMid),
-                              Point2d(xMid, yBot),
-                              Point2d(xLeft, yMid),
+                              Coord(xRight, yMid),
+                              Coord(xMid, yBot),
+                              Coord(xLeft, yMid),
                               midTop),
                        ls, true)
 }

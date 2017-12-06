@@ -24,7 +24,7 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**
@@ -35,12 +35,12 @@ interface RenderTarget {
     /**
      Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
 
-     @param start the Point2d of the starting point
-     @param end the Point2d of the ending point
+     @param start the Coord of the starting point
+     @param end the Coord of the ending point
      @param lineStyle the style to draw the line with
      @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(start: Point2d, end: Point2d, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget {
+    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget {
         drawLineStrip(listOf(start, end), lineStyle, reallyRender)
         return this
     }
@@ -48,42 +48,42 @@ interface RenderTarget {
     /**
     Draws lines from the first point to the last.  Direction is important if using mitering.
 
-    @param points the list of Point2d to draw lines between.  This does *not* connect the last point to the first.
+    @param points the list of Coord to draw lines between.  This does *not* connect the last point to the first.
     If you want that, add the first point again at the end of the list.
     @param lineStyle the style to draw the line with
     @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLineStrip(points: List<Point2d>, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget
+    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget
 
     /**
      Puts styled text on this RenderTarget
-     @param bottomLeft the Point2d of the lower-left-hand corner
+     @param bottomLeft the Coord of the lower-left-hand corner
      @param text the text
      @param textStyle the style
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(bottomLeft: Point2d, text: String, textStyle: TextStyle, reallyRender: Boolean): Float
+    fun drawStyledText(bottomLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float
 
     /**
      Puts an image on this RenderTarget
-     @param bottomLeft the Point2d of the lower-left-hand corner
+     @param bottomLeft the Coord of the lower-left-hand corner
      @param wi the scaled, "wrapped" jpeg/png image
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawImage(bottomLeft: Point2d, wi: WrappedImage, reallyRender: Boolean): Float
+    fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): Float
 
     /**
      Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
      separately with textLines).
-     @param bottomLeft the Point2d of the lower-left-hand corner
+     @param bottomLeft the Coord of the lower-left-hand corner
      @param dimensions width and height (dimensions) of rectangle
      @param c color
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(bottomLeft: Point2d, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float
+    fun fillRect(bottomLeft: Coord, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float
 
     /**
     Returns the top margin necessary to push this item onto a new page if it won't fit on this one.

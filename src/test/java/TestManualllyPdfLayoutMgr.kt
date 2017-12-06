@@ -14,7 +14,7 @@ import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
 import com.planbase.pdf.layoutmanager.utils.Dimensions
-import com.planbase.pdf.layoutmanager.utils.Point2d
+import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
 import org.apache.pdfbox.pdmodel.font.PDType0Font
@@ -25,6 +25,7 @@ import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
 import javax.imageio.ImageIO
+import kotlin.test.assertEquals
 
 class TestManualllyPdfLayoutMgr {
 
@@ -123,7 +124,7 @@ class TestManualllyPdfLayoutMgr {
         val xya: Dimensions = tB.buildTable().wrap()
                 .render(lp, lp.bodyTopLeft())
 
-        println("xya=$xya")
+        assertEquals(Dimensions(360.0f, 384.55627f), xya)
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
@@ -176,7 +177,7 @@ class TestManualllyPdfLayoutMgr {
         val xyb: Dimensions = tB.buildTable().wrap()
                 .render(lp, lp.bodyTopLeft().plusX(xya.width + 10))
 
-        println("xyb=$xyb")
+        assertEquals(Dimensions(300.0f, 324.55627f), xyb)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -212,7 +213,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
                 .buildTable()
                 .wrap()
-                .render(lp, Point2d(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
+                .render(lp, Coord(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
 
         lp.commit()
 
@@ -289,7 +290,7 @@ class TestManualllyPdfLayoutMgr {
         // Where's the lower-right-hand corner?  Put a cell there.
         tB.buildTable()
                 .wrap()
-                .render(lp, Point2d(lp.pageWidth() - (100 + pMargin),
+                .render(lp, Coord(lp.pageWidth() - (100 + pMargin),
                                      lp.yBodyBottom() + 15 + pMargin))
 
         lp.commit()
@@ -302,7 +303,7 @@ class TestManualllyPdfLayoutMgr {
             val cell = Cell(pageHeadCellStyle, tableWidth,
                             listOf(Text(pageHeadTextStyle, "Test Logical Page Three (physical page $pageNum)")))
 
-            cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27))
+            cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 
@@ -501,7 +502,7 @@ class TestManualllyPdfLayoutMgr {
             val cell = Cell(pageHeadCellStyle, tableWidth,
                             listOf(Text(pageHeadTextStyle,
                                         "Test Logical Page Four  (physical page $pageNum)")))
-            cell.wrap().render(pb, Point2d(pMargin, LETTER.width - 27))
+            cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
             0f // Don't offset whole page.
         }
 
@@ -509,10 +510,10 @@ class TestManualllyPdfLayoutMgr {
         // API adds two more pages as needed.  This is a great test for how geometric shapes break
         // across pages.
 
-        val topLeft = Point2d(pMargin, lp.yBodyTop())
-        val topRight = Point2d(pageRMargin, lp.yBodyTop())
-        val bottomRight = Point2d(pageRMargin, -lp.yBodyTop())
-        val bottomLeft = Point2d(pMargin, -lp.yBodyTop())
+        val topLeft = Coord(pMargin, lp.yBodyTop())
+        val topRight = Coord(pageRMargin, lp.yBodyTop())
+        val bottomRight = Coord(pageRMargin, -lp.yBodyTop())
+        val bottomLeft = Coord(pMargin, -lp.yBodyTop())
 
         // top lne
         lp.drawLine(topLeft, topRight, lineStyle, true)
@@ -529,7 +530,7 @@ class TestManualllyPdfLayoutMgr {
         lp.drawLine(bottomLeft, topRight, lineStyle, true)
 
         // middle line
-        lp.drawLine(Point2d(pMargin, 0f), Point2d(pageRMargin, 0f), lineStyle, true)
+        lp.drawLine(Coord(pMargin, 0f), Coord(pageRMargin, 0f), lineStyle, true)
         lp.commit()
 
         // All done - write it out!
