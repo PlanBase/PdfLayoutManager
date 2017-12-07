@@ -131,6 +131,8 @@ enum class Align {
                 if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
     };
 
+    // TODO: rename to adjustTopLeft and take a topLeft Coord and return the adjusted Coord.
+    // OR just return the component parts individually: top, right, bottom, or left.
     /**
     Given outer dimensions (make sure to add padding as necessary), and inner dimensions,
     calculates *additional* padding to apply.

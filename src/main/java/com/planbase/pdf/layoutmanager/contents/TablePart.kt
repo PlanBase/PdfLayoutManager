@@ -88,12 +88,12 @@ class TablePart(private val tableBuilder: TableBuilder) {
                 part.rows.map { WrappedTableRow(it) }
                         .toList()
 
-        fun render(lp: RenderTarget, topLeft: Coord, reallyRender:Boolean): Dimensions {
+        fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
             var y = topLeft.y
             var maxWidth = 0f
             for (row in rows) {
                 //            System.out.println("\tAbout to render row: " + row);
-                val (width, height) = row.render(lp, Coord(topLeft.x, y), reallyRender)
+                val (width, height) = row.render(lp, Coord(topLeft.x, y))
                 maxWidth = max(maxWidth, width)
                 y -= height
             }

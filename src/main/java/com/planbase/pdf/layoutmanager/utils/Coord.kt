@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.utils
 
 import kotlin.math.abs
-
+// TODO: How about renaming this Xy?
 /**
  An immutable 2D Coordinate or point in terms of X and Y.  Often measured from the lower-left corner.
  Do not confuse this with an Dimensions which represents positive width and height.
@@ -40,7 +40,7 @@ data class Coord(val x: Float, val y: Float) {
 
     fun minusY(offset: Float) = if (offset == 0f) { this } else { Coord(x, y - offset) }
 
-    fun plusXMinusY(that: Coord) = Coord(x + that.x, y - that.y)
+//    fun plusXMinusY(that: Coord) = Coord(x + that.x, y - that.y)
 
     fun plusXMinusY(that: Dimensions) = Coord(x + that.width, y - that.height)
 

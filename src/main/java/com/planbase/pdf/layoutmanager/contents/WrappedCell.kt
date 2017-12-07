@@ -47,7 +47,7 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         for (row in items) {
             val rowDim = row.dimensions
             dim = Dimensions(Math.max(dim.width, rowDim.width),
-                        dim.height + rowDim.height)
+                             dim.height + rowDim.height)
         }
         dim
     }()
@@ -56,23 +56,23 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         return tableRender(lp, topLeft, dimensions.height, true)
     }
 
+    // TODO: When given a min-height, this sometimes returns the wrong height.
+    // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
     fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dimensions {
-//        println("render() topLeft=" + topLeft)
+        println("render($topLeft, $height, $reallyRender)")
         val boxStyle = cellStyle.boxStyle
-        val padding = boxStyle.padding
         val border = boxStyle.border
         // Dimensions dimensions = padding.addTo(pcrs.dim);
 
         // Draw contents over background, but under border
-        var innerTopLeft: Coord = padding.applyTopLeft(topLeft)
-                .plusXMinusY(Coord(border.left.thickness / 2f, border.top.thickness / 2f))
-        val innerDimensions: Dimensions = padding.subtractFrom(dimensions)
+        val tempTopLeft: Coord = boxStyle.applyTopLeft(topLeft)
+        val innerDimensions: Dimensions = boxStyle.subtractFrom(dimensions)
 
         // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
         val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
 //        System.out.println("\tCell.render alignPad=" + alignPad);
-        innerTopLeft = Coord(innerTopLeft.x + alignPad.left,
-                                innerTopLeft.y - alignPad.top)
+        val innerTopLeft = Coord(tempTopLeft.x + alignPad.left,
+                                 tempTopLeft.y - alignPad.top)
 
         var bottomY = innerTopLeft.y
         for (line in items) {
@@ -89,6 +89,8 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             bottomY -= thisLineHeight // y is always the lowest item in the cell.
 //            println("line=$line")
         }
+        println("bottomY=$bottomY")
+        println("totalHeight=${innerTopLeft.y - bottomY}")
         // TODO: Where do we add bottom padding to bottomY?
         bottomY = minOf(bottomY, topLeft.y - height)
 //        println("height=${innerTopLeft.y - bottomY}")
@@ -126,7 +128,9 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             }
         }
 
-        return Dimensions(rightX - topLeft.x,
-                     topLeft.y - bottomY)
+        val ret = Dimensions(rightX - topLeft.x,
+                             topLeft.y - bottomY)
+        println("Returning: $ret")
+        return ret
     }
 }

@@ -2,6 +2,8 @@ package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.CMYK_WHITE
+import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dimensions
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -14,8 +16,17 @@ class BoxStyleTest {
                                       LineStyle(CMYK_WHITE, 17f),
                                       LineStyle(CMYK_WHITE, 19f)))
 
+        assertEquals(6.5f, bs1.interiorSpaceTop())
+        assertEquals(9.5f, bs1.interiorSpaceRight())
+        assertEquals(13.5f, bs1.interiorSpaceBottom())
+        assertEquals(16.5f, bs1.interiorSpaceLeft())
+
         assertEquals(20f, bs1.topBottomInteriorSp())
         assertEquals(26f, bs1.leftRightInteriorSp())
+
+        assertEquals(Coord(116.5f, 193.5f), bs1.applyTopLeft(Coord(100f, 200f)))
+
+        assertEquals(Dimensions(74f, 180f), bs1.subtractFrom(Dimensions(100f, 200f)))
 
         val bs2 = BoxStyle(Padding.NO_PADDING,
                            CMYK_BLACK,

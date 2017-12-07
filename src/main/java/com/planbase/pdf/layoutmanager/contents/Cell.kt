@@ -44,7 +44,9 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
     }
 
     fun wrap() : WrappedCell {
-        val fixedLines: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(contents, width)
+        val fixedLines: List<MultiLineWrapped> =
+                renderablesToMultiLineWrappeds(contents,
+                                               width - cellStyle.boxStyle.leftRightInteriorSp())
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
         var height = cellStyle.boxStyle.topBottomInteriorSp()
 

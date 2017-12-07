@@ -61,7 +61,7 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
             var maxWidth = 0f
             for (part in parts) {
                 //            System.out.println("About to render part: " + part);
-                val (width, height) = part.render(lp, topLeft.y(y), true)
+                val (width, height) = part.render(lp, topLeft.y(y))
                 maxWidth = max(maxWidth, width)
                 y -= height
             }

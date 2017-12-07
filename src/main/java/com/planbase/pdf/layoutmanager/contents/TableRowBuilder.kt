@@ -101,27 +101,28 @@ class TableRowBuilder(private val tablePart: TablePart) {
                 rowBuilder.cells.map { c -> c!!.wrap() }
                         .toList()
 
-        fun render(lp: RenderTarget, outerTopLeft: Coord, reallyRender:Boolean): Dimensions {
+        fun render(lp: RenderTarget, outerTopLeft: Coord): Dimensions {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
 //                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
 
             var x = outerTopLeft.x
             var maxRowHeight = minRowHeight
+            println("minRowHeight=$minRowHeight")
             // Find the height of the tallest cell before rendering any cells.
             for (fixedCell in fixedCells) {
                 val (width, height) = fixedCell.tableRender(lp, Coord(x, outerTopLeft.y), maxRowHeight, false)
+                println("height=$height")
                 maxRowHeight = max(maxRowHeight, height)
+                println("maxRowHeight=$maxRowHeight")
                 x += width
             }
             val maxWidth = x - outerTopLeft.x
 
-            if (reallyRender) {
-                // Now render the cells
-                x = outerTopLeft.x
-                for (fixedCell in fixedCells) {
-                    val (width, _) = fixedCell.tableRender(lp, Coord(x, outerTopLeft.y), maxRowHeight, true)
-                    x += width
-                }
+            // Now render the cells
+            x = outerTopLeft.x
+            for (fixedCell in fixedCells) {
+                val (width, _) = fixedCell.tableRender(lp, Coord(x, outerTopLeft.y), maxRowHeight, true)
+                x += width
             }
 
             return Dimensions(maxWidth, maxRowHeight)
