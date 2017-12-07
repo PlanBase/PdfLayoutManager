@@ -56,10 +56,10 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //            maxWidth = maxOf(line.dimensions.width, maxWidth)
         }
 
-        if ( (tableRow != null) &&
-             (height < tableRow.minRowHeight) ) {
-            height = tableRow.minRowHeight
-        }
+//        if ( (tableRow != null) &&
+//             (height < tableRow.minRowHeight) ) {
+//            height = tableRow.minRowHeight
+//        }
 
         return WrappedCell(Dimensions(width, height), this.cellStyle, fixedLines)
     }

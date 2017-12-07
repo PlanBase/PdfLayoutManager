@@ -49,7 +49,7 @@ class SinglePageTest {
         val tableX1 = cellX1 + squareSide + 10
         var y = lp.yBodyTop() - melonHeight
 
-        while(y >= lp.yBodyBottom()) {
+        while(y >= lp.lowerLeftBody.y) {
             val imgY = page.drawImage(Coord(melonX, y), bigMelon, true)
             assertEquals(melonHeight, imgY)
 
@@ -64,7 +64,7 @@ class SinglePageTest {
             val cellDim = qbfCell.render(page, Coord(cellX1, y + qbfCell.dimensions.height))
             assertEquals(qbfCell.dimensions, cellDim)
 
-            val tableDim = qbfTable.render(page, Coord(tableX1, y))
+            val tableDim = qbfTable.render(page, Coord(tableX1, y + qbfCell.dimensions.height))
             assertEquals(qbfTable.dimensions, tableDim)
 
             y -= melonHeight

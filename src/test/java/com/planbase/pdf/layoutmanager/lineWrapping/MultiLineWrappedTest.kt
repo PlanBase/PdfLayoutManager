@@ -18,12 +18,12 @@ import java.io.FileOutputStream
 import kotlin.test.assertTrue
 
 class MultiLineWrappedTest {
-    private val floatCloseEnough = 0.000002f
+    private val floatCloseEnough = 0.000004f
 
     @Test fun testLine() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 60f, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK)
         val txt2 = Text(tStyle2, "there ")
         val txt3 = Text(tStyle1, "world!")
         val line = MultiLineWrapped()

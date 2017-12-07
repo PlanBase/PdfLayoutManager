@@ -1,5 +1,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
 import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
 import com.planbase.pdf.layoutmanager.contents.Text.WrappedText
@@ -7,11 +9,19 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
+import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
+import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.junit.Assert
 import org.junit.Test
+import java.io.FileOutputStream
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -181,4 +191,35 @@ class TextTest {
         assertEquals("\n\nHello\n\n\n   There\nWorld\n\n\n   ",
                      cleanStr("  \n\n\tHello  \n\n\n   There\r\nWorld   \n\n\n   "))
     }
+
+    @Test fun testBaseline() {
+        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 100f, CMYK_BLACK)
+        val txt1 = Text(tStyle1, "Hello dNg")
+        val thinLine = LineStyle(RGB_BLACK, 0.125f)
+
+        // This is for the baseline!
+        val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
+        val logicalPage = mgr.logicalPageStart()
+        mgr.ensurePageIdx(0)
+        val lp = mgr.page(0)
+        val margin = 40f
+        val pageDim = mgr.pageDim.swapWh()
+        val yTop = pageDim.height - margin
+        val pageRightMargin = pageDim.width - margin
+        val yBaseline = yTop - tStyle1.ascent()
+        val yBottom = yTop - tStyle1.lineHeight()
+        val upperLeft = Coord(margin, yTop)
+        lp.drawLine(Coord(margin, yTop), Coord(pageRightMargin, yTop), thinLine, true)
+        lp.drawLine(Coord(margin, yBaseline), Coord(pageRightMargin, yBaseline), thinLine, true)
+        lp.drawLine(Coord(margin, yBottom), Coord(pageRightMargin, yBottom), thinLine, true)
+        lp.drawStyledText(upperLeft.minusY(tStyle1.ascent()), txt1.text, tStyle1, true)
+
+        // TODO: Figure this out!
+//        assertEquals(Coord(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
+
+        logicalPage.commit()
+        val os = FileOutputStream("textBaseline.pdf")
+        mgr.save(os)
+    }
+
 }

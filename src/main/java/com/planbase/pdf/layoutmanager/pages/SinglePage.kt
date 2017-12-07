@@ -143,6 +143,9 @@ class SinglePage(val pageNum: Int,
         }
     }
 
+    /*
+    Text is drawn from the baseline up.
+     */
     internal class Text(private val bottomLeft: Coord, val t: String, val style: TextStyle,
                         ord: Long, z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)

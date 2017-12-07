@@ -93,7 +93,7 @@ class TablePart(private val tableBuilder: TableBuilder) {
             var maxWidth = 0f
             for (row in rows) {
                 //            System.out.println("\tAbout to render row: " + row);
-                val (width, height) = row.render(lp, Coord(topLeft.x, y))
+                val (width, height) = row.render(lp, topLeft.y(y))
                 maxWidth = max(maxWidth, width)
                 y -= height
             }

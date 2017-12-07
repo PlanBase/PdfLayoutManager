@@ -66,7 +66,7 @@ class ScaledImage(private val bufferedImage: BufferedImage,
 
         /** {@inheritDoc}  */
         override fun render(lp: RenderTarget, topLeft: Coord): Dimensions =
-                dimensions.height(lp.drawImage(topLeft, this, true))
+                dimensions.height(lp.drawImage(topLeft.minusY(dimensions.height), this, true))
     }
 
     companion object {

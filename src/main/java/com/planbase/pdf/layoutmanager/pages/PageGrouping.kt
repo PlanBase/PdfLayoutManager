@@ -28,10 +28,9 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
-import com.planbase.pdf.layoutmanager.utils.Dimensions
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dimensions
 import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 import java.util.TreeSet
@@ -90,53 +89,33 @@ import java.util.TreeSet
  * Constructor
  * @param mgr the PdfLayoutMgr you are using.
  * @param orientation page orientation for this logical page grouping.
- * @param bodyOff the offset (in document units) from the lower-left hand corner of the page to
+ * @param lowerLeftBody the offset (in document units) from the lower-left hand corner of the page to
  * the lower-left of the body area.
  * @param bodyDim the dimensions of the body area.
  * @return a new PageGrouping with the given settings.
  */
 class PageGrouping(private val mgr: PdfLayoutMgr,
                    val orientation: Orientation,
-                   bodyOff: Coord,
-                   bodyDim: Dimensions) : RenderTarget { // AKA Document Section
+                   val lowerLeftBody: Coord,
+                   val bodyDim: Dimensions) : RenderTarget { // AKA Document Section
 
-    /**
-     * Create a PageGrouping with default margins for body top and bottom.
-     * @param m the PdfLayoutMgr you are using.
-     * @param orientation page orientation for this logical page grouping.
-     * @return a new PageGrouping with the given settings.
-     */
-    constructor(m: PdfLayoutMgr, orientation: Orientation):
-            this(m, orientation, Coord(DEFAULT_MARGIN, DEFAULT_MARGIN),
-                 if (orientation == PORTRAIT)
-                     m.pageDim.minus(DEFAULT_DOUBLE_MARGIN_DIM)
-                 else
-                     m.pageDim.swapWh().minus(DEFAULT_DOUBLE_MARGIN_DIM))
-
-
-    private val bodyRect: PDRectangle = PDRectangle(bodyOff.x, bodyOff.y,
-                                                    bodyDim.width, bodyDim.height)
     // borderItems apply to a logical section
     private val borderItems = TreeSet<PdfItem>()
 //    private var borderOrd = 0
     private var valid = true
 
+    override fun toString(): String =
+            "PageGrouping(pageDim=${if (orientation == PORTRAIT) mgr.pageDim else mgr.pageDim.swapWh()}" +
+            " $orientation lowerLeftBody=$lowerLeftBody bodyDim=$bodyDim)"
+
     // ===================================== Instance Methods =====================================
 
-    fun bodyTopLeft() = Coord(bodyRect.lowerLeftX, bodyRect.upperRightY)
+    // TODO: Do we need this?  Can't we just expose lowerLeftBody?
+    fun bodyTopLeft() = lowerLeftBody.plusY(bodyDim.height)
 
+    // TODO: Do we need this?  Can't we just expose lowerLeftBody and bodyDim?
     /** The Y-value for top of the body section (in document units)  */
-    fun yBodyTop(): Float = bodyRect.upperRightY
-
-    /**
-     * The Y-value for the bottom of the body section (in document units).  The bottom of the page is
-     * always zero, so this is always equivalent to the margin body bottom.
-     */
-    fun yBodyBottom(): Float = bodyRect.lowerLeftY
-
-    /** Height (dimension, not offset) of the body section (in document units)  */
-    // part of public interface
-    fun bodyHeight(): Float = bodyRect.height
+    fun yBodyTop(): Float = lowerLeftBody.y + bodyDim.height
 
     /**
      * Width of the entire page (in document units).  This is the short dimension for portrait,
@@ -232,7 +211,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                 yb = if (pageNum == totalPages) {
                     pby2.y
                 } else {
-                    yBodyBottom()
+                    lowerLeftBody.y
                 }
 
                 currPage.fillRect(Coord(left, yb), Dimensions(width, ya - yb), c, reallyRender)
@@ -317,7 +296,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     yb = pby2.y
                 } else {
                     // On all except the last page, the second-y will end at the bottom of the page.
-                    yb = yBodyBottom()
+                    yb = lowerLeftBody.y
 
                     // This represents the x-value of the line at the bottom of one page and later
                     // becomes the x-value for the top of the next page.  It should work whether
@@ -366,8 +345,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      @param origY the un-adjusted (bottom) y value.
      @return the proper page and adjusted y value for that page.
      */
-    private fun appropriatePage(origY: Float, height: Float): PageBufferAndY {
-        var y = origY
+    private fun appropriatePage(bottomY: Float, height: Float): PageBufferAndY {
+        println("appropriatePage(bottomY=$bottomY, height=$height)")
+        var y = bottomY
         if (!mgr.hasAnyPages()) {
             throw IllegalStateException("Cannot work with the any pages until one has been" +
                                         " created by calling mgr.ensurePageIdx(1).")
@@ -375,84 +355,23 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         var idx = mgr.unCommittedPageIdx()
         // Get the first possible page.  Just keep moving to the top of the next page until it's in
         // the printable area.
-        while (y < yBodyBottom()) {
-            y += bodyHeight()
+        while (y < lowerLeftBody.y) {
+            println("  y=$y lowerLeftBody.y=${lowerLeftBody.y}")
+            y += bodyDim.height
             idx++
             mgr.ensurePageIdx(idx)
         }
         val ps = mgr.page(idx)
         var adj = 0f
         if (y + height > yBodyTop()) {
+            println("  y=$y yBodyTop()=${yBodyTop()}")
             val oldY = y
             y = yBodyTop() - height
             adj = y - oldY
         }
+        println("  y=$y, adj=$adj")
         return PageBufferAndY(ps, y, -adj)
     }
-
-    /*
-     * You can draw a cell without a table (for a heading, or paragraph of same-format text, or
-     * whatever).
-     */
-//    fun drawCell(x: Float, y: Float, cell: WrappedCell): Dimensions =
-//            // render the row with that maxHeight.
-//            cell.render(this, Coord(x, y))
-
-//    /**
-//     * Shows the given cells plus either a background or an outline as appropriate.
-//     *
-//     * @param initialX the left-most x-value.
-//     * @param origY the starting y-value
-//     * @param cells the Cells to display
-//     * @return the final y-value
-//     * @throws IOException if there is an error writing to the underlying stream.
-//     */
-//    @Throws(IOException::class)
-//    fun putRow(initialX: Float, origY: Float, vararg cells: Cell): Float {
-//        if (!valid) {
-//            throw IllegalStateException("Logical page accessed after commit")
-//        }
-//
-//        // Similar to TableBuilder and TableRowBuilder.calcDimensions().  Should be combined?
-//        var maxDim = Dimensions.ZERO
-//        for (cell in cells) {
-//            val wh = cell.calcDimensions(cell.width)
-//            maxDim = Dimensions(wh!!.width + maxDim.width,
-//                           Math.max(maxDim.height, wh.height))
-//        }
-//        val maxHeight = maxDim.height
-//
-//        //        System.out.println("putRow: maxHeight=" + maxHeight);
-//
-//        // render the row with that maxHeight.
-//        var x = initialX
-//        for (cell in cells) {
-//            cell.render(this, Coord(x, origY), Dimensions(cell.width, maxHeight))
-//            x += cell.width
-//        }
-//
-//        return origY - maxHeight
-//    }
-
-    //    /**
-    //     Header and footer in this case means anything that doesn't have to appear within the body
-    //     of the page.  Most commonly used for headers and footers, but could be watermarks, background
-    //     images, or anything outside the normal page flow.  I believe these get drawn first so
-    //     the body text will render over the top of them.  Items put here will *not* wrap to the next
-    //     page.
-    //
-    //     @param x the x-value on all pages (often set outside the normal margins)
-    //     @param origY the y-value on all pages (often set outside the normal margins)
-    //     @param cell the cell containing the styling and text to render
-    //     @return the bottom Y-value of the rendered cell (on all pages)
-    //     */
-    //    public float drawCellAsWatermark(float x, float origY, Cell cell) {
-    //        if (!valid) { throw new IllegalStateException("Logical page accessed after commit"); }
-    //        float outerWidth = cell.width();
-    //        Dimensions innerDim = cell.calcDimensions(outerWidth);
-    //        PageBufferAndY pby = appropriatePage(origY);
-    //        return cell.render(pby.pb, Coord.of(x, pby.y), innerDim.width(outerWidth)).y();
-    //    }
 
     @Throws(IOException::class)
     fun commitBorderItems(stream: PDPageContentStream) {
@@ -480,7 +399,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //    }
 
     companion object {
-        private val DEFAULT_DOUBLE_MARGIN_DIM = Dimensions(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
+        val DEFAULT_DOUBLE_MARGIN_DIM = Dimensions(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
 
         /**
         @param pb specific page item will be put on

@@ -21,12 +21,13 @@
 package com.planbase.pdf.layoutmanager.utils
 
 import kotlin.math.abs
-// TODO: How about renaming this Xy?
+// TODO: rename to Offset?
 /**
- An immutable 2D Coordinate or point in terms of X and Y.  Often measured from the lower-left corner.
+ An immutable 2D Coordinate, offset, or point in terms of X and Y.  Often measured from the lower-left corner.
  Do not confuse this with an Dimensions which represents positive width and height.
  This is called Coord because Point and Point2D are already classes in Java and they are mutable.
- It's pronounced "co-ward" as in, "coordinate."
+ It's pronounced "co-ward" as in, "coordinate."  It's not called Xy because that's too easy to confuse
+ with width and height, which this is not - it's an offset from the origin.
  */
 data class Coord(val x: Float, val y: Float) {
 

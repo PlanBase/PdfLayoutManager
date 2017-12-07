@@ -52,9 +52,19 @@ class MultiLineWrapped(var width: Float = 0f,
         val y = topLeft.y
         var maxHeight = dimensions.height
         for (item: LineWrapped in items) {
-            // ascent is the maximum ascent for anything on this line.  Subtracting that from the top-y
+            // ascent is the maximum ascent for anything on this line.
+            //          /
+            //         |
+            // (max)   |
+            // ascent <        __
+            //         |      |  )
+            //         |      |-:
+            //          \. . .|  \ . . . . . . . . . . .
+            //
+            //
+            // Subtracting that from the top-y
             // yields the baseline, which is what we want to align on.
-            val fixedHeight = item.render(lp, Coord(x, y - ascent)).height
+            val fixedHeight = item.render(lp, Coord(x, y - (ascent - item.ascent))).height
             maxHeight = maxOf(maxHeight, fixedHeight)
             x += item.dimensions.width
         }

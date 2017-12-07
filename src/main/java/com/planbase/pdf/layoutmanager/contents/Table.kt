@@ -54,9 +54,6 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
         lower-right-hand corner of the last line (e.g. of text).
         */
         override fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
-            // TODO: Tables must render from top left.
-//            val origY = topLeft.y + ascent
-//            var y = origY
             var y = topLeft.y
             var maxWidth = 0f
             for (part in parts) {
@@ -65,8 +62,6 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
                 maxWidth = max(maxWidth, width)
                 y -= height
             }
-            // TODO: Tables must render from top left.
-//            return Dimensions(maxWidth, origY - y)
             return Dimensions(maxWidth, topLeft.y - y)
         }
 

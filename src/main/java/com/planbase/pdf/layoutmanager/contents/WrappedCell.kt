@@ -60,45 +60,52 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
     fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dimensions {
         println("render($topLeft, $height, $reallyRender)")
+        println("  cellStyle=$cellStyle")
         val boxStyle = cellStyle.boxStyle
         val border = boxStyle.border
         // Dimensions dimensions = padding.addTo(pcrs.dim);
 
         // Draw contents over background, but under border
         val tempTopLeft: Coord = boxStyle.applyTopLeft(topLeft)
-        val innerDimensions: Dimensions = boxStyle.subtractFrom(dimensions)
+        println("  tempTopLeft=$tempTopLeft dimensions=$dimensions height=$height")
+        val finalDim = if (dimensions.height < height) { dimensions.height(height) } else { dimensions }
+        println("  finalDim=$finalDim")
+        val innerDimensions: Dimensions = boxStyle.subtractFrom(finalDim)
+        println("  innerDimensions=$innerDimensions")
 
         // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
         val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
-//        System.out.println("\tCell.render alignPad=" + alignPad);
+        println("  alignPad=$alignPad")
         val innerTopLeft = Coord(tempTopLeft.x + alignPad.left,
                                  tempTopLeft.y - alignPad.top)
+        println("  innerTopLeft=$innerTopLeft")
 
-        var bottomY = innerTopLeft.y
+        var y = innerTopLeft.y
         for (line in items) {
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dimensions.width)
             val thisLineHeight = if (reallyRender) {
 //                println("render")
-                line.render(lp, Coord(rowXOffset + innerTopLeft.x, bottomY)).height
+                line.render(lp, Coord(rowXOffset + innerTopLeft.x, y)).height
             } else {
-//                println("try")
-                lp.pageBreakingTopMargin(bottomY + line.descentAndLeading, line.lineHeight) + line.lineHeight
-//                println("try adjY=$adjY line.lineHeight=${line.lineHeight}")
+                println("  try y=$y line=$line")
+                val adjY = lp.pageBreakingTopMargin(y + line.descentAndLeading, line.lineHeight) + line.lineHeight
+                println("  try adjY=$adjY line.lineHeight=${line.lineHeight}")
+                adjY
             }
 //            println("thisLineHeight=$thisLineHeight")
-            bottomY -= thisLineHeight // y is always the lowest item in the cell.
+            y -= thisLineHeight // y is always the lowest item in the cell.
 //            println("line=$line")
         }
-        println("bottomY=$bottomY")
-        println("totalHeight=${innerTopLeft.y - bottomY}")
-        // TODO: Where do we add bottom padding to bottomY?
-        bottomY = minOf(bottomY, topLeft.y - height)
-//        println("height=${innerTopLeft.y - bottomY}")
+        println("  y=$y")
+        println("  totalHeight=${innerTopLeft.y - y}")
+        // TODO: Where do we add bottom padding to y?
+        y = minOf(y, topLeft.y - height)
+//        println("height=${innerTopLeft.y - y}")
 
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(topLeft.y(bottomY), dimensions.height(topLeft.y - bottomY), boxStyle.bgColor, reallyRender)
+            lp.fillRect(topLeft.y(y), dimensions.height(topLeft.y - y), boxStyle.bgColor, reallyRender)
             //            System.out.println("\tCell.render back from putRect");
         }
 
@@ -109,8 +116,8 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             val origY = topLeft.y
 
             val topRight = Coord(rightX, origY)
-            val bottomRight = Coord(rightX, bottomY)
-            val bottomLeft = Coord(origX, bottomY)
+            val bottomRight = Coord(rightX, y)
+            val bottomLeft = Coord(origX, y)
 
             // TODO use multi-line drawing
             // Like CSS it's listed Top, Right, Bottom, left
@@ -129,8 +136,8 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         }
 
         val ret = Dimensions(rightX - topLeft.x,
-                             topLeft.y - bottomY)
-        println("Returning: $ret")
+                             topLeft.y - y)
+        println("  Returning: $ret")
         return ret
     }
 }

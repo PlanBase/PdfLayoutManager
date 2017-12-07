@@ -24,6 +24,7 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
+import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dimensions
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
@@ -163,7 +164,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         pageReactor = pr
         val pb = SinglePage(pages.size + 1, this, pageReactor)
         pages.add(pb)
-        return PageGrouping(this, o)
+        return PageGrouping(this, o, Coord(DEFAULT_MARGIN, DEFAULT_MARGIN),
+                            if (o == Orientation.PORTRAIT)
+                                this.pageDim.minus(PageGrouping.DEFAULT_DOUBLE_MARGIN_DIM)
+                            else
+                                this.pageDim.swapWh().minus(PageGrouping.DEFAULT_DOUBLE_MARGIN_DIM))
     }
 
     /**

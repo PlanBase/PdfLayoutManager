@@ -54,9 +54,9 @@ data class Padding(val top: Float,
 
     override fun toString() =
             if ((top == right) && (top == bottom) && (top == left)) {
-                "Padding($top)"
+                "Padding(${top}f)"
             } else {
-                super.toString()
+                "Padding(${top}f, ${right}f, ${bottom}f, ${left}f)"
             }
 
     //    public Coord topLeftPadOffset() { return Coord(left, -top); }

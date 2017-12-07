@@ -67,11 +67,15 @@ class CellTest {
 
         val wrappedCell:WrappedCell = cell.wrap()
 //        println("wrappedCell=$wrappedCell")
-        assertEquals(squareDim, wrappedCell.dimensions.height)
+        assertEquals(theText.textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+                     wrappedCell.dimensions.height)
 
         trb.buildRow()
                 .buildPart()
         val table: Table = tB.buildTable()
+
+        println("lp=$lp")
+        println("lp.yBodyTop()=${lp.yBodyTop()}")
 
         val dim: Dimensions = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
 
