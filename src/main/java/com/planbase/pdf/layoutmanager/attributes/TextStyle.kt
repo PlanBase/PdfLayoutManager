@@ -106,6 +106,9 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
     /** Leading as a positive number in document units  */
     fun leading(): Float = adl.leading
 
+    /** Descent plus leading as a positive number in document units  */
+    fun descentAndLeading(): Float = adl.descent + adl.leading
+
     fun lineHeight(): Float = adl.lineHeight()
 
     internal data class AscDescLead(val ascent: Float, val descent: Float, val leading: Float) {

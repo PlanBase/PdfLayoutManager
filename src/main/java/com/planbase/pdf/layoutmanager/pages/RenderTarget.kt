@@ -57,13 +57,13 @@ interface RenderTarget {
 
     /**
      Puts styled text on this RenderTarget
-     @param bottomLeft the Coord of the lower-left-hand corner
+     @param baselineLeft the Coord of the left-hand baseline point.  Ascent goes above, descent and leading below.
      @param text the text
      @param textStyle the style
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(bottomLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float
+    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float
 
     /**
      Puts an image on this RenderTarget

@@ -194,7 +194,7 @@ class TextTest {
 
     @Test fun testBaseline() {
         val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 100f, CMYK_BLACK)
-        val txt1 = Text(tStyle1, "Hello dNg")
+        val txt1 = Text(tStyle1, "Hello dNgjpqy")
         val thinLine = LineStyle(RGB_BLACK, 0.125f)
 
         // This is for the baseline!
@@ -207,7 +207,7 @@ class TextTest {
         val yTop = pageDim.height - margin
         val pageRightMargin = pageDim.width - margin
         val yBaseline = yTop - tStyle1.ascent()
-        val yBottom = yTop - tStyle1.lineHeight()
+        val yBottom = yTop - (tStyle1.lineHeight() - tStyle1.leading())
         val upperLeft = Coord(margin, yTop)
         lp.drawLine(Coord(margin, yTop), Coord(pageRightMargin, yTop), thinLine, true)
         lp.drawLine(Coord(margin, yBaseline), Coord(pageRightMargin, yBaseline), thinLine, true)

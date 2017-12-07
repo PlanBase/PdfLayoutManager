@@ -82,14 +82,14 @@ class SinglePage(val pageNum: Int,
         return this
     }
 
-    private fun drawStyledText(bottomLeft: Coord, text: String, s: TextStyle, z: Float) {
-        items.add(Text(bottomLeft.plusX(xOff), text, s, lastOrd++, z))
+    private fun drawStyledText(baselineLeft: Coord, text: String, s: TextStyle, z: Float) {
+        items.add(Text(baselineLeft.plusX(xOff), text, s, lastOrd++, z))
     }
 
     /** {@inheritDoc}  */
-    override fun drawStyledText(bottomLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
+    override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
         if (reallyRender) {
-            drawStyledText(bottomLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+            drawStyledText(baselineLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
         }
         return textStyle.lineHeight()
     }
@@ -146,14 +146,14 @@ class SinglePage(val pageNum: Int,
     /*
     Text is drawn from the baseline up.
      */
-    internal class Text(private val bottomLeft: Coord, val t: String, val style: TextStyle,
+    internal class Text(private val baselineLeft: Coord, val t: String, val style: TextStyle,
                         ord: Long, z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             stream.beginText()
             stream.setNonStrokingColor(style.textColor)
             stream.setFont(style.font, style.fontSize)
-            stream.newLineAtOffset(bottomLeft.x, bottomLeft.y)
+            stream.newLineAtOffset(baselineLeft.x, baselineLeft.y)
             stream.showText(t)
             stream.endText()
         }
