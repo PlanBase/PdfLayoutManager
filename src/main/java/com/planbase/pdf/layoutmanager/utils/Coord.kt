@@ -42,7 +42,13 @@ data class Coord(val x: Float, val y: Float) {
 
 //    fun plusXMinusY(that: Coord) = Coord(x + that.x, y - that.y)
 
-    fun plusXMinusY(that: Dim) = Coord(x + that.width, y - that.height)
+    fun plusXMinusY(dim: Dim) =
+            if (dim == Dim.ZERO) this
+            else Coord(x + dim.width, y - dim.height)
+
+    fun plusXMinusY(xOff:Float, yOff:Float) =
+            if ( (xOff == 0f) && (yOff == 0f) ) this
+            else Coord(x + xOff, y - yOff)
 
     fun dimensionTo(that: Coord) = Dim(abs(x - that.x), abs(y - that.y))
 

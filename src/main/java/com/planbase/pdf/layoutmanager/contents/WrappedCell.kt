@@ -75,11 +75,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         val innerDim: Dim = boxStyle.subtractFrom(finalDim)
         println("  innerDim=$innerDim")
 
-        // TODO: Looks wrong!  Returns a Padding?  But we already have innerDim, calculated from the Padding!
-        val alignPad = cellStyle.align.calcPadding(innerDim, wrappedBlockDim)
-        println("  alignPad=$alignPad")
-        val innerTopLeft = Coord(tempTopLeft.x + alignPad.left,
-                                 tempTopLeft.y - alignPad.top)
+        val innerTopLeft = cellStyle.align.innerTopLeft(innerDim, wrappedBlockDim, tempTopLeft)
         println("  innerTopLeft=$innerTopLeft")
 
         var y = innerTopLeft.y
