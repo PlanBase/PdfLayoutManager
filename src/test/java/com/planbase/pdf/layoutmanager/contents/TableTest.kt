@@ -30,7 +30,6 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(twoHundred, ret.width)
-        // TODO: Can we adjust the calculations to have less errors?
         assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
 
@@ -59,7 +58,6 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(helloHelloWidth, ret.width)
-        // TODO: Can we adjust the calculations to have less errors?
         assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }
@@ -86,7 +84,6 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(twoHundred + twoHundred, ret.width)
-        // TODO: Can we adjust the calculations to have less errors?
         assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }
@@ -113,7 +110,6 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(helloHelloWidth + helloHelloWidth, ret.width)
-        // TODO: Can we adjust the calculations to have less errors?
         assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }

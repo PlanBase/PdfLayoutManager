@@ -113,8 +113,6 @@ class PageGroupingTest {
 
         val squareDim = Dim(squareSide, squareSide)
 
-        // TODO: The topLeft parameters on RenderTarget are actually LOWER-left.
-
         val melonX = lp.bodyTopLeft().x
         val textX = melonX + melonWidth + 10
         val squareX = textX + bigText.maxWidth() + 10
