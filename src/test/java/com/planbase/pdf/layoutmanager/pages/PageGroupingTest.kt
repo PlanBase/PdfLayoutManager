@@ -168,10 +168,11 @@ class PageGroupingTest {
 
 //        val tableDim2 = qbfTable.render(lp, Coord(tableX1, y))
         val tableDim2 = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-
 //        println("qbfTable.dim=${qbfTable.dim} tableDim2=${tableDim2}")
+
         assertTrue(qbfTable.dim.height < tableDim2.height)
-//        assertEquals(cellDim2.height, tableDim2.height)
+        assertEquals(qbfCell.dim.height, qbfTable.dim.height)
+        assertEquals(cellDim2.height, tableDim2.height)
 
         y -= listOf(imgY2, txtY2, rectY2).max() as Float
 

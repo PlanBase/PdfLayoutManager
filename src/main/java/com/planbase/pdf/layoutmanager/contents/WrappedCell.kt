@@ -68,7 +68,9 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         // Draw contents over background, but under border
         val tempTopLeft: Coord = boxStyle.applyTopLeft(topLeft)
         println("  tempTopLeft=$tempTopLeft dim=$dim height=$height")
-        val finalDim = if (dim.height < height) { dim.height(height) } else {
+        val finalDim = if (dim.height < height) {
+            dim.height(height)
+        } else {
             dim
         }
         println("  finalDim=$finalDim")
@@ -86,7 +88,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
                 line.render(lp, Coord(rowXOffset + innerTopLeft.x, y)).height
             } else {
                 println("  try y=$y line=$line")
-                val adjY = lp.pageBreakingTopMargin(y + line.descentAndLeading, line.lineHeight) + line.lineHeight
+                val adjY = lp.pageBreakingTopMargin(y - line.lineHeight, line.lineHeight) + line.lineHeight
                 println("  try adjY=$adjY line.lineHeight=${line.lineHeight}")
                 adjY
             }

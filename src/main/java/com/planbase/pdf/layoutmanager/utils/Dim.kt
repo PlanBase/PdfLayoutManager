@@ -87,8 +87,14 @@ data class Dim(val width: Float, val height: Float) {
     companion object {
         val ZERO = Dim(0f, 0f)
         fun sum(xys:Iterable<Dim>) = xys.fold(ZERO, { acc, xy -> acc.plus(xy)})
-        fun within(latitude:Float, xya: Dim, xyb: Dim):Boolean =
-                (abs(xya.height - xyb.height) <= latitude) &&
-                (abs(xya.width - xyb.width) <= latitude)
+
+        fun assertEquals(xya: Dim, xyb: Dim, latitude:Float) {
+            if ((abs(xya.height - xyb.height) > latitude) ||
+                (abs(xya.width - xyb.width) > latitude)) {
+                throw Error("\n" +
+                            "Expected: $xya\n" +
+                            "Actual:   $xyb")
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.planbase.pdf.layoutmanager.contents
 
+import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
+import TestManualllyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
@@ -12,11 +14,13 @@ import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import junit.framework.TestCase
 import junit.framework.TestCase.assertTrue
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
+import java.io.FileOutputStream
 import kotlin.test.assertEquals
 
 class WrappedCellTest {
@@ -44,7 +48,7 @@ class WrappedCellTest {
                                  wrappedCell.dim.width)
 
         val dim = wrappedCell.render(lp, upperLeft)
-        assertTrue(Dim.within(0.00002f, wrappedCell.dim, dim))
+        Dim.assertEquals(wrappedCell.dim, dim, 0.00002f)
 
         lp.commit()
     }
@@ -119,7 +123,7 @@ class WrappedCellTest {
 
         assertEquals(cellWidth, dim.width)
 
-        assertTrue(Dim.within(0.00002f, wrappedCell.dim, dim))
+        Dim.assertEquals(wrappedCell.dim, dim, 0.00002f)
 
         lp.commit()
 
@@ -127,6 +131,35 @@ class WrappedCellTest {
 //        // Commit it to the output stream!
 //        val os = FileOutputStream("wrappedCellRight.pdf")
 //        pageMgr.save(os)
+    }
+
+    @Test fun testCellHeightBug() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
+        val textStyle = TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT)
+        val cellStyle = CellStyle(Align.BOTTOM_CENTER, BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(rgbBlack)))
+
+        val tB = Table()
+                .addCellWidths(listOf(120f))
+                .textStyle(textStyle)
+                .partBuilder()
+                .cellStyle(cellStyle)
+                .rowBuilder().addTextCells("First").buildRow()
+                .buildPart()
+        val wrappedTable = tB.wrap()
+
+        TestCase.assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+                              wrappedTable.dim.height)
+
+        TestCase.assertEquals(120f, wrappedTable.dim.width)
+
+        val renderedDim: Dim = wrappedTable.render(lp, lp.bodyTopLeft())
+
+        Dim.assertEquals(wrappedTable.dim, renderedDim, 0.00003f)
+
+        lp.commit()
+        val os = FileOutputStream("test3.pdf")
+        pageMgr.save(os)
     }
 
     companion object {
