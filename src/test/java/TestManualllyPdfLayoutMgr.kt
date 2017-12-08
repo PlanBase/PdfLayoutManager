@@ -9,7 +9,7 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
-import com.planbase.pdf.layoutmanager.contents.TableBuilder
+import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
@@ -72,7 +72,7 @@ class TestManualllyPdfLayoutMgr {
 
         // Draw the first table with lots of extra room to show off the vertical and horizontal
         // alignment.
-        var tB = TableBuilder()
+        var tB = Table()
         tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder()
@@ -120,14 +120,14 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xya: Dim = tB.buildTable().wrap()
+        val xya: Dim = tB.wrap()
                 .render(lp, lp.bodyTopLeft())
 
 //        assertEquals(Dim(360.0f, 384.55627f), xya)
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
-        tB = TableBuilder()
+        tB = Table()
         tB.addCellWidths(listOf(100f, 100f, 100f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
@@ -173,7 +173,7 @@ class TestManualllyPdfLayoutMgr {
                                               "Line three")
                 .buildRow()
                 .buildPart()
-        val xyb: Dim = tB.buildTable().wrap()
+        val xyb: Dim = tB.wrap()
                 .render(lp, lp.bodyTopLeft().plusX(xya.width + 10))
 
 //        assertEquals(Dim(300.0f, 324.55627f), xyb)
@@ -181,7 +181,7 @@ class TestManualllyPdfLayoutMgr {
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
         // the way cells extend vertically (but not horizontally) to fit the text you put in them.
-        tB = TableBuilder()
+        tB = Table()
         tB.addCellWidths(listOf(100f, 100f, 100f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
                                      RGB_YELLOW_BRIGHT))
@@ -210,7 +210,6 @@ class TestManualllyPdfLayoutMgr {
                                                 "Line two")
                 .align(TOP_LEFT).addTextCells("Line 1").buildRow()
                 .buildPart()
-                .buildTable()
                 .wrap()
                 .render(lp, Coord(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
 
@@ -218,7 +217,7 @@ class TestManualllyPdfLayoutMgr {
 
         // Let's do a portrait page now.  I just copied this from the previous page.
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
-        tB = TableBuilder()
+        tB = Table()
         tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
@@ -264,7 +263,7 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xyc: Dim = tB.buildTable()
+        val xyc: Dim = tB
                 .wrap()
                 .render(lp, lp.bodyTopLeft())
 
@@ -278,7 +277,7 @@ class TestManualllyPdfLayoutMgr {
                 .wrap()
                 .render(lp, lp.bodyTopLeft().plusXMinusY(xyc))
 
-        tB = TableBuilder()
+        tB = Table()
         tB.addCellWidths(listOf(100f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
                                      RGB_YELLOW_BRIGHT))
@@ -287,8 +286,7 @@ class TestManualllyPdfLayoutMgr {
                 .rowBuilder().addTextCells("Lower-Right").buildRow()
                 .buildPart()
         // Where's the lower-right-hand corner?  Put a cell there.
-        tB.buildTable()
-                .wrap()
+        tB.wrap()
                 .render(lp, Coord(lp.pageWidth() - (100 + pMargin),
                                   lp.lowerLeftBody.y + 15 + pMargin))
 
@@ -312,7 +310,7 @@ class TestManualllyPdfLayoutMgr {
         val f = File("target/test-classes/melon.jpg")
         val melonPic = ImageIO.read(f)
 
-        tB = TableBuilder(colWidths.toMutableList(), headingCell, heading)
+        tB = Table(colWidths.toMutableList(), headingCell, heading)
         tB.partBuilder()
                 .rowBuilder()
                 .cell(headingCell, listOf(Text(heading, "Transliterated Russian (with un-transliterated Chinese below)")))
@@ -489,8 +487,7 @@ class TestManualllyPdfLayoutMgr {
                 .cell(regularCell, listOf(Text(regular, "That's it!")))
                 .buildRow()
                 .buildPart()
-        tB.buildTable()
-                .wrap()
+        tB.wrap()
                 .render(lp, lp.bodyTopLeft())
         lp.commit()
 

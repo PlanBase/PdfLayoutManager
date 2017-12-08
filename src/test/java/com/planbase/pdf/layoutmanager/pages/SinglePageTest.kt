@@ -13,10 +13,9 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Table
-import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -112,12 +111,11 @@ val qbfCell = Cell(paleGreenLeft, squareSide,
                    listOf(Text(times15, "The quick brown fox jumps over the lazy dog"))).wrap()
 
 val qbfTable: Table.WrappedTable =
-        TableBuilder(mutableListOf(squareSide, squareSide))
+        Table(mutableListOf(squareSide, squareSide))
                 .partBuilder()
                 .rowBuilder()
                 .cell(paleBlueLeft, listOf(Text(times15, "The quick brown fox jumps over the lazy dog")))
                 .cell(paleBlueLeft, listOf(Text(times15, "Etaoin shrdlu cmfwyp")))
                 .buildRow()
                 .buildPart()
-                .buildTable()
                 .wrap()

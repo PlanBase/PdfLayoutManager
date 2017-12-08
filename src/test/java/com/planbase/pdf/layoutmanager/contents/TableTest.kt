@@ -3,20 +3,19 @@ package com.planbase.pdf.layoutmanager.contents
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Dim
-import junit.framework.Assert.assertEquals
+import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
 
 class TableTest {
     @Test fun testSingleCell() {
-        val table:Table = TableBuilder(mutableListOf(twoHundred))
+        val table:Table = Table(mutableListOf(twoHundred))
                 .partBuilder()
                 .rowBuilder()
                 .cell(cellStyle, listOf(hello))
                 .buildRow()
                 .buildPart()
-                .buildTable()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -39,13 +38,12 @@ class TableTest {
     }
 
     @Test fun testSingleCellWrapped() {
-        val table:Table = TableBuilder(mutableListOf(helloHelloWidth))
+        val table:Table = Table(mutableListOf(helloHelloWidth))
                 .partBuilder()
                 .rowBuilder()
                 .cell(cellStyle, listOf(helloHello))
                 .buildRow()
                 .buildPart()
-                .buildTable()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -67,14 +65,13 @@ class TableTest {
     }
 
     @Test fun testTwoCells() {
-        val table:Table = TableBuilder(mutableListOf(twoHundred, twoHundred))
+        val table:Table = Table(mutableListOf(twoHundred, twoHundred))
                 .partBuilder()
                 .rowBuilder()
                 .cell(cellStyle, listOf(hello))
                 .cell(cellStyle, listOf(hello))
                 .buildRow()
                 .buildPart()
-                .buildTable()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -95,14 +92,13 @@ class TableTest {
     }
 
     @Test fun testTwoCellsWrapped() {
-        val table:Table = TableBuilder(mutableListOf(helloHelloWidth, helloHelloWidth))
+        val table:Table = Table(mutableListOf(helloHelloWidth, helloHelloWidth))
                 .partBuilder()
                 .rowBuilder()
                 .cell(cellStyle, listOf(helloHello))
                 .cell(cellStyle, listOf(helloHello))
                 .buildRow()
                 .buildPart()
-                .buildTable()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 

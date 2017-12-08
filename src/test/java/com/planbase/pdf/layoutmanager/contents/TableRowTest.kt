@@ -32,7 +32,7 @@ class TableRowTest {
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
         // the way cells extend vertically (but not horizontally) to fit the text you put in them.
-        val tB = TableBuilder()
+        val tB = Table()
         tB.addCellWidths(listOf(100f, 100f, 100f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
                                      RGB_YELLOW_BRIGHT))
@@ -61,7 +61,6 @@ class TableRowTest {
 //    "Line two").buildCell()
 //                .cellBuilder().align(Align.TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
                 .buildPart()
-                .buildTable()
                 .wrap().render(lp, upperLeft)
 
         lp.commit()
@@ -98,7 +97,7 @@ class TableRowTest {
         // Let's do a portrait page now.  I just copied this from the previous page.
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
 
-        val tB = TableBuilder(colWidths.toMutableList(), headingCell, heading)
+        val tB = Table(colWidths.toMutableList(), headingCell, heading)
         tB.partBuilder()
                 .rowBuilder()
                 .cell(headingCell,
@@ -108,7 +107,7 @@ class TableRowTest {
                 .cell(headingCellR, listOf(Text(heading, "German")))
                 .buildRow()
                 .buildPart()
-        tB.buildTable().wrap().render(lp, lp.bodyTopLeft())
+        tB.wrap().render(lp, lp.bodyTopLeft())
         lp.commit()
 
 //        val os = FileOutputStream("rowHeight2.pdf")

@@ -33,10 +33,10 @@ import kotlin.math.max
  * A set of styles to be the default for a table header or footer, or whatever other kind of group of table rows you
  * dream up.
  */
-class TablePart(private val tableBuilder: TableBuilder) {
-    val cellWidths:List<Float> = tableBuilder.cellWidths.toList()
-    var cellStyle: CellStyle = tableBuilder.cellStyle
-    var textStyle: TextStyle? = tableBuilder.textStyle
+class TablePart(private val table: Table) {
+    val cellWidths:List<Float> = table.cellWidths.toList()
+    var cellStyle: CellStyle = table.cellStyle
+    var textStyle: TextStyle? = table.textStyle
     var minRowHeight = 0f
     private val rows = ArrayList<TableRow>(1)
 
@@ -67,7 +67,7 @@ class TablePart(private val tableBuilder: TableBuilder) {
         return this
     }
 
-    fun buildPart(): TableBuilder = tableBuilder.addPart(this)
+    fun buildPart(): Table = table.addPart(this)
 
 //    fun calcDimensions(): Dim {
 //        var maxDim = Dim.ZERO

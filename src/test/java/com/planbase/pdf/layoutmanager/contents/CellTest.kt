@@ -9,8 +9,8 @@ import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -55,7 +55,7 @@ class CellTest {
 
         val squareDim = 120f
 
-        val tB = TableBuilder()
+        val tB = Table()
         val trb: TableRow = tB.addCellWidths(listOf(squareDim))
                 .partBuilder()
                 .minRowHeight(squareDim)
@@ -70,9 +70,8 @@ class CellTest {
         assertEquals(theText.textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedCell.dim.height)
 
-        trb.buildRow()
-                .buildPart()
-        val table: Table = tB.buildTable()
+
+        val table: Table = trb.buildRow().buildPart()
 
         println("lp=$lp")
         println("lp.yBodyTop()=${lp.yBodyTop()}")
