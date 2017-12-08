@@ -30,71 +30,57 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 /** Horizontal and vertical alignment options for cell contents  */
 enum class Align {
     TOP_LEFT {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord = xy
-
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
     },
     TOP_CENTER {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord =
-                xy.plusX(leftOffset(outer.width, inner.width))
-
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
-                (outerWidth - innerWidth) / 2
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = (outerWidth - innerWidth) / 2
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
     },
     TOP_RIGHT {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord =
-                xy.plusX(leftOffset(outer.width, inner.width))
-
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
-                outerWidth - innerWidth
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = outerWidth - innerWidth
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
     },
     MIDDLE_LEFT {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord =
-                xy.minusY((outer.height - inner.height) / 2)
-
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = (outerHeight - innerHeight) / 2
     },
     MIDDLE_CENTER {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord =
-                xy.plusXMinusY(leftOffset(outer.width, inner.width),
-                               (outer.height - inner.height) / 2)
-
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
-                (outerWidth - innerWidth) / 2
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = (outerWidth - innerWidth) / 2
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = (outerHeight - innerHeight) / 2
     },
     MIDDLE_RIGHT {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord =
-                xy.plusXMinusY(leftOffset(outer.width, inner.width),
-                               (outer.height - inner.height) / 2)
-
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
-                outerWidth - innerWidth
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = outerWidth - innerWidth
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = (outerHeight - innerHeight) / 2
     },
     BOTTOM_LEFT {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord =
-                xy.minusY(outer.height - inner.height)
-
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = outerHeight - innerHeight
     },
     BOTTOM_CENTER {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord =
-                xy.plusXMinusY(leftOffset(outer.width, inner.width),
-                               outer.height - inner.height)
-
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
-                (outerWidth - innerWidth) / 2
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = (outerWidth - innerWidth) / 2
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = outerHeight - innerHeight
     },
     BOTTOM_RIGHT {
-        override fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord  =
-                xy.plusXMinusY(leftOffset(outer.width, inner.width),
-                               outer.height - inner.height)
-
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float =
-                outerWidth - innerWidth
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = outerWidth - innerWidth
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = outerHeight - innerHeight
     };
 
-    abstract fun innerTopLeft(outer: Dim, inner: Dim, xy: Coord):Coord
+    /**
+     Given the size of the cell (outer), the size of the contents (inner), and the
+     top-left corner of the inside of the cell, what should the top-left corner of the contents be?
+
+     @param outer the inside dimension after taking cell borders and padding into account
+     @param inner the size of the cell contents
+     @param topLeft the coordinate of the top-left corner of the cell inside the borders and padding.
+     */
+    fun innerTopLeft(outer: Dim, inner: Dim, topLeft: Coord):Coord =
+            topLeft.plusXMinusY(leftOffset(outer.width, inner.width),
+                                topOffset(outer.height, inner.height))
 
     /** How far from the left do we need to start for this alignment? */
     abstract fun leftOffset(outerWidth: Float, innerWidth: Float): Float
+
+    /** How far from the top do we need to start for this alignment? */
+    abstract fun topOffset(outerHeight: Float, innerHeight: Float): Float
 }
