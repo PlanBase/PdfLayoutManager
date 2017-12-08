@@ -43,20 +43,10 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        wrappedCell.render(lp, upperLeft)
-//        val xyOff : Coord = wrappedCell.render(lp, upperLeft)
-//        println("upperLeft=" + upperLeft)
-//        println("xyOff=" + xyOff)
-
-        // TODO: This is not right.  Cell should report it's lower-right-hand corner, no?
-//        val xyOff2 : Coord = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
-//        println("xyOff2=" + xyOff2)
-
-//        assertEquals(upperLeft.plusXMinusY(Dim(wrappedCell.dim.width, wrappedCell.lineHeight)), xyOff)
+        val dim = wrappedCell.render(lp, upperLeft)
+        assertTrue(Dim.within(0.00002f, wrappedCell.dim, dim))
 
         lp.commit()
-//        val os = FileOutputStream("test3.pdf")
-//        pageMgr.save(os)
     }
 
     @Test fun testMultiLine() {
@@ -127,12 +117,7 @@ class WrappedCellTest {
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
-        // TODO: Enable!
         assertEquals(cellWidth, dim.width)
-
-        // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
-//        val xyOff2 : Coord = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
-//        println("xyOff2=" + xyOff2)
 
         assertTrue(Dim.within(0.00002f, wrappedCell.dim, dim))
 
