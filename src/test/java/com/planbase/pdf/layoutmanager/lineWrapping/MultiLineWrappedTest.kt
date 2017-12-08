@@ -45,13 +45,11 @@ class MultiLineWrappedTest {
         val upperLeft = Coord(100f, yTop)
         lp.drawLine(Coord(0f, yTop), Coord(lp.pageWidth(), yTop), LineStyle(rgbBlack, 0.125f), true)
         lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(rgbBlack, 0.125f), true)
-        val xyOff = line.render(lp, upperLeft)
-
-        // TODO: Figure this out!
-//        assertEquals(Coord(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
+        val dim = line.render(lp, upperLeft)
+        assertEquals(line.dim, dim)
 
         lp.commit()
-        val os = FileOutputStream("testBaseline.pdf")
+        val os = FileOutputStream("multiLineBaseline.pdf")
         pageMgr.save(os)
     }
 

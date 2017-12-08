@@ -210,10 +210,8 @@ class TextTest {
         lp.drawLine(Coord(margin, yTop), Coord(pageRightMargin, yTop), thinLine, true)
         lp.drawLine(Coord(margin, yBaseline), Coord(pageRightMargin, yBaseline), thinLine, true)
         lp.drawLine(Coord(margin, yBottom), Coord(pageRightMargin, yBottom), thinLine, true)
-        lp.drawStyledText(upperLeft.minusY(tStyle1.ascent()), txt1.text, tStyle1, true)
-
-        // TODO: Figure this out!
-//        assertEquals(Coord(upperLeft.x + line.width, upperLeft.y - tStyle2.lineHeight()), xyOff)
+        val deltaY = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent()), txt1.text, tStyle1, true)
+        assertEquals(tStyle1.lineHeight(), deltaY)
 
         logicalPage.commit()
         val os = FileOutputStream("textBaseline.pdf")
