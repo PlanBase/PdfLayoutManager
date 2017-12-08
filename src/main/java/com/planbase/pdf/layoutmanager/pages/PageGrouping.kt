@@ -343,7 +343,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      @return the proper page and adjusted y value for that page.
      */
     private fun appropriatePage(bottomY: Float, height: Float): PageBufferAndY {
-        println("appropriatePage(bottomY=$bottomY, height=$height)")
+//        println("appropriatePage(bottomY=$bottomY, height=$height)")
         var y = bottomY
         if (!mgr.hasAnyPages()) {
             throw IllegalStateException("Cannot work with the any pages until one has been" +
@@ -353,7 +353,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         // Get the first possible page.  Just keep moving to the top of the next page until it's in
         // the printable area.
         while (y < lowerLeftBody.y) {
-            println("  y=$y lowerLeftBody.y=${lowerLeftBody.y}")
+//            println("  y=$y lowerLeftBody.y=${lowerLeftBody.y}")
             y += bodyDim.height
             idx++
             mgr.ensurePageIdx(idx)
@@ -361,12 +361,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         val ps = mgr.page(idx)
         var adj = 0f
         if (y + height > yBodyTop()) {
-            println("  y=$y yBodyTop()=${yBodyTop()}")
+//            println("  y=$y yBodyTop()=${yBodyTop()}")
             val oldY = y
             y = yBodyTop() - height
             adj = y - oldY
         }
-        println("  y=$y, adj=$adj")
+//        println("  y=$y, adj=$adj")
         return PageBufferAndY(ps, y, -adj)
     }
 

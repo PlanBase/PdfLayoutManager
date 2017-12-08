@@ -73,8 +73,8 @@ class CellTest {
 
         val table: Table = trb.buildRow().buildPart()
 
-        println("lp=$lp")
-        println("lp.yBodyTop()=${lp.yBodyTop()}")
+//        println("lp=$lp")
+//        println("lp.yBodyTop()=${lp.yBodyTop()}")
 
         val dim: Dim = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
 

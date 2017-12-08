@@ -106,13 +106,13 @@ class TableRow(private val tablePart: TablePart) {
 
             var x = topLeft.x
             var maxRowHeight = minRowHeight
-            println("minRowHeight=$minRowHeight")
+//            println("minRowHeight=$minRowHeight")
             // Find the height of the tallest cell before rendering any cells.
             for (fixedCell in fixedCells) {
                 val (width, height) = fixedCell.tableRender(lp, topLeft.x(x), maxRowHeight, false)
-                println("height=$height")
+//                println("height=$height")
                 maxRowHeight = max(maxRowHeight, height)
-                println("maxRowHeight=$maxRowHeight")
+//                println("maxRowHeight=$maxRowHeight")
                 x += width
             }
             val maxWidth = x - topLeft.x

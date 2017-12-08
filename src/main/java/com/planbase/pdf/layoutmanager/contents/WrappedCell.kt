@@ -59,26 +59,26 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
     // TODO: When given a min-height, this sometimes returns the wrong height.
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
     fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dim {
-        println("render($topLeft, $height, $reallyRender)")
-        println("  cellStyle=$cellStyle")
+//        println("render($topLeft, $height, $reallyRender)")
+//        println("  cellStyle=$cellStyle")
         val boxStyle = cellStyle.boxStyle
         val border = boxStyle.border
         // Dim dim = padding.addTo(pcrs.dim);
 
         // Draw contents over background, but under border
         val tempTopLeft: Coord = boxStyle.applyTopLeft(topLeft)
-        println("  tempTopLeft=$tempTopLeft dim=$dim height=$height")
+//        println("  tempTopLeft=$tempTopLeft dim=$dim height=$height")
         val finalDim = if (dim.height < height) {
             dim.height(height)
         } else {
             dim
         }
-        println("  finalDim=$finalDim")
+//        println("  finalDim=$finalDim")
         val innerDim: Dim = boxStyle.subtractFrom(finalDim)
-        println("  innerDim=$innerDim")
+//        println("  innerDim=$innerDim")
 
         val innerTopLeft = cellStyle.align.innerTopLeft(innerDim, wrappedBlockDim, tempTopLeft)
-        println("  innerTopLeft=$innerTopLeft")
+//        println("  innerTopLeft=$innerTopLeft")
 
         var y = innerTopLeft.y
         for (line in items) {
@@ -87,18 +87,18 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 //                println("render")
                 line.render(lp, Coord(rowXOffset + innerTopLeft.x, y)).height
             } else {
-                println("  try y=$y line=$line")
+//                println("  try y=$y line=$line")
                 val adjY = lp.pageBreakingTopMargin(y - line.lineHeight, line.lineHeight) + line.lineHeight
-                println("  try adjY=$adjY line.lineHeight=${line.lineHeight}")
+//                println("  try adjY=$adjY line.lineHeight=${line.lineHeight}")
                 adjY
             }
 //            println("thisLineHeight=$thisLineHeight")
             y -= thisLineHeight // y is always the lowest item in the cell.
 //            println("line=$line")
         }
-        println("  y=$y")
-        println("  totalHeight=${innerTopLeft.y - y}")
-        // TODO: Where do we add bottom padding to y?
+//        println("  y=$y")
+//        println("  totalHeight=${innerTopLeft.y - y}")
+        // TODO: test that we add bottom padding to y
         y = minOf(y, topLeft.y - height)
 //        println("height=${innerTopLeft.y - y}")
 
@@ -135,9 +135,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             }
         }
 
-        val ret = Dim(rightX - topLeft.x,
-                             topLeft.y - y)
-        println("  Returning: $ret")
-        return ret
+        return Dim(rightX - topLeft.x,
+                   topLeft.y - y)
     }
 }

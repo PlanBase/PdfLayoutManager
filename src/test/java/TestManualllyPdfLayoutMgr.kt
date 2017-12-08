@@ -15,6 +15,7 @@ import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import com.planbase.pdf.layoutmanager.utils.rgbWhite
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
 import org.apache.pdfbox.pdmodel.font.PDType0Font
@@ -123,7 +124,7 @@ class TestManualllyPdfLayoutMgr {
         val xya: Dim = tB.wrap()
                 .render(lp, lp.bodyTopLeft())
 
-//        assertEquals(Dim(360.0f, 384.55627f), xya)
+        assertEquals(Dim(360.0f, 375.80627f), xya)
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
@@ -176,7 +177,7 @@ class TestManualllyPdfLayoutMgr {
         val xyb: Dim = tB.wrap()
                 .render(lp, lp.bodyTopLeft().plusX(xya.width + 10))
 
-//        assertEquals(Dim(300.0f, 324.55627f), xyb)
+        assertEquals(Dim(300.0f, 315.80627f), xyb)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
