@@ -50,9 +50,18 @@ Positive Y is up.  Positive X is right.
 #### Upper-Left
 Once line-wrapped, everything in PdfLayoutMgr is *rendered* from the upper-left corner: [LineWrapped](src/main/java/com/planbase/pdf/layoutmanager/lineWrapping/LineWrapped.kt).
 
-#### Why?
-We considered making everything work from the upper-left-hand corner, but decided not to.
-If you want to use PDFBox directly, or manually send codes to the underlying stream, you are already using the final coordinate system and conventions.
+##### Why not all upper-left?
+This matches how PDFBox (and presumably the PDF format) works.
+If you
+* are already familiar with PDF details
+* use PDFBox directly
+* manually send codes to the underlying stream
+* need to byte-decode the output PDF
+
+you are already using the final coordinate system and conventions, so there are no translations to make.
+
+#### Top-right-bottom-left
+When practical, parameters are specified in the same order as CSS.
 
 #### More
 For reference: [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf)

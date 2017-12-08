@@ -117,8 +117,8 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             val bottomRight = Coord(rightX, y)
             val bottomLeft = Coord(origX, y)
 
-            // TODO use multi-line drawing
-            // Like CSS it's listed Top, Right, Bottom, left
+            // I'm not using multi-line drawing here (now/yet).
+            // It's complicated, and if there's page breaking it won't work anyway.
             if (border.top.thickness > 0) {
                 lp.drawLine(topLeft, topRight, border.top, reallyRender)
             }
