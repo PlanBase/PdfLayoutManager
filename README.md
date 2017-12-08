@@ -25,35 +25,44 @@ Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayo
     </dependency>
 ```
 
-### Positioning
+# Positioning
 
-It's worth being aware of a few PDF defaults that PdfLayoutMgr2 inherits from the [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf):
+You probably don't need to know this to start using PdfLayoutMgr.
+Remember that it's here to refer to when you're ready.
 
-* **User Space:** Everything is positioned on the page according to User Space which uses the familiar [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system).
+#### User Space
+Everything is positioned on the page according to User Space which uses the familiar [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system).
 Most people learned about this by drawing graphs in basic algebra in elementary school.
-* **1/72"** The default unit is 1/72 of an inch.
+
+#### 1/72" The default unit is 1/72 of an inch.
 This corresponds to one definition of a "point" and to a common screen resolution for older monitors.
-* **Lower-Left:** Everything is positioned by its lower-left-hand corner.
-The point (0,0) is the lower-left-hand corner of the page (in portrait orientation).
+
+#### Lower-Left
+* The point (0,0) is the lower-left-hand corner of the page (in portrait orientation, in landscape it may be below the bottom of the page).
 Positive Y is up.  Positive X is right.
-Text, images, and rectangles are specified by their lower-left-hand corner.
+* Rectangles and Images are positioned by their lower-left corners.
 
-For text, the lower-left-hand-corner is below the leading which is below the descent which is below the baseline.
-Lines are still aligned based on the baseline of the text.
+#### Baseline
+* The baseline is what the characters in most scripts "sit" on.  Letters like "N" are entirely above it.  Others like "g" dip below it.  The *ascent* is everything above that, *descent* and *leading* are below.
+* Text is positioned by its baseline.
+* Line-wrapping is done based on the *baseline*.
 
-Despite this, LineWrapped.render() takes a topLeft.  Also, images even within PDFs have (0,0) in their top-left corner
-(just like a screen).
+#### Upper-Left
+Once line-wrapped, everything in PdfLayoutMgr is *rendered* from the upper-left corner: [LineWrapped](src/main/java/com/planbase/pdf/layoutmanager/lineWrapping/LineWrapped.kt).
 
-TODO: LineWrapped.render() is topLeft for a table, but not for anything else yet.  ARRRRGH
+#### Why?
+We considered making everything work from the upper-left-hand corner, but decided not to.
+If you want to use PDFBox directly, or manually send codes to the underlying stream, you are already using the final coordinate system and conventions.
 
-TODO: Does PDFBox base some things on the lower-RIGHT corner?  If so, what?
+#### More
+For reference: [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf)
 
 # FAQ
 
 #### Q: Can I use this in closed-source software?
 **A:** You can purchase a commercial license from [PlanBase Inc.](https://planbase.com)
 Otherwise, you must comply with all the terms of the [Affero GPL](https://www.gnu.org/licenses/agpl-3.0.en.html).
-Affero GPL software cannot be used in closed-source software in the same JVM even if the AGPL software is only availble to end-users over a network or the Internet (not physically distributed).
+Affero GPL software cannot be used in closed-source software in the same JVM even if the AGPL software is only availble to end-users over a network or the Internet (without being physically distributed).
 
 #### Q: Can I use this in non-AfferoGPL Open-Sourced software?
 **A:** No.

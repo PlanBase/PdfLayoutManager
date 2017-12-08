@@ -42,7 +42,6 @@ interface LineWrapped {
     /** Total vertical height this line, both above and below the baseline */
     val lineHeight: Float
 
-    // TODO: Why does this take a topLeft?  Nothing should take a topLeft.  Should be bottomLeft only!
     /**
      Sends the underlying object to PDFBox to be drawn.
 

@@ -139,8 +139,7 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
 
         // Somewhere it says that font units are 1000 times page units, but my tests with
         // PDType1Font.HELVETICA and PDType1Font.HELVETICA_BOLD from size 5-200 show that 960x is
-        // pretty darn good.
-        // TODO: Fix font-size for other fonts.
+        // pretty darn good.  If we find a font this doesn't work for, we'll have to adjust.
         fun factorFromFontSize(fontSize: Float) : Float = fontSize / 960f
 
         fun avgCharWidth(f : PDFont, sz:Float) : Float {

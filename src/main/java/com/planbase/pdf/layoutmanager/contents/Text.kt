@@ -33,7 +33,6 @@ import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
-// TODO: Should match order of params in WrappedText.  String should either be first or last.
 /**
  * Represents styled text kind of like a #Text node in HTML.
  */
@@ -45,7 +44,6 @@ data class Text(val textStyle: TextStyle,
     // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
     val text = cleanStr(initialText)
 
-    // TODO: Should match order of params in Text.  String should either be first or last.
     data class WrappedText(val textStyle: TextStyle,
                            val string: String,
                            override val dim: Dim,
