@@ -25,22 +25,22 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import java.util.Arrays
 
-val CMYK_BLACK = PDColor(floatArrayOf(0f, 0f, 0f, 1f), PDDeviceCMYK.INSTANCE)
-val CMYK_WHITE = PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)
+val cmykBlack = PDColor(floatArrayOf(0f, 0f, 0f, 1f), PDDeviceCMYK.INSTANCE)
+val cmykWhite = PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)
 
-val RGB_BLACK = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
-val RGB_WHITE = PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)
+val rgbBlack = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
+val rgbWhite = PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)
 
-val BULLET_CHAR = "\u2022"
+val bulletChar = "\u2022"
 
 /** For implementing briefer toString() methods */
 fun colorToString(color:PDColor?) =
         when {
             color == null -> "null"
-            pdColorEquator(color, CMYK_BLACK) -> "CMYK_BLACK"
-            pdColorEquator(color, CMYK_WHITE) -> "CMYK_WHITE"
-            pdColorEquator(color, RGB_BLACK) -> "RGB_BLACK"
-            pdColorEquator(color, RGB_WHITE) -> "RGB_WHITE"
+            pdColorEquator(color, cmykBlack) -> "cmykBlack"
+            pdColorEquator(color, cmykWhite) -> "cmykWhite"
+            pdColorEquator(color, rgbBlack) -> "rgbBlack"
+            pdColorEquator(color, rgbWhite) -> "rgbWhite"
             else -> {
                 if (color.patternName != null) {
                     color.toString()

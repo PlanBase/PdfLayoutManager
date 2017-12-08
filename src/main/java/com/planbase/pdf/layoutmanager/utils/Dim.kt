@@ -24,10 +24,10 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import java.lang.Math.abs
 
 /**
- * Immutable 2D dimension in terms of non-negative width and height.
- * Do not confuse a dimension (measurement) with an Coord which represents coordinates where
- * the bottom of the page is zero and positive height is up from there.
- * Remember: a Dimensions on a Portrait orientation page has the width and height *reversed*.
+ Immutable 2D dimension in terms of non-negative width and height.
+ Do not confuse a dimension (measurement) with a Coord(inate) which represents an offset from
+ (0, 0) at the bottom of the page.
+ Remember: a Dimensions on a Portrait orientation may have the width and height *reversed*.
  */
 data class Dim(val width: Float, val height: Float) {
     init {

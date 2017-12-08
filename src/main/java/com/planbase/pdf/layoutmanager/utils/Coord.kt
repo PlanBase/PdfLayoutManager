@@ -21,7 +21,6 @@
 package com.planbase.pdf.layoutmanager.utils
 
 import kotlin.math.abs
-// TODO: rename to Offset?
 /**
  An immutable 2D Coordinate, offset, or point in terms of X and Y.  Often measured from the lower-left corner.
  Do not confuse this with an Dim which represents positive width and height.

@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.Dim
 
-//    /** Horizontal allignment options for cell contents */
+//    /** Horizontal alignment options for cell contents */
 //    public enum HorizAlign { LEFT, CENTER, RIGHT; }
 //    public enum VertAlign { TOP, MIDDLE, BOTTOM; }
 

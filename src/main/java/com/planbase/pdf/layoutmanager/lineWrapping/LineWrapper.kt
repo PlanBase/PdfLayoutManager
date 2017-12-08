@@ -55,7 +55,7 @@ interface LineWrapper {
     fun getSomething(maxWidth: Float): ConTerm
 
     /**
-     * Called when line is not empty to try to fit on this line.  If it doesn’t fit, then the
+     * Called when line is not empty to try to fit on this line.  If it doesn't fit, then the
      * caller will probably create a new line and call getSomething(maxWidth) to start that line.
      */
     fun getIfFits(remainingWidth: Float): ConTermNone

@@ -2,7 +2,7 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
@@ -28,7 +28,7 @@ class TestMultiPageLines {
         val tableWidth = lp.pageWidth() - 2 * pMargin
         val pageRMargin = pMargin + tableWidth
 
-        val lineStyle = LineStyle(RGB_BLACK, 1f)
+        val lineStyle = LineStyle(rgbBlack, 1f)
 
         // Make a big 3-page X in a box.  Notice that we code it as though it's on one page, and the
         // API adds two more pages as needed.  This is a great test for how geometric shapes break

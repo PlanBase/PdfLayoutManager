@@ -16,7 +16,7 @@ import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -36,7 +36,7 @@ class SinglePageTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, rgbBlack), "gN")
 
         val squareDim = Dim(squareSide, squareSide)
 
@@ -55,7 +55,7 @@ class SinglePageTest {
             val txtY = page.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
             assertEquals(bigText.textStyle.lineHeight(), txtY)
 
-            val rectY = page.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
+            val rectY = page.fillRect(Coord(squareX, y), squareDim, rgbBlack, true)
             assertEquals(squareSide, rectY)
 
             diamondRect(page, Coord(lineX1, y), squareSide)
@@ -75,7 +75,7 @@ class SinglePageTest {
     }
 }
 fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Float) {
-    val ls = LineStyle(RGB_BLACK, 1f)
+    val ls = LineStyle(rgbBlack, 1f)
     val (xLeft, yBot) = lowerLeft
     val xRight = xLeft + size
     val yTop = yBot + size
@@ -102,11 +102,11 @@ fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Float) {
 }
 
 val squareSide = 70f
-val times15 = TextStyle(PDType1Font.TIMES_ROMAN, 15f, RGB_BLACK)
+val times15 = TextStyle(PDType1Font.TIMES_ROMAN, 15f, rgbBlack)
 val paleGreenLeft = CellStyle(Align.TOP_LEFT,
-                              BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK)))
+                              BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(rgbBlack)))
 val paleBlueLeft = CellStyle(Align.TOP_LEFT,
-                             BoxStyle(Padding(2f), RGB_LIGHT_BLUE, BorderStyle(RGB_BLACK)))
+                             BoxStyle(Padding(2f), RGB_LIGHT_BLUE, BorderStyle(rgbBlack)))
 val qbfCell = Cell(paleGreenLeft, squareSide,
                    listOf(Text(times15, "The quick brown fox jumps over the lazy dog"))).wrap()
 

@@ -11,10 +11,10 @@ import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
-import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
+import com.planbase.pdf.layoutmanager.utils.cmykBlack
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -27,7 +27,7 @@ import kotlin.test.assertTrue
 
 class TextTest {
     @Test fun testText() {
-        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt = Text(tStyle, "This is a long enough line of text.")
         var ri : RowIdx = Text.tryGettingText(50f, 0, txt)
         assertFalse(ri.foundCr)
@@ -63,7 +63,7 @@ class TextTest {
     }
 
     @Test fun testTextTerminal() {
-        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt = Text(tStyle, "This is\na long enough line of text.")
         var ri = Text.tryGettingText(50f, 0, txt)
         assertTrue(ri.foundCr)
@@ -121,7 +121,7 @@ class TextTest {
 //    }
 
     @Test fun testRenderator() {
-        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, cmykBlack)
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
@@ -148,7 +148,7 @@ class TextTest {
     }
 
     @Test fun testRenderator2() {
-        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, CMYK_BLACK)
+        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, cmykBlack)
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
@@ -176,7 +176,7 @@ class TextTest {
     }
 
 //    @Test fun testCalcDimensions() {
-//        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, CMYK_BLACK)
+//        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, cmykBlack)
 //        val txt = Text.of(tStyle, "This is a long enough line of text.")
 //
 //        val dim: Dim = txt.calcDimensions(40f)
@@ -191,9 +191,9 @@ class TextTest {
     }
 
     @Test fun testBaseline() {
-        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 100f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 100f, cmykBlack)
         val txt1 = Text(tStyle1, "Hello dNgjpqy")
-        val thinLine = LineStyle(RGB_BLACK, 0.125f)
+        val thinLine = LineStyle(rgbBlack, 0.125f)
 
         // This is for the baseline!
         val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))

@@ -8,7 +8,7 @@ import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -109,7 +109,7 @@ class PageGroupingTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, rgbBlack), "gN")
 
         val squareDim = Dim(squareSide, squareSide)
 
@@ -130,7 +130,7 @@ class PageGroupingTest {
             val txtY = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
             assertEquals(bigText.textStyle.lineHeight(), txtY)
 
-            val rectY = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
+            val rectY = lp.fillRect(Coord(squareX, y), squareDim, rgbBlack, true)
             assertEquals(squareSide, rectY)
 
             diamondRect(lp, Coord(lineX1, y), squareSide)
@@ -156,13 +156,13 @@ class PageGroupingTest {
         assertTrue(bigText.textStyle.lineHeight() < txtY2)
 
         // Rectangles span multiple pages, so their height should be unchanged.
-        val rectY2: Float = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
+        val rectY2: Float = lp.fillRect(Coord(squareX, y), squareDim, rgbBlack, true)
         assertEquals(squareSide, rectY2)
 
         // Lines span multiple pages, so their height should be unchanged.
         // Also, lines don't have a height.
         diamondRect(lp, Coord(lineX1, y), squareSide)
-//            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
+//            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(rgbBlack, 1f))
 
         val cellDim2 = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
 //        println("qbfCell.dim=${qbfCell.dim} tableDim2=${cellDim2}")
@@ -184,11 +184,11 @@ class PageGroupingTest {
             val txtY:Float = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
             assertEquals(bigText.textStyle.lineHeight(), txtY)
 
-            val rectY:Float = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
+            val rectY:Float = lp.fillRect(Coord(squareX, y), squareDim, rgbBlack, true)
             assertEquals(squareSide, rectY)
 
             diamondRect(lp, Coord(lineX1, y), squareSide)
-//            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
+//            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(rgbBlack, 1f))
 
             val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
             assertEquals(qbfCell.dim, cellDim)

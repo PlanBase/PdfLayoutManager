@@ -11,7 +11,7 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -23,7 +23,7 @@ val twoHundred:Float = 200f
 val cellStyle = CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f),
                                                    RGB_LIGHT_GREEN,
                                                    BorderStyle(RGB_DARK_GRAY)))
-val textStyle = TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK)
+val textStyle = TextStyle(PDType1Font.COURIER, 12f, rgbBlack)
 val hello = Text(textStyle, "Hello")
 val helloSpace = Text(textStyle, "Hello ")
 val helloHello = Text(textStyle, "Hello Hello")
@@ -51,7 +51,7 @@ class CellTest {
         val cellStyle = CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f),
                                                            RGB_LIGHT_GREEN,
                                                            BorderStyle(RGB_DARK_GRAY)))
-        val theText = Text(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK), "Line 1")
+        val theText = Text(TextStyle(PDType1Font.COURIER, 12f, rgbBlack), "Line 1")
 
         val squareDim = 120f
 

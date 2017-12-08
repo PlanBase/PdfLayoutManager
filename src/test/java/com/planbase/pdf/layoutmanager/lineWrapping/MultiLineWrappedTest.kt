@@ -5,8 +5,8 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.cmykBlack
+import com.planbase.pdf.layoutmanager.utils.rgbBlack
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -21,9 +21,9 @@ class MultiLineWrappedTest {
     private val floatCloseEnough = 0.000004f
 
     @Test fun testLine() {
-        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 60f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 60f, cmykBlack)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.TIMES_BOLD, 100f, cmykBlack)
         val txt2 = Text(tStyle2, "there ")
         val txt3 = Text(tStyle1, "world!")
         val line = MultiLineWrapped()
@@ -43,8 +43,8 @@ class MultiLineWrappedTest {
         val yTop = lp.yBodyTop() - 10f
         val yBottom = yTop - tStyle2.lineHeight()
         val upperLeft = Coord(100f, yTop)
-        lp.drawLine(Coord(0f, yTop), Coord(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f), true)
-        lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
+        lp.drawLine(Coord(0f, yTop), Coord(lp.pageWidth(), yTop), LineStyle(rgbBlack, 0.125f), true)
+        lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(rgbBlack, 0.125f), true)
         val xyOff = line.render(lp, upperLeft)
 
         // TODO: Figure this out!
@@ -69,9 +69,9 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLines() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, cmykBlack)
         val txt2 = Text(tStyle2, "there ")
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 60f
@@ -89,9 +89,9 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLines2() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, cmykBlack)
         val txt2 = Text(tStyle2, "there ")
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 90f
@@ -107,7 +107,7 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLines3() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt1 = Text(tStyle1, "Hello there world! This is great stuff.")
         val maxWidth = 300f
 
@@ -121,7 +121,7 @@ class MultiLineWrappedTest {
 
 
     @Test fun testRenderablesToLinesTerminal() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt1 = Text(tStyle1, "Hello\nthere world! This\nis great stuff.")
         // This is 300 just like previous test, showing this can fit on one line
         // So we know the line breaks are due to the \n characters.
@@ -138,7 +138,7 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLinesTerminal2() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt1 = Text(tStyle1, "Hello\nthere world! This\nis great stuff.\n")
         // This is 300 just like previous test, showing this can fit on one line
         // So we know the line breaks are due to the \n characters.
@@ -159,7 +159,7 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLinesMultiReturn() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, cmykBlack)
         val txt1 = Text(tStyle1, " Hello    \n\n\n  there world! This\n\nis great stuff.     \n\n")
         // This is 300 just like previous test, showing this can fit on one line
         // So we know the line breaks are due to the \n characters.

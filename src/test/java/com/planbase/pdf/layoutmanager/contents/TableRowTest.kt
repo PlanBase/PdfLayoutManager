@@ -15,8 +15,8 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
+import com.planbase.pdf.layoutmanager.utils.rgbBlack
+import com.planbase.pdf.layoutmanager.utils.rgbWhite
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -37,13 +37,13 @@ class TableRowTest {
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
                                      RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(Align.BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(rgbBlack))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(Align.MIDDLE_CENTER,
                                                    BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                .textStyle(TextStyle(PDType1Font.COURIER, 12f, rgbBlack))
                 .rowBuilder()
                 .align(Align.BOTTOM_RIGHT).addTextCells("Line 1")
                 .align(Align.BOTTOM_CENTER).addTextCells("Line 1\n" +
@@ -84,15 +84,15 @@ class TableRowTest {
         val textCellPadding = Padding(2f)
 
         // Set up some useful styles for later
-        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, RGB_WHITE)
+        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, rgbWhite)
         val headingCell = CellStyle(Align.BOTTOM_CENTER,
                                     BoxStyle(textCellPadding, RGB_BLUE,
-                                             BorderStyle(LineStyle.NO_LINE, LineStyle(RGB_WHITE),
+                                             BorderStyle(LineStyle.NO_LINE, LineStyle(rgbWhite),
                                                          LineStyle.NO_LINE, LineStyle(RGB_BLUE))))
         val headingCellR = CellStyle(Align.BOTTOM_CENTER,
-                                     BoxStyle(textCellPadding, RGB_BLACK,
-                                              BorderStyle(LineStyle.NO_LINE, LineStyle(RGB_BLACK),
-                                                          LineStyle.NO_LINE, LineStyle(RGB_WHITE))))
+                                     BoxStyle(textCellPadding, rgbBlack,
+                                              BorderStyle(LineStyle.NO_LINE, LineStyle(rgbBlack),
+                                                          LineStyle.NO_LINE, LineStyle(rgbWhite))))
 
         // Let's do a portrait page now.  I just copied this from the previous page.
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)

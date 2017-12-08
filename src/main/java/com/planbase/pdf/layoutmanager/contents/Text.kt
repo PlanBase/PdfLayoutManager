@@ -197,7 +197,7 @@ data class Text(val textStyle: TextStyle,
                 while (idx > -1 && !Character.isWhitespace(text[idx])) {
                     idx--
                 }
-                // Find last non-whatespace character before whitespace run.
+                // Find last non-whitespace character before whitespace run.
                 while (idx > -1 && Character.isWhitespace(text[idx])) {
                     idx--
                 }
