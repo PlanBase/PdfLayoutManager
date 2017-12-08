@@ -48,7 +48,7 @@ data class Text(val textStyle: TextStyle,
     // TODO: Should match order of params in Text.  String should either be first or last.
     data class WrappedText(val textStyle: TextStyle,
                            val string: String,
-                           val dim: Dim,
+                           override val dim: Dim,
                            val source: LineWrappable) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle,

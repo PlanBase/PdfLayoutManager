@@ -56,7 +56,7 @@ class CellTest {
         val squareDim = 120f
 
         val tB = TableBuilder()
-        val trb:TableRowBuilder = tB.addCellWidths(listOf(squareDim))
+        val trb: TableRow = tB.addCellWidths(listOf(squareDim))
                 .partBuilder()
                 .minRowHeight(squareDim)
                 .rowBuilder()

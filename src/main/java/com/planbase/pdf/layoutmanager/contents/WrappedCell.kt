@@ -28,7 +28,7 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
 // TODO: This should be a private inner class of Cell
-class WrappedCell(val dim: Dim, // measured on the border lines
+class WrappedCell(override val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
                   private val items: List<LineWrapped>) : LineWrapped {
 

@@ -23,7 +23,6 @@ package com.planbase.pdf.layoutmanager.utils
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import java.lang.Math.abs
 
-// TODO: Rename to "Dim"
 /**
  * Immutable 2D dimension in terms of non-negative width and height.
  * Do not confuse a dimension (measurement) with an Coord which represents coordinates where

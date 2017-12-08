@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.contents.TableRowBuilder.WrappedTableRow
+import com.planbase.pdf.layoutmanager.contents.TableRow.WrappedTableRow
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
@@ -38,7 +38,7 @@ class TablePart(private val tableBuilder: TableBuilder) {
     var cellStyle: CellStyle = tableBuilder.cellStyle
     var textStyle: TextStyle? = tableBuilder.textStyle
     var minRowHeight = 0f
-    private val rows = ArrayList<TableRowBuilder>(1)
+    private val rows = ArrayList<TableRow>(1)
 
     fun finalXyDim() = Dim(cellWidths.sum(),
                            rows.map{ r -> r.finalRowHeight()}.sum())
@@ -60,9 +60,9 @@ class TablePart(private val tableBuilder: TableBuilder) {
         return this
     }
 
-    fun rowBuilder() = TableRowBuilder(this)
+    fun rowBuilder() = TableRow(this)
 
-    fun addRow(trb: TableRowBuilder): TablePart {
+    fun addRow(trb: TableRow): TablePart {
         rows.add(trb)
         return this
     }

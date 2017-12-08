@@ -44,7 +44,7 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
     override fun toString(): String = "Table($parts)"
 
     data class WrappedTable(private val parts:List<WrappedTablePart>) : LineWrapped {
-        val dim: Dim = Dim.sum(parts.map { part -> part.dim })
+        override val dim: Dim = Dim.sum(parts.map { part -> part.dim })
         override val ascent: Float = dim.height
         override val descentAndLeading: Float = 0f
         override val lineHeight: Float = dim.height

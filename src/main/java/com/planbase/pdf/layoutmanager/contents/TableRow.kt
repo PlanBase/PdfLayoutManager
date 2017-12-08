@@ -31,30 +31,29 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 import java.util.ArrayList
 import kotlin.math.max
 
-// TODO: Rename to TableRow
 /**
  * Unsynchronized mutable class which is not thread-safe.  The internal tracking of cells and widths
  * allows you to make a cell builder for a cell at a given column, add cells in subsequent columns,
  * then complete (buildCell()) the cell and have it find its proper (now previous) column.
  */
-class TableRowBuilder(private val tablePart: TablePart) {
+class TableRow(private val tablePart: TablePart) {
     var textStyle: TextStyle? = tablePart.textStyle
     private var cellStyle: CellStyle = tablePart.cellStyle
     private val cells: MutableList<Cell?> = ArrayList(tablePart.cellWidths.size)
     var minRowHeight = tablePart.minRowHeight
     private var nextCellIdx = 0
 
-//    fun textStyle(x: TextStyle): TableRowBuilder {
+//    fun textStyle(x: TextStyle): TableRow {
 //        textStyle = x
 //        return this
 //    }
 
-    fun align(a: Align) : TableRowBuilder {
+    fun align(a: Align) : TableRow {
         cellStyle = cellStyle.align(a)
         return this
     }
 
-    fun addTextCells(vararg ss: String): TableRowBuilder {
+    fun addTextCells(vararg ss: String): TableRow {
         if (textStyle == null) {
             throw IllegalStateException("Tried to add a text cell without setting a default text style")
         }
@@ -64,13 +63,13 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return this
     }
 
-    fun minRowHeight(f: Float): TableRowBuilder {
+    fun minRowHeight(f: Float): TableRow {
         minRowHeight = f
         return this
     }
 
     fun cell(cs: CellStyle = cellStyle,
-             contents: List<LineWrappable>): TableRowBuilder {
+             contents: List<LineWrappable>): TableRow {
         if (tablePart.cellWidths.size < (nextCellIdx + 1)) {
             throw IllegalStateException("Can't add another cell because there are only ${tablePart.cellWidths.size}" +
                                         " cell widths and already $nextCellIdx cells")
@@ -95,10 +94,10 @@ class TableRowBuilder(private val tablePart: TablePart) {
         return minRowHeight
     }
 
-    class WrappedTableRow(rowBuilder:TableRowBuilder) {
-        private val minRowHeight:Float = rowBuilder.minRowHeight
+    class WrappedTableRow(row: TableRow) {
+        private val minRowHeight:Float = row.minRowHeight
         private val fixedCells:List<WrappedCell> =
-                rowBuilder.cells.map { c -> c!!.wrap() }
+                row.cells.map { c -> c!!.wrap() }
                         .toList()
 
         fun render(lp: RenderTarget, topLeft: Coord): Dim {
@@ -129,5 +128,5 @@ class TableRowBuilder(private val tablePart: TablePart) {
         }
     }
 
-    override fun toString(): String = "TableRowBuilder($cells)"
+    override fun toString(): String = "TableRow($cells)"
 }
