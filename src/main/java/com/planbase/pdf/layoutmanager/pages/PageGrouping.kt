@@ -29,12 +29,11 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 import java.util.TreeSet
-
 
 /**
  *
@@ -91,13 +90,13 @@ import java.util.TreeSet
  * @param orientation page orientation for this logical page grouping.
  * @param lowerLeftBody the offset (in document units) from the lower-left hand corner of the page to
  * the lower-left of the body area.
- * @param bodyDim the dimensions of the body area.
+ * @param bodyDim the dim of the body area.
  * @return a new PageGrouping with the given settings.
  */
 class PageGrouping(private val mgr: PdfLayoutMgr,
                    val orientation: Orientation,
                    val lowerLeftBody: Coord,
-                   val bodyDim: Dimensions) : RenderTarget { // AKA Document Section
+                   val bodyDim: Dim) : RenderTarget { // AKA Document Section
 
     // borderItems apply to a logical section
     private val borderItems = TreeSet<PdfItem>()
@@ -161,23 +160,23 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = appropriatePage(bottomLeft.y, wi.dimensions.height)
+        val pby = appropriatePage(bottomLeft.y, wi.dim.height)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(bottomLeft.y(pby.y), wi, reallyRender)
-        return wi.dimensions.height + pby.adj
+        return wi.dim.height + pby.adj
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: Coord, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float {
+    override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         //        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
         //                           Utils.toString(c) + ")");
         val left = bottomLeft.x
-        val topY = bottomLeft.y + dimensions.height
-        val width = dimensions.width
-        val maxHeight = dimensions.height
+        val topY = bottomLeft.y + dim.height
+        val width = dim.width
+        val maxHeight = dim.height
         val bottomY = bottomLeft.y
 
         if (topY < bottomY) {
@@ -187,7 +186,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         val pby1 = appropriatePage(topY, 0f)
         val pby2 = appropriatePage(bottomY, 0f)
         if (pby1 == pby2) {
-            pby1.pb.fillRect(Coord(left, pby1.y), Dimensions(width, maxHeight), c, reallyRender)
+            pby1.pb.fillRect(Coord(left, pby1.y), Dim(width, maxHeight), c, reallyRender)
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
 
@@ -214,7 +213,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     lowerLeftBody.y
                 }
 
-                currPage.fillRect(Coord(left, yb), Dimensions(width, ya - yb), c, reallyRender)
+                currPage.fillRect(Coord(left, yb), Dim(width, ya - yb), c, reallyRender)
 
                 // pageNum is one-based while get is zero-based, so passing get the current
                 // pageNum actually gets the next page.  Don't get another one after we already
@@ -399,7 +398,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //    }
 
     companion object {
-        val DEFAULT_DOUBLE_MARGIN_DIM = Dimensions(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
+        val DEFAULT_DOUBLE_MARGIN_DIM = Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
 
         /**
         @param pb specific page item will be put on

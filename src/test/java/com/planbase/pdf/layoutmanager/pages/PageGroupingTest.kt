@@ -6,7 +6,7 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -28,8 +28,8 @@ class PageGroupingTest {
     @Test
     @Throws(IOException::class)
     fun testBasics() {
-        var pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(LETTER))
-        var lp = pageMgr.logicalPageStart()
+        var pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
+        var lp = pageMgr.startPageGrouping()
 
         // Just testing some default values before potentially merging changes that could make
         // these variable.
@@ -38,7 +38,7 @@ class PageGroupingTest {
         assertEquals(LETTER.height.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
         assertEquals((LETTER.width - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
 
-        lp = pageMgr.logicalPageStart(PORTRAIT)
+        lp = pageMgr.startPageGrouping(PORTRAIT)
 
         assertEquals((LETTER.height - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(PdfLayoutMgr.DEFAULT_MARGIN.toDouble(), lp.lowerLeftBody.y.toDouble(), 0.000000001)
@@ -50,15 +50,15 @@ class PageGroupingTest {
         pageMgr.save(ByteArrayOutputStream())
 
         // Make a new manager for a new test.
-        pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dimensions(A1))
-        lp = pageMgr.logicalPageStart(PORTRAIT)
+        pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(A1))
+        lp = pageMgr.startPageGrouping(PORTRAIT)
 
         assertEquals((A1.height - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(PdfLayoutMgr.DEFAULT_MARGIN.toDouble(), lp.lowerLeftBody.y.toDouble(), 0.000000001)
         assertEquals(A1.width.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
         assertEquals((A1.height - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
 
-        lp = pageMgr.logicalPageStart()
+        lp = pageMgr.startPageGrouping()
 
         assertEquals((A1.width - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(PdfLayoutMgr.DEFAULT_MARGIN.toDouble(), lp.lowerLeftBody.y.toDouble(), 0.000000001)
@@ -72,9 +72,9 @@ class PageGroupingTest {
         val topM = 20f
         val bottomM = 60f
         // Make a new manager for a new test.
-        pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, Dimensions(A6))
+        pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, Dim(A6))
         lp = PageGrouping(pageMgr, PORTRAIT, Coord(PdfLayoutMgr.DEFAULT_MARGIN, bottomM),
-                          pageMgr.pageDim.minus(Dimensions(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
+                          pageMgr.pageDim.minus(Dim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
 
         assertEquals((A6.height - topM).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(bottomM.toDouble(), lp.lowerLeftBody.y.toDouble(), 0.000000001)
@@ -86,10 +86,10 @@ class PageGroupingTest {
         pageMgr.save(ByteArrayOutputStream())
 
         // Make a new manager for a new test.
-        pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, Dimensions(A6))
+        pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, Dim(A6))
         lp = PageGrouping(pageMgr, LANDSCAPE, Coord(PdfLayoutMgr.DEFAULT_MARGIN, bottomM),
                           pageMgr.pageDim.swapWh()
-                                                                       .minus(Dimensions(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
+                                                                       .minus(Dim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM)))
 
         assertEquals((A6.width - topM).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(bottomM.toDouble(), lp.lowerLeftBody.y.toDouble(), 0.000000001)
@@ -102,16 +102,16 @@ class PageGroupingTest {
     }
 
     @Test fun testBasics2() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val f = File("target/test-classes/melon.jpg")
         val melonPic = ImageIO.read(f)
         val melonHeight = 100f
         val melonWidth = 170f
-        val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
+        val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
         val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
 
-        val squareDim = Dimensions(squareSide, squareSide)
+        val squareDim = Dim(squareSide, squareSide)
 
         // TODO: The topLeft parameters on RenderTarget are actually LOWER-left.
 
@@ -135,11 +135,11 @@ class PageGroupingTest {
 
             diamondRect(lp, Coord(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dimensions.height))
-            assertEquals(qbfCell.dimensions, cellDim)
+            val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            assertEquals(qbfCell.dim, cellDim)
 
-            val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dimensions.height))
-            assertEquals(qbfTable.dimensions, tableDim)
+            val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            assertEquals(qbfTable.dim, tableDim)
 
             y -= melonHeight
         }
@@ -164,15 +164,15 @@ class PageGroupingTest {
         diamondRect(lp, Coord(lineX1, y), squareSide)
 //            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-        val cellDim2 = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dimensions.height))
-//        println("qbfCell.dimensions=${qbfCell.dimensions} tableDim2=${cellDim2}")
-        assertTrue(qbfCell.dimensions.height < cellDim2.height)
+        val cellDim2 = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+//        println("qbfCell.dim=${qbfCell.dim} tableDim2=${cellDim2}")
+        assertTrue(qbfCell.dim.height < cellDim2.height)
 
 //        val tableDim2 = qbfTable.render(lp, Coord(tableX1, y))
-        val tableDim2 = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dimensions.height))
+        val tableDim2 = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
 
-//        println("qbfTable.dimensions=${qbfTable.dimensions} tableDim2=${tableDim2}")
-        assertTrue(qbfTable.dimensions.height < tableDim2.height)
+//        println("qbfTable.dim=${qbfTable.dim} tableDim2=${tableDim2}")
+        assertTrue(qbfTable.dim.height < tableDim2.height)
 //        assertEquals(cellDim2.height, tableDim2.height)
 
         y -= listOf(imgY2, txtY2, rectY2).max() as Float
@@ -190,12 +190,12 @@ class PageGroupingTest {
             diamondRect(lp, Coord(lineX1, y), squareSide)
 //            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dimensions.height))
-            assertEquals(qbfCell.dimensions, cellDim)
+            val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            assertEquals(qbfCell.dim, cellDim)
 
 //            val tableDim = qbfTable.render(lp, Coord(tableX1, y))
-            val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dimensions.height))
-            assertEquals(qbfTable.dimensions, tableDim)
+            val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            assertEquals(qbfTable.dim, tableDim)
 
             y -= listOf(imgY, txtY, rectY).max() as Float
         }

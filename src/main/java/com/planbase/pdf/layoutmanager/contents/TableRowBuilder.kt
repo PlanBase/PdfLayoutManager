@@ -26,7 +26,7 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import java.util.ArrayList
 import kotlin.math.max
@@ -90,7 +90,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
 
     fun finalRowHeight():Float {
         cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
-                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
+                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dim.height)}
 //        println("finalRowHeight() returns: ${minRowHeight}")
         return minRowHeight
     }
@@ -101,9 +101,9 @@ class TableRowBuilder(private val tablePart: TablePart) {
                 rowBuilder.cells.map { c -> c!!.wrap() }
                         .toList()
 
-        fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
+        fun render(lp: RenderTarget, topLeft: Coord): Dim {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
-//                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dimensions.height)}
+//                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dim.height)}
 
             var x = topLeft.x
             var maxRowHeight = minRowHeight
@@ -125,7 +125,7 @@ class TableRowBuilder(private val tablePart: TablePart) {
                 x += width
             }
 
-            return Dimensions(maxWidth, maxRowHeight)
+            return Dim(maxWidth, maxRowHeight)
         }
     }
 

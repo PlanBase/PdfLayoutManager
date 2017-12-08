@@ -21,15 +21,15 @@
 package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
 /**
  Represents a fixed-size item.  Classes implementing this interface should be immutable.
  */
 interface LineWrapped {
-    /** These are the dimensions *without/before* page-breaking adjustments. */
-    val dimensions: Dimensions
+    /** These are the dim *without/before* page-breaking adjustments. */
+    val dim: Dim
 //    fun width(): Float = width
 //    fun totalHeight(): Float = heightAboveBase + depthBelowBase
 
@@ -49,13 +49,13 @@ interface LineWrapped {
      @param lp RenderTarget is the SinglePage or PageGrouping to draw to.  This will contain the paper size,
      orientation, and body area which are necessary in order to calculate page breaking
      @param topLeft is the offset where this item starts.
-     @return the adjusted Dimensions which may include extra (vertical) spacing required to nudge some items onto the next
+     @return the adjusted Dim which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Coord): Dimensions
+    fun render(lp: RenderTarget, topLeft: Coord): Dim
 
     object ZeroLineWrapped: LineWrapped {
-        override val dimensions: Dimensions = Dimensions.ZERO
+        override val dim: Dim = Dim.ZERO
 
         override val ascent: Float = 0f
 
@@ -63,7 +63,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, topLeft: Coord): Dimensions = dimensions
+        override fun render(lp: RenderTarget, topLeft: Coord): Dim = dim
     }
 
 //    companion object {
@@ -78,7 +78,7 @@ interface LineWrapped {
 //            }
 //
 //            override fun getIfFits(remainingWidth: Float): ConTermNone =
-//                    if (hasMore && (item.dimensions.width <= remainingWidth)) {
+//                    if (hasMore && (item.dim.width <= remainingWidth)) {
 //                        hasMore = false
 //                        Continuing(item)
 //                    } else {

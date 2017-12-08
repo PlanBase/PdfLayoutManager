@@ -7,7 +7,7 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -29,17 +29,17 @@ class MultiLineWrappedTest {
         val line = MultiLineWrapped()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
         line.append(txt1.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle1.lineHeight(), line.dimensions.height, floatCloseEnough)
+        assertEquals(tStyle1.lineHeight(), line.dim.height, floatCloseEnough)
 
         line.append(txt2.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight(), line.dimensions.height, floatCloseEnough)
+        assertEquals(tStyle2.lineHeight(), line.dim.height, floatCloseEnough)
 
         line.append(txt3.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight(), line.dimensions.height, floatCloseEnough)
+        assertEquals(tStyle2.lineHeight(), line.dim.height, floatCloseEnough)
 
         // This is for the baseline!
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val yTop = lp.yBodyTop() - 10f
         val yBottom = yTop - tStyle2.lineHeight()
         val upperLeft = Coord(100f, yTop)
@@ -59,7 +59,7 @@ class MultiLineWrappedTest {
 
     fun verifyLine(line: MultiLineWrapped, lineHeight:Float, maxWidth:Float, text:String) {
 //        println("line: " + line)
-        assertEquals(lineHeight, line.dimensions.height, floatCloseEnough)
+        assertEquals(lineHeight, line.dim.height, floatCloseEnough)
         assertTrue(line.width < maxWidth)
         assertEquals(text,
                      line.items

@@ -20,7 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
 /**
@@ -34,16 +34,16 @@ data class Padding(val top: Float,
     /** Sets all padding values equally  */
     constructor(a:Float) : this(a, a, a, a)
 
-//    fun topLeftPadDim(): Dimensions = Dimensions(left, top)
+//    fun topLeftPadDim(): Dim = Dim(left, top)
 //
-//    fun botRightPadDim(): Dimensions = Dimensions(right, bottom)
+//    fun botRightPadDim(): Dim = Dim(right, bottom)
 
-    fun subtractFrom(outer: Dimensions): Dimensions =
-            Dimensions(outer.width - (left + right),
+    fun subtractFrom(outer: Dim): Dim =
+            Dim(outer.width - (left + right),
                   outer.height - (top + bottom))
 
-//    fun addTo(outer: Dimensions): Dimensions =
-//            Dimensions(outer.width + (left + right),
+//    fun addTo(outer: Dim): Dim =
+//            Dim(outer.width + (left + right),
 //                  outer.height + (top + bottom))
 
     fun applyTopLeft(orig: Coord): Coord = Coord(orig.x + left, orig.y - top)

@@ -1,6 +1,6 @@
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -10,7 +10,7 @@ import java.io.FileOutputStream
 
 class TestMultiPageLines {
     @Test fun testMultiPageLines() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
 
         // One inch is 72 document units.  36 is about a half-inch - enough margin to satisfy most
         // printers. A typical monitor has 72 dots per inch, so you can think of these as pixels
@@ -22,7 +22,7 @@ class TestMultiPageLines {
         // the bottom of a page, a new page is automatically created for you with the settings taken
         // from the LogicPage grouping. If you don't want a new page, be sure to stay within the
         // bounds of the current one!
-        val lp = pageMgr.logicalPageStart()
+        val lp = pageMgr.startPageGrouping()
 
         // Set up some useful constants for later.
         val tableWidth = lp.pageWidth() - 2 * pMargin

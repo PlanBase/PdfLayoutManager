@@ -28,7 +28,7 @@ import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.BULLET_CHAR
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
@@ -49,7 +49,7 @@ class TestManual2 {
 @Test
 fun testBodyMargins() {
     // Nothing happens without a PdfLayoutMgr.
-    val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dimensions(PDRectangle.A6))
+    val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
     val bodyWidth = PDRectangle.A6.width - 80f
 
@@ -57,7 +57,7 @@ fun testBodyMargins() {
 //    println(f.absolutePath)
     val graphPic = ImageIO.read(f)
 
-    val lp = pageMgr.logicalPageStart(
+    val lp = pageMgr.startPageGrouping(
             PORTRAIT,
             { pageNum:Int, pb: SinglePage ->
                 val isLeft = pageNum % 2 == 1

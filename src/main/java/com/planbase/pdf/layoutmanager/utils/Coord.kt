@@ -24,7 +24,7 @@ import kotlin.math.abs
 // TODO: rename to Offset?
 /**
  An immutable 2D Coordinate, offset, or point in terms of X and Y.  Often measured from the lower-left corner.
- Do not confuse this with an Dimensions which represents positive width and height.
+ Do not confuse this with an Dim which represents positive width and height.
  This is called Coord because Point and Point2D are already classes in Java and they are mutable.
  It's pronounced "co-ward" as in, "coordinate."  It's not called Xy because that's too easy to confuse
  with width and height, which this is not - it's an offset from the origin.
@@ -43,9 +43,9 @@ data class Coord(val x: Float, val y: Float) {
 
 //    fun plusXMinusY(that: Coord) = Coord(x + that.x, y - that.y)
 
-    fun plusXMinusY(that: Dimensions) = Coord(x + that.width, y - that.height)
+    fun plusXMinusY(that: Dim) = Coord(x + that.width, y - that.height)
 
-    fun dimensionTo(that: Coord) = Dimensions(abs(x - that.x), abs(y - that.y))
+    fun dimensionTo(that: Coord) = Dim(abs(x - that.x), abs(y - that.y))
 
     override fun toString(): String = "Coord(${x}f, ${y}f)"
 }

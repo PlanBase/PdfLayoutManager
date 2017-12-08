@@ -30,7 +30,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
 // TODO: Should match order of params in WrappedText.  String should either be first or last.
@@ -48,11 +48,11 @@ data class Text(val textStyle: TextStyle,
     // TODO: Should match order of params in Text.  String should either be first or last.
     data class WrappedText(val textStyle: TextStyle,
                            val string: String,
-                           override val dimensions: Dimensions,
+                           val dim: Dim,
                            val source: LineWrappable) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle,
-                    src: LineWrappable): this(ts, s, Dimensions(x, ts.lineHeight()), src)
+                    src: LineWrappable): this(ts, s, Dim(x, ts.lineHeight()), src)
 
         override val ascent: Float = textStyle.ascent()
 
@@ -60,10 +60,10 @@ data class Text(val textStyle: TextStyle,
 
         override val lineHeight: Float = textStyle.lineHeight()
 
-        override fun render(lp: RenderTarget, topLeft: Coord): Dimensions =
-                dimensions.height(lp.drawStyledText(topLeft.minusY(textStyle.ascent()), string, textStyle, true))
+        override fun render(lp: RenderTarget, topLeft: Coord): Dim =
+                dim.height(lp.drawStyledText(topLeft.minusY(textStyle.ascent()), string, textStyle, true))
 
-        override fun toString() = "WrappedText(\"$string\", $dimensions, $textStyle)"
+        override fun toString() = "WrappedText(\"$string\", $dim, $textStyle)"
     }
 
     fun style(): TextStyle = textStyle
@@ -117,7 +117,7 @@ data class Text(val textStyle: TextStyle,
             }
             val ctri = tryGettingText(remainingWidth, idx, txt)
             val row = ctri.row
-            return if (row.dimensions.width <= remainingWidth) {
+            return if (row.dim.width <= remainingWidth) {
                 idx = ctri.idx
                 ctri.toContTerm() as ConTermNone
             } else {

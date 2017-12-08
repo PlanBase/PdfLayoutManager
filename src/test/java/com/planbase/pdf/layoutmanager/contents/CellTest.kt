@@ -9,7 +9,7 @@ import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -34,19 +34,19 @@ class CellTest {
         val cell = Cell(cellStyle, twoHundred, listOf(hello))
         val wrappedCell:WrappedCell = cell.wrap()
         assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedCell.dimensions.height)
+                     wrappedCell.dim.height)
     }
 
     @Test fun testOneWrappedLine() {
         val cell = Cell(cellStyle, helloHelloWidth, listOf(helloHello))
         val wrappedCell:WrappedCell = cell.wrap()
         assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedCell.dimensions.height)
+                     wrappedCell.dim.height)
     }
 
     @Test fun testWrapTable() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
 
         val cellStyle = CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f),
                                                            RGB_LIGHT_GREEN,
@@ -68,7 +68,7 @@ class CellTest {
         val wrappedCell:WrappedCell = cell.wrap()
 //        println("wrappedCell=$wrappedCell")
         assertEquals(theText.textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedCell.dimensions.height)
+                     wrappedCell.dim.height)
 
         trb.buildRow()
                 .buildPart()
@@ -77,7 +77,7 @@ class CellTest {
         println("lp=$lp")
         println("lp.yBodyTop()=${lp.yBodyTop()}")
 
-        val dim: Dimensions = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
+        val dim: Dim = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")

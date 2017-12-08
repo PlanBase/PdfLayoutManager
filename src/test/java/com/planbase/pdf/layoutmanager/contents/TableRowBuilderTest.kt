@@ -13,7 +13,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
@@ -24,8 +24,8 @@ import org.junit.Test
 
 class TableRowBuilderTest {
     @Test fun testBasics() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
 
         val upperLeft = Coord(100f, 500f)
 
@@ -73,10 +73,10 @@ class TableRowBuilderTest {
     }
 
     @Test fun testJustHeadings() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
 
         val pMargin = PdfLayoutMgr.DOC_UNITS_PER_INCH / 2
-        var lp = pageMgr.logicalPageStart()
+        var lp = pageMgr.startPageGrouping()
 
         // Set up some useful constants for later.
         val tableWidth = lp.pageWidth() - 2 * pMargin
@@ -96,7 +96,7 @@ class TableRowBuilderTest {
                                                           LineStyle.NO_LINE, LineStyle(RGB_WHITE))))
 
         // Let's do a portrait page now.  I just copied this from the previous page.
-        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.PORTRAIT)
+        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
 
         val tB = TableBuilder(colWidths.toMutableList(), headingCell, heading)
         tB.partBuilder()

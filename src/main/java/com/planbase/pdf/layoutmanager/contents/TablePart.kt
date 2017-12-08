@@ -24,7 +24,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.TableRowBuilder.WrappedTableRow
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import java.util.ArrayList
 import kotlin.math.max
@@ -40,8 +40,8 @@ class TablePart(private val tableBuilder: TableBuilder) {
     var minRowHeight = 0f
     private val rows = ArrayList<TableRowBuilder>(1)
 
-    fun finalXyDim() = Dimensions(cellWidths.sum(),
-                                  rows.map{ r -> r.finalRowHeight()}.sum())
+    fun finalXyDim() = Dim(cellWidths.sum(),
+                           rows.map{ r -> r.finalRowHeight()}.sum())
 
     fun cellStyle(x: CellStyle): TablePart {
         cellStyle = x
@@ -69,26 +69,26 @@ class TablePart(private val tableBuilder: TableBuilder) {
 
     fun buildPart(): TableBuilder = tableBuilder.addPart(this)
 
-//    fun calcDimensions(): Dimensions {
-//        var maxDim = Dimensions.ZERO
+//    fun calcDimensions(): Dim {
+//        var maxDim = Dim.ZERO
 //        for (row in rows) {
 //            val (width, height) = row.calcDimensions()
-//            maxDim = Dimensions(Math.max(width, maxDim.width),
+//            maxDim = Dim(Math.max(width, maxDim.width),
 //                           maxDim.height + height)
 //        }
 //        return maxDim
 //    }
 
     class WrappedTablePart(part:TablePart) {
-        val dimensions: Dimensions = part.finalXyDim()
-//        val ascent:Float = dimensions.height
-//        val lineHeight: Float = dimensions.height
+        val dim: Dim = part.finalXyDim()
+//        val ascent:Float = dim.height
+//        val lineHeight: Float = dim.height
 
         private val rows: List<WrappedTableRow> =
                 part.rows.map { WrappedTableRow(it) }
                         .toList()
 
-        fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
+        fun render(lp: RenderTarget, topLeft: Coord): Dim {
             var y = topLeft.y
             var maxWidth = 0f
             for (row in rows) {
@@ -97,7 +97,7 @@ class TablePart(private val tableBuilder: TableBuilder) {
                 maxWidth = max(maxWidth, width)
                 y -= height
             }
-            return Dimensions(maxWidth, topLeft.y - y)
+            return Dim(maxWidth, topLeft.y - y)
         }
     }
 

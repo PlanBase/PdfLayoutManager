@@ -25,7 +25,7 @@ import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -48,14 +48,14 @@ import java.util.HashMap
  * <pre>`// Create a new manager
  * PdfLayoutMgr pageMgr = PdfLayoutMgr.newRgbPageMgr();
  *
- * PageGrouping lp = pageMgr.logicalPageStart();
+ * PageGrouping lp = pageMgr.startPageGrouping();
  * // defaults to Landscape orientation
  * // call various lp.tableBuilder() or lp.put...() methods here.
  * // They will page-break and create extra physical pages as needed.
  * // ...
  * lp.commit();
  *
- * lp = pageMgr.logicalPageStart(PORTRAIT);
+ * lp = pageMgr.startPageGrouping(PORTRAIT);
  * // These pages will be in Portrait orientation
  * // call various lp methods to put things on the next page grouping
  * // ...
@@ -79,23 +79,18 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                     * good idea to use this directly.  Use the corrected values through a [PageGrouping]
                     * instead.
                     */
-                   val pageDim: Dimensions,
+                   val pageDim: Dim,
                    /** Takes a page number and returns an x-offset for that page. */
                    private var pageReactor:((Int, SinglePage) -> Float)? = null) {
     private val doc = PDDocument()
-//    val pageDim = Dimensions(mb ?: PDRectangle.LETTER)
 
-
-    // TODO: add Sensible defaults, such as textStyle?
-    //    private TextStyle textStyle;
-    //    private PDRectangle pageDimensions;
-    //    private Padding pageMargins;
-    //    private PDRectangle printableArea;
-    //
-    //    public TextStyle textStyle() { return textStyle; }
-    //    public PDRectangle pageDimensions() { return pageDimensions; }
-    //    public Padding pageMargins() { return pageMargins; }
-    //    public PDRectangle printableArea() { return printableArea; }
+    /**
+     This returns the wrapped PDDocument instance.  This is a highly mutable data structure.
+     Accessing it directly while also using PdfLayoutMgr is inherently unsafe and untested.
+     This method is provided so you can do things like add encryption or use other features of PDFBox not yet
+     directly supported by PdfLayoutMgr.
+     */
+    fun getPDDocButBeCareful(): PDDocument = doc
 
     // You can have many DrawJpegs backed by only a few images - it is a flyweight, and this
     // hash map keeps track of the few underlying images, even as instances of DrawJpeg
@@ -159,8 +154,8 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      */
     // Part of end-user public interface
     // TODO: Rename to startPageGrouping
-    fun logicalPageStart(o: Orientation,
-                         pr: ((Int, SinglePage) -> Float)?): PageGrouping {
+    fun startPageGrouping(o: Orientation,
+                          pr: ((Int, SinglePage) -> Float)?): PageGrouping {
         pageReactor = pr
         val pb = SinglePage(pages.size + 1, this, pageReactor)
         pages.add(pb)
@@ -176,13 +171,13 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * two or more physical pages) in the requested page orientation.
      */
     // TODO: Rename to startPageGrouping
-    fun logicalPageStart(o: Orientation): PageGrouping = logicalPageStart(o, null)
+    fun startPageGrouping(o: Orientation): PageGrouping = startPageGrouping(o, null)
 
     /**
      * Get a new logical page (which may be broken across two or more physical pages) in Landscape orientation.
      */
     // TODO: Rename to startPageGrouping
-    fun logicalPageStart(): PageGrouping = logicalPageStart(LANDSCAPE, null)
+    fun startPageGrouping(): PageGrouping = startPageGrouping(LANDSCAPE, null)
 
     /**
      * Loads a TrueType font (and embeds it into the document?) from the given file into a
@@ -292,7 +287,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         val DEFAULT_MARGIN = 37f
     }
 
-    //    public Coord putRect(Coord outerTopLeft, Dimensions outerDimensions, final PDColor c) {
+    //    public Coord putRect(Coord outerTopLeft, Dim outerDimensions, final PDColor c) {
     ////        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
     ////                           Utils.toString(c) + ")");
     //        putRect(outerTopLeft.x(), outerTopLeft.y(), outerDimensions.x(), outerDimensions.y(), c);

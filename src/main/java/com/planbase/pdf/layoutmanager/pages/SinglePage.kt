@@ -25,7 +25,7 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -49,16 +49,16 @@ class SinglePage(val pageNum: Int,
     // THIS MUST COME LAST as items will not be initialized if it comes before.
     private val xOff: Float = pageReactor?.invoke(pageNum, this) ?: 0f
 
-    private fun fillRect(bottomLeft: Coord, dimensions: Dimensions, c: PDColor, zIdx: Float) {
-        items.add(FillRect(bottomLeft.plusX(xOff), dimensions, c, lastOrd++, zIdx))
+    private fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, zIdx: Float) {
+        items.add(FillRect(bottomLeft.plusX(xOff), dim, c, lastOrd++, zIdx))
     }
 
     /** {@inheritDoc}  */
-    override fun fillRect(bottomLeft: Coord, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float {
+    override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float {
         if (reallyRender) {
-            fillRect(bottomLeft, dimensions, c, -1f)
+            fillRect(bottomLeft, dim, c, -1f)
         }
-        return dimensions.height
+        return dim.height
     }
 
     /** {@inheritDoc}  */
@@ -67,7 +67,7 @@ class SinglePage(val pageNum: Int,
             items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
         }
         // This does not account for a page break because this class represents a single page.
-        return wi.dimensions.height
+        return wi.dim.height
     }
 
     private fun drawLineStrip(points: List<Coord>, ls: LineStyle, z: Float) {
@@ -131,14 +131,14 @@ class SinglePage(val pageNum: Int,
     }
 
     private class FillRect(val bottomLeft: Coord,
-                           val dimensions: Dimensions,
+                           val dim: Dim,
                            val color: PDColor,
                            ord: Long,
                            z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             stream.setNonStrokingColor(color)
-            stream.addRect(bottomLeft.x, bottomLeft.y, dimensions.width, dimensions.height)
+            stream.addRect(bottomLeft.x, bottomLeft.y, dim.width, dim.height)
             stream.fill()
         }
     }
@@ -168,7 +168,7 @@ class SinglePage(val pageNum: Int,
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             // stream.drawImage(jpeg, x, y);
-            val (width, height) = scaledImage.dimensions
+            val (width, height) = scaledImage.dim
             stream.drawImage(img, bottomLeft.x, bottomLeft.y, width, height)
         }
     }

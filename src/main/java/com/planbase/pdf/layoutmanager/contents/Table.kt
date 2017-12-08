@@ -26,7 +26,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import kotlin.math.max
 
@@ -44,16 +44,16 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
     override fun toString(): String = "Table($parts)"
 
     data class WrappedTable(private val parts:List<WrappedTablePart>) : LineWrapped {
-        override val dimensions: Dimensions = Dimensions.sum(parts.map { part -> part.dimensions })
-        override val ascent: Float = dimensions.height
+        val dim: Dim = Dim.sum(parts.map { part -> part.dim })
+        override val ascent: Float = dim.height
         override val descentAndLeading: Float = 0f
-        override val lineHeight: Float = dimensions.height
+        override val lineHeight: Float = dim.height
 
         /*
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-        override fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
+        override fun render(lp: RenderTarget, topLeft: Coord): Dim {
             var y = topLeft.y
             var maxWidth = 0f
             for (part in parts) {
@@ -62,7 +62,7 @@ class Table(private val parts: List<TablePart>, val cellStyle: CellStyle) : Line
                 maxWidth = max(maxWidth, width)
                 y -= height
             }
-            return Dimensions(maxWidth, topLeft.y - y)
+            return Dim(maxWidth, topLeft.y - y)
         }
 
         override fun toString(): String = "WrappedTable($parts)"

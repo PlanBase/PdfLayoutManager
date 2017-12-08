@@ -9,17 +9,15 @@ import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
-import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.junit.Assert
 import org.junit.Test
 import java.io.FileOutputStream
 import kotlin.test.assertEquals
@@ -37,10 +35,10 @@ class TextTest {
         var idx = ri.idx
         assertEquals("This is a", wrappedText.string)
         assertEquals(10, idx)
-        assertEquals(34.903126f, wrappedText.dimensions.width)
+        assertEquals(34.903126f, wrappedText.dim.width)
         assertEquals(tStyle.ascent(), wrappedText.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedText.dimensions.height)
+        assertEquals(tStyle.lineHeight(), wrappedText.dim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -73,10 +71,10 @@ class TextTest {
         var idx = ri.idx
         assertEquals("This is", wrappedText.string)
         assertEquals(8, idx)
-        assertEquals(27.084375f, wrappedText.dimensions.width)
+        assertEquals(27.084375f, wrappedText.dim.width)
         assertEquals(tStyle.ascent(), wrappedText.ascent)
         assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedText.dimensions.height)
+        assertEquals(tStyle.lineHeight(), wrappedText.dim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -134,8 +132,8 @@ class TextTest {
         assertEquals(tStyle.descent() + tStyle.leading(),
                 row.descentAndLeading)
         assertEquals(tStyle.lineHeight(), row.lineHeight)
-        assertEquals(tStyle.lineHeight(), row.dimensions.height)
-        assertEquals(28.250002f, row.dimensions.width)
+        assertEquals(tStyle.lineHeight(), row.dim.height)
+        assertEquals(28.250002f, row.dim.width)
 
         assertTrue(rend.getIfFits(5f) is None)
 
@@ -146,7 +144,7 @@ class TextTest {
             None -> null
         }
         assertNotNull(row3)
-        assertEquals(14.816668f, row3!!.dimensions.width)
+        assertEquals(14.816668f, row3!!.dim.width)
     }
 
     @Test fun testRenderator2() {
@@ -161,8 +159,8 @@ class TextTest {
         assertEquals(tStyle.descent() + tStyle.leading(),
                      row.descentAndLeading)
         assertEquals(tStyle.lineHeight(), row.lineHeight)
-        assertEquals(tStyle.lineHeight(), row.dimensions.height)
-        assertEquals(28.250002f, row.dimensions.width)
+        assertEquals(tStyle.lineHeight(), row.dim.height)
+        assertEquals(28.250002f, row.dim.width)
 
         assertTrue(rend.getIfFits(5f) is None)
 
@@ -173,15 +171,15 @@ class TextTest {
             None -> null
         }
         assertNotNull(row3)
-        assertEquals(14.816668f, row3!!.dimensions.width)
-        assertEquals(tStyle.lineHeight(), row3.dimensions.height)
+        assertEquals(14.816668f, row3!!.dim.width)
+        assertEquals(tStyle.lineHeight(), row3.dim.height)
     }
 
 //    @Test fun testCalcDimensions() {
 //        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8f, CMYK_BLACK)
 //        val txt = Text.of(tStyle, "This is a long enough line of text.")
 //
-//        val dim: Dimensions = txt.calcDimensions(40f)
+//        val dim: Dim = txt.calcDimensions(40f)
 //        println(dim)
 //        assertEquals(tStyle.lineHeight() * 2, dim.height())
 //        assertEquals(28.250002f, dim.width())
@@ -198,8 +196,8 @@ class TextTest {
         val thinLine = LineStyle(RGB_BLACK, 0.125f)
 
         // This is for the baseline!
-        val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val logicalPage = mgr.logicalPageStart()
+        val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val logicalPage = mgr.startPageGrouping()
         mgr.ensurePageIdx(0)
         val lp = mgr.page(0)
         val margin = 40f

@@ -20,7 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 
 //    /** Horizontal allignment options for cell contents */
 //    public enum HorizAlign { LEFT, CENTER, RIGHT; }
@@ -29,7 +29,7 @@ import com.planbase.pdf.layoutmanager.utils.Dimensions
 /** Horizontal and vertical alignment options for cell contents  */
 enum class Align {
     TOP_LEFT {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             return if (outer.lte(inner)) {
                 Padding.NO_PADDING
             } else Padding(0f, outer.width - inner.width, outer.height - inner.height, 0f)
@@ -38,7 +38,7 @@ enum class Align {
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
     },
     TOP_CENTER {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             if (outer.lte(inner)) {
                 return Padding.NO_PADDING
             }
@@ -50,7 +50,7 @@ enum class Align {
                 if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
     },
     TOP_RIGHT {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             return if (outer.lte(inner)) {
                 Padding.NO_PADDING
             } else Padding(0f, 0f, outer.height - inner.height, outer.width - inner.width)
@@ -60,7 +60,7 @@ enum class Align {
                 if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
     },
     MIDDLE_LEFT {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             if (outer.lte(inner)) {
                 return Padding.NO_PADDING
             }
@@ -71,7 +71,7 @@ enum class Align {
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
     },
     MIDDLE_CENTER {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             if (outer.lte(inner)) {
                 return Padding.NO_PADDING
             }
@@ -84,7 +84,7 @@ enum class Align {
                 if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
     },
     MIDDLE_RIGHT {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             if (outer.lte(inner)) {
                 return Padding.NO_PADDING
             }
@@ -96,7 +96,7 @@ enum class Align {
                 if (innerWidth >= outerWidth) 0f else outerWidth - innerWidth
     },
     BOTTOM_LEFT {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             return if (outer.lte(inner)) {
                 Padding.NO_PADDING
             } else Padding(outer.height - inner.height, outer.width - inner.width, 0f, 0f)
@@ -105,7 +105,7 @@ enum class Align {
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
     },
     BOTTOM_CENTER {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             //                System.out.println("\t\t\tcalcPadding(o=" + outer + " i=" + inner + ")");
             if (outer.lte(inner)) {
                 return Padding.NO_PADDING
@@ -121,7 +121,7 @@ enum class Align {
                 if (innerWidth >= outerWidth) 0f else (outerWidth - innerWidth) / 2
     },
     BOTTOM_RIGHT {
-        override fun calcPadding(outer: Dimensions, inner: Dimensions): Padding {
+        override fun calcPadding(outer: Dim, inner: Dim): Padding {
             return if (outer.lte(inner)) {
                 return Padding.NO_PADDING
             } else Padding(outer.height - inner.height, 0f, 0f, outer.width - inner.width)
@@ -137,7 +137,7 @@ enum class Align {
     Given outer dimensions (make sure to add padding as necessary), and inner dimensions,
     calculates *additional* padding to apply.
      */
-    abstract fun calcPadding(outer: Dimensions, inner: Dimensions): Padding
+    abstract fun calcPadding(outer: Dim, inner: Dim): Padding
 
     abstract fun leftOffset(outerWidth: Float, innerWidth: Float): Float
 

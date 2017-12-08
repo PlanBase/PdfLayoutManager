@@ -24,57 +24,59 @@ import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
 // TODO: This should be a private inner class of Cell
-class WrappedCell(override val dimensions: Dimensions, // measured on the border lines
+class WrappedCell(val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
                   private val items: List<LineWrapped>) : LineWrapped {
 
     override val ascent: Float
-        get() = dimensions.height
+        get() = dim.height
 
     override val descentAndLeading: Float = 0f
 
     override val lineHeight: Float
-        get() = dimensions.height
+        get() = dim.height
 
-    override fun toString() = "WrappedCell($dimensions, $cellStyle, $items)"
+    override fun toString() = "WrappedCell($dim, $cellStyle, $items)"
 
-    private val wrappedBlockDim: Dimensions = {
-        var dim = Dimensions.ZERO
+    private val wrappedBlockDim: Dim = {
+        var dim = Dim.ZERO
         for (row in items) {
-            val rowDim = row.dimensions
-            dim = Dimensions(Math.max(dim.width, rowDim.width),
+            val rowDim = row.dim
+            dim = Dim(Math.max(dim.width, rowDim.width),
                              dim.height + rowDim.height)
         }
         dim
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
-        return tableRender(lp, topLeft, dimensions.height, true)
+    override fun render(lp: RenderTarget, topLeft: Coord): Dim {
+        return tableRender(lp, topLeft, dim.height, true)
     }
 
     // TODO: When given a min-height, this sometimes returns the wrong height.
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
-    fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dimensions {
+    fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dim {
         println("render($topLeft, $height, $reallyRender)")
         println("  cellStyle=$cellStyle")
         val boxStyle = cellStyle.boxStyle
         val border = boxStyle.border
-        // Dimensions dimensions = padding.addTo(pcrs.dim);
+        // Dim dim = padding.addTo(pcrs.dim);
 
         // Draw contents over background, but under border
         val tempTopLeft: Coord = boxStyle.applyTopLeft(topLeft)
-        println("  tempTopLeft=$tempTopLeft dimensions=$dimensions height=$height")
-        val finalDim = if (dimensions.height < height) { dimensions.height(height) } else { dimensions }
+        println("  tempTopLeft=$tempTopLeft dim=$dim height=$height")
+        val finalDim = if (dim.height < height) { dim.height(height) } else {
+            dim
+        }
         println("  finalDim=$finalDim")
-        val innerDimensions: Dimensions = boxStyle.subtractFrom(finalDim)
-        println("  innerDimensions=$innerDimensions")
+        val innerDim: Dim = boxStyle.subtractFrom(finalDim)
+        println("  innerDim=$innerDim")
 
-        // TODO: Looks wrong!  Returns a Padding?  But we already have innerDimensions, calculated from the Padding!
-        val alignPad = cellStyle.align.calcPadding(innerDimensions, wrappedBlockDim)
+        // TODO: Looks wrong!  Returns a Padding?  But we already have innerDim, calculated from the Padding!
+        val alignPad = cellStyle.align.calcPadding(innerDim, wrappedBlockDim)
         println("  alignPad=$alignPad")
         val innerTopLeft = Coord(tempTopLeft.x + alignPad.left,
                                  tempTopLeft.y - alignPad.top)
@@ -82,7 +84,7 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
 
         var y = innerTopLeft.y
         for (line in items) {
-            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dimensions.width)
+            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dim.width)
             val thisLineHeight = if (reallyRender) {
 //                println("render")
                 line.render(lp, Coord(rowXOffset + innerTopLeft.x, y)).height
@@ -105,11 +107,11 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(topLeft.y(y), dimensions.height(topLeft.y - y), boxStyle.bgColor, reallyRender)
+            lp.fillRect(topLeft.y(y), dim.height(topLeft.y - y), boxStyle.bgColor, reallyRender)
             //            System.out.println("\tCell.render back from putRect");
         }
 
-        val rightX = topLeft.x + dimensions.width
+        val rightX = topLeft.x + dim.width
         // Draw border last to cover anything that touches it?
         if (border != BorderStyle.NO_BORDERS) {
             val origX = topLeft.x
@@ -135,7 +137,7 @@ class WrappedCell(override val dimensions: Dimensions, // measured on the border
             }
         }
 
-        val ret = Dimensions(rightX - topLeft.x,
+        val ret = Dim(rightX - topLeft.x,
                              topLeft.y - y)
         println("  Returning: $ret")
         return ret

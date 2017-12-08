@@ -2,7 +2,7 @@ package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.pages.SinglePage
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import junit.framework.Assert.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -21,12 +21,12 @@ class TableTest {
         val wrappedTable:Table.WrappedTable = table.wrap()
 
         assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedTable.dimensions.height)
+                     wrappedTable.dim.height)
 
-        assertEquals(twoHundred, wrappedTable.dimensions.width)
+        assertEquals(twoHundred, wrappedTable.dim.width)
 
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
@@ -50,13 +50,13 @@ class TableTest {
         val wrappedTable:Table.WrappedTable = table.wrap()
 
         assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedTable.dimensions.height)
+                     wrappedTable.dim.height)
 
         assertEquals(helloHelloWidth,
-                     wrappedTable.dimensions.width)
+                     wrappedTable.dim.width)
 
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
@@ -79,12 +79,12 @@ class TableTest {
         val wrappedTable:Table.WrappedTable = table.wrap()
 
         assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedTable.dimensions.height)
+                     wrappedTable.dim.height)
 
-        assertEquals(twoHundred + twoHundred, wrappedTable.dimensions.width)
+        assertEquals(twoHundred + twoHundred, wrappedTable.dim.width)
 
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
@@ -107,12 +107,12 @@ class TableTest {
         val wrappedTable:Table.WrappedTable = table.wrap()
 
         assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedTable.dimensions.height)
+                     wrappedTable.dim.height)
 
-        assertEquals(helloHelloWidth + helloHelloWidth, wrappedTable.dimensions.width)
+        assertEquals(helloHelloWidth + helloHelloWidth, wrappedTable.dim.width)
 
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())

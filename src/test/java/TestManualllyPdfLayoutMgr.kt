@@ -13,7 +13,7 @@ import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
@@ -25,13 +25,12 @@ import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
 import javax.imageio.ImageIO
-import kotlin.test.assertEquals
 
 class TestManualllyPdfLayoutMgr {
 
     @Test fun testPdf() {
         // Nothing happens without a PdfLayoutMgr.
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
 
         // One inch is 72 document units.  36 is about a half-inch - enough margin to satisfy most
         // printers. A typical monitor has 72 dots per inch, so you can think of these as pixels
@@ -43,7 +42,7 @@ class TestManualllyPdfLayoutMgr {
         // the bottom of a page, a new page is automatically created for you with the settings taken
         // from the LogicPage grouping. If you don't want a new page, be sure to stay within the
         // bounds of the current one!
-        var lp = pageMgr.logicalPageStart()
+        var lp = pageMgr.startPageGrouping()
 
         // Set up some useful constants for later.
         val tableWidth = lp.pageWidth() - 2 * pMargin
@@ -121,10 +120,10 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xya: Dimensions = tB.buildTable().wrap()
+        val xya: Dim = tB.buildTable().wrap()
                 .render(lp, lp.bodyTopLeft())
 
-//        assertEquals(Dimensions(360.0f, 384.55627f), xya)
+//        assertEquals(Dim(360.0f, 384.55627f), xya)
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
@@ -174,10 +173,10 @@ class TestManualllyPdfLayoutMgr {
                                               "Line three")
                 .buildRow()
                 .buildPart()
-        val xyb: Dimensions = tB.buildTable().wrap()
+        val xyb: Dim = tB.buildTable().wrap()
                 .render(lp, lp.bodyTopLeft().plusX(xya.width + 10))
 
-//        assertEquals(Dimensions(300.0f, 324.55627f), xyb)
+//        assertEquals(Dim(300.0f, 324.55627f), xyb)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -218,7 +217,7 @@ class TestManualllyPdfLayoutMgr {
         lp.commit()
 
         // Let's do a portrait page now.  I just copied this from the previous page.
-        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.PORTRAIT)
+        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
         tB = TableBuilder()
         tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
@@ -265,7 +264,7 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xyc: Dimensions = tB.buildTable()
+        val xyc: Dim = tB.buildTable()
                 .wrap()
                 .render(lp, lp.bodyTopLeft())
 
@@ -298,7 +297,7 @@ class TestManualllyPdfLayoutMgr {
         // More landscape pages
         val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK)
         val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NONE)
-        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.LANDSCAPE
+        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE
         ) { pageNum, pb->
             val cell = Cell(pageHeadCellStyle, tableWidth,
                             listOf(Text(pageHeadTextStyle, "Test Logical Page Three (physical page $pageNum)")))
@@ -386,11 +385,11 @@ class TestManualllyPdfLayoutMgr {
                                   " it shows up several times, the image data is only attached\n" +
                                   " to the file once and reused."),
                              ScaledImage(melonPic),
-                             ScaledImage(melonPic, Dimensions(50f, 50f)),
+                             ScaledImage(melonPic, Dim(50f, 50f)),
                              Text(regular, " Melon "),
-                             ScaledImage(melonPic, Dimensions(50f, 50f)),
+                             ScaledImage(melonPic, Dim(50f, 50f)),
                              Text(regular, " Yum!"),
-                             ScaledImage(melonPic, Dimensions(170f, 100f)),
+                             ScaledImage(melonPic, Dim(170f, 100f)),
                              Text(regular, "Watermelon!")))
                 .cell(regularCell,
                       listOf(Text(textStyle = regular,
@@ -497,7 +496,7 @@ class TestManualllyPdfLayoutMgr {
 
         val lineStyle = LineStyle(RGB_BLACK, 1f)
 
-        lp = pageMgr.logicalPageStart(PdfLayoutMgr.Orientation.LANDSCAPE
+        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE
         ) { pageNum, pb->
             val cell = Cell(pageHeadCellStyle, tableWidth,
                             listOf(Text(pageHeadTextStyle,

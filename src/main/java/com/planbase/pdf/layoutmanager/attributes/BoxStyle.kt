@@ -1,7 +1,7 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.colorToString
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
@@ -38,6 +38,6 @@ data class BoxStyle(val padding: Padding = Padding.NO_PADDING,
      */
     fun leftRightInteriorSp():Float = interiorSpaceLeft() + interiorSpaceRight()
 
-    fun subtractFrom(dim: Dimensions) = Dimensions(dim.width - leftRightInteriorSp(), dim.height - topBottomInteriorSp())
+    fun subtractFrom(dim: Dim) = Dim(dim.width - leftRightInteriorSp(), dim.height - topBottomInteriorSp())
 }
 

@@ -23,7 +23,7 @@ package com.planbase.pdf.layoutmanager.pages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
@@ -78,12 +78,12 @@ interface RenderTarget {
      Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
      separately with textLines).
      @param bottomLeft the Coord of the lower-left-hand corner
-     @param dimensions width and height (dimensions) of rectangle
+     @param dim width and height (dim) of rectangle
      @param c color
      @return the effective height after page breaking
      (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(bottomLeft: Coord, dimensions: Dimensions, c: PDColor, reallyRender: Boolean): Float
+    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float
 
     /**
     Returns the top margin necessary to push this item onto a new page if it won't fit on this one.

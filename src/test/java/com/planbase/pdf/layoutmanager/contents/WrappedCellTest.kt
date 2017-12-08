@@ -10,7 +10,7 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import junit.framework.TestCase.assertTrue
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -22,8 +22,8 @@ import kotlin.test.assertEquals
 class WrappedCellTest {
 
     @Test fun testBasics() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val cellWidth = 200f
         val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
@@ -36,12 +36,12 @@ class WrappedCellTest {
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.dimensions.width)
+                                 wrappedCell.dim.width)
 
         val upperLeft = Coord(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.dimensions.width)
+                                 wrappedCell.dim.width)
 
         wrappedCell.render(lp, upperLeft)
 //        val xyOff : Coord = wrappedCell.render(lp, upperLeft)
@@ -52,7 +52,7 @@ class WrappedCellTest {
 //        val xyOff2 : Coord = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
-//        assertEquals(upperLeft.plusXMinusY(Dimensions(wrappedCell.dimensions.width, wrappedCell.lineHeight)), xyOff)
+//        assertEquals(upperLeft.plusXMinusY(Dim(wrappedCell.dim.width, wrappedCell.lineHeight)), xyOff)
 
         lp.commit()
 //        val os = FileOutputStream("test3.pdf")
@@ -60,8 +60,8 @@ class WrappedCellTest {
     }
 
     @Test fun testMultiLine() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val cellWidth = 300f
         val hello = Text(textStyle, "Hello\nThere\nWorld!")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
@@ -74,12 +74,12 @@ class WrappedCellTest {
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.dimensions.width)
+                                 wrappedCell.dim.width)
 
         val upperLeft = Coord(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.dimensions.width)
+                                 wrappedCell.dim.width)
 
         wrappedCell.render(lp, upperLeft)
         lp.commit()
@@ -89,8 +89,8 @@ class WrappedCellTest {
     }
 
     @Test fun testRightAlign() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
 
         val cellWidth = 200f
         val hello = Text(textStyle, "Hello")
@@ -98,7 +98,7 @@ class WrappedCellTest {
                         cellWidth, listOf(hello), null)
 
         val wrappedCell =
-                WrappedCell(Dimensions(cellWidth,
+                WrappedCell(Dim(cellWidth,
                                   textStyle.lineHeight() + boxStyle.topBottomInteriorSp()),
                             CellStyle(Align.TOP_RIGHT, boxStyle),
                             listOf(MultiLineWrapped(hello.maxWidth(),
@@ -106,8 +106,8 @@ class WrappedCellTest {
                                                     textStyle.descent() + textStyle.leading(),
                                                     mutableListOf(Text.WrappedText(textStyle,
                                                                                    hello.text,
-                                                                                   Dimensions(hello.maxWidth(),
-                                                                                              textStyle.lineHeight()),
+                                                                                   Dim(hello.maxWidth(),
+                                                                                       textStyle.lineHeight()),
                                                                                    hello)))))
 //        val wrappedCell = cell.wrap()
 //        println("cell.wrap()=${cell.wrap()}")
@@ -116,25 +116,25 @@ class WrappedCellTest {
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.dimensions.width)
+                                 wrappedCell.dim.width)
 
         val upperLeft = Coord(100f, 500f)
 
         kotlin.test.assertEquals(cellWidth,
-                                 wrappedCell.dimensions.width)
+                                 wrappedCell.dim.width)
 
-        val dimensions: Dimensions = wrappedCell.render(lp, upperLeft)
+        val dim: Dim = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
         // TODO: Enable!
-        assertEquals(cellWidth, dimensions.width)
+        assertEquals(cellWidth, dim.width)
 
         // TODO: This is not right.  Cell should report it's lower-righ-hand corner, no?
 //        val xyOff2 : Coord = wrappedCell.render(lp, upperLeft.plusXMinusY(xyOff))
 //        println("xyOff2=" + xyOff2)
 
-        assertTrue(Dimensions.within(0.00002f, wrappedCell.dimensions, dimensions))
+        assertTrue(Dim.within(0.00002f, wrappedCell.dim, dim))
 
         lp.commit()
 

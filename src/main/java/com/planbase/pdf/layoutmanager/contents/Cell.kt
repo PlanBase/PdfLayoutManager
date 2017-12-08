@@ -21,12 +21,11 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToMultiLineWrappeds
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 
 /**
  A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated
@@ -51,9 +50,9 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
         var height = cellStyle.boxStyle.topBottomInteriorSp()
 
         for (line in fixedLines) {
-            height += line.dimensions.height
+            height += line.dim.height
 //            println("height=$height")
-//            maxWidth = maxOf(line.dimensions.width, maxWidth)
+//            maxWidth = maxOf(line.dim.width, maxWidth)
         }
 
 //        if ( (tableRow != null) &&
@@ -61,7 +60,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //            height = tableRow.minRowHeight
 //        }
 
-        return WrappedCell(Dimensions(width, height), this.cellStyle, fixedLines)
+        return WrappedCell(Dim(width, height), this.cellStyle, fixedLines)
     }
 
     override fun lineWrapper() = MultiLineWrapper(contents.iterator())

@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
 /**
@@ -32,8 +32,8 @@ class MultiLineWrapped(var width: Float = 0f,
                        override var ascent: Float = 0f,
                        override var descentAndLeading: Float = 0f,
                        val items: MutableList<LineWrapped> = mutableListOf()) : LineWrapped {
-    override val dimensions: Dimensions
-            get() = Dimensions(width, lineHeight)
+    override val dim: Dim
+            get() = Dim(width, lineHeight)
 
     override val lineHeight: Float
             get() = ascent + descentAndLeading
@@ -42,15 +42,15 @@ class MultiLineWrapped(var width: Float = 0f,
     fun append(fi : LineWrapped): MultiLineWrapped {
         ascent = maxOf(ascent, fi.ascent)
         descentAndLeading = maxOf(descentAndLeading, fi.descentAndLeading)
-        width += fi.dimensions.width
+        width += fi.dim.width
         items.add(fi)
         return this
     }
 
-    override fun render(lp: RenderTarget, topLeft: Coord): Dimensions {
+    override fun render(lp: RenderTarget, topLeft: Coord): Dim {
         var x:Float = topLeft.x
         val y = topLeft.y
-        var maxHeight = dimensions.height
+        var maxHeight = dim.height
         for (item: LineWrapped in items) {
             // ascent is the maximum ascent for anything on this line.
             //          /
@@ -66,9 +66,9 @@ class MultiLineWrapped(var width: Float = 0f,
             // yields the baseline, which is what we want to align on.
             val fixedHeight = item.render(lp, Coord(x, y - (ascent - item.ascent))).height
             maxHeight = maxOf(maxHeight, fixedHeight)
-            x += item.dimensions.width
+            x += item.dim.width
         }
-        return Dimensions(x - topLeft.x, maxHeight)
+        return Dim(x - topLeft.x, maxHeight)
     }
 
     override fun toString(): String {

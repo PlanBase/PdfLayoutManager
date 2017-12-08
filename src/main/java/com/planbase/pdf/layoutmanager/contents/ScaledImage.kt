@@ -25,7 +25,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import java.awt.image.BufferedImage
 
@@ -38,7 +38,7 @@ import java.awt.image.BufferedImage
  * document.
  */
 class ScaledImage(private val bufferedImage: BufferedImage,
-                  val dimensions: Dimensions) : LineWrappable {
+                  val dim: Dim) : LineWrappable {
 
     /**
      * Returns a new buffered image with width and height calculated from the source BufferedImage
@@ -48,25 +48,25 @@ class ScaledImage(private val bufferedImage: BufferedImage,
      * @return a ScaledImage holding the width and height for that image.
      */
     constructor(bufferedImage:BufferedImage) :
-            this(bufferedImage, Dimensions(bufferedImage.width * IMAGE_SCALE,
+            this(bufferedImage, Dim(bufferedImage.width * IMAGE_SCALE,
                                       bufferedImage.height * IMAGE_SCALE))
 
-    fun wrap():WrappedImage = WrappedImage(bufferedImage, dimensions)
+    fun wrap():WrappedImage = WrappedImage(bufferedImage, dim)
 
-    override fun lineWrapper(): LineWrapper = LineWrapper.preWrappedLineWrapper(WrappedImage(bufferedImage, dimensions))
+    override fun lineWrapper(): LineWrapper = LineWrapper.preWrappedLineWrapper(WrappedImage(bufferedImage, dim))
 
     data class WrappedImage(val bufferedImage: BufferedImage,
-                            override val dimensions: Dimensions) : LineWrapped {
+                            override val dim: Dim) : LineWrapped {
 
-        override val ascent: Float = dimensions.height
+        override val ascent: Float = dim.height
 
         override val descentAndLeading: Float = 0f
 
-        override val lineHeight: Float = dimensions.height
+        override val lineHeight: Float = dim.height
 
         /** {@inheritDoc}  */
-        override fun render(lp: RenderTarget, topLeft: Coord): Dimensions =
-                dimensions.height(lp.drawImage(topLeft.minusY(dimensions.height), this, true))
+        override fun render(lp: RenderTarget, topLeft: Coord): Dim =
+                dim.height(lp.drawImage(topLeft.minusY(dim.height), this, true))
     }
 
     companion object {

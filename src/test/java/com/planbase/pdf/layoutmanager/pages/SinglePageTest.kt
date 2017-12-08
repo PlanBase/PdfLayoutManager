@@ -15,7 +15,7 @@ import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.TableBuilder
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.Dimensions
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -29,17 +29,17 @@ import javax.imageio.ImageIO
 
 class SinglePageTest {
     @Test fun testBasics() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dimensions(PDRectangle.LETTER))
-        val lp = pageMgr.logicalPageStart()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
         val page:SinglePage = pageMgr.page(0)
         val f = File("target/test-classes/melon.jpg")
         val melonPic = ImageIO.read(f)
         val melonHeight = 100f
         val melonWidth = 170f
-        val bigMelon = ScaledImage(melonPic, Dimensions(melonWidth, melonHeight)).wrap()
+        val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
         val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
 
-        val squareDim = Dimensions(squareSide, squareSide)
+        val squareDim = Dim(squareSide, squareSide)
 
         val melonX = lp.bodyTopLeft().x
         val textX = melonX + melonWidth + 10
@@ -61,11 +61,11 @@ class SinglePageTest {
 
             diamondRect(page, Coord(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(page, Coord(cellX1, y + qbfCell.dimensions.height))
-            assertEquals(qbfCell.dimensions, cellDim)
+            val cellDim = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
+            assertEquals(qbfCell.dim, cellDim)
 
-            val tableDim = qbfTable.render(page, Coord(tableX1, y + qbfCell.dimensions.height))
-            assertEquals(qbfTable.dimensions, tableDim)
+            val tableDim = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
+            assertEquals(qbfTable.dim, tableDim)
 
             y -= melonHeight
         }
