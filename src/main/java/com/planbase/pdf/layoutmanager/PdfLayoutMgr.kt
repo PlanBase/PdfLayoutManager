@@ -147,13 +147,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         doc.close()
     }
 
-    // TODO: Add logicalPage() method and call pages.add() lazily for the first item actually shown on a page, and logicalPageEnd called before a save.
     /**
      * Tells this PdfLayoutMgr that you want to start a new logical page (which may be broken across
      * two or more physical pages) in the requested page orientation.
      */
     // Part of end-user public interface
-    // TODO: Rename to startPageGrouping
     fun startPageGrouping(o: Orientation,
                           pr: ((Int, SinglePage) -> Float)?): PageGrouping {
         pageReactor = pr
@@ -170,13 +168,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * Tells this PdfLayoutMgr that you want to start a new logical page (which may be broken across
      * two or more physical pages) in the requested page orientation.
      */
-    // TODO: Rename to startPageGrouping
     fun startPageGrouping(o: Orientation): PageGrouping = startPageGrouping(o, null)
 
     /**
      * Get a new logical page (which may be broken across two or more physical pages) in Landscape orientation.
      */
-    // TODO: Rename to startPageGrouping
     fun startPageGrouping(): PageGrouping = startPageGrouping(LANDSCAPE, null)
 
     /**

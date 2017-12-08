@@ -109,10 +109,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
     // ===================================== Instance Methods =====================================
 
-    // TODO: Do we need this?  Can't we just expose lowerLeftBody?
     fun bodyTopLeft() = lowerLeftBody.plusY(bodyDim.height)
 
-    // TODO: Do we need this?  Can't we just expose lowerLeftBody and bodyDim?
     /** The Y-value for top of the body section (in document units)  */
     fun yBodyTop(): Float = lowerLeftBody.y + bodyDim.height
 
