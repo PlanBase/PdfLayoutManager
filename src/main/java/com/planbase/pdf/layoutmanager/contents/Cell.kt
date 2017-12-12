@@ -36,6 +36,11 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
                 // A list of the contents.  It's pretty limiting to have one item per row.
                 private var contents: List<LineWrappable>,
                 private val tableRow: TableRow? = null) : LineWrappable {
+
+    constructor(cs: CellStyle, // contents can override this style
+                w: Float,
+            // A list of the contents.  It's pretty limiting to have one item per row.
+                cont: List<LineWrappable>) : this(cs, w, cont, null)
     init {
         if (width < 0) {
             throw IllegalArgumentException("A cell cannot have a negative width")

@@ -11,11 +11,10 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
-import com.planbase.pdf.layoutmanager.utils.rgbBlack
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import junit.framework.TestCase
-import junit.framework.TestCase.assertTrue
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -137,7 +136,7 @@ class WrappedCellTest {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping()
         val textStyle = TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT)
-        val cellStyle = CellStyle(Align.BOTTOM_CENTER, BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(rgbBlack)))
+        val cellStyle = CellStyle(Align.BOTTOM_CENTER, BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)))
 
         val tB = Table()
                 .addCellWidths(listOf(120f))
@@ -163,7 +162,7 @@ class WrappedCellTest {
     }
 
     companion object {
-        val boxStyle = BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(rgbBlack))
-        private val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, rgbBlack)
+        val boxStyle = BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))
+        private val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
     }
 }

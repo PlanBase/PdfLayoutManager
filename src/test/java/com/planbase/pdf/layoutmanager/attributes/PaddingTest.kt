@@ -1,6 +1,7 @@
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.Padding.Companion.DEFAULT_TEXT_PADDING
+import com.planbase.pdf.layoutmanager.attributes.Padding.Companion.NO_PADDING
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -9,9 +10,9 @@ import org.organicdesign.testUtils.EqualsContract.equalsDistinctHashCode
 class PaddingTest {
     @Test
     fun staticFactoryTest() {
-        assertTrue(Padding.NO_PADDING == Padding(0f))
-        assertTrue(Padding.NO_PADDING == Padding(0f, 0f, 0f, 0f))
-        assertTrue(Padding.DEFAULT_TEXT_PADDING == Padding(1.5f, 1.5f, 2f, 1.5f))
+        assertTrue(NO_PADDING == Padding(0f))
+        assertTrue(NO_PADDING == Padding(0f, 0f, 0f, 0f))
+        assertTrue(DEFAULT_TEXT_PADDING == Padding(1.5f, 1.5f, 2f, 1.5f))
 
         val (top, right, bottom, left) = Padding(2f)
         assertEquals(2.0f, top, 0.0f)

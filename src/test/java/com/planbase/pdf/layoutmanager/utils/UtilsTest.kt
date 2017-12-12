@@ -10,12 +10,12 @@ import org.junit.Test
 class UtilsTest {
     @Test fun testColorToString() {
         assertEquals("null", colorToString(null))
-        assertEquals("cmykBlack", colorToString(cmykBlack))
-        assertEquals("cmykWhite", colorToString(cmykWhite))
-        assertEquals("cmykWhite", colorToString(PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)))
-        assertEquals("rgbBlack", colorToString(rgbBlack))
-        assertEquals("rgbWhite", colorToString(rgbWhite))
-        assertEquals("rgbWhite", colorToString(PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)))
+        assertEquals("CMYK_BLACK", colorToString(CMYK_BLACK))
+        assertEquals("CMYK_WHITE", colorToString(CMYK_WHITE))
+        assertEquals("CMYK_WHITE", colorToString(PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)))
+        assertEquals("RGB_BLACK", colorToString(RGB_BLACK))
+        assertEquals("RGB_WHITE", colorToString(RGB_WHITE))
+        assertEquals("RGB_WHITE", colorToString(PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)))
 
         assertEquals("DeviceCMYK[0.2, 0.3, 0.4, 0.5]",
                      colorToString(PDColor(floatArrayOf(0.2f, 0.3f, 0.4f, 0.5f), PDDeviceCMYK.INSTANCE)))

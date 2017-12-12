@@ -56,7 +56,6 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         return tableRender(lp, topLeft, dim.height, true)
     }
 
-    // TODO: When given a min-height, this sometimes returns the wrong height.
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
     fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dim {
 //        println("render($topLeft, $height, $reallyRender)")

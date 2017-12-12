@@ -18,6 +18,8 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
+@file:JvmName("Utils")
+
 package com.planbase.pdf.layoutmanager.utils
 
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -25,22 +27,27 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import java.util.Arrays
 
-val cmykBlack = PDColor(floatArrayOf(0f, 0f, 0f, 1f), PDDeviceCMYK.INSTANCE)
-val cmykWhite = PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)
+@JvmField
+val CMYK_BLACK = PDColor(floatArrayOf(0f, 0f, 0f, 1f), PDDeviceCMYK.INSTANCE)
+@JvmField
+val CMYK_WHITE = PDColor(floatArrayOf(0f, 0f, 0f, 0f), PDDeviceCMYK.INSTANCE)
 
-val rgbBlack = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
-val rgbWhite = PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)
+@JvmField
+val RGB_BLACK = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
+@JvmField
+val RGB_WHITE = PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)
 
-val bulletChar = "\u2022"
+@JvmField
+val BULLET_CHAR = "\u2022"
 
 /** For implementing briefer toString() methods */
 fun colorToString(color:PDColor?) =
         when {
             color == null -> "null"
-            pdColorEquator(color, cmykBlack) -> "cmykBlack"
-            pdColorEquator(color, cmykWhite) -> "cmykWhite"
-            pdColorEquator(color, rgbBlack) -> "rgbBlack"
-            pdColorEquator(color, rgbWhite) -> "rgbWhite"
+            pdColorEquator(color, CMYK_BLACK) -> "CMYK_BLACK"
+            pdColorEquator(color, CMYK_WHITE) -> "CMYK_WHITE"
+            pdColorEquator(color, RGB_BLACK) -> "RGB_BLACK"
+            pdColorEquator(color, RGB_WHITE) -> "RGB_WHITE"
             else -> {
                 if (color.patternName != null) {
                     color.toString()

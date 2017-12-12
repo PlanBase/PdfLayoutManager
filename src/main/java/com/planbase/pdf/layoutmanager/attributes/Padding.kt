@@ -66,7 +66,9 @@ data class Padding(val top: Float,
         /**
          * Default padding of 1.5, 1.5, 2. 1.5 (top, right, bottom, left)
          */
+        @JvmField
         val DEFAULT_TEXT_PADDING = Padding(1.5f, 1.5f, 2f, 1.5f)
+        @JvmField
         val NO_PADDING = Padding(0f, 0f, 0f, 0f)
     }
 }

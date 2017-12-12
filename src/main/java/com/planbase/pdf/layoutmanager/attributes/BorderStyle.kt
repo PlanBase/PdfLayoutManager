@@ -85,6 +85,7 @@ data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
             }
 
     companion object {
+        @JvmField
         val NO_BORDERS = BorderStyle(LineStyle.NO_LINE)
     }
 }

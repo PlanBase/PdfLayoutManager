@@ -11,8 +11,8 @@ import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.rgbBlack
-import com.planbase.pdf.layoutmanager.utils.rgbWhite
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import junit.framework.TestCase.assertEquals
@@ -53,21 +53,21 @@ class TestManualllyPdfLayoutMgr {
         val textCellPadding = Padding(2f)
 
         // Set up some useful styles for later
-        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, rgbWhite)
+        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, RGB_WHITE)
         val headingCell = CellStyle(BOTTOM_CENTER,
                                     BoxStyle(textCellPadding, RGB_BLUE,
-                                             BorderStyle(NO_LINE, LineStyle(rgbWhite),
+                                             BorderStyle(NO_LINE, LineStyle(RGB_WHITE),
                                                          NO_LINE, LineStyle(RGB_BLUE))))
         val headingCellR = CellStyle(BOTTOM_CENTER,
-                                     BoxStyle(textCellPadding, rgbBlack,
-                                              BorderStyle(NO_LINE, LineStyle(rgbBlack),
-                                                          NO_LINE, LineStyle(rgbWhite))))
+                                     BoxStyle(textCellPadding, RGB_BLACK,
+                                              BorderStyle(NO_LINE, LineStyle(RGB_BLACK),
+                                                          NO_LINE, LineStyle(RGB_WHITE))))
 
-        val regular = TextStyle(PDType1Font.HELVETICA, 9.5f, rgbBlack)
+        val regular = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
         val regularCell = CellStyle(TOP_LEFT,
                                     BoxStyle(textCellPadding, null,
-                                             BorderStyle(NO_LINE, LineStyle(rgbBlack),
-                                                         LineStyle(rgbBlack), LineStyle(rgbBlack))))
+                                             BorderStyle(NO_LINE, LineStyle(RGB_BLACK),
+                                                         LineStyle(RGB_BLACK), LineStyle(RGB_BLACK))))
 
         // Let's draw three tables on our first landscape-style page grouping.
 
@@ -78,7 +78,7 @@ class TestManualllyPdfLayoutMgr {
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder()
                 .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2f),
-                                                             RGB_BLUE_GREEN, BorderStyle(rgbBlack))))
+                                                             RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
                 .buildPart()
                 .partBuilder()
@@ -86,7 +86,7 @@ class TestManualllyPdfLayoutMgr {
                                                              RGB_LIGHT_GREEN,
                                                              BorderStyle(RGB_DARK_GRAY))))
                 .minRowHeight(120f)
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, rgbBlack))
+                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
                 .rowBuilder()
                 .align(TOP_LEFT).addTextCells("Line 1\n" +
                                               "Line two\n" +
@@ -132,14 +132,14 @@ class TestManualllyPdfLayoutMgr {
         tB.addCellWidths(listOf(100f, 100f, 100f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(rgbBlack))))
+                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
                                                    BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
                 .minRowHeight(100f)
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, rgbBlack))
+                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
                 .rowBuilder()
                 .align(BOTTOM_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
@@ -187,13 +187,13 @@ class TestManualllyPdfLayoutMgr {
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
                                      RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(rgbBlack))))
+                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("Uno", "Dos", "Tres").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
                                                    BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, rgbBlack))
+                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
                 .rowBuilder().align(BOTTOM_RIGHT).addTextCells("Line 1")
                 .align(BOTTOM_CENTER).addTextCells("Line 1\n" +
                                                    "Line two")
@@ -222,14 +222,14 @@ class TestManualllyPdfLayoutMgr {
         tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(rgbBlack))))
+                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
                                                    BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
                 .minRowHeight(120f)
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, rgbBlack))
+                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
                 .rowBuilder()
                 .align(TOP_LEFT).addTextCells("Line 1\n" +
                                               "Line two\n" +
@@ -274,7 +274,7 @@ class TestManualllyPdfLayoutMgr {
         Cell(CellStyle(MIDDLE_CENTER,
                        BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
              200f,
-             listOf(Text(TextStyle(liberationFont, 12f, rgbBlack), "Hello Liberation Mono Bold Font!")))
+             listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Liberation Mono Bold Font!")))
                 .wrap()
                 .render(lp, lp.bodyTopLeft().plusXMinusY(xyc))
 
@@ -283,7 +283,7 @@ class TestManualllyPdfLayoutMgr {
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
                                      RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(rgbBlack))))
+                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("Lower-Right").buildRow()
                 .buildPart()
         // Where's the lower-right-hand corner?  Put a cell there.
@@ -294,7 +294,7 @@ class TestManualllyPdfLayoutMgr {
         lp.commit()
 
         // More landscape pages
-        val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, rgbBlack)
+        val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK)
         val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NONE)
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE
         ) { pageNum, pb->
@@ -492,7 +492,7 @@ class TestManualllyPdfLayoutMgr {
                 .render(lp, lp.bodyTopLeft())
         lp.commit()
 
-        val lineStyle = LineStyle(rgbBlack, 1f)
+        val lineStyle = LineStyle(RGB_BLACK, 1f)
 
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE
         ) { pageNum, pb->
