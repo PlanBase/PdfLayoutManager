@@ -74,7 +74,7 @@ class MultiLineWrappedTest {
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 60f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(listOf(txt1, txt2, txt3), maxWidth)
+        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1, txt2, txt3), maxWidth)
 //        println(MultiLineWrappeds)
 
         assertEquals(3, MultiLineWrappeds.size)
@@ -94,7 +94,7 @@ class MultiLineWrappedTest {
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 90f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(listOf(txt1, txt2, txt3), maxWidth)
+        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1, txt2, txt3), maxWidth)
 //        println(MultiLineWrappeds)
 
         assertEquals(2, MultiLineWrappeds.size)
@@ -109,7 +109,7 @@ class MultiLineWrappedTest {
         val txt1 = Text(tStyle1, "Hello there world! This is great stuff.")
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(listOf(txt1), maxWidth)
+        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
 //        println(MultiLineWrappeds)
 
         assertEquals(1, MultiLineWrappeds.size)
@@ -125,7 +125,7 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(listOf(txt1), maxWidth)
+        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
 //        println(MultiLineWrappeds)
 
         assertEquals(3, MultiLineWrappeds.size)
@@ -142,7 +142,7 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(listOf(txt1), maxWidth)
+        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
 //        println(MultiLineWrappeds)
 
         assertEquals(4, MultiLineWrappeds.size)
@@ -163,7 +163,7 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = renderablesToMultiLineWrappeds(listOf(txt1), maxWidth)
+        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
 //        println(MultiLineWrappeds)
 
         assertEquals(8, MultiLineWrappeds.size)
@@ -181,6 +181,6 @@ class MultiLineWrappedTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun testRenderablesToLinesEx() {
-        renderablesToMultiLineWrappeds(listOf(), -1f)
+        lineWrappablesToMultiLineWrappeds(listOf(), -1f)
     }
 }

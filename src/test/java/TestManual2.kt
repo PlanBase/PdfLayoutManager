@@ -14,8 +14,7 @@
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT
-import com.planbase.pdf.layoutmanager.attributes.Align.TOP_RIGHT
+import com.planbase.pdf.layoutmanager.attributes.Align.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
@@ -29,6 +28,7 @@ import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.BULLET_CHAR
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
+import com.planbase.pdf.layoutmanager.utils.CMYK_WHITE
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -80,40 +80,36 @@ fun testBodyMargins() {
             .buildRow()
             .buildPart()
 
+    val heading = Cell(HEADING_CELL_STYLE, bodyWidth - 6f,
+                       listOf(Text(HEADING_TEXT_STYLE, "Some Heading Thing")))
+
     Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
          bodyWidth,
-         listOf(Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
+         listOf(Text(BULLET_TEXT_STYLE,
                      "The long "),
                 Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18f, CMYK_BLACK),
                      "families"),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
-                     " needed the national " +
-                     "words and women said new. The new " +
-                     "companies told the possible hands " +
-                     "and books was low.\n\n"),
+                Text(BULLET_TEXT_STYLE,
+                     " needed the national words and women said new."),
+                heading,
+                Text(BULLET_TEXT_STYLE,
+                     "The new companies told the possible hands and books was low.\n\n"),
                 bulletTable,
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
-                     "The new " +
-                     "companies told the possible hands " +
-                     "and books was low. The other " +
-                     "questions got the recent children and " +
-                     "lots felt important."),
+                Text(BULLET_TEXT_STYLE,
+                     "The new companies told the possible hands  and books was low. The other " +
+                     "questions got the recent children and lots felt important."),
                 ScaledImage(graphPic),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
-                     ("The hard eyes seemed the clear " +
-                      "mothers and systems came economic. " +
-                      "The high months showed the possible " +
-                      "money and eyes heard certain. The " +
-                      "true men played the different facts and " +
-                      "areas showed large. The good ways " +
-                      "lived the different countries and " +
-                      "stories found good. The certain " +
-                      "places found the political months and " +
-                      "facts told easy. The long homes ran " +
-                      "the good governments and cases " +
-                      "lived social.")),
+                Text(BULLET_TEXT_STYLE,
+                     "The hard eyes seemed the clear mothers and systems came economic. " +
+                     "The high months showed the possible money and eyes heard certain." +
+                     "People played the different facts and areas showed large. "),
+                heading,
+                Text(BULLET_TEXT_STYLE,
+                     "The good ways lived the different countries and stories found good. " +
+                     "The certain places found the political months and facts told easy. The long homes ran " +
+                     "the good governments and cases lived social."),
                 ScaledImage(graphPic),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
+                Text(BULLET_TEXT_STYLE,
                      ("The social people ran the " +
                       "local cases and men left local. The " +
                       "easy areas saw the whole times and " +
@@ -132,7 +128,7 @@ fun testBodyMargins() {
                       "international men kept the real " +
                       "questions and nights made big.")),
                 ScaledImage(graphPic),
-                Text(TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK),
+                Text(BULLET_TEXT_STYLE,
                      ("The " +
                       "best points got the economic waters " +
                       "and problems gave great. The whole " +
@@ -153,9 +149,15 @@ fun testBodyMargins() {
 
         val CMYK_DARK_GRAY = PDColor(floatArrayOf(0f, 0f, 0f, 0.2f), PDDeviceCMYK.INSTANCE)
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
+        val CMYK_YELLOW = PDColor(floatArrayOf(0f, 0.2f, 1f, 0f), PDDeviceCMYK.INSTANCE)
 
         internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT, BoxStyle(Padding(0f, 4f, 15f, 0f), null, BorderStyle.NO_BORDERS))
         internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK)
+
+        internal val HEADING_TEXT_STYLE = TextStyle(PDType1Font.TIMES_BOLD, 16f, CMYK_BLACK)
+        internal val HEADING_CELL_STYLE = CellStyle(BOTTOM_LEFT,
+                                                    BoxStyle(Padding(10f, 0f, 0f, 0f), null, // TODO: Make this a background color!
+                                                             BorderStyle(LineStyle(CMYK_YELLOW, 1f))))
 
         // adj plNoun verb adj descriptiveNoun
         // and

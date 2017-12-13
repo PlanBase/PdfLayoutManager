@@ -34,7 +34,7 @@ data class LineStyle(val color: PDColor?, val thickness: Float) {
         if (thickness < 0) { throw IllegalArgumentException("LineStyle cannot have a negative width.") }
     }
 
-    override fun toString() = "LineStyle(${colorToString(color)}, $thickness)"
+    override fun toString() = "LineStyle(${colorToString(color)}, ${thickness}f)"
 
     companion object {
         val DEFAULT_WIDTH = 1f

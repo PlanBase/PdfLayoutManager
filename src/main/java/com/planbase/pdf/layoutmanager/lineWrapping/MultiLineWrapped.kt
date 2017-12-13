@@ -113,7 +113,7 @@ private fun addLineToMultiLineWrappedsCheckBlank(MultiLineWrappeds: MutableList<
     MultiLineWrappeds.add(line)
 }
 
-fun renderablesToMultiLineWrappeds(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<MultiLineWrapped> {
+fun lineWrappablesToMultiLineWrappeds(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<MultiLineWrapped> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }
@@ -123,6 +123,7 @@ fun renderablesToMultiLineWrappeds(itemsInBlock: List<LineWrappable>, maxWidth: 
     var line = MultiLineWrapped() // Is this right, putting no source here?
 
     for (item in itemsInBlock) {
+//        println("About to wrap: $item")
         val rtor: LineWrapper = item.lineWrapper()
         while (rtor.hasMore()) {
             if (line.isEmpty()) {

@@ -1,9 +1,7 @@
 package com.planbase.pdf.layoutmanager.lineWrapping
 
 // This is a generic stackable line wrapper (a line wrapper that wraps an Iterable of line wrappers)
-// Not sure yet that it's really needed.
-// The name pronounced, "Multi- LineWrapper Wrapper"  LineWrapper is something that does line breaking.
-// The last word, "Wrapper" means "container"
+// This works and was used for wrapping cell contents, until it was discovered that cells need to be pre-wrapped.
 class MultiLineWrapper(private val items: Iterator<LineWrappable>) : LineWrapper {
     private var internLineWrapper: LineWrapper =
             if (items.hasNext()) {

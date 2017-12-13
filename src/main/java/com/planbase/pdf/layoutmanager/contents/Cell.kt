@@ -22,9 +22,9 @@ package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
-import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapper
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
-import com.planbase.pdf.layoutmanager.lineWrapping.renderablesToMultiLineWrappeds
+import com.planbase.pdf.layoutmanager.lineWrapping.lineWrappablesToMultiLineWrappeds
 import com.planbase.pdf.layoutmanager.utils.Dim
 
 /**
@@ -48,8 +48,9 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
     }
 
     fun wrap() : WrappedCell {
+//        println("Wrapping: $this")
         val fixedLines: List<MultiLineWrapped> =
-                renderablesToMultiLineWrappeds(contents,
+                lineWrappablesToMultiLineWrappeds(contents,
                                                width - cellStyle.boxStyle.leftRightInteriorSp())
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
         var height = cellStyle.boxStyle.topBottomInteriorSp()
@@ -68,7 +69,7 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
         return WrappedCell(Dim(width, height), this.cellStyle, fixedLines)
     }
 
-    override fun lineWrapper() = MultiLineWrapper(contents.iterator())
+    override fun lineWrapper() = LineWrapper.preWrappedLineWrapper(this.wrap())
 
     /** {@inheritDoc}  */
     override fun toString(): String {
