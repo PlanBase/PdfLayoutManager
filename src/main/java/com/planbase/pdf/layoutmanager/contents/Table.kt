@@ -85,7 +85,7 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
     data class WrappedTable(private val parts:List<TablePart.WrappedTablePart>) : LineWrapped {
         override val dim: Dim = Dim.sum(parts.map { part -> part.dim })
         override val ascent: Float = dim.height
-        override val descentAndLeading: Float = 0f
+//        override val descentAndLeading: Float = 0f
         override val lineHeight: Float = dim.height
 
         /*

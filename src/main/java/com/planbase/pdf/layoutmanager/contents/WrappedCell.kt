@@ -35,7 +35,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
     override val ascent: Float
         get() = dim.height
 
-    override val descentAndLeading: Float = 0f
+//    override val descentAndLeading: Float = 0f
 
     override val lineHeight: Float
         get() = dim.height

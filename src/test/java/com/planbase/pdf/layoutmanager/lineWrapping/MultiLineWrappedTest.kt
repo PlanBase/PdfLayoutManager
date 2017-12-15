@@ -29,19 +29,19 @@ class MultiLineWrappedTest {
         val line = MultiLineWrapped()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
         line.append(txt1.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle1.lineHeight(), line.dim.height, floatCloseEnough)
+        assertEquals(tStyle1.lineHeight, line.dim.height, floatCloseEnough)
 
         line.append(txt2.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight(), line.dim.height, floatCloseEnough)
+        assertEquals(tStyle2.lineHeight, line.dim.height, floatCloseEnough)
 
         line.append(txt3.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight(), line.dim.height, floatCloseEnough)
+        assertEquals(tStyle2.lineHeight, line.dim.height, floatCloseEnough)
 
         // This is for the baseline!
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping()
         val yTop = lp.yBodyTop() - 10f
-        val yBottom = yTop - tStyle2.lineHeight()
+        val yBottom = yTop - tStyle2.lineHeight
         val upperLeft = Coord(100f, yTop)
         lp.drawLine(Coord(0f, yTop), Coord(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f), true)
         lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
@@ -79,11 +79,11 @@ class MultiLineWrappedTest {
 
         assertEquals(3, MultiLineWrappeds.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle2.lineHeight(), maxWidth, "Hello there")
+        verifyLine(MultiLineWrappeds[0], tStyle2.lineHeight, maxWidth, "Hello there")
 
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight(), maxWidth, "world! This is")
+        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "world! This is")
 
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight(), maxWidth, "great stuff.")
+        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "great stuff.")
     }
 
     @Test fun testRenderablesToLines2() {
@@ -99,9 +99,9 @@ class MultiLineWrappedTest {
 
         assertEquals(2, MultiLineWrappeds.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle2.lineHeight(), maxWidth, "Hello there world!")
+        verifyLine(MultiLineWrappeds[0], tStyle2.lineHeight, maxWidth, "Hello there world!")
 
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight(), maxWidth, "This is great stuff.")
+        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "This is great stuff.")
     }
 
     @Test fun testRenderablesToLines3() {
@@ -114,7 +114,7 @@ class MultiLineWrappedTest {
 
         assertEquals(1, MultiLineWrappeds.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight(), maxWidth, "Hello there world! This is great stuff.")
+        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, "Hello there world! This is great stuff.")
     }
 
 
@@ -130,9 +130,9 @@ class MultiLineWrappedTest {
 
         assertEquals(3, MultiLineWrappeds.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight(), maxWidth, "Hello")
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight(), maxWidth, "there world! This")
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight(), maxWidth, "is great stuff.")
+        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, "Hello")
+        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "there world! This")
+        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "is great stuff.")
     }
 
     @Test fun testRenderablesToLinesTerminal2() {
@@ -149,11 +149,11 @@ class MultiLineWrappedTest {
 
 //        println("line3: " + MultiLineWrappeds[3])
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight(), maxWidth, "Hello")
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight(), maxWidth, "there world! This")
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight(), maxWidth, "is great stuff.")
+        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, "Hello")
+        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "there world! This")
+        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "is great stuff.")
         // Additional blank line has same height as previous one.
-        verifyLine(MultiLineWrappeds[3], tStyle1.lineHeight(), maxWidth, "")
+        verifyLine(MultiLineWrappeds[3], tStyle1.lineHeight, maxWidth, "")
     }
 
     @Test fun testRenderablesToLinesMultiReturn() {
@@ -169,14 +169,14 @@ class MultiLineWrappedTest {
         assertEquals(8, MultiLineWrappeds.size)
 //        println("line3: " + MultiLineWrappeds[3])
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight(), maxWidth, " Hello")
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight(), maxWidth, "")
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight(), maxWidth, "")
-        verifyLine(MultiLineWrappeds[3], tStyle1.lineHeight(), maxWidth, "  there world! This")
-        verifyLine(MultiLineWrappeds[4], tStyle1.lineHeight(), maxWidth, "")
-        verifyLine(MultiLineWrappeds[5], tStyle1.lineHeight(), maxWidth, "is great stuff.")
-        verifyLine(MultiLineWrappeds[6], tStyle1.lineHeight(), maxWidth, "")
-        verifyLine(MultiLineWrappeds[7], tStyle1.lineHeight(), maxWidth, "")
+        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, " Hello")
+        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(MultiLineWrappeds[3], tStyle1.lineHeight, maxWidth, "  there world! This")
+        verifyLine(MultiLineWrappeds[4], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(MultiLineWrappeds[5], tStyle1.lineHeight, maxWidth, "is great stuff.")
+        verifyLine(MultiLineWrappeds[6], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(MultiLineWrappeds[7], tStyle1.lineHeight, maxWidth, "")
     }
 
     @Test(expected = IllegalArgumentException::class)

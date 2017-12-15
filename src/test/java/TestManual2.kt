@@ -124,9 +124,7 @@ fun testBodyMargins() {
                       "clear lives showed the white work and " +
                       "people used long. The major rights " +
                       "was the important children and " +
-                      "mothers turned able. The " +
-                      "international men kept the real " +
-                      "questions and nights made big.")),
+                      "mothers turned able.")),
                 ScaledImage(graphPic),
                 Text(BULLET_TEXT_STYLE,
                      ("The " +

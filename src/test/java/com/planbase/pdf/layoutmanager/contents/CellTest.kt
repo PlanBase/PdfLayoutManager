@@ -33,14 +33,14 @@ class CellTest {
     @Test fun testBasics() {
         val cell = Cell(cellStyle, twoHundred, listOf(hello))
         val wrappedCell:WrappedCell = cell.wrap()
-        assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedCell.dim.height)
     }
 
     @Test fun testOneWrappedLine() {
         val cell = Cell(cellStyle, helloHelloWidth, listOf(helloHello))
         val wrappedCell:WrappedCell = cell.wrap()
-        assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedCell.dim.height)
     }
 
@@ -67,7 +67,7 @@ class CellTest {
 
         val wrappedCell:WrappedCell = cell.wrap()
 //        println("wrappedCell=$wrappedCell")
-        assertEquals(theText.textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals(theText.textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedCell.dim.height)
 
 

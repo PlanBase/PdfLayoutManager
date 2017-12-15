@@ -36,9 +36,9 @@ class TextTest {
         assertEquals("This is a", wrappedText.string)
         assertEquals(10, idx)
         assertEquals(34.903126f, wrappedText.dim.width)
-        assertEquals(tStyle.ascent(), wrappedText.ascent)
-        assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedText.dim.height)
+        assertEquals(tStyle.ascent, wrappedText.ascent)
+//        assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
+        assertEquals(tStyle.lineHeight, wrappedText.dim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -72,9 +72,9 @@ class TextTest {
         assertEquals("This is", wrappedText.string)
         assertEquals(8, idx)
         assertEquals(27.084375f, wrappedText.dim.width)
-        assertEquals(tStyle.ascent(), wrappedText.ascent)
-        assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), wrappedText.dim.height)
+        assertEquals(tStyle.ascent, wrappedText.ascent)
+//        assertEquals(tStyle.descent() + tStyle.leading(), wrappedText.descentAndLeading)
+        assertEquals(tStyle.lineHeight, wrappedText.dim.height)
 
         ri = Text.tryGettingText(50f, idx, txt)
         assertFalse(ri.foundCr)
@@ -128,11 +128,10 @@ class TextTest {
         val ri: ConTerm = rend.getSomething(40f)
         assertFalse(ri is Terminal)
         val row = ri.item
-        assertEquals(tStyle.ascent(), row.ascent)
-        assertEquals(tStyle.descent() + tStyle.leading(),
-                row.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), row.lineHeight)
-        assertEquals(tStyle.lineHeight(), row.dim.height)
+        assertEquals(tStyle.ascent, row.ascent)
+//        assertEquals(tStyle.descent() + tStyle.leading(), row.descentAndLeading)
+        assertEquals(tStyle.lineHeight, row.lineHeight)
+        assertEquals(tStyle.lineHeight, row.dim.height)
         assertEquals(28.250002f, row.dim.width)
 
         assertTrue(rend.getIfFits(5f) is None)
@@ -155,11 +154,10 @@ class TextTest {
         val ri: ConTerm = rend.getSomething(40f)
         assertFalse(ri is Terminal)
         val row = ri.item
-        assertEquals(tStyle.ascent(), row.ascent)
-        assertEquals(tStyle.descent() + tStyle.leading(),
-                     row.descentAndLeading)
-        assertEquals(tStyle.lineHeight(), row.lineHeight)
-        assertEquals(tStyle.lineHeight(), row.dim.height)
+        assertEquals(tStyle.ascent, row.ascent)
+//        assertEquals(tStyle.descent() + tStyle.leading(), row.descentAndLeading)
+        assertEquals(tStyle.lineHeight, row.lineHeight)
+        assertEquals(tStyle.lineHeight, row.dim.height)
         assertEquals(28.250002f, row.dim.width)
 
         assertTrue(rend.getIfFits(5f) is None)
@@ -172,7 +170,7 @@ class TextTest {
         }
         assertNotNull(row3)
         assertEquals(14.816668f, row3!!.dim.width)
-        assertEquals(tStyle.lineHeight(), row3.dim.height)
+        assertEquals(tStyle.lineHeight, row3.dim.height)
     }
 
 //    @Test fun testCalcDimensions() {
@@ -192,7 +190,7 @@ class TextTest {
 
     @Test fun testBaseline() {
         val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 100f, CMYK_BLACK)
-        val txt1 = Text(tStyle1, "Hello dNgjpqy")
+        val txt1 = Text(tStyle1, "Hi 'dNlgjpqy,!$")
         val thinLine = LineStyle(RGB_BLACK, 0.125f)
 
         // This is for the baseline!
@@ -204,14 +202,14 @@ class TextTest {
         val pageDim = mgr.pageDim.swapWh()
         val yTop = pageDim.height - margin
         val pageRightMargin = pageDim.width - margin
-        val yBaseline = yTop - tStyle1.ascent()
-        val yBottom = yTop - (tStyle1.lineHeight() - tStyle1.leading())
+        val yBaseline = yTop - tStyle1.ascent
+        val yBottom = yTop - tStyle1.lineHeight
         val upperLeft = Coord(margin, yTop)
         lp.drawLine(Coord(margin, yTop), Coord(pageRightMargin, yTop), thinLine, true)
         lp.drawLine(Coord(margin, yBaseline), Coord(pageRightMargin, yBaseline), thinLine, true)
         lp.drawLine(Coord(margin, yBottom), Coord(pageRightMargin, yBottom), thinLine, true)
-        val deltaY = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent()), txt1.text, tStyle1, true)
-        assertEquals(tStyle1.lineHeight(), deltaY)
+        val deltaY = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent), txt1.text, tStyle1, true)
+        assertEquals(tStyle1.lineHeight, deltaY)
 
         logicalPage.commit()
         val os = FileOutputStream("textBaseline.pdf")

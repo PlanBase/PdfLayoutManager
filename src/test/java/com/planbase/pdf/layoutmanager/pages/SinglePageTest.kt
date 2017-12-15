@@ -53,7 +53,7 @@ class SinglePageTest {
             assertEquals(melonHeight, imgY)
 
             val txtY = page.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-            assertEquals(bigText.textStyle.lineHeight(), txtY)
+            assertEquals(bigText.textStyle.lineHeight, txtY)
 
             val rectY = page.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
             assertEquals(squareSide, rectY)

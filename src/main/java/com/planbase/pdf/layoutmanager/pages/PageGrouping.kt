@@ -147,9 +147,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
-        val pby = appropriatePage(baselineLeft.y - textStyle.descentAndLeading(), textStyle.lineHeight())
-        pby.pb.drawStyledText(baselineLeft.y(pby.y + textStyle.descentAndLeading()), text, textStyle, reallyRender)
-        return textStyle.lineHeight() + pby.adj
+        val pby = appropriatePage(baselineLeft.y - textStyle.descent, textStyle.lineHeight)
+        pby.pb.drawStyledText(baselineLeft.y(pby.y + textStyle.descent), text, textStyle, reallyRender)
+        return textStyle.lineHeight + pby.adj
     }
 
     /** {@inheritDoc}  */

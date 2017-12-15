@@ -60,7 +60,7 @@ class ScaledImage(private val bufferedImage: BufferedImage,
 
         override val ascent: Float = dim.height
 
-        override val descentAndLeading: Float = 0f
+//        override val descentAndLeading: Float = 0f
 
         override val lineHeight: Float = dim.height
 

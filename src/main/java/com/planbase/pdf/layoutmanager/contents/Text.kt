@@ -50,16 +50,16 @@ data class Text(val textStyle: TextStyle,
                            val source: LineWrappable) : LineWrapped {
 
         constructor(s: String, x: Float, ts: TextStyle,
-                    src: LineWrappable): this(ts, s, Dim(x, ts.lineHeight()), src)
+                    src: LineWrappable): this(ts, s, Dim(x, ts.lineHeight), src)
 
-        override val ascent: Float = textStyle.ascent()
+        override val ascent: Float = textStyle.ascent
 
-        override val descentAndLeading: Float = textStyle.descent() + textStyle.leading()
+//        override val descentAndLeading: Float = textStyle.descent() + textStyle.leading()
 
-        override val lineHeight: Float = textStyle.lineHeight()
+        override val lineHeight: Float = textStyle.lineHeight
 
         override fun render(lp: RenderTarget, topLeft: Coord): Dim =
-                dim.height(lp.drawStyledText(topLeft.minusY(textStyle.ascent()), string, textStyle, true))
+                dim.height(lp.drawStyledText(topLeft.minusY(textStyle.ascent), string, textStyle, true))
 
         override fun toString() = "WrappedText(\"$string\", $dim, $textStyle)"
     }

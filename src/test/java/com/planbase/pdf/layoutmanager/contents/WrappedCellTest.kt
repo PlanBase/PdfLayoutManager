@@ -35,7 +35,7 @@ class WrappedCellTest {
         val wrappedCell: WrappedCell = cell.wrap()
 //        println(wrappedCell)
 
-        kotlin.test.assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
+        kotlin.test.assertEquals(textStyle.lineHeight + cell.cellStyle.boxStyle.topBottomInteriorSp(),
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
@@ -63,7 +63,7 @@ class WrappedCellTest {
         val wrappedCell: WrappedCell = cell.wrap()
 //        println(wrappedCell)
 
-        kotlin.test.assertEquals((textStyle.lineHeight() * 3) + cell.cellStyle.boxStyle.topBottomInteriorSp(),
+        kotlin.test.assertEquals((textStyle.lineHeight * 3) + cell.cellStyle.boxStyle.topBottomInteriorSp(),
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
@@ -92,20 +92,20 @@ class WrappedCellTest {
 
         val wrappedCell =
                 WrappedCell(Dim(cellWidth,
-                                  textStyle.lineHeight() + boxStyle.topBottomInteriorSp()),
+                                  textStyle.lineHeight + boxStyle.topBottomInteriorSp()),
                             CellStyle(Align.TOP_RIGHT, boxStyle),
                             listOf(MultiLineWrapped(hello.maxWidth(),
-                                                    textStyle.ascent(),
-                                                    textStyle.descent() + textStyle.leading(),
+                                                    textStyle.ascent,
+                                                    textStyle.lineHeight,
                                                     mutableListOf(Text.WrappedText(textStyle,
                                                                                    hello.text,
                                                                                    Dim(hello.maxWidth(),
-                                                                                       textStyle.lineHeight()),
+                                                                                       textStyle.lineHeight),
                                                                                    hello)))))
 //        val wrappedCell = cell.wrap()
 //        println("cell.wrap()=${cell.wrap()}")
 
-        kotlin.test.assertEquals(textStyle.lineHeight() + cell.cellStyle.boxStyle.topBottomInteriorSp(),
+        kotlin.test.assertEquals(textStyle.lineHeight + cell.cellStyle.boxStyle.topBottomInteriorSp(),
                                  wrappedCell.lineHeight)
 
         kotlin.test.assertEquals(cellWidth,
@@ -147,7 +147,7 @@ class WrappedCellTest {
                 .buildPart()
         val wrappedTable = tB.wrap()
 
-        TestCase.assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+        TestCase.assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                               wrappedTable.dim.height)
 
         TestCase.assertEquals(120f, wrappedTable.dim.width)

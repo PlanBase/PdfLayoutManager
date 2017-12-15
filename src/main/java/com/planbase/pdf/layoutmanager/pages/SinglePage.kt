@@ -91,7 +91,7 @@ class SinglePage(val pageNum: Int,
         if (reallyRender) {
             drawStyledText(baselineLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
         }
-        return textStyle.lineHeight()
+        return textStyle.lineHeight
     }
 
     /**

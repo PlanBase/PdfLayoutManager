@@ -37,7 +37,7 @@ interface LineWrapped {
     val ascent: Float
 
     /** Depth below the baseline of this line */
-    val descentAndLeading: Float
+//    val descentAndLeading: Float
 
     /** Total vertical height this line, both above and below the baseline */
     val lineHeight: Float
@@ -58,7 +58,7 @@ interface LineWrapped {
 
         override val ascent: Float = 0f
 
-        override val descentAndLeading: Float = 0f
+//        override val descentAndLeading: Float = 0f
 
         override val lineHeight: Float = 0f
 

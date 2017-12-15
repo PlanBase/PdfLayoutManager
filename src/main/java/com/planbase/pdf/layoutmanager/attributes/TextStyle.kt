@@ -35,42 +35,60 @@ import org.apache.pdfbox.pdmodel.font.PDFont
         ____  `.__ ""  _,'
 Descent/          """\ \,.
        \____          '--"
-Leading ____  _  _  _  _  _  _
 
-TextLine height = ascent + descent + leading.
- */
-/**
- * Specifies font, font-size, color, and padding.  Immutable.
- */
-data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
-                                         val textColor: PDColor,
-                                         private val adl: AscDescLead,
-                                         /**
-                                         Average character width (for this font, or maybe guessed) as a positive number in document
-                                         units
-                                          */
-                                         val avgCharWidth: Float) {
-    /**
-     * Creates a TextStyle with the given font, size, color, and leadingFactor.
-     * The leading factor defines the actual leading (vertical space between textLines) based on the
-     * font descent (how far letters like g, q, j, etc. go below the baseline of letters like m).
-     * A leadingFactor of 1 will result of a leading equal to the descent, while a leadingFactor
-     * of 2 will result of a leading equal to twice the descent etc...
-     */
-    constructor(f: PDFont, sz: Float, tc: PDColor, leadingFactor: Float) :
-            this(f, sz, tc, AscDescLead.fromLeadingFactor(f, sz, leadingFactor),
-                 avgCharWidth(f, sz))
 
-    /** Creates a TextStyle with the given font, size, color, and a leadingFactor of 0.5.  */
-    constructor(f: PDFont, sz: Float, tc: PDColor) :
-            this(f, sz, tc, AscDescLead.fromLeadingFactor(f, sz, 0.5f),
-                 avgCharWidth(f, sz))
+
+
+TextLine height = ascent + descent.
+ */
+/** Specifies font, font-size, and color. */
+data class TextStyle(val font: PDFont,    // Tf
+                     val fontSize: Float, // Tfs
+                     val textColor: PDColor) {
+
+    /** Average character width (for this font, or maybe guessed) as a positive number in document units */
+    val avgCharWidth: Float = avgCharWidth(font, fontSize)
 
     private val factor = factorFromFontSize(fontSize)
 
+    // Characters look best with the descent size both above and below.  Also acts as a good
+    // default leading.
+    val ascent = font.fontDescriptor.ascent * factor
+    val descent = font.fontDescriptor.descent * -factor
+    val lineHeight:Float = ascent + descent
+
+// Below taken from Section 9.3 page 243 of PDF 32000-1:2008
+//
+// Some of these parameters are expressed in unscaled text space units. This means that they shall be specified
+// in a coordinate system that shall be defined by the text matrix, T m but shall not be scaled by the font size
+// parameter, T fs.
+//
+// Tc is in unscaled text space units (subject to scaling by the Th parameter if the writing mode is horizontal)
+// characterSpacing = 0f
+//
+// Tw
+// wordSpacing = 0f
+//
+// Th
+// horizontalScaling = scale / 100
+//
+// Tz
+// scale = 100
+//
+// Tl Text leading (aka lineHeight) shall be used only by the T*, ', and " operators.  The vertical distance between the baselines of adjacent lines of text
+// leading = 0f
+//
+// Tmode
+// renderingMode = 0 // integer
+//
+// Trise or Ts adjusts the baseline for superscript (positive) or subscript (negative) effects.
+// rise = 0f
+//
+// Tk
+// knockout
+
     override fun toString() = "TextStyle(\"" + font.toString().replace("PDType1Font", "T1") + "\" " +
-                              fontSize + ", " + colorToString(textColor) +
-                              ", $adl)"// avgCharWidth=$avgCharWidth)"
+                              fontSize + "f, " + colorToString(textColor) + ")"
 
     /**
      Assumes ISO_8859_1 encoding
@@ -86,54 +104,6 @@ data class TextStyle private constructor(val font: PDFont, val fontSize: Float,
                 // Calculate our default if there's an exception.
                 text.length * avgCharWidth
             }
-
-//    fun font(): PDFont = font
-//
-//    fun fontSize(): Float = fontSize
-//
-//    fun textColor(): PDColor = textColor
-
-//    fun textColor(c: PDColor): TextStyle = TextStyle(font, fontSize, c)
-
-//    fun avgCharWidth(): Float = avgCharWidth
-
-    /** Ascent as a positive number in document units  */
-    fun ascent(): Float = adl.ascent
-
-    /** Descent as a positive number in document units  */
-    fun descent(): Float = adl.descent
-
-    /** Leading as a positive number in document units  */
-    fun leading(): Float = adl.leading
-
-    /** Descent plus leading as a positive number in document units  */
-    fun descentAndLeading(): Float = adl.descent + adl.leading
-
-    fun lineHeight(): Float = adl.lineHeight()
-
-    internal data class AscDescLead(val ascent: Float, val descent: Float, val leading: Float) {
-        // Java FontMetrics says getHeight() = getAscent() + getDescent() + getLeading().
-        fun lineHeight(): Float {
-            return ascent + descent + leading
-        }
-
-        override fun toString() = "AscDescLead($ascent, $descent, $leading)"
-
-        companion object {
-            fun fromLeadingFactor(font: PDFont, fontSize: Float, leadingFactor: Float) : AscDescLead {
-                val factor = factorFromFontSize(fontSize)
-                val fontDescriptor = font.fontDescriptor
-                val rawAscent = fontDescriptor.ascent
-                val rawDescent = fontDescriptor.descent
-                // Characters look best with the descent size both above and below.  Also acts as a good
-                // default leading.
-                val ascent = rawAscent * factor
-                val descent = rawDescent * -factor
-                val leading = descent * leadingFactor
-                return AscDescLead(ascent, descent, leading)
-            }
-        }
-    }
 
     companion object {
 

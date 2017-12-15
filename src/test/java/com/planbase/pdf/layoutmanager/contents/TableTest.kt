@@ -19,7 +19,7 @@ class TableTest {
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
-        assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedTable.dim.height)
 
         assertEquals(twoHundred, wrappedTable.dim.width)
@@ -30,7 +30,7 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(twoHundred, ret.width)
-        assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
 
         // TODO: Make rendered section of all items below.
@@ -46,7 +46,7 @@ class TableTest {
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
-        assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedTable.dim.height)
 
         assertEquals(helloHelloWidth,
@@ -58,7 +58,7 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(helloHelloWidth, ret.width)
-        assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }
 
@@ -73,7 +73,7 @@ class TableTest {
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
-        assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedTable.dim.height)
 
         assertEquals(twoHundred + twoHundred, wrappedTable.dim.width)
@@ -84,7 +84,7 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(twoHundred + twoHundred, ret.width)
-        assertEquals(textStyle.lineHeight() + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }
 
@@ -99,7 +99,7 @@ class TableTest {
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
-        assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      wrappedTable.dim.height)
 
         assertEquals(helloHelloWidth + helloHelloWidth, wrappedTable.dim.width)
@@ -110,7 +110,7 @@ class TableTest {
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
         assertEquals(helloHelloWidth + helloHelloWidth, ret.width)
-        assertEquals((textStyle.lineHeight() * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
+        assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }
 }

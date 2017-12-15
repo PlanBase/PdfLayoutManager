@@ -30,18 +30,18 @@ A mutable data structure to hold a wrapped line consisting of multiple items.
  */
 class MultiLineWrapped(var width: Float = 0f,
                        override var ascent: Float = 0f,
-                       override var descentAndLeading: Float = 0f,
+                       override var lineHeight: Float = 0f,
                        val items: MutableList<LineWrapped> = mutableListOf()) : LineWrapped {
     override val dim: Dim
             get() = Dim(width, lineHeight)
 
-    override val lineHeight: Float
-            get() = ascent + descentAndLeading
+//    override val lineHeight: Float
+//            get() = ascent + descentAndLeading
 
     fun isEmpty() = items.isEmpty()
     fun append(fi : LineWrapped): MultiLineWrapped {
         ascent = maxOf(ascent, fi.ascent)
-        descentAndLeading = maxOf(descentAndLeading, fi.descentAndLeading)
+        lineHeight = maxOf(lineHeight, fi.lineHeight)
         width += fi.dim.width
         items.add(fi)
         return this
@@ -72,7 +72,7 @@ class MultiLineWrapped(var width: Float = 0f,
     }
 
     override fun toString(): String {
-        return "MultiLineWrapped(width=$width, ascent=$ascent, descentAndLeading=$descentAndLeading," +
+        return "MultiLineWrapped(width=$width, ascent=$ascent, lineHeight=$lineHeight," +
                " items=\n" +
                items.fold(StringBuilder("["),
                           {acc, item ->
@@ -107,7 +107,7 @@ private fun addLineToMultiLineWrappedsCheckBlank(MultiLineWrappeds: MutableList<
     if (line.isEmpty() && MultiLineWrappeds.isNotEmpty())  {
         val lastRealItem: LineWrapped = MultiLineWrappeds.last().items.last()
         line.ascent = lastRealItem.ascent
-        line.descentAndLeading = lastRealItem.descentAndLeading
+        line.lineHeight = lastRealItem.lineHeight
     }
     // Now add the line to the list.
     MultiLineWrappeds.add(line)
