@@ -109,7 +109,7 @@ class PageGroupingTest {
         val melonHeight = 100f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 93.75f, RGB_BLACK), "gN")
 
         val squareDim = Dim(squareSide, squareSide)
 
@@ -134,7 +134,7 @@ class PageGroupingTest {
             diamondRect(lp, Coord(lineX1, y), squareSide)
 
             val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
-            assertEquals(qbfCell.dim, cellDim)
+            Dim.assertEquals(qbfCell.dim, cellDim, 0.00004f)
 
             val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
             assertEquals(qbfTable.dim, tableDim)

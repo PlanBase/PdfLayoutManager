@@ -61,7 +61,7 @@ class SinglePageTest {
             diamondRect(page, Coord(lineX1, y), squareSide)
 
             val cellDim = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
-            assertEquals(qbfCell.dim, cellDim)
+            Dim.assertEquals(qbfCell.dim, cellDim, 0.00004f)
 
             val tableDim = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
             assertEquals(qbfTable.dim, tableDim)

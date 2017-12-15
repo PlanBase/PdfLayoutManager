@@ -67,9 +67,9 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLines() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.375f, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13.54166671f, CMYK_BLACK)
         val txt2 = Text(tStyle2, "there ")
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 60f

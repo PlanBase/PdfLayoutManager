@@ -49,12 +49,15 @@ data class TextStyle(val font: PDFont,    // Tf
     /** Average character width (for this font, or maybe guessed) as a positive number in document units */
     val avgCharWidth: Float = avgCharWidth(font, fontSize)
 
-    private val factor = factorFromFontSize(fontSize)
+    // Somewhere it says that font units are 1000 times page units, but my tests with
+    // PDType1Font.HELVETICA and PDType1Font.HELVETICA_BOLD from size 5-200 show that 960x is
+    // pretty darn good.  If we find a font this doesn't work for, we'll have to adjust.
+    private val factor = fontSize / 1000f
 
     // Characters look best with the descent size both above and below.  Also acts as a good
     // default leading.
-    val ascent = font.fontDescriptor.ascent * factor
-    val descent = font.fontDescriptor.descent * -factor
+    val ascent = font.fontDescriptor.ascent * fontSize / 1000f
+    val descent = font.fontDescriptor.descent * -fontSize / 1000f
     val lineHeight:Float = ascent + descent
 
 // Below taken from Section 9.3 page 243 of PDF 32000-1:2008
@@ -106,11 +109,6 @@ data class TextStyle(val font: PDFont,    // Tf
             }
 
     companion object {
-
-        // Somewhere it says that font units are 1000 times page units, but my tests with
-        // PDType1Font.HELVETICA and PDType1Font.HELVETICA_BOLD from size 5-200 show that 960x is
-        // pretty darn good.  If we find a font this doesn't work for, we'll have to adjust.
-        fun factorFromFontSize(fontSize: Float) : Float = fontSize / 960f
 
         fun avgCharWidth(f : PDFont, sz:Float) : Float {
             var avgFontWidth = 500f

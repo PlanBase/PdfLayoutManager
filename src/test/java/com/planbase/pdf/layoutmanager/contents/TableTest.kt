@@ -57,7 +57,7 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
-        assertEquals(helloHelloWidth, ret.width)
+        assertEquals(helloHelloWidth, ret.width, 0.00001f)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }
@@ -109,7 +109,7 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
-        assertEquals(helloHelloWidth + helloHelloWidth, ret.width)
+        assertEquals(helloHelloWidth + helloHelloWidth, ret.width, 0.00001f)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.height, 0.00003f)
     }
