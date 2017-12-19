@@ -11,6 +11,7 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -24,28 +25,41 @@ class MultiLineWrappedTest {
         val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 60f, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello ")
         val tStyle2 = TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK)
-        val txt2 = Text(tStyle2, "there ")
+        val txt2 = Text(tStyle2, "gruel ")
         val txt3 = Text(tStyle1, "world!")
         val line = MultiLineWrapped()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
         line.append(txt1.lineWrapper().getSomething(999f).item)
         assertEquals(tStyle1.lineHeight, line.dim.height, floatCloseEnough)
+        assertEquals(tStyle1.ascent, line.ascent)
 
         line.append(txt2.lineWrapper().getSomething(999f).item)
         assertEquals(tStyle2.lineHeight, line.dim.height, floatCloseEnough)
+        assertEquals(tStyle2.ascent, line.ascent)
 
         line.append(txt3.lineWrapper().getSomething(999f).item)
         assertEquals(tStyle2.lineHeight, line.dim.height, floatCloseEnough)
+        assertEquals(tStyle2.ascent, line.ascent)
 
         // This is for the baseline!
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping()
-        val yTop = lp.yBodyTop() - 10f
+        val yTop = lp.yBodyTop()
+//        println("yBodyTop=$yTop")
         val yBottom = yTop - tStyle2.lineHeight
-        val upperLeft = Coord(100f, yTop)
+        val yBaseline = yTop - tStyle2.ascent
+
+        val ascentDiff = tStyle2.ascent - tStyle1.ascent
+        val top2 = yTop - ascentDiff
+//        println("ascentDiff=$ascentDiff")
+        val upperLeft = Coord(40f, yTop)
         lp.drawLine(Coord(0f, yTop), Coord(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f), true)
+        lp.drawLine(Coord(0f, top2), Coord(lp.pageWidth(), top2), LineStyle(PDColor(floatArrayOf(0.5f, 0.5f, 0.5f), PDDeviceRGB.INSTANCE), 0.125f), true)
+        lp.drawLine(Coord(0f, yBaseline), Coord(lp.pageWidth(), yBaseline), LineStyle(RGB_BLACK, 0.125f), true)
         lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
         val dim = line.render(lp, upperLeft)
+//        println("tStyle1=$tStyle1")
+//        println("tStyle2=$tStyle2")
         assertEquals(line.dim, dim)
 
         lp.commit()

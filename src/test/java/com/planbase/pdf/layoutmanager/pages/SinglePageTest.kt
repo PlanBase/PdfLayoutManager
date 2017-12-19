@@ -64,7 +64,7 @@ class SinglePageTest {
             Dim.assertEquals(qbfCell.dim, cellDim, 0.00004f)
 
             val tableDim = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
-            assertEquals(qbfTable.dim, tableDim)
+            Dim.assertEquals(qbfTable.dim, tableDim, 0.00002f)
 
             y -= melonHeight
         }

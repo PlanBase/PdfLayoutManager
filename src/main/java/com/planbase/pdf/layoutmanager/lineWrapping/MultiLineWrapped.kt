@@ -35,13 +35,14 @@ class MultiLineWrapped(var width: Float = 0f,
     override val dim: Dim
             get() = Dim(width, lineHeight)
 
-//    override val lineHeight: Float
-//            get() = ascent + descentAndLeading
+    private var descentLeading = lineHeight - ascent
 
     fun isEmpty() = items.isEmpty()
     fun append(fi : LineWrapped): MultiLineWrapped {
+        // lineHeight has to be ascent + descentLeading because we align on the baseline
         ascent = maxOf(ascent, fi.ascent)
-        lineHeight = maxOf(lineHeight, fi.lineHeight)
+        descentLeading = maxOf(descentLeading, fi.lineHeight - fi.ascent)
+        lineHeight = ascent + descentLeading
         width += fi.dim.width
         items.add(fi)
         return this
@@ -50,25 +51,36 @@ class MultiLineWrapped(var width: Float = 0f,
     override fun render(lp: RenderTarget, topLeft: Coord): Dim {
         var x:Float = topLeft.x
         val y = topLeft.y
-        var maxHeight = dim.height
+        // lineHeight has to be ascent + descentLeading because we align on the baseline
+        var maxAscent = ascent
+        var maxDescentLeading = lineHeight - ascent
         for (item: LineWrapped in items) {
+            // Text rendering calculation spot 2/3
             // ascent is the maximum ascent for anything on this line.
-            //          /
-            //         |
-            // (max)   |
-            // ascent <        __
-            //         |      |  )
-            //         |      |-:
-            //          \. . .|  \ . . . . . . . . . . .
-            //
-            //
+            //               _____
+            //          /   |     \
+            //         |    |      \
+            // (max)   |    |      |
+            // ascent <     |_____/      ___.
+            //         |    |     \     /   |
+            //         |    |      \   |    |
+            //          \. .|. . . .\. .\___| . . . .
+            //                              |
+            //                          \__/
             // Subtracting that from the top-y
             // yields the baseline, which is what we want to align on.
-            val fixedHeight = item.render(lp, Coord(x, y - (ascent - item.ascent))).height
-            maxHeight = maxOf(maxHeight, fixedHeight)
+//            println("y=$y ascent=$ascent item=${item}")
+            val ascentDiff = ascent - item.ascent
+            val innerUpperLeft = Coord(x, y - ascentDiff)
+//            println("ascentDiff=$ascentDiff innerUpperLeft=$innerUpperLeft")
+            val adjHeight = item.render(lp, innerUpperLeft).height
+            val adjustment = adjHeight - item.lineHeight
+//            println("adjHeight=$adjHeight item.lineHeight=${item.lineHeight} adjustment=$adjustment")
+            maxAscent = maxOf(maxAscent, item.ascent + adjustment)
+            maxDescentLeading = maxOf(maxDescentLeading, item.lineHeight - item.ascent)
             x += item.dim.width
         }
-        return Dim(x - topLeft.x, maxHeight)
+        return Dim(x - topLeft.x, maxAscent + maxDescentLeading)
     }
 
     override fun toString(): String {

@@ -75,7 +75,7 @@ class TestManualllyPdfLayoutMgr {
         // alignment.
         var tB = Table()
         tB.addCellWidths(listOf(120f, 120f, 120f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
                 .partBuilder()
                 .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2f),
                                                              RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
@@ -124,16 +124,16 @@ class TestManualllyPdfLayoutMgr {
         val xya: Dim = tB.wrap()
                 .render(lp, lp.bodyTopLeft())
 
-        assertEquals(Dim(360.0f, 374.432f), xya)
+        assertEquals(Dim(360.0f, 375f), xya)
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
         tB = Table()
         tB.addCellWidths(listOf(100f, 100f, 100f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
                                                    BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
+                .rowBuilder().addTextCells("January", "February", "March").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
                                                    BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
@@ -177,15 +177,14 @@ class TestManualllyPdfLayoutMgr {
         val xyb: Dim = tB.wrap()
                 .render(lp, lp.bodyTopLeft().plusX(xya.width + 10))
 
-        assertEquals(Dim(300.0f, 314.432f), xyb)
+        assertEquals(Dim(300.0f, 315f), xyb)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
         // the way cells extend vertically (but not horizontally) to fit the text you put in them.
         tB = Table()
         tB.addCellWidths(listOf(100f, 100f, 100f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
-                                     RGB_YELLOW_BRIGHT))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
                                                    BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("Uno", "Dos", "Tres").buildRow()
@@ -220,7 +219,7 @@ class TestManualllyPdfLayoutMgr {
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
         tB = Table()
         tB.addCellWidths(listOf(120f, 120f, 120f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
                                                    BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()

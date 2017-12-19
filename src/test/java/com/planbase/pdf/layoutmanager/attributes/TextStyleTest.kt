@@ -13,20 +13,27 @@ import java.io.File
 
 class TextStyleTest {
     @Test fun basics() {
-        assertEquals(92.5f, TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(92.5f, TextStyle(PDType1Font.HELVETICA_BOLD, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(92.5f, TextStyle(PDType1Font.HELVETICA_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(92.5f, TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(90.0f, TextStyle(PDType1Font.TIMES_ROMAN, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(90.0f, TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(90.0f, TextStyle(PDType1Font.TIMES_ITALIC, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(90.0f, TextStyle(PDType1Font.TIMES_BOLD_ITALIC, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(78.6f, TextStyle(PDType1Font.COURIER, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(78.6f, TextStyle(PDType1Font.COURIER_BOLD, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(78.6f, TextStyle(PDType1Font.COURIER_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(78.6f, TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
-//        assertEquals(f, TextStyle(PDType1Font.SYMBOL, 100f, CMYK_BLACK).lineHeight)
-//        assertEquals(f, TextStyle(PDType1Font.ZAPF_DINGBATS, 100f, CMYK_BLACK).lineHeight)
+
+        // Natural height
+        assertEquals(115.6f, TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK).lineHeight)
+
+        // Should take whatever height we give it!
+        assertEquals(50f, TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 50f).lineHeight)
+        assertEquals(200f, TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 200f).lineHeight)
+
+        // Natural heights of other fonts
+        assertEquals(119.0f, TextStyle(PDType1Font.HELVETICA_BOLD, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(115.6f, TextStyle(PDType1Font.HELVETICA_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(119.0f, TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(111.6f, TextStyle(PDType1Font.TIMES_ROMAN, 100f, CMYK_BLACK).lineHeight)
+
+        assertEquals(115.3f, TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(110f, TextStyle(PDType1Font.TIMES_ITALIC, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(113.9f, TextStyle(PDType1Font.TIMES_BOLD_ITALIC, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(105.5f, TextStyle(PDType1Font.COURIER, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(105.1f, TextStyle(PDType1Font.COURIER_BOLD, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(105.5f, TextStyle(PDType1Font.COURIER_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(105.1f, TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
 
         val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))

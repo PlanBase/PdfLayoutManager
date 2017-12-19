@@ -44,7 +44,11 @@ TextLine height = ascent + descent.
 /** Specifies font, font-size, and color. */
 data class TextStyle(val font: PDFont,    // Tf
                      val fontSize: Float, // Tfs
-                     val textColor: PDColor) {
+                     val textColor: PDColor,
+                     val lineHeight:Float) {
+    constructor(font: PDFont,    // Tf
+                fontSize: Float, // Tfs
+                textColor: PDColor) : this(font, fontSize, textColor, font.fontDescriptor.fontBoundingBox.height * fontSize / 1000f)
 
     /** Average character width (for this font, or maybe guessed) as a positive number in document units */
     val avgCharWidth: Float = avgCharWidth(font, fontSize)
@@ -57,8 +61,6 @@ data class TextStyle(val font: PDFont,    // Tf
     // Characters look best with the descent size both above and below.  Also acts as a good
     // default leading.
     val ascent = font.fontDescriptor.ascent * fontSize / 1000f
-    val descent = font.fontDescriptor.descent * -fontSize / 1000f
-    val lineHeight:Float = ascent + descent
 
 // Below taken from Section 9.3 page 243 of PDF 32000-1:2008
 //
@@ -91,7 +93,7 @@ data class TextStyle(val font: PDFont,    // Tf
 // knockout
 
     override fun toString() = "TextStyle(\"" + font.toString().replace("PDType1Font", "T1") + "\" " +
-                              fontSize + "f, " + colorToString(textColor) + ")"
+                              fontSize + "f, ${colorToString(textColor)}, ${lineHeight}f)"
 
     /**
      Assumes ISO_8859_1 encoding

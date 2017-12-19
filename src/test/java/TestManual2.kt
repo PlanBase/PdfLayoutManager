@@ -113,18 +113,13 @@ fun testBodyMargins() {
                      ("The social people ran the " +
                       "local cases and men left local. The " +
                       "easy areas saw the whole times and " +
-                      "systems became national. The whole " +
-                      "Page # 1questions lived the white points and " +
-                      "governments had national. The real " +
-                      "families saw the hard stories and Mrs " +
-                      "looked late. The young studies had " +
-                      "the other times and families started " +
-                      "late. The public years saw the hard " +
-                      "stories and waters used sure. The " +
-                      "clear lives showed the white work and " +
-                      "people used long. The major rights " +
+                      "systems became national. The " +
+                      "clear lives showed the work and " +
+                      "people used. The major rights " +
                       "was the important children and " +
-                      "mothers turned able.")),
+                      "mothers turned able. The " +
+                      "international men kept the real " +
+                      "questions and nights made big.")),
                 ScaledImage(graphPic),
                 Text(BULLET_TEXT_STYLE,
                      ("The " +

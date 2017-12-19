@@ -106,7 +106,7 @@ class PageGroupingTest {
         val lp = pageMgr.startPageGrouping()
         val f = File("target/test-classes/melon.jpg")
         val melonPic = ImageIO.read(f)
-        val melonHeight = 100f
+        val melonHeight = 98f
         val melonWidth = 170f
         val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
         val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 93.75f, RGB_BLACK), "gN")
@@ -137,7 +137,7 @@ class PageGroupingTest {
             Dim.assertEquals(qbfCell.dim, cellDim, 0.00004f)
 
             val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-            assertEquals(qbfTable.dim, tableDim)
+            Dim.assertEquals(qbfTable.dim, tableDim, 0.00002f)
 
             y -= melonHeight
         }

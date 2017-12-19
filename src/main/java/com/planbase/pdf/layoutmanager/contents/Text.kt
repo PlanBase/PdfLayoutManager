@@ -58,6 +58,7 @@ data class Text(val textStyle: TextStyle,
 
         override val lineHeight: Float = textStyle.lineHeight
 
+        // Text rendering calculation spot 1/3
         override fun render(lp: RenderTarget, topLeft: Coord): Dim =
                 dim.height(lp.drawStyledText(topLeft.minusY(textStyle.ascent), string, textStyle, true))
 
