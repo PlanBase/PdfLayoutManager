@@ -205,7 +205,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * @throws IOException - if there is a failure writing to the underlying stream.
      */
     @Throws(IOException::class)
-    internal fun logicalPageEnd(lp: PageGrouping) {
+    fun logicalPageEnd(lp: PageGrouping) {
 
         // Write out all uncommitted pages.
         while (unCommittedPageIdx < pages.size) {
