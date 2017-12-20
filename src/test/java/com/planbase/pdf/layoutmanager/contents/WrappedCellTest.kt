@@ -157,8 +157,8 @@ class WrappedCellTest {
         Dim.assertEquals(wrappedTable.dim, renderedDim, 0.00003f)
 
         lp.commit()
-        val os = FileOutputStream("test3.pdf")
-        pageMgr.save(os)
+//        val os = FileOutputStream("test3.pdf")
+//        pageMgr.save(os)
     }
 
     companion object {

@@ -84,8 +84,8 @@ class CellTest {
         assertEquals(squareDim, dim.height)
         lp.commit()
 
-        val os = FileOutputStream("testCell1.pdf")
-        pageMgr.save(os)
+//        val os = FileOutputStream("testCell1.pdf")
+//        pageMgr.save(os)
     }
 
 }

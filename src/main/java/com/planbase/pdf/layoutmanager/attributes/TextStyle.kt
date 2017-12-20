@@ -27,31 +27,49 @@ import java.io.IOException
 import org.apache.pdfbox.pdmodel.font.PDFont
 
 /*
-        ----    __----__
-        ^     ,'  ."".  `,
-        |    /   /    \   \
-   Ascent   (   (      )   )
-        V    \   \_  _/   /
-        ____  `.__ ""  _,'
-Descent/          """\ \,.
-       \____          '--"
+ Represents the attributes of some text.
+             __
+            /           ----    __----__
+            |           ^     ,'  ."".  `,
+            |           |    /   /    \   \
+            |      Ascent   (   (      )   )
+lineHeight <            V    \   \_  _/   /
+   AKA      |           ____  `.__ ""  _,'
+ "leading"  |   Descent/          """\ \,.
+            |          \____          '--"
+            |
+            \__ Extra space here is included in the leading, but is NOT leading!
 
-
-
-
-TextLine height = ascent + descent.
+ @param font "Tf" in the PDF spec, the font
+ @param fontSize "Tfs" in the PDF spec, the font size in document units
+ @param textColor the color
+ @param lineHeight "TL" in the PDF spec, is the distance from baseline of one row of text to baseline of the next in
+ document units.  By default this is the height of the bounding box for the font (translated into document units).
+ PDF spec calls this "leading."
+ @param characterSpacing "Tc" in the PDF spec, is the amount of extra space to put between characters
+ (negative removes) in unscaled text space units.  Subject to scaling by the Th parameter if the writing mode is
+ horizontal.
+ @param wordSpacing "Tw" in the PDF spec, is like characterSpacing, but only affects the ASCII SPACE character
+ (0x20 or 32 decimal) and is in document units (PdfLayoutMgr emulates this instead of falling through to PDFBox).
  */
 /** Specifies font, font-size, and color. */
 data class TextStyle(val font: PDFont,    // Tf
                      val fontSize: Float, // Tfs
                      val textColor: PDColor,
-                     val lineHeight:Float) {
-    constructor(font: PDFont,    // Tf
-                fontSize: Float, // Tfs
+                     val lineHeight:Float,
+                     val characterSpacing:Float,
+                     val wordSpacing:Float) {
+    constructor(font: PDFont,
+                fontSize: Float,
+                textColor: PDColor,
+                lineHeight:Float) : this(font, fontSize, textColor, lineHeight, 0f, 0f)
+
+    constructor(font: PDFont,
+                fontSize: Float,
                 textColor: PDColor) : this(font, fontSize, textColor, font.fontDescriptor.fontBoundingBox.height * fontSize / 1000f)
 
     /** Average character width (for this font, or maybe guessed) as a positive number in document units */
-    val avgCharWidth: Float = avgCharWidth(font, fontSize)
+    val avgCharWidth: Float = avgCharWidth(font, fontSize, characterSpacing)
 
     // Somewhere it says that font units are 1000 times page units, but my tests with
     // PDType1Font.HELVETICA and PDType1Font.HELVETICA_BOLD from size 5-200 show that 960x is
@@ -67,12 +85,6 @@ data class TextStyle(val font: PDFont,    // Tf
 // Some of these parameters are expressed in unscaled text space units. This means that they shall be specified
 // in a coordinate system that shall be defined by the text matrix, T m but shall not be scaled by the font size
 // parameter, T fs.
-//
-// Tc is in unscaled text space units (subject to scaling by the Th parameter if the writing mode is horizontal)
-// characterSpacing = 0f
-//
-// Tw
-// wordSpacing = 0f
 //
 // Th
 // horizontalScaling = scale / 100
@@ -93,26 +105,40 @@ data class TextStyle(val font: PDFont,    // Tf
 // knockout
 
     override fun toString() = "TextStyle(\"" + font.toString().replace("PDType1Font", "T1") + "\" " +
-                              fontSize + "f, ${colorToString(textColor)}, ${lineHeight}f)"
+                              fontSize + "f, ${colorToString(textColor)}, ${lineHeight}f" +
+                              if (characterSpacing != 0f) { ", ${characterSpacing}f" } else { "" } +
+                              if (wordSpacing != 0f) { ", ${wordSpacing}f" } else { "" } +
+                              ")"
 
     /**
      Assumes ISO_8859_1 encoding
      @param text ISO_8859_1 encoded text
      @return the width of this text rendered in this font.
      */
-    fun stringWidthInDocUnits(text: String): Float =
-            try {
-                font.getStringWidth(text) * factor
-            } catch (ioe: IOException) {
-                // logger.error("IOException probably means an issue reading font metrics from the underlying" +
-                //              "font file used in this PDF");
-                // Calculate our default if there's an exception.
-                text.length * avgCharWidth
-            }
+    fun stringWidthInDocUnits(text: String): Float  {
+        var ret = try {
+            font.getStringWidth(text) * factor
+
+        } catch (ioe: IOException) {
+            // logger.error("IOException probably means an issue reading font metrics from the underlying" +
+            //              "font file used in this PDF");
+            // Calculate our default if there's an exception.
+            text.length * avgCharWidth
+        }
+        if (characterSpacing != 0f) {
+            ret += text.length * characterSpacing
+        }
+        if (wordSpacing != 0f) {
+//            println("ret before wordspacing = $ret   text='$text'  count=${text.count{ it == ' ' }}")
+            ret += text.count{ it == ' ' } * wordSpacing
+//            println("ret after wordspacing = $ret")
+        }
+        return ret
+    }
 
     companion object {
 
-        fun avgCharWidth(f : PDFont, sz:Float) : Float {
+        fun avgCharWidth(f : PDFont, sz:Float, csp: Float) : Float {
             var avgFontWidth = 500f
             try {
                 avgFontWidth = f.averageFontWidth
@@ -122,7 +148,7 @@ data class TextStyle(val font: PDFont,    // Tf
                 // just use default if there's an exception.
             }
 
-            return avgFontWidth * sz
+            return (avgFontWidth * sz) + csp
         }
     }
 }

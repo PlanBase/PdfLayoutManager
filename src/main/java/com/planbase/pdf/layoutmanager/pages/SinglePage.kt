@@ -150,12 +150,53 @@ class SinglePage(val pageNum: Int,
                         ord: Long, z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
-            stream.beginText()
             stream.setNonStrokingColor(style.textColor)
             stream.setFont(style.font, style.fontSize)
-            stream.newLineAtOffset(baselineLeft.x, baselineLeft.y)
-            stream.showText(t)
-            stream.endText()
+            val characterSpacing = style.characterSpacing
+            if (characterSpacing != 0f) {
+                stream.setCharacterSpacing(characterSpacing)
+            }
+            val wordSpacing = style.wordSpacing
+            if (wordSpacing == 0f) {
+                stream.beginText()
+                stream.newLineAtOffset(baselineLeft.x, baselineLeft.y)
+                stream.showText(t)
+                stream.endText()
+            } else {
+                var x = baselineLeft.x
+                var word = StringBuilder()
+                for (c in t) {
+                    if (c == ' ') {
+                        if (word.isEmpty()) {
+//                            println("x1=$x")
+                            x += style.stringWidthInDocUnits(" ")
+//                            println("  x1=$x")
+                        } else {
+                            val str = word.toString()
+                            stream.beginText()
+                            stream.newLineAtOffset(x, baselineLeft.y)
+                            stream.showText(str)
+                            stream.endText()
+//                            println("x2=$x")
+                            x += style.stringWidthInDocUnits(str)
+                            x += style.stringWidthInDocUnits(" ")
+//                            println("  x2=$x")
+                            word = StringBuilder()
+                        }
+                    } else {
+                        word.append(c)
+                    }
+                }
+                if (word.isNotEmpty()) {
+                    stream.beginText()
+                    stream.newLineAtOffset(x, baselineLeft.y)
+                    stream.showText(word.toString())
+                    stream.endText()
+                }
+            }
+            if (characterSpacing != 0f) {
+                stream.setCharacterSpacing(0f)
+            }
         }
     }
 

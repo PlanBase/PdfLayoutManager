@@ -1,6 +1,7 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -10,8 +11,11 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.File
+import java.io.FileOutputStream
 
 class TextStyleTest {
+    val quickBrownFox = "The quick brown fox jumps over the lazy dog"
+
     @Test fun basics() {
 
         // Natural height
@@ -39,6 +43,46 @@ class TextStyleTest {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         assertEquals(113.28125f, TextStyle(liberationFont, 100f, CMYK_BLACK).lineHeight)
+
+        // TODO: Test character spacing and word spacing!
+
+        val helvetica100 = TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK)
+        val basicWidth = 516.7f
+
+        assertEquals(basicWidth, helvetica100.stringWidthInDocUnits("Hello World"))
+
+        assertEquals(basicWidth + 10f,
+                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 0f, 10f)
+                             .stringWidthInDocUnits("Hello World"))
+
+        assertEquals(basicWidth + ("Hello World".length * 1f),
+                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 1f, 0f)
+                             .stringWidthInDocUnits("Hello World"))
+
+        val lp = pageMgr.startPageGrouping()
+        val page: SinglePage = pageMgr.page(0)
+
+
+        val times20 = TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK)
+        val leading = times20.lineHeight
+        page.drawStyledText(lp.bodyTopLeft().minusY(leading), quickBrownFox, times20)
+
+        page.drawStyledText(lp.bodyTopLeft().minusY(leading * 2), quickBrownFox,
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 1f, 0f))
+
+        page.drawStyledText(lp.bodyTopLeft().minusY(leading * 3), quickBrownFox,
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, -1f, 0f))
+
+        page.drawStyledText(lp.bodyTopLeft().minusY(leading * 4), quickBrownFox,
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 2f))
+
+        page.drawStyledText(lp.bodyTopLeft().minusY(leading * 5), quickBrownFox,
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, -2f))
+
+        lp.commit()
+        val os = FileOutputStream("textStyleTest.pdf")
+        pageMgr.save(os)
+
 
 //        val fd = PDType1Font.HELVETICA_BOLD.fontDescriptor
 //        println("fd=${fd}")
