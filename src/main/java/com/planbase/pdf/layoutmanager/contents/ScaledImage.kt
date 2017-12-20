@@ -37,8 +37,8 @@ import java.awt.image.BufferedImage
  * significantly decreases the file size of the resulting PDF when images are reused within that
  * document.
  */
-class ScaledImage(private val bufferedImage: BufferedImage,
-                  val dim: Dim) : LineWrappable {
+data class ScaledImage(private val bufferedImage: BufferedImage,
+                       val dim: Dim) : LineWrappable {
 
     /**
      * Returns a new buffered image with width and height calculated from the source BufferedImage

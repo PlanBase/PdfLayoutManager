@@ -32,6 +32,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.util.Matrix
 import java.awt.image.BufferedImage
@@ -98,7 +99,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     // CRITICAL: This means that the the set of jpgs must be thrown out and created anew for each
     // document!  Thus, a private final field on the PdfLayoutMgr instead of DrawJpeg, and DrawJpeg
     // must be an inner class (or this would have to be package scoped).
-    private val jpegMap = HashMap<BufferedImage, PDImageXObject>()
+    private val imageCache = HashMap<BufferedImage, PDImageXObject>()
 
     private val pages:MutableList<SinglePage> = mutableListOf()
 
@@ -114,18 +115,30 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     internal fun ensureCached(sj: WrappedImage): PDImageXObject {
         val bufferedImage = sj.bufferedImage
-        var temp: PDImageXObject? = jpegMap[bufferedImage]
+        var temp: PDImageXObject? = imageCache[bufferedImage]
         if (temp == null) {
-            try {
-                temp = JPEGFactory.createFromImage(doc, bufferedImage)
-            } catch (ioe: IOException) {
-                // can there ever be an exception here?  Doesn't it get written later?
-                throw IllegalStateException("Caught exception creating a PDImageXObject from a bufferedImage", ioe)
+            val problems:MutableList<Throwable> = mutableListOf()
+
+            temp = try {
+                LosslessFactory.createFromImage(doc, bufferedImage)
+            } catch (t: Throwable) {
+                problems.plus(t)
+                try {
+                    JPEGFactory.createFromImage(doc, bufferedImage)
+                } catch (u: Throwable) {
+                    if (problems.isEmpty()) {
+                        throw Exception("Caught exception creating a JPEG from a bufferedImage", u)
+                    } else {
+                        problems.plus(u)
+                        throw Exception("Caught exceptions creating Lossless/JPEG PDImageXObjects from" +
+                                        " a bufferedImage: $problems")
+                    }
+                }
             }
 
-            jpegMap.put(bufferedImage, temp)
+            imageCache.put(bufferedImage, temp!!)
         }
-        return temp!!
+        return temp
     }
 
     fun hasAnyPages():Boolean = pages.size > 0
