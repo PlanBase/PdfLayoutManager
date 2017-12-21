@@ -1,7 +1,7 @@
 # PdfLayoutMgr2
 
 A wrapper for PDFBox to add line-breaking, page-breaking, and tables.
-Uses a box-model (like HTML) for styles.
+Uses a box-model (like HTML, but called a "cell").
 Requires PDFBox which in turn requires Log4J or apache commons Logging.
 
 ![Sample Output](sampleScreenShot.png)
@@ -43,9 +43,15 @@ Positive Y is up.  Positive X is right.
 * Rectangles and Images are positioned by their lower-left corners.
 
 #### Baseline
-* The baseline is what the characters in most scripts "sit" on.  Letters like "N" are entirely above it.  Others like "g" dip below it.  The *ascent* is everything above that, *descent* and *leading* are below.
 * Text is positioned by its baseline.
-* Line-wrapping is done based on the *baseline*.
+* The baseline is what the characters in most scripts "sit" on.
+Letters like "N" are entirely above it.
+Others like "g" dip below it.
+The *ascent* is everything above the baseline.
+*Descent* is below the baseline, but there is usually extra space between the lowest descent and the total lineHeight.
+You can remove this by manually setting the lineHeight independently of the size of the font.
+* The baseline of images and tables is their bottom (they have no descent or additional line height) 
+* Line-wrapping is done based on the baseline.
 
 #### Upper-Left
 Once line-wrapped, everything in PdfLayoutMgr is *rendered* from the upper-left corner: [LineWrapped](src/main/java/com/planbase/pdf/layoutmanager/lineWrapping/LineWrapped.kt).
@@ -62,6 +68,12 @@ you are already using the final coordinate system and conventions, so there are 
 
 #### Top-right-bottom-left
 When practical, parameters are specified in the same order as CSS.
+
+#### Text Measurements
+We take the default ascent, leading, and lineHeight from the font information.
+Fonts vary widely in these measurements.
+Size 11 in one font might be size 12 in another.
+The default lineHeight varies significantly between fonts.
 
 #### More
 For reference: [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf)
@@ -131,12 +143,8 @@ contact [PlanBase Inc.](https://planbase.com) to purchase a commercial license.
 
 Requires Maven 3, (Java 8?), and Kotlin 1.1.51 or greater.  Jar file ends up in the `target/` sub-folder.
 
-API documentation can be built with `mvn javadoc:javadoc` and is then found at `target/site/apidocs/index.html`
+API documentation used to be built with `mvn javadoc:javadoc` and is then found at `target/site/apidocs/index.html`
 
-A sample PDF named `test.pdf` shows up in the root folder of this project when you run `mvn test`.
+Several PDFs like `test.pdf` show up in the root folder of this project when you run `mvn test`.
 
 A jar file can be built with `mvn clean package` and ends up in the `target/` sub-folder.  Or type `mvn clean install` to build and install into your local maven repository.
-
-# To Do
-* Add @JvmField to companion values.
-* Add tests for new funcs in RenderTarget
