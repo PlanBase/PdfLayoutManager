@@ -52,11 +52,11 @@ class TextStyleTest {
         assertEquals(basicWidth, helvetica100.stringWidthInDocUnits("Hello World"))
 
         assertEquals(basicWidth + 10f,
-                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 0f, 10f)
+                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 0f, 0f, 10f)
                              .stringWidthInDocUnits("Hello World"))
 
         assertEquals(basicWidth + ("Hello World".length * 1f),
-                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 1f, 0f)
+                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 0f, 1f, 0f)
                              .stringWidthInDocUnits("Hello World"))
 
         val lp = pageMgr.startPageGrouping()
@@ -68,16 +68,26 @@ class TextStyleTest {
         page.drawStyledText(lp.bodyTopLeft().minusY(leading), quickBrownFox, times20)
 
         page.drawStyledText(lp.bodyTopLeft().minusY(leading * 2), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 1f, 0f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 1f, 0f))
 
         page.drawStyledText(lp.bodyTopLeft().minusY(leading * 3), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, -1f, 0f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, -1f, 0f))
 
         page.drawStyledText(lp.bodyTopLeft().minusY(leading * 4), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 2f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 0f, 2f))
 
         page.drawStyledText(lp.bodyTopLeft().minusY(leading * 5), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, -2f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 0f, -2f))
+
+        val helloOff = lp.bodyTopLeft().minusY(leading * 6)
+        page.drawStyledText(helloOff, "Hello", times20)
+        page.drawStyledText(helloOff.plusX(times20.stringWidthInDocUnits("Hello")), "subscript",
+                            TextStyle(PDType1Font.TIMES_ROMAN, 11f, CMYK_BLACK, 11f, -4f, 0f, 0f))
+
+        val stuffOff = helloOff.plusX(times20.stringWidthInDocUnits("hellosubscript"))
+        page.drawStyledText(stuffOff, "Stuff", times20)
+        page.drawStyledText(stuffOff.plusX(times20.stringWidthInDocUnits("Stuff") + 1f), "superscript",
+                            TextStyle(PDType1Font.TIMES_ROMAN, 11f, CMYK_BLACK, 11f, 10f, 0f, 0f))
 
         lp.commit()
         val os = FileOutputStream("textStyleTest.pdf")

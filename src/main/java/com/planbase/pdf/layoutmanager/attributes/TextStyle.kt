@@ -46,6 +46,8 @@ lineHeight <            V    \   \_  _/   /
  @param lineHeight "TL" in the PDF spec, is the distance from baseline of one row of text to baseline of the next in
  document units.  By default this is the height of the bounding box for the font (translated into document units).
  PDF spec calls this "leading."
+ @param rise "Trise" or "Ts" in the PDF spec, adjusts the baseline positive for superscript or negative for subscript.
+ You probably want to use a smaller font for this.
  @param characterSpacing "Tc" in the PDF spec, is the amount of extra space to put between characters
  (negative removes) in unscaled text space units.  Subject to scaling by the Th parameter if the writing mode is
  horizontal.
@@ -57,12 +59,13 @@ data class TextStyle(val font: PDFont,    // Tf
                      val fontSize: Float, // Tfs
                      val textColor: PDColor,
                      val lineHeight:Float,
+                     val rise:Float,
                      val characterSpacing:Float,
                      val wordSpacing:Float) {
     constructor(font: PDFont,
                 fontSize: Float,
                 textColor: PDColor,
-                lineHeight:Float) : this(font, fontSize, textColor, lineHeight, 0f, 0f)
+                lineHeight:Float) : this(font, fontSize, textColor, lineHeight, 0f, 0f, 0f)
 
     constructor(font: PDFont,
                 fontSize: Float,
@@ -97,9 +100,6 @@ data class TextStyle(val font: PDFont,    // Tf
 //
 // Tmode
 // renderingMode = 0 // integer
-//
-// Trise or Ts adjusts the baseline for superscript (positive) or subscript (negative) effects.
-// rise = 0f
 //
 // Tk
 // knockout

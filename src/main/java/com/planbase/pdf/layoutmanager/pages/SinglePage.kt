@@ -150,6 +150,7 @@ class SinglePage(val pageNum: Int,
                         ord: Long, z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
+            // TODO: Just adding the rise to the y value here is kind of a cop-out - could run into the line above or below.
             stream.setNonStrokingColor(style.textColor)
             stream.setFont(style.font, style.fontSize)
             val characterSpacing = style.characterSpacing
@@ -159,7 +160,7 @@ class SinglePage(val pageNum: Int,
             val wordSpacing = style.wordSpacing
             if (wordSpacing == 0f) {
                 stream.beginText()
-                stream.newLineAtOffset(baselineLeft.x, baselineLeft.y)
+                stream.newLineAtOffset(baselineLeft.x, baselineLeft.y + style.rise)
                 stream.showText(t)
                 stream.endText()
             } else {
@@ -174,7 +175,7 @@ class SinglePage(val pageNum: Int,
                         } else {
                             val str = word.toString()
                             stream.beginText()
-                            stream.newLineAtOffset(x, baselineLeft.y)
+                            stream.newLineAtOffset(x, baselineLeft.y + style.rise)
                             stream.showText(str)
                             stream.endText()
 //                            println("x2=$x")
@@ -189,7 +190,7 @@ class SinglePage(val pageNum: Int,
                 }
                 if (word.isNotEmpty()) {
                     stream.beginText()
-                    stream.newLineAtOffset(x, baselineLeft.y)
+                    stream.newLineAtOffset(x, baselineLeft.y + style.rise)
                     stream.showText(word.toString())
                     stream.endText()
                 }
