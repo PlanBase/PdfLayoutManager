@@ -15,26 +15,27 @@ Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayo
 
 [API Docs](https://PlanBase.github.io/PdfLayoutMgr2/apidocs/)
 
+[Changelog](CHANGELOG.md)
+
 # Maven Dependency
 ```xml
     <!-- Affero GPL - contact PlanBase for commercial version. -->
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.0.0-STAGING</version>
+        <version>2.0.2</version>
     </dependency>
 ```
 
 # Positioning
 
-You probably don't need to know this to start using PdfLayoutMgr.
-Remember that it's here to refer to when you're ready.
+You probably don't need to know this to start using PdfLayoutMgr, but it's here to refer to when you're ready.
 
 #### User Space
 Everything is positioned on the page according to User Space which uses the familiar [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system).
 Most people learned about this by drawing graphs in basic algebra in elementary school.
 
-#### 1/72" The default unit is 1/72 of an inch.
+#### 1/72" is default unit.
 This corresponds to one definition of a "point" and to a common screen resolution for older monitors.
 
 #### Lower-Left
@@ -57,14 +58,14 @@ You can remove this by manually setting the lineHeight independently of the size
 Once line-wrapped, everything in PdfLayoutMgr is *rendered* from the upper-left corner: [LineWrapped](src/main/java/com/planbase/pdf/layoutmanager/lineWrapping/LineWrapped.kt).
 
 ##### Why not all upper-left?
-This matches how PDFBox (and presumably the PDF format) works.
+To match the [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf) (and PDFBox).
 If you
-* are already familiar with PDF details
-* use PDFBox directly
-* manually send codes to the underlying stream
-* need to byte-decode the output PDF
+* Are already familiar with PDF details
+* Use PDFBox directly
+* Manually send codes to the underlying PDF stream
+* Need to byte-decode the output PDF
 
-you are already using the final coordinate system and conventions, so there are no translations to make.
+then you are already using the final coordinate system and conventions, so there are no translations to make.
 
 #### Top-right-bottom-left
 When practical, parameters are specified in the same order as CSS.
@@ -74,9 +75,6 @@ We take the default ascent, leading, and lineHeight from the font information.
 Fonts vary widely in these measurements.
 Size 11 in one font might be size 12 in another.
 The default lineHeight varies significantly between fonts.
-
-#### More
-For reference: [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf)
 
 # FAQ
 
@@ -141,7 +139,7 @@ contact [PlanBase Inc.](https://planbase.com) to purchase a commercial license.
 
 # Building from Source
 
-Requires Maven 3, (Java 8?), and Kotlin 1.1.51 or greater.  Jar file ends up in the `target/` sub-folder.
+Requires Maven 3, (and Java 8?) or greater.  Jar file ends up in the `target/` sub-folder.
 
 API documentation used to be built with `mvn javadoc:javadoc` and is then found at `target/site/apidocs/index.html`
 
