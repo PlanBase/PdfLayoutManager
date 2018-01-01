@@ -13,7 +13,7 @@ See the [FAQ](#faq) below
 
 Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayoutMgr.java)
 
-[API Docs](https://PlanBase.github.io/PdfLayoutMgr2/apidocs/)
+[API Docs](https://planbase.github.io/PdfLayoutMgr2/apidocs/)
 
 [Changelog](CHANGELOG.md)
 

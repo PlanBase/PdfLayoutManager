@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 <!--
 For adding to Sonatype OSSRH, need to issue:
-mvn clean deploy
+mvn clean package dokka:javadoc dokka:javadocJar deploy
 
 See also:
 http://central.sonatype.org/pages/apache-maven.html
