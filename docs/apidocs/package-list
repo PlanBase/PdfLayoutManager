@@ -1,1 +1,6 @@
 com.planbase.pdf.layoutmanager
+com.planbase.pdf.layoutmanager.attributes
+com.planbase.pdf.layoutmanager.contents
+com.planbase.pdf.layoutmanager.lineWrapping
+com.planbase.pdf.layoutmanager.pages
+com.planbase.pdf.layoutmanager.utils
