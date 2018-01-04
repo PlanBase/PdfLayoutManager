@@ -201,7 +201,6 @@ class MultiLineWrappedTest {
 
     @Test fun testStuff() {
         // See: TextTest.testExactLineWrapping()
-
         val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
         assertEquals(214.104f, text.maxWidth())
 

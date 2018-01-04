@@ -124,12 +124,13 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Float) : List<MultiLine
     // This is the current line we're working on.
     var currLine = MultiLineWrapped() // Is this right, putting no source here?
 
+//    var prevItem:LineWrappable = LineWrappable.ZeroLineWrappable
     for (item in wrappables) {
 //        println("About to wrap: $item")
-        val rtor: LineWrapper = item.lineWrapper()
-        while (rtor.hasMore()) {
+        val lineWrapper: LineWrapper = item.lineWrapper()
+        while (lineWrapper.hasMore()) {
             if (currLine.isEmpty()) {
-                val something : ConTerm = rtor.getSomething(maxWidth)
+                val something : ConTerm = lineWrapper.getSomething(maxWidth)
 //                println("🢂something=" + something)
                 currLine.append(something.item)
                 if (something is Terminal) {
@@ -139,7 +140,7 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Float) : List<MultiLine
                     currLine = MultiLineWrapped()
                 }
             } else {
-                val ctn: ConTermNone = rtor.getIfFits(maxWidth - currLine.width)
+                val ctn: ConTermNone = lineWrapper.getIfFits(maxWidth - currLine.width)
 //                println("🢂ctn=" + ctn)
 
                 when (ctn) {
@@ -157,8 +158,8 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Float) : List<MultiLine
                         currLine = MultiLineWrapped()
                     }}
             }
-        }
-    }
+        } // end while lineWrapper.hasMore()
+    } // end for item in wrappables
 //    println("Line before last item: $currLine")
 
     // Don't forget to add last item.

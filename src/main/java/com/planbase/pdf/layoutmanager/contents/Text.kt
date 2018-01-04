@@ -116,7 +116,7 @@ data class Text(val textStyle: TextStyle,
 
         override fun getIfFits(remainingWidth: Float): ConTermNone {
             if (remainingWidth <= 0) {
-                return None
+                return None // TODO: Should we instead? throw IllegalArgumentException("remainingWidth must be > 0")
             }
             val ctri = tryGettingText(remainingWidth, idx, txt)
             val row = ctri.row
