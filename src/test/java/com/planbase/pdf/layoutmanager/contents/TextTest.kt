@@ -1,5 +1,6 @@
 package com.planbase.pdf.layoutmanager.contents
 
+import TestManual2.Companion.BULLET_TEXT_STYLE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
@@ -18,6 +19,7 @@ import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.junit.Assert
 import org.junit.Test
 import java.io.FileOutputStream
 import kotlin.test.assertEquals
@@ -216,4 +218,16 @@ class TextTest {
         mgr.save(os)
     }
 
+    @Test fun testExactLineWrapping() {
+        val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
+        Assert.assertEquals(214.104f, text.maxWidth())
+        Assert.assertEquals(makeContinuing(BULLET_TEXT_STYLE, text.text),
+                            text.lineWrapper().getSomething(214.104f))
+
+        Assert.assertEquals(makeContinuing(BULLET_TEXT_STYLE, "months showed the possible money"),
+                            text.lineWrapper().getSomething(214.103f))
+    }
 }
+
+fun makeContinuing(textStyle:TextStyle, str:String):Continuing =
+        Continuing(WrappedText(textStyle, str, textStyle.stringWidthInDocUnits(str)))

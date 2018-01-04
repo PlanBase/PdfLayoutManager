@@ -113,64 +113,67 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
-
-private fun addLineToMultiLineWrappedsCheckBlank(MultiLineWrappeds: MutableList<MultiLineWrapped>, line: MultiLineWrapped) {
-    // If this item is a blank line, take the height from the previous item (if there is one).
-    if (line.isEmpty() && MultiLineWrappeds.isNotEmpty())  {
-        val lastRealItem: LineWrapped = MultiLineWrappeds.last().items.last()
-        line.ascent = lastRealItem.ascent
-        line.lineHeight = lastRealItem.lineHeight
-    }
-    // Now add the line to the list.
-    MultiLineWrappeds.add(line)
-}
-
-fun lineWrappablesToMultiLineWrappeds(itemsInBlock: List<LineWrappable>, maxWidth: Float) : List<MultiLineWrapped> {
+fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Float) : List<MultiLineWrapped> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }
 
-    // Really should call this "List of wrapped, wrapped line lists"
-    val listOfWrappedWrappedLineLists: MutableList<MultiLineWrapped> = mutableListOf()
-    var line = MultiLineWrapped() // Is this right, putting no source here?
+    // These are lines consisting of multiple (line-wrapped) items.
+    val wrappedLines: MutableList<MultiLineWrapped> = mutableListOf()
 
-    for (item in itemsInBlock) {
+    // This is the current line we're working on.
+    var currLine = MultiLineWrapped() // Is this right, putting no source here?
+
+    for (item in wrappables) {
 //        println("About to wrap: $item")
         val rtor: LineWrapper = item.lineWrapper()
         while (rtor.hasMore()) {
-            if (line.isEmpty()) {
+            if (currLine.isEmpty()) {
                 val something : ConTerm = rtor.getSomething(maxWidth)
 //                println("🢂something=" + something)
-                line.append(something.item)
+                currLine.append(something.item)
                 if (something is Terminal) {
 //                    println("=============== TERMINAL")
 //                    println("something:" + something)
-                    addLineToMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
-                    line = MultiLineWrapped()
+                    addLineCheckBlank(currLine, wrappedLines)
+                    currLine = MultiLineWrapped()
                 }
             } else {
-                val ctn: ConTermNone = rtor.getIfFits(maxWidth - line.width)
+                val ctn: ConTermNone = rtor.getIfFits(maxWidth - currLine.width)
 //                println("🢂ctn=" + ctn)
 
                 when (ctn) {
                     is Continuing ->
-                        line.append(ctn.item)
+                        currLine.append(ctn.item)
                     is Terminal -> {
 //                        println("=============== TERMINAL 222222222")
 //                        println("ctn:" + ctn)
-                        line.append(ctn.item)
-                        line = MultiLineWrapped()
+                        currLine.append(ctn.item)
+                        currLine = MultiLineWrapped()
                     }
                     None -> {
-//                        MultiLineWrappeds.add(line)
-                        addLineToMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
-                        line = MultiLineWrapped()
+//                        MultiLineWrappeds.add(currLine)
+                        addLineCheckBlank(currLine, wrappedLines)
+                        currLine = MultiLineWrapped()
                     }}
             }
         }
     }
-    // Don't forget to add last item.
-    addLineToMultiLineWrappedsCheckBlank(listOfWrappedWrappedLineLists, line)
+//    println("Line before last item: $currLine")
 
-    return listOfWrappedWrappedLineLists.toList()
+    // Don't forget to add last item.
+    addLineCheckBlank(currLine, wrappedLines)
+
+    return wrappedLines.toList()
+}
+
+private fun addLineCheckBlank(currLine: MultiLineWrapped,
+                              wrappedLines: MutableList<MultiLineWrapped>) {
+    // If this item is a blank line, take the height from the previous item (if there is one).
+    if (currLine.isEmpty() && wrappedLines.isNotEmpty())  {
+        val lastRealItem: LineWrapped = wrappedLines.last().items.last()
+        currLine.ascent = lastRealItem.ascent
+        currLine.lineHeight = lastRealItem.lineHeight
+    }
+    wrappedLines.add(currLine)
 }

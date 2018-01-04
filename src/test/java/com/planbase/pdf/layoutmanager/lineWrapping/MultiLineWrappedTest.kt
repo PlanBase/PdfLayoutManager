@@ -1,6 +1,7 @@
 package com.planbase.pdf.layoutmanager.lineWrapping
 
 //import kotlin.test.assertEquals
+import TestManual2.Companion.BULLET_TEXT_STYLE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -88,16 +89,16 @@ class MultiLineWrappedTest {
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 60f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1, txt2, txt3), maxWidth)
-//        println(MultiLineWrappeds)
+        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
+//        println(wrappedLines)
 
-        assertEquals(3, MultiLineWrappeds.size)
+        assertEquals(3, wrappedLines.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle2.lineHeight, maxWidth, "Hello there")
+        verifyLine(wrappedLines[0], tStyle2.lineHeight, maxWidth, "Hello there")
 
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "world! This is")
+        verifyLine(wrappedLines[1], tStyle1.lineHeight, maxWidth, "world! This is")
 
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "great stuff.")
+        verifyLine(wrappedLines[2], tStyle1.lineHeight, maxWidth, "great stuff.")
     }
 
     @Test fun testRenderablesToLines2() {
@@ -108,14 +109,14 @@ class MultiLineWrappedTest {
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 90f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1, txt2, txt3), maxWidth)
-//        println(MultiLineWrappeds)
+        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
+//        println(wrappedLines)
 
-        assertEquals(2, MultiLineWrappeds.size)
+        assertEquals(2, wrappedLines.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle2.lineHeight, maxWidth, "Hello there world!")
+        verifyLine(wrappedLines[0], tStyle2.lineHeight, maxWidth, "Hello there world!")
 
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "This is great stuff.")
+        verifyLine(wrappedLines[1], tStyle1.lineHeight, maxWidth, "This is great stuff.")
     }
 
     @Test fun testRenderablesToLines3() {
@@ -123,12 +124,12 @@ class MultiLineWrappedTest {
         val txt1 = Text(tStyle1, "Hello there world! This is great stuff.")
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
-//        println(MultiLineWrappeds)
+        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+//        println(wrappedLines)
 
-        assertEquals(1, MultiLineWrappeds.size)
+        assertEquals(1, wrappedLines.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, "Hello there world! This is great stuff.")
+        verifyLine(wrappedLines[0], tStyle1.lineHeight, maxWidth, "Hello there world! This is great stuff.")
     }
 
 
@@ -139,14 +140,14 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
-//        println(MultiLineWrappeds)
+        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+//        println(wrappedLines)
 
-        assertEquals(3, MultiLineWrappeds.size)
+        assertEquals(3, wrappedLines.size)
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, "Hello")
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "there world! This")
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "is great stuff.")
+        verifyLine(wrappedLines[0], tStyle1.lineHeight, maxWidth, "Hello")
+        verifyLine(wrappedLines[1], tStyle1.lineHeight, maxWidth, "there world! This")
+        verifyLine(wrappedLines[2], tStyle1.lineHeight, maxWidth, "is great stuff.")
     }
 
     @Test fun testRenderablesToLinesTerminal2() {
@@ -156,18 +157,18 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
-//        println(MultiLineWrappeds)
+        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+//        println(wrappedLines)
 
-        assertEquals(4, MultiLineWrappeds.size)
+        assertEquals(4, wrappedLines.size)
 
-//        println("line3: " + MultiLineWrappeds[3])
+//        println("line3: " + wrappedLines[3])
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, "Hello")
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "there world! This")
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "is great stuff.")
+        verifyLine(wrappedLines[0], tStyle1.lineHeight, maxWidth, "Hello")
+        verifyLine(wrappedLines[1], tStyle1.lineHeight, maxWidth, "there world! This")
+        verifyLine(wrappedLines[2], tStyle1.lineHeight, maxWidth, "is great stuff.")
         // Additional blank line has same height as previous one.
-        verifyLine(MultiLineWrappeds[3], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(wrappedLines[3], tStyle1.lineHeight, maxWidth, "")
     }
 
     @Test fun testRenderablesToLinesMultiReturn() {
@@ -177,24 +178,36 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300f
 
-        val MultiLineWrappeds: List<MultiLineWrapped> = lineWrappablesToMultiLineWrappeds(listOf(txt1), maxWidth)
-//        println(MultiLineWrappeds)
+        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+//        println(wrappedLines)
 
-        assertEquals(8, MultiLineWrappeds.size)
-//        println("line3: " + MultiLineWrappeds[3])
+        assertEquals(8, wrappedLines.size)
+//        println("line3: " + wrappedLines[3])
 
-        verifyLine(MultiLineWrappeds[0], tStyle1.lineHeight, maxWidth, " Hello")
-        verifyLine(MultiLineWrappeds[1], tStyle1.lineHeight, maxWidth, "")
-        verifyLine(MultiLineWrappeds[2], tStyle1.lineHeight, maxWidth, "")
-        verifyLine(MultiLineWrappeds[3], tStyle1.lineHeight, maxWidth, "  there world! This")
-        verifyLine(MultiLineWrappeds[4], tStyle1.lineHeight, maxWidth, "")
-        verifyLine(MultiLineWrappeds[5], tStyle1.lineHeight, maxWidth, "is great stuff.")
-        verifyLine(MultiLineWrappeds[6], tStyle1.lineHeight, maxWidth, "")
-        verifyLine(MultiLineWrappeds[7], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(wrappedLines[0], tStyle1.lineHeight, maxWidth, " Hello")
+        verifyLine(wrappedLines[1], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(wrappedLines[2], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(wrappedLines[3], tStyle1.lineHeight, maxWidth, "  there world! This")
+        verifyLine(wrappedLines[4], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(wrappedLines[5], tStyle1.lineHeight, maxWidth, "is great stuff.")
+        verifyLine(wrappedLines[6], tStyle1.lineHeight, maxWidth, "")
+        verifyLine(wrappedLines[7], tStyle1.lineHeight, maxWidth, "")
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun testRenderablesToLinesEx() {
-        lineWrappablesToMultiLineWrappeds(listOf(), -1f)
+        wrapLines(listOf(), -1f)
+    }
+
+    @Test fun testStuff() {
+        // See: TextTest.testExactLineWrapping()
+
+        val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
+        assertEquals(214.104f, text.maxWidth())
+
+        // TODO: Enable!
+//        val wrapped2:List<MultiLineWrapped> = wrapLines(listOf(text), 213f) //212.63782f)
+//        println("\nwrapped2: $wrapped2")
+//        assertEquals(2, wrapped2.size)
     }
 }

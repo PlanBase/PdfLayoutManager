@@ -34,7 +34,7 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
 /**
- * Represents styled text kind of like a #Text node in HTML.
+ Represents styled text kind of like a #Text node in HTML.
  */
 data class Text(val textStyle: TextStyle,
                 private val initialText: String = "") : LineWrappable {
@@ -44,25 +44,29 @@ data class Text(val textStyle: TextStyle,
     // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
     val text = cleanStr(initialText)
 
+    /**
+     Represents a unit of wrapped text.  This could be a whole line, or part of a line that includes other contents
+     such as images or other text styles.
+
+     @param textStyle the style
+     @param string the actual text that fits in this line
+     @param width the width of that string in this textStyle
+     */
     data class WrappedText(val textStyle: TextStyle,
                            val string: String,
-                           override val dim: Dim,
-                           val source: LineWrappable) : LineWrapped {
-
-        constructor(s: String, x: Float, ts: TextStyle,
-                    src: LineWrappable): this(ts, s, Dim(x, ts.lineHeight), src)
-
-        override val ascent: Float = textStyle.ascent
-
-//        override val descentAndLeading: Float = textStyle.descent() + textStyle.leading()
+                           val width: Float) : LineWrapped {
 
         override val lineHeight: Float = textStyle.lineHeight
 
+        override val dim: Dim = Dim(width, lineHeight)
+
+        override val ascent: Float = textStyle.ascent
+
         // Text rendering calculation spot 1/3
         override fun render(lp: RenderTarget, topLeft: Coord): Dim =
-                dim.height(lp.drawStyledText(topLeft.minusY(textStyle.ascent), string, textStyle, true))
+                dim.height(lp.drawStyledText(topLeft.minusY(ascent), string, textStyle, true))
 
-        override fun toString() = "WrappedText(\"$string\", $dim, $textStyle)"
+        override fun toString() = "WrappedText($textStyle, \"$string\", $width)"
     }
 
     fun style(): TextStyle = textStyle
@@ -216,12 +220,12 @@ data class Text(val textStyle: TextStyle,
                 if (strWidth > maxWidth) {
                     throw IllegalStateException("strWidth=$strWidth > maxWidth=$maxWidth")
                 }
-                return RowIdx(WrappedText(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1, true)
+                return RowIdx(WrappedText(txt.textStyle, substr, strWidth), idx + startIdx + 1, true)
             }
             // Need to test trailing whitespace.
 //            println("idx=" + idx + " substr=\"" + substr + "\"")
 
-            return RowIdx(WrappedText(substr, strWidth, txt.textStyle, txt), idx + startIdx + 1,
+            return RowIdx(WrappedText(txt.textStyle, substr, strWidth), idx + startIdx + 1,
                           if (substr == text) {
                                                                            foundCr
                                                                        } else {

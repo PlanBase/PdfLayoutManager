@@ -24,7 +24,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
-import com.planbase.pdf.layoutmanager.lineWrapping.lineWrappablesToMultiLineWrappeds
+import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
 import com.planbase.pdf.layoutmanager.utils.Dim
 
 /**
@@ -49,9 +49,8 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 
     fun wrap() : WrappedCell {
 //        println("Wrapping: $this")
-        val fixedLines: List<MultiLineWrapped> =
-                lineWrappablesToMultiLineWrappeds(contents,
-                                               width - cellStyle.boxStyle.leftRightInteriorSp())
+        val fixedLines: List<MultiLineWrapped> = wrapLines(contents,
+                                                           width - cellStyle.boxStyle.leftRightInteriorSp())
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
         var height = cellStyle.boxStyle.topBottomInteriorSp()
 

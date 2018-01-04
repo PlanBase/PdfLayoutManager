@@ -11,15 +11,14 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
 import kotlin.test.assertEquals
 
 class WrappedCellTest {
@@ -99,9 +98,7 @@ class WrappedCellTest {
                                                     textStyle.lineHeight,
                                                     mutableListOf(Text.WrappedText(textStyle,
                                                                                    hello.text,
-                                                                                   Dim(hello.maxWidth(),
-                                                                                       textStyle.lineHeight),
-                                                                                   hello)))))
+                                                                                   hello.maxWidth())))))
 //        val wrappedCell = cell.wrap()
 //        println("cell.wrap()=${cell.wrap()}")
 
