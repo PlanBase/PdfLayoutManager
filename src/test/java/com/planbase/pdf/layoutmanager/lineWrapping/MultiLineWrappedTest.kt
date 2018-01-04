@@ -204,9 +204,8 @@ class MultiLineWrappedTest {
         val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
         assertEquals(214.104f, text.maxWidth())
 
-        // TODO: Enable!
-//        val wrapped2:List<MultiLineWrapped> = wrapLines(listOf(text), 213f) //212.63782f)
+        val wrapped2:List<MultiLineWrapped> = wrapLines(listOf(text), 213f) //212.63782f)
 //        println("\nwrapped2: $wrapped2")
-//        assertEquals(2, wrapped2.size)
+        assertEquals(2, wrapped2.size)
     }
 }

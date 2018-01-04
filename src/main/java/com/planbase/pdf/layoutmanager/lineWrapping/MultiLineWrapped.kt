@@ -138,6 +138,14 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Float) : List<MultiLine
 //                    println("something:" + something)
                     addLineCheckBlank(currLine, wrappedLines)
                     currLine = MultiLineWrapped()
+                } else if (lineWrapper.hasMore()) {
+                    // We have a line of text which is too long and must be broken up.  But if it’s too long by less
+                    // than the width of a single space, it truncates the final space from the text fragment, then
+                    // looks again and sees that the next word now fits, so adds it to the same line *without the space*
+                    // which is wrong.  To fix this, we check if the lineWrapper already gave us all it has for this
+                    // line and if so, we store it and start the next line.
+                    addLineCheckBlank(currLine, wrappedLines)
+                    currLine = MultiLineWrapped()
                 }
             } else {
                 val ctn: ConTermNone = lineWrapper.getIfFits(maxWidth - currLine.width)
