@@ -63,8 +63,8 @@ data class Text(val textStyle: TextStyle,
         override val ascent: Float = textStyle.ascent
 
         // Text rendering calculation spot 1/3
-        override fun render(lp: RenderTarget, topLeft: Coord): Dim =
-                dim.height(lp.drawStyledText(topLeft.minusY(ascent), string, textStyle, true))
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =
+                dim.height(lp.drawStyledText(topLeft.minusY(ascent), string, textStyle, reallyRender))
 
         override fun toString() = "WrappedText($textStyle, \"$string\", $width)"
     }

@@ -16,7 +16,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
 import kotlin.test.assertEquals
 
 val twoHundred:Float = 200f

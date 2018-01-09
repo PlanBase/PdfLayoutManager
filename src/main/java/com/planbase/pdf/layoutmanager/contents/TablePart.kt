@@ -79,7 +79,7 @@ class TablePart(private val table: Table) {
 //        return maxDim
 //    }
 
-    class WrappedTablePart(part:TablePart) {
+    data class WrappedTablePart(private val part:TablePart) {
         val dim: Dim = part.finalXyDim()
 //        val ascent:Float = dim.height
 //        val lineHeight: Float = dim.height
@@ -88,12 +88,11 @@ class TablePart(private val table: Table) {
                 part.rows.map { WrappedTableRow(it) }
                         .toList()
 
-        fun render(lp: RenderTarget, topLeft: Coord): Dim {
+        fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
             var y = topLeft.y
             var maxWidth = 0f
             for (row in rows) {
-                //            System.out.println("\tAbout to render row: " + row);
-                val (width, height) = row.render(lp, topLeft.y(y))
+                val (width, height) = row.render(lp, topLeft.y(y), reallyRender)
                 maxWidth = max(maxWidth, width)
                 y -= height
             }

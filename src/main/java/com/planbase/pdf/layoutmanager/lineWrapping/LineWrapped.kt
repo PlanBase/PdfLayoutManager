@@ -48,10 +48,25 @@ interface LineWrapped {
      @param lp RenderTarget is the SinglePage or PageGrouping to draw to.  This will contain the paper size,
      orientation, and body area which are necessary in order to calculate page breaking
      @param topLeft is the offset where this item starts.
+     @param reallyRender render if true.  Otherwise, just measure without drawing anything.  This may be a little
+     awkward for the end-user, but it lets us use exactly the same logic for measuring as for drawing which
+     prevents bugs and there's a version of this method without this parameter.
      @return the adjusted Dim which may include extra (vertical) spacing required to nudge some items onto the next
      page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Coord): Dim
+    fun render(lp: RenderTarget, topLeft: Coord, reallyRender:Boolean): Dim
+
+    /**
+    Sends the underlying object to PDFBox to be drawn. Use [@link render(RenderTarget, Coord, Boolean)] if
+    you just want an exact measurement after page breaking without actually drawing anything.
+
+    @param lp RenderTarget is the SinglePage or PageGrouping to draw to.  This will contain the paper size,
+    orientation, and body area which are necessary in order to calculate page breaking
+    @param topLeft is the offset where this item starts.
+    @return the adjusted Dim which may include extra (vertical) spacing required to nudge some items onto the next
+    page so they don't end up in the margin or off the page.
+     */
+    fun render(lp: RenderTarget, topLeft: Coord) = render(lp, topLeft, true)
 
     object ZeroLineWrapped: LineWrapped {
         override val dim: Dim = Dim.ZERO
@@ -62,7 +77,7 @@ interface LineWrapped {
 
         override val lineHeight: Float = 0f
 
-        override fun render(lp: RenderTarget, topLeft: Coord): Dim = dim
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim = dim
     }
 
 //    companion object {

@@ -52,8 +52,8 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         dim
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Coord): Dim {
-        return tableRender(lp, topLeft, dim.height, true)
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
+        return tableRender(lp, topLeft, dim.height, reallyRender)
     }
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
@@ -80,20 +80,12 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 //        println("  innerTopLeft=$innerTopLeft")
 
         var y = innerTopLeft.y
-        for (line in items) {
-            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, line.dim.width)
-            val thisLineHeight = if (reallyRender) {
-//                println("render")
-                line.render(lp, Coord(rowXOffset + innerTopLeft.x, y)).height
-            } else {
-//                println("  try y=$y line=$line")
-                val adjY = lp.pageBreakingTopMargin(y - line.lineHeight, line.lineHeight) + line.lineHeight
-//                println("  try adjY=$adjY line.lineHeight=${line.lineHeight}")
-                adjY
-            }
+        for (item in items) {
+//            println("item=$item")
+            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, item.dim.width)
+            val thisLineHeight = item.render(lp, Coord(rowXOffset + innerTopLeft.x, y), reallyRender).height
 //            println("thisLineHeight=$thisLineHeight")
             y -= thisLineHeight // y is always the lowest item in the cell.
-//            println("line=$line")
         }
 //        println("  y=$y")
 //        println("  totalHeight=${innerTopLeft.y - y}")

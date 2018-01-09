@@ -92,12 +92,11 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
         Renders item and all child-items with given width and returns the x-y pair of the
         lower-right-hand corner of the last line (e.g. of text).
         */
-        override fun render(lp: RenderTarget, topLeft: Coord): Dim {
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
             var y = topLeft.y
             var maxWidth = 0f
             for (part in parts) {
-                //            System.out.println("About to render part: " + part);
-                val (width, height) = part.render(lp, topLeft.y(y))
+                val (width, height) = part.render(lp, topLeft.y(y), reallyRender)
                 maxWidth = max(maxWidth, width)
                 y -= height
             }

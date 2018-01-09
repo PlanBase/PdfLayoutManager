@@ -65,8 +65,8 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
         override val lineHeight: Float = dim.height
 
         /** {@inheritDoc}  */
-        override fun render(lp: RenderTarget, topLeft: Coord): Dim =
-                dim.height(lp.drawImage(topLeft.minusY(dim.height), this, true))
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =
+                dim.height(lp.drawImage(topLeft.minusY(dim.height), this, reallyRender))
     }
 
     companion object {

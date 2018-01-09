@@ -48,7 +48,7 @@ class MultiLineWrapped(var width: Float = 0f,
         return this
     }
 
-    override fun render(lp: RenderTarget, topLeft: Coord): Dim {
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
         var x:Float = topLeft.x
         val y = topLeft.y
         // lineHeight has to be ascent + descentLeading because we align on the baseline
@@ -73,7 +73,7 @@ class MultiLineWrapped(var width: Float = 0f,
             val ascentDiff = ascent - item.ascent
             val innerUpperLeft = Coord(x, y - ascentDiff)
 //            println("ascentDiff=$ascentDiff innerUpperLeft=$innerUpperLeft")
-            val adjHeight = item.render(lp, innerUpperLeft).height
+            val adjHeight = item.render(lp, innerUpperLeft, reallyRender).height
             val adjustment = adjHeight - item.lineHeight
 //            println("adjHeight=$adjHeight item.lineHeight=${item.lineHeight} adjustment=$adjustment")
             maxAscent = maxOf(maxAscent, item.ascent + adjustment)
