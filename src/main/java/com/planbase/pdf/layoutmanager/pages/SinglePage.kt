@@ -20,7 +20,6 @@
 
 package com.planbase.pdf.layoutmanager.pages
 
-import com.planbase.pdf.layoutmanager.PdfItem
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -64,7 +63,7 @@ class SinglePage(val pageNum: Int,
     /** {@inheritDoc}  */
     override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): Float {
         if (reallyRender) {
-            items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, PdfItem.DEFAULT_Z_INDEX))
+            items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, DEFAULT_Z_INDEX))
         }
         // This does not account for a page break because this class represents a single page.
         return wi.dim.height
@@ -77,7 +76,7 @@ class SinglePage(val pageNum: Int,
     /** [@inheritDoc]  */
     override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): SinglePage {
         if (reallyRender) {
-            drawLineStrip(points, lineStyle, PdfItem.DEFAULT_Z_INDEX)
+            drawLineStrip(points, lineStyle, DEFAULT_Z_INDEX)
         }
         return this
     }
@@ -89,7 +88,7 @@ class SinglePage(val pageNum: Int,
     /** {@inheritDoc}  */
     override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
         if (reallyRender) {
-            drawStyledText(baselineLeft, text, textStyle, PdfItem.DEFAULT_Z_INDEX)
+            drawStyledText(baselineLeft, text, textStyle, DEFAULT_Z_INDEX)
         }
         return textStyle.lineHeight
     }
@@ -111,6 +110,10 @@ class SinglePage(val pageNum: Int,
     }
 
     override fun toString(): String = "SinglePage($pageNum)"
+
+    companion object {
+        val DEFAULT_Z_INDEX = 0f
+    }
 
     private class DrawLine(private val points:List<Coord>,
                            private val style: LineStyle,
@@ -143,10 +146,10 @@ class SinglePage(val pageNum: Int,
         }
     }
 
-    /*
-    Text is drawn from the baseline up.
-     */
-    internal class Text(private val baselineLeft: Coord, val t: String, val style: TextStyle,
+    /* Text is drawn from the baseline up. */
+    internal class Text(private val baselineLeft: Coord,
+                        val t: String,
+                        private val style: TextStyle,
                         ord: Long, z: Float) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {

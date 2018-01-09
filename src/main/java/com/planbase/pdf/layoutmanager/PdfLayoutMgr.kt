@@ -42,11 +42,11 @@ import java.io.OutputStream
 import java.util.HashMap
 
 /**
+ * Manages a PDF document.  You need one of these to do almost anything useful.
  *
- * The main class in this package; it handles page and line breaks.
- *
- * <h3>Usage (the unit test is a much better example):</h3>
- * <pre>`// Create a new manager
+ * ## Usage (the unit test is a much better example)
+ * ```kotlin
+ * // Create a new manager
  * PdfLayoutMgr pageMgr = PdfLayoutMgr.newRgbPageMgr();
  *
  * PageGrouping lp = pageMgr.startPageGrouping();
@@ -66,30 +66,31 @@ import java.util.HashMap
  * OutputStream os = new FileOutputStream("test.pdf");
  *
  * // Commit all pages to output stream.
- * pageMgr.save(os);`</pre>
- * <br></br>
- * <h3>Note:</h3>
+ * pageMgr.save(os);
+ * ```
+ *
+ * # Note:
  *
  * Because this class buffers and writes to an underlying stream, it is mutable, has side effects,
  * and is NOT thread-safe!
+ *
+ * @param colorSpace the color-space for the document.  Often PDDeviceCMYK.INSTANCE or PDDeviceRGB.INSTANCE
+ * @param pageDim Returns the width and height of the paper-size where THE HEIGHT IS ALWAYS THE LONGER DIMENSION.
+ * You may need to swap these for landscape: `pageDim().swapWh()`.  For this reason, it's not a
+ * good idea to use this directly.  Use the corrected values through a [PageGrouping] instead.
+ * @param pageReactor Takes a page number and returns an x-offset for that page.  Use this for effects like page
+ * numbering or different offsets or headers/footers for even and odd pages or the start of a chapter.
  */
 class PdfLayoutMgr(private val colorSpace: PDColorSpace,
-                   /**
-                    * Returns the width and height of the paper-size where THE HEIGHT IS ALWAYS THE LONGER DIMENSION.
-                    * You may need to swap these for landscape: `pageDim().swapWh()`.  For this reason, it's not a
-                    * good idea to use this directly.  Use the corrected values through a [PageGrouping]
-                    * instead.
-                    */
                    val pageDim: Dim,
-                   /** Takes a page number and returns an x-offset for that page. */
                    private var pageReactor:((Int, SinglePage) -> Float)? = null) {
     private val doc = PDDocument()
 
     /**
-     This returns the wrapped PDDocument instance.  This is a highly mutable data structure.
-     Accessing it directly while also using PdfLayoutMgr is inherently unsafe and untested.
-     This method is provided so you can do things like add encryption or use other features of PDFBox not yet
-     directly supported by PdfLayoutMgr.
+     * This returns the wrapped PDDocument instance.  This is a highly mutable data structure.
+     * Accessing it directly while also using PdfLayoutMgr is inherently unsafe and untested.
+     * This method is provided so you can do things like add encryption or use other features of PDFBox not yet
+     * directly supported by PdfLayoutMgr.
      */
     fun getPDDocButBeCareful(): PDDocument = doc
 
@@ -202,7 +203,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * written to the underlying stream.  This method turns the potential pages into real output.
      * Call when you need a page break, or your document is done and you need to write it out.
      *
-     * @throws IOException - if there is a failure writing to the underlying stream.
+     * @throws IOException if there is a failure writing to the underlying stream.
      */
     @Throws(IOException::class)
     fun logicalPageEnd(lp: PageGrouping) {

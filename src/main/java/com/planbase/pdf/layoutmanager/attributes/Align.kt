@@ -23,7 +23,6 @@ package com.planbase.pdf.layoutmanager.attributes
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 
-//    /** Horizontal alignment options for cell contents */
 //    public enum HorizAlign { LEFT, CENTER, RIGHT; }
 //    public enum VertAlign { TOP, MIDDLE, BOTTOM; }
 
@@ -67,12 +66,12 @@ enum class Align {
     };
 
     /**
-     Given the size of the cell (outer), the size of the contents (inner), and the
-     top-left corner of the inside of the cell, what should the top-left corner of the contents be?
-
-     @param outer the inside dimension after taking cell borders and padding into account
-     @param inner the size of the cell contents
-     @param topLeft the coordinate of the top-left corner of the cell inside the borders and padding.
+     * Given the size of the cell (outer), the size of the contents (inner), and the
+     * top-left corner of the inside of the cell, what should the top-left corner of the contents be?
+     *
+     * @param outer the inside dimension after taking cell borders and padding into account
+     * @param inner the size of the cell contents
+     * @param topLeft the coordinate of the top-left corner of the cell inside the borders and padding.
      */
     fun innerTopLeft(outer: Dim, inner: Dim, topLeft: Coord):Coord =
             topLeft.plusXMinusY(leftOffset(outer.width, inner.width),

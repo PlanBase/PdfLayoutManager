@@ -18,22 +18,23 @@
 // If you wish to use this code with proprietary software,
 // contact PlanBase Inc. <https://planbase.com> to purchase a commercial license.
 
-package com.planbase.pdf.layoutmanager
+package com.planbase.pdf.layoutmanager.pages
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 
 import java.io.IOException
 
 /**
- * Represents items to be later drawn to the page of a PDF file.  The z-index allows items to be drawn
+ * An internal class representing items to be later drawn to the page of a PDF file.
+ * The z-index allows items to be drawn
  * from back (lower-z-values) to front (higher-z-values).  When the z-index of two items is the same
  * they will be drawn in the order they were created.  Implementing classes should give PdfItems
  * ascending serialNumbers as they are created by calling super(num, z);  PdfItems are comparable
  * and their natural ordering is the same order as they will be drawn: ascending by z-index,
  * then by creation order.  The default z-index is zero.
  */
-abstract class PdfItem(private val serialNumber: Long,
-                       private val z: Float) : Comparable<PdfItem> {
+internal abstract class PdfItem(private val serialNumber: Long,
+                                private val z: Float) : Comparable<PdfItem> {
     //    public static PdfItem of(final long ord, final float zIndex) {
     //        return new PdfItem(ord, zIndex);
     //    }
@@ -77,9 +78,5 @@ abstract class PdfItem(private val serialNumber: Long,
 
     override fun hashCode(): Int {
         return (z * 1000).toInt() + serialNumber.toInt()
-    }
-
-    companion object {
-        val DEFAULT_Z_INDEX = 0f
     }
 }

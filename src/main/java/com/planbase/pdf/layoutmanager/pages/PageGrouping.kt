@@ -20,7 +20,6 @@
 
 package com.planbase.pdf.layoutmanager.pages
 
-import com.planbase.pdf.layoutmanager.PdfItem
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
