@@ -93,12 +93,12 @@ class SinglePage(val pageNum: Int,
         return textStyle.lineHeight
     }
 
-    /**
-    Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
-    A single page always returns zero suggesting that something won't flow onto another page, but it may
-    still be truncated when it goes off the edge of this one.
-     */
-    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float = 0f
+//    /**
+//    Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
+//    A single page always returns zero suggesting that something won't flow onto another page, but it may
+//    still be truncated when it goes off the edge of this one.
+//     */
+//    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float = 0f
 
     @Throws(IOException::class)
     fun commit(stream: PDPageContentStream) {
@@ -114,6 +114,64 @@ class SinglePage(val pageNum: Int,
     companion object {
         val DEFAULT_Z_INDEX = 0f
     }
+
+    /**
+     * An internal class representing items to be later drawn to the page of a PDF file.
+     * The z-index allows items to be drawn
+     * from back (lower-z-values) to front (higher-z-values).  When the z-index of two items is the same
+     * they will be drawn in the order they were created.  Implementing classes should give PdfItems
+     * ascending serialNumbers as they are created by calling super(num, z);  PdfItems are comparable
+     * and their natural ordering is the same order as they will be drawn: ascending by z-index,
+     * then by creation order.  The default z-index is zero.
+     */
+    internal abstract class PdfItem(private val serialNumber: Long,
+                                    private val z: Float) : Comparable<PdfItem> {
+        //    public static PdfItem of(final long ord, final float zIndex) {
+        //        return new PdfItem(ord, zIndex);
+        //    }
+
+        @Throws(IOException::class)
+        abstract fun commit(stream: PDPageContentStream)
+
+        // @Override
+        override fun compareTo(other: PdfItem): Int {
+            // Ascending by Z (draw the lower-order background items first)
+            val zDiff = this.z.compareTo(other.z)
+            if (zDiff != 0) {
+                return zDiff
+            }
+
+            // Ascending by creation order
+            val oDiff = this.serialNumber - other.serialNumber
+            if (oDiff > 0) {
+                return 1
+            } else if (oDiff < 0) {
+                return -1
+            }
+            return 0
+        }
+
+        override fun equals(other: Any?): Boolean {
+            // Cheapest operation first...
+            if (this === other) {
+                return true
+            }
+            // Return false if can't be equal
+            if (other == null ||
+                other !is PdfItem ||
+                this.hashCode() != other.hashCode()) {
+                return false
+            }
+            // Details...
+            val that = other as PdfItem?
+            return compareTo(that!!) == 0
+        }
+
+        override fun hashCode(): Int {
+            return (z * 1000).toInt() + serialNumber.toInt()
+        }
+    }
+
 
     private class DrawLine(private val points:List<Coord>,
                            private val style: LineStyle,

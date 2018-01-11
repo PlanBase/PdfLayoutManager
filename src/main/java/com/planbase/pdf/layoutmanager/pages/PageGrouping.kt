@@ -98,7 +98,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                    val bodyDim: Dim) : RenderTarget { // AKA Document Section
 
     // borderItems apply to a logical section
-    private val borderItems = TreeSet<PdfItem>()
+    private val borderItems = TreeSet<SinglePage.PdfItem>()
 //    private var borderOrd = 0
     private var valid = true
 
@@ -330,12 +330,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return this
     }
 
-    /**
-     Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
-     If it will fit, simply returns 0.
-     */
-    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float =
-            appropriatePage(bottomY, height).adj
+//    /**
+//     Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
+//     If it will fit, simply returns 0.
+//     */
+//    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float =
+//            appropriatePage(bottomY, height).adj
 
     /**
      Returns the correct page for the given value of y.  This lets the user use any Y value and

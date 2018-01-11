@@ -145,9 +145,9 @@ interface RenderTarget {
     fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor): Float =
             fillRect(bottomLeft, dim, c, true)
 
-    /**
-    Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
-    If it will fit, simply returns 0.
-     */
-    fun pageBreakingTopMargin(bottomY:Float, height:Float):Float
+//    /**
+//    Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
+//    If it will fit, simply returns 0.
+//     */
+//    fun pageBreakingTopMargin(bottomY:Float, height:Float):Float
 }
