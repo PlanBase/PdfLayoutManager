@@ -33,121 +33,60 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
  */
 interface RenderTarget {
     /**
-     Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
-
-     @param start the Coord of the starting point
-     @param end the Coord of the ending point
-     @param lineStyle the style to draw the line with
-     @param reallyRender Only render this if true.  Otherwise, just measure and return.
-     @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     * Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
+     *
+     * @param start the Coord of the starting point
+     * @param end the Coord of the ending point
+     * @param lineStyle the style to draw the line with
+     * @param reallyRender Only render this if true.  Otherwise, just measure and return.
+     * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget {
+    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean = true): RenderTarget {
         drawLineStrip(listOf(start, end), lineStyle, reallyRender)
         return this
     }
 
     /**
-    Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
-
-    @param start the Coord of the starting point
-    @param end the Coord of the ending point
-    @param lineStyle the style to draw the line with
-    @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     * Draws lines from the first point to the last.  Direction is important if using mitering.
+     *
+     * @param points the list of Coord to draw lines between.  This does *not* connect the last point to the first.
+     * If you want that, add the first point again at the end of the list.
+     * @param lineStyle the style to draw the line with
+     * @param reallyRender Only render this if true.  Otherwise, just measure and return.
+     * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle): RenderTarget =
-            drawLineStrip(listOf(start, end), lineStyle, true)
+    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean = true): RenderTarget
 
     /**
-    Draws lines from the first point to the last.  Direction is important if using mitering.
-
-    @param points the list of Coord to draw lines between.  This does *not* connect the last point to the first.
-    If you want that, add the first point again at the end of the list.
-    @param lineStyle the style to draw the line with
-    @param reallyRender Only render this if true.  Otherwise, just measure and return.
-    @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     * Puts styled text on this RenderTarget
+     * @param baselineLeft the Coord of the left-hand baseline point.  Ascent goes above, descent and leading below.
+     * @param text the text
+     * @param textStyle the style
+     * @param reallyRender Only render this if true.  Otherwise, just measure and return.
+     * @return the effective height after page breaking
+     * (may include some extra space above to push items onto the next page).
      */
-    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): RenderTarget
+    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean = true): Float
 
     /**
-    Draws lines from the first point to the last.  Direction is important if using mitering.
-
-    @param points the list of Coord to draw lines between.  This does *not* connect the last point to the first.
-    If you want that, add the first point again at the end of the list.
-    @param lineStyle the style to draw the line with
-    @return the updated RenderTarget (may be changed to return the lowest y-value instead)
+     * Puts an image on this RenderTarget
+     * @param bottomLeft the Coord of the lower-left-hand corner
+     * @param wi the scaled, "wrapped" jpeg/png image
+     * @param reallyRender Only render this if true.  Otherwise, just measure and return.
+     * @return the effective height after page breaking
+     * (may include some extra space above to push items onto the next page).
      */
-    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle): RenderTarget =
-            drawLineStrip(points, lineStyle, true)
+    fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean = true): Float
 
     /**
-     Puts styled text on this RenderTarget
-     @param baselineLeft the Coord of the left-hand baseline point.  Ascent goes above, descent and leading below.
-     @param text the text
-     @param textStyle the style
-     @param reallyRender Only render this if true.  Otherwise, just measure and return.
-     @return the effective height after page breaking
-     (may include some extra space above to push items onto the next page).
+     * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
+     * separately with textLines).
+     * @param bottomLeft the Coord of the lower-left-hand corner
+     * @param dim width and height (dim) of rectangle
+     * @param c color
+     * @param reallyRender Only render this if true.  Otherwise, just measure and return.
+     * @return the effective height after page breaking
+     * (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float
-
-    /**
-    Puts styled text on this RenderTarget
-    @param baselineLeft the Coord of the left-hand baseline point.  Ascent goes above, descent and leading below.
-    @param text the text
-    @param textStyle the style
-    @return the effective height after page breaking
-    (may include some extra space above to push items onto the next page).
-     */
-    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle): Float =
-            drawStyledText(baselineLeft, text, textStyle, true)
-
-    /**
-     Puts an image on this RenderTarget
-     @param bottomLeft the Coord of the lower-left-hand corner
-     @param wi the scaled, "wrapped" jpeg/png image
-     @param reallyRender Only render this if true.  Otherwise, just measure and return.
-     @return the effective height after page breaking
-     (may include some extra space above to push items onto the next page).
-     */
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): Float
-
-    /**
-    Puts an image on this RenderTarget
-    @param bottomLeft the Coord of the lower-left-hand corner
-    @param wi the scaled, "wrapped" jpeg/png image
-    @return the effective height after page breaking
-    (may include some extra space above to push items onto the next page).
-     */
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage): Float =
-            drawImage(bottomLeft, wi, true)
-
-    /**
-     Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
-     separately with textLines).
-     @param bottomLeft the Coord of the lower-left-hand corner
-     @param dim width and height (dim) of rectangle
-     @param c color
-     @param reallyRender Only render this if true.  Otherwise, just measure and return.
-     @return the effective height after page breaking
-     (may include some extra space above to push items onto the next page).
-     */
-    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float
-
-    /**
-    Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
-    separately with textLines).
-    @param bottomLeft the Coord of the lower-left-hand corner
-    @param dim width and height (dim) of rectangle
-    @param c color
-    @return the effective height after page breaking
-    (may include some extra space above to push items onto the next page).
-     */
-    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor): Float =
-            fillRect(bottomLeft, dim, c, true)
-
-//    /**
-//    Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
-//    If it will fit, simply returns 0.
-//     */
-//    fun pageBreakingTopMargin(bottomY:Float, height:Float):Float
+    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean = true): Float
 }
