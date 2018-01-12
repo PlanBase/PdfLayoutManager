@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.4 - 2018-01-12
+ - Added requiredSpaceBelow param to Cell as a way to push things like headings onto the next page if there isn't
+ going to be enough room under them.
+
 ## 2.0.3 - 2018-01-09
  - Fixed: Line-wrapping sometimes drops the space before the last word on a line.
    Only happened when the last word should have been too long to line wrap by a width of less than one space.
