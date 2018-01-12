@@ -89,9 +89,9 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
         override val lineHeight: Float = dim.height
 
         /*
-        Renders item and all child-items with given width and returns the x-y pair of the
-        lower-right-hand corner of the last line (e.g. of text).
-        */
+         * Renders item and all child-items with given width and returns the x-y pair of the
+         * lower-right-hand corner of the last line (e.g. of text).
+         */
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
             var y = topLeft.y
             var maxWidth = 0f

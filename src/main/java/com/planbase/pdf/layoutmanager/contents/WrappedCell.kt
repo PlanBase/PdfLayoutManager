@@ -30,7 +30,8 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 // TODO: This should be a private inner class of Cell
 class WrappedCell(override val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
-                  private val items: List<LineWrapped>) : LineWrapped {
+                  private val items: List<LineWrapped>,
+                  private val requiredSpaceBelow : Float) : LineWrapped {
 
     override val ascent: Float
         get() = dim.height
@@ -52,12 +53,36 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         dim
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
-        return tableRender(lp, topLeft, dim.height, reallyRender)
-    }
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =
+            tableRender(lp, topLeft, dim.height, reallyRender)
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
-    fun tableRender(lp: RenderTarget, topLeft: Coord, height:Float, reallyRender:Boolean): Dim {
+    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height:Float, reallyRender:Boolean): Dim {
+        val adj = if (requiredSpaceBelow == 0f) {
+            0f
+        } else {
+            lp.pageBreakingTopMargin(tempTopLeft.y - dim.height, dim.height, requiredSpaceBelow)
+        }
+
+        val topLeft: Coord = if (requiredSpaceBelow == 0f) {
+            tempTopLeft
+        } else {
+            // Not part of a table.
+            //
+            // Given topLeft.y and dim, is there room for this cell plus requiredSpaceBelow on this page?
+            // - Yes: Return topLeft.y unchanged.
+            // - No: Is there room on any page?
+            // - No: Return topLeft.y unchanged
+            // - Yes: Return the y value of the top of the next page.
+            //
+            // If not, return the new innerTopLeft.y.
+            //
+            // NO:
+            // Given innerTopLeft.y and wrappedBlockDim, is there room for the block plus requiredSpaceBelow
+            // on this page? If not, return the new innerTopLeft.y.
+            tempTopLeft.minusY(adj)
+        }
+
 //        println("render($topLeft, $height, $reallyRender)")
 //        println("  cellStyle=$cellStyle")
         val boxStyle = cellStyle.boxStyle
@@ -65,8 +90,6 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         // Dim dim = padding.addTo(pcrs.dim);
 
         // Draw contents over background, but under border
-        val tempTopLeft: Coord = boxStyle.applyTopLeft(topLeft)
-//        println("  tempTopLeft=$tempTopLeft dim=$dim height=$height")
         val finalDim = if (dim.height < height) {
             dim.height(height)
         } else {
@@ -76,7 +99,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         val innerDim: Dim = boxStyle.subtractFrom(finalDim)
 //        println("  innerDim=$innerDim")
 
-        val innerTopLeft = cellStyle.align.innerTopLeft(innerDim, wrappedBlockDim, tempTopLeft)
+        val innerTopLeft = cellStyle.align.innerTopLeft(innerDim, wrappedBlockDim, boxStyle.applyTopLeft(topLeft))
 //        println("  innerTopLeft=$innerTopLeft")
 
         var y = innerTopLeft.y
@@ -127,6 +150,6 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         }
 
         return Dim(rightX - topLeft.x,
-                   topLeft.y - y)
+                   (topLeft.y - y) + adj)
     }
 }

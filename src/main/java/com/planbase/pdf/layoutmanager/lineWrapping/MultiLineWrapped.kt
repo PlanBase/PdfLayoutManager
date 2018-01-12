@@ -24,10 +24,7 @@ import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
-/**
-A mutable data structure to hold a wrapped line consisting of multiple items.
- @param source
- */
+/** A mutable data structure to hold a wrapped line consisting of multiple items. */
 class MultiLineWrapped(var width: Float = 0f,
                        override var ascent: Float = 0f,
                        override var lineHeight: Float = 0f,

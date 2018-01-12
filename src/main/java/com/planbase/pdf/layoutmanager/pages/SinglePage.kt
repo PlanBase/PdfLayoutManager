@@ -34,10 +34,10 @@ import java.util.SortedSet
 import java.util.TreeSet
 
 /**
- Caches the contents of a specific, single page for later drawing.  Inner classes are what's added
- to the cache and what controls the drawing.  You generally want to use [PageGrouping] when
- you want automatic page-breaking.  SinglePage is for when you want to force something onto a
- specific page only.
+ * Caches the contents of a specific, single page for later drawing.  Inner classes are what's added
+ * to the cache and what controls the drawing.  You generally want to use [PageGrouping] when
+ * you want automatic page-breaking.  SinglePage is for when you want to force something onto a
+ * specific page only.
  */
 class SinglePage(val pageNum: Int,
                  private val mgr: PdfLayoutMgr,
@@ -52,7 +52,6 @@ class SinglePage(val pageNum: Int,
         items.add(FillRect(bottomLeft.plusX(xOff), dim, c, lastOrd++, zIdx))
     }
 
-    /** {@inheritDoc}  */
     override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float {
         if (reallyRender) {
             fillRect(bottomLeft, dim, c, -1f)
@@ -60,7 +59,6 @@ class SinglePage(val pageNum: Int,
         return dim.height
     }
 
-    /** {@inheritDoc}  */
     override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): Float {
         if (reallyRender) {
             items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, DEFAULT_Z_INDEX))
@@ -73,7 +71,6 @@ class SinglePage(val pageNum: Int,
         items.add(DrawLine(points.map{ it.plusX(xOff) }.toList(), ls, lastOrd++, z))
     }
 
-    /** [@inheritDoc]  */
     override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): SinglePage {
         if (reallyRender) {
             drawLineStrip(points, lineStyle, DEFAULT_Z_INDEX)
@@ -85,7 +82,6 @@ class SinglePage(val pageNum: Int,
         items.add(Text(baselineLeft.plusX(xOff), text, s, lastOrd++, z))
     }
 
-    /** {@inheritDoc}  */
     override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
         if (reallyRender) {
             drawStyledText(baselineLeft, text, textStyle, DEFAULT_Z_INDEX)
@@ -93,12 +89,12 @@ class SinglePage(val pageNum: Int,
         return textStyle.lineHeight
     }
 
-//    /**
-//    Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
-//    A single page always returns zero suggesting that something won't flow onto another page, but it may
-//    still be truncated when it goes off the edge of this one.
-//     */
-//    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float = 0f
+    /**
+     * Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
+     * A single page always returns zero suggesting that something won't flow onto another page, but it may
+     * still be truncated when it goes off the edge of this one.
+     */
+    override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float = 0f
 
     @Throws(IOException::class)
     fun commit(stream: PDPageContentStream) {

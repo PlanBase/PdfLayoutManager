@@ -1,12 +1,11 @@
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
 
 class TestMultiPageLines {
     @Test fun testMultiPageLines() {
@@ -57,8 +56,8 @@ class TestMultiPageLines {
         lp.drawLine(Coord(pMargin, 0f), Coord(pageRMargin, 0f), lineStyle, true)
         lp.commit()
 
-        val os = FileOutputStream("multiPageLines.pdf")
-        pageMgr.save(os)
+//        val os = FileOutputStream("multiPageLines.pdf")
+//        pageMgr.save(os)
     }
 
 }

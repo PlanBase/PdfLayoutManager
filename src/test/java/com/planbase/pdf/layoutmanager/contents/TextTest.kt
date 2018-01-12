@@ -3,10 +3,10 @@ package com.planbase.pdf.layoutmanager.contents
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
 import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
 import com.planbase.pdf.layoutmanager.contents.Text.WrappedText
-import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
@@ -21,7 +21,6 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert
 import org.junit.Test
-import java.io.FileOutputStream
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -214,8 +213,8 @@ class TextTest {
         assertEquals(tStyle1.lineHeight, deltaY)
 
         logicalPage.commit()
-        val os = FileOutputStream("textBaseline.pdf")
-        mgr.save(os)
+//        val os = FileOutputStream("textBaseline.pdf")
+//        mgr.save(os)
     }
 
     @Test fun testExactLineWrapping() {

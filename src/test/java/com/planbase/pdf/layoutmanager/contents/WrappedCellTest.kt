@@ -98,7 +98,7 @@ class WrappedCellTest {
                                                     textStyle.lineHeight,
                                                     mutableListOf(Text.WrappedText(textStyle,
                                                                                    hello.text,
-                                                                                   hello.maxWidth())))))
+                                                                                   hello.maxWidth())))), 0f)
 //        val wrappedCell = cell.wrap()
 //        println("cell.wrap()=${cell.wrap()}")
 

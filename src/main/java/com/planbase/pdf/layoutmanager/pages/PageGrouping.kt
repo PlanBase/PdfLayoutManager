@@ -141,31 +141,28 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return mgr
     }
 
-    /** {@inheritDoc}  */
     override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Text rendering calculation spot 3/3
         val belowBaseline = textStyle.lineHeight - textStyle.ascent
-        val pby = appropriatePage(baselineLeft.y - belowBaseline, textStyle.lineHeight)
+        val pby = appropriatePage(baselineLeft.y - belowBaseline, textStyle.lineHeight, 0f)
         pby.pb.drawStyledText(baselineLeft.y(pby.y + belowBaseline), text, textStyle, reallyRender)
         return textStyle.lineHeight + pby.adj
     }
 
-    /** {@inheritDoc}  */
     override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = appropriatePage(bottomLeft.y, wi.dim.height)
+        val pby = appropriatePage(bottomLeft.y, wi.dim.height, 0f)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(bottomLeft.y(pby.y), wi, reallyRender)
         return wi.dim.height + pby.adj
     }
 
-    /** {@inheritDoc}  */
     override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
@@ -182,8 +179,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             throw IllegalStateException("height must be positive")
         }
         // logger.info("About to put line: (" + x1 + "," + y1 + "), (" + x2 + "," + y2 + ")");
-        val pby1 = appropriatePage(topY, 0f)
-        val pby2 = appropriatePage(bottomY, 0f)
+        val pby1 = appropriatePage(topY, 0f, 0f)
+        val pby2 = appropriatePage(bottomY, 0f, 0f)
         if (pby1 == pby2) {
             pby1.pb.fillRect(Coord(left, pby1.y), Dim(width, maxHeight), c, reallyRender)
         } else {
@@ -242,7 +239,6 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return this
     }
 
-    /** {@inheritDoc}  */
     override fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean): PageGrouping {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
@@ -251,8 +247,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //        println("About to put line: start=$start end=$end")
         val flip:Boolean = end.y > start.y
 
-        val pby1 = appropriatePage(if (flip) { end.y } else { start.y }, 0f)
-        val pby2 = appropriatePage(if (flip) { start.y } else { end.y }, 0f)
+        val pby1 = appropriatePage(if (flip) { end.y } else { start.y }, 0f, 0f)
+        val pby2 = appropriatePage(if (flip) { start.y } else { end.y }, 0f, 0f)
 //        println("pby1=$pby1, pby2=$pby2")
         if (pby1 == pby2) {
             if (flip) {
@@ -330,30 +326,33 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return this
     }
 
-//    /**
-//     Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
-//     If it will fit, simply returns 0.
-//     */
-//    override fun pageBreakingTopMargin(bottomY:Float, height:Float):Float =
-//            appropriatePage(bottomY, height).adj
+    override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float =
+            appropriatePage(bottomY, height, requiredSpaceBelow).adj
 
     /**
-     Returns the correct page for the given value of y.  This lets the user use any Y value and
-     we continue extending their canvas downward (negative) by adding extra pages.
-     @param origY the un-adjusted (bottom) y value.
-     @return the proper page and adjusted y value for that page.
+     * Returns the correct page for the given value of y.  This lets the user use any Y value and
+     * we continue extending their canvas downward (negative) by adding extra pages.
+     * @param bottomY the un-adjusted (bottom) y value.
+     * @param height the height
+     * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move to the next page.
+     * @return the proper page and adjusted y value for that page.
      */
-    private fun appropriatePage(bottomY: Float, height: Float): PageBufferAndY {
+    private fun appropriatePage(bottomY: Float, height: Float, requiredSpaceBelow:Float): PageBufferAndY {
 //        println("appropriatePage(bottomY=$bottomY, height=$height)")
-        var y = bottomY
+        if ( (height + requiredSpaceBelow) > bodyDim.height ) {
+            throw IllegalArgumentException("The height ($height) plus requiredSpaceBelow ($requiredSpaceBelow)" +
+                                           " must be less than bodyDim.height (${bodyDim.height})" +
+                                           " or it can't fit on one page.")
+        }
         if (!mgr.hasAnyPages()) {
             throw IllegalStateException("Cannot work with the any pages until one has been" +
                                         " created by calling mgr.ensurePageIdx(1).")
         }
+        var y = bottomY
         var idx = mgr.unCommittedPageIdx()
         // Get the first possible page.  Just keep moving to the top of the next page until it's in
         // the printable area.
-        while (y < lowerLeftBody.y) {
+        while ( (y - requiredSpaceBelow) < lowerLeftBody.y ) {
 //            println("  y=$y lowerLeftBody.y=${lowerLeftBody.y}")
             y += bodyDim.height
             idx++

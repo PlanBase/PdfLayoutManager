@@ -28,7 +28,6 @@ import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.BULLET_CHAR
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
-import com.planbase.pdf.layoutmanager.utils.CMYK_WHITE
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle

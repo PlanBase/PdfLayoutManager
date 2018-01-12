@@ -27,23 +27,42 @@ import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
 import com.planbase.pdf.layoutmanager.utils.Dim
 
+// TODO: Consider making this an abstract class "Box" with subclasses TableCell and Div
 /**
- A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated
- based on how the content is rendered with regard to line-breaks and page-breaks.
+ * A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated
+ * based on how the content is rendered with regard to line-breaks and page-breaks.
+ * @param cellStyle the style info for this cell
+ * @param width the width of this cell (in document units)
+ * @param contents the contents of this cell
+ * @param requiredSpaceBelow leave this much vertical space at the end of the page below this cell.
+ * @param tableRow if null, this cell is a stand-alone box-model (like a div in HTML).  If non-null,
+ * this cell behaves as part of the given table row.
  */
-data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can override this style
+data class Cell(val cellStyle: CellStyle = CellStyle.Default,
                 val width: Float,
-                // A list of the contents.  It's pretty limiting to have one item per row.
                 private var contents: List<LineWrappable>,
+                private val requiredSpaceBelow : Float,
                 private val tableRow: TableRow? = null) : LineWrappable {
 
-    constructor(cs: CellStyle, // contents can override this style
-                w: Float,
-            // A list of the contents.  It's pretty limiting to have one item per row.
-                cont: List<LineWrappable>) : this(cs, w, cont, null)
+    constructor(cellStyle: CellStyle = CellStyle.Default,
+                width: Float,
+                contents: List<LineWrappable>,
+                tableRow: TableRow? = null) : this(cellStyle, width, contents, 0f, tableRow)
+
+    constructor(cellStyle: CellStyle = CellStyle.Default,
+                width: Float,
+                contents: List<LineWrappable>) : this(cellStyle, width, contents, 0f, null)
+
+    constructor(cellStyle: CellStyle = CellStyle.Default,
+                width: Float,
+                contents: List<LineWrappable>,
+                requiredSpaceBelow : Float) : this(cellStyle, width, contents, requiredSpaceBelow, null)
     init {
         if (width < 0) {
             throw IllegalArgumentException("A cell cannot have a negative width")
+        }
+        if ( (tableRow != null) && (requiredSpaceBelow != 0f) ) {
+            throw IllegalArgumentException("Can either be a table cell or have required space below, not both.")
         }
     }
 
@@ -65,12 +84,11 @@ data class Cell(val cellStyle: CellStyle = CellStyle.Default, // contents can ov
 //            height = tableRow.minRowHeight
 //        }
 
-        return WrappedCell(Dim(width, height), this.cellStyle, fixedLines)
+        return WrappedCell(Dim(width, height), this.cellStyle, fixedLines, requiredSpaceBelow)
     }
 
     override fun lineWrapper() = LineWrapper.preWrappedLineWrapper(this.wrap())
 
-    /** {@inheritDoc}  */
     override fun toString(): String {
         val sB = StringBuilder("Cell(").append(cellStyle).append(" width=")
                 .append(width).append(" contents=[")

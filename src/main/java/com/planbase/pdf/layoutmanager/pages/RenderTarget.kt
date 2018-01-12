@@ -89,4 +89,14 @@ interface RenderTarget {
      * (may include some extra space above to push items onto the next page).
      */
     fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean = true): Float
+
+    /**
+     * Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
+     * If it will fit, simply returns 0.
+     * @param bottomY the un-adjusted (bottom) y value.
+     * @param height the height
+     * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move chunk to the top
+     * of the next page.
+     */
+    fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float
 }

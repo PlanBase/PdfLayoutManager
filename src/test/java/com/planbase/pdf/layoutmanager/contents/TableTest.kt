@@ -141,6 +141,9 @@ text, but the table itself is page-broken somewhat like a chunk.
 I could not get this happen with nested cells, it requires nested *tables* with a page break.
 
 It's the outer cell that has too much space in it, the inner one is fine.
+
+Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
+
  */
     @Test fun testNestedTablesAcrossPageBreak() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))

@@ -45,12 +45,12 @@ data class Text(val textStyle: TextStyle,
     val text = cleanStr(initialText)
 
     /**
-     Represents a unit of wrapped text.  This could be a whole line, or part of a line that includes other contents
-     such as images or other text styles.
-
-     @param textStyle the style
-     @param string the actual text that fits in this line
-     @param width the width of that string in this textStyle
+     * Represents a unit of wrapped text.  This could be a whole line, or part of a line that includes other contents
+     * such as images or other text styles.
+     *
+     * @param textStyle the style
+     * @param string the actual text that fits in this line
+     * @param width the width of that string in this textStyle
      */
     data class WrappedText(val textStyle: TextStyle,
                            val string: String,
@@ -68,8 +68,6 @@ data class Text(val textStyle: TextStyle,
 
         override fun toString() = "WrappedText($textStyle, \"$string\", $width)"
     }
-
-    fun style(): TextStyle = textStyle
 
     fun avgCharsForWidth(width: Float): Int = (width * 1220 / textStyle.avgCharWidth).toInt()
 
