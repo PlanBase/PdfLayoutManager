@@ -339,11 +339,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      */
     private fun appropriatePage(bottomY: Float, height: Float, requiredSpaceBelow:Float): PageBufferAndY {
 //        println("appropriatePage(bottomY=$bottomY, height=$height)")
-        if ( (height + requiredSpaceBelow) > bodyDim.height ) {
-            throw IllegalArgumentException("The height ($height) plus requiredSpaceBelow ($requiredSpaceBelow)" +
-                                           " must be less than bodyDim.height (${bodyDim.height})" +
-                                           " or it can't fit on one page.")
+        // Used to throw exception, but this is a valid situation.
+        val spaceBelow: Float = if ( (height + requiredSpaceBelow) > bodyDim.height ) {
+            0f
+        } else {
+            requiredSpaceBelow
         }
+
         if (!mgr.hasAnyPages()) {
             throw IllegalStateException("Cannot work with the any pages until one has been" +
                                         " created by calling mgr.ensurePageIdx(1).")
@@ -352,7 +354,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         var idx = mgr.unCommittedPageIdx()
         // Get the first possible page.  Just keep moving to the top of the next page until it's in
         // the printable area.
-        while ( (y - requiredSpaceBelow) < lowerLeftBody.y ) {
+        while ( (y - spaceBelow) < lowerLeftBody.y ) {
 //            println("  y=$y lowerLeftBody.y=${lowerLeftBody.y}")
             y += bodyDim.height
             idx++

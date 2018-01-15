@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.5 - 2018-01-15
+ - Changed PageGrouping.appropriatePage() to ignore requiredSpaceBelow when the given height won't fit on a single page.
+ It used to throw an exception.
+
 ## 2.0.4 - 2018-01-12
  - Added requiredSpaceBelow param to Cell as a way to push things like headings onto the next page if there isn't
  going to be enough room under them.

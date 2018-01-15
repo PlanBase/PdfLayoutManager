@@ -116,16 +116,14 @@ fun testBodyMargins() {
                       "clear lives showed the work and " +
                       "people used. The major rights " +
                       "was the important children and " +
-                      "mothers turned able. The " +
-                      "international men kept the real " +
-                      "questions and nights made big.")),
+                      "mothers turned unimaginatively.  ")),
                 ScaledImage(graphPic),
                 Text(BULLET_TEXT_STYLE,
                      ("The " +
                       "best points got the economic waters " +
                       "and problems gave great. The whole " +
                       "countries went the best children and " +
-                      "eyes came able."))), null).wrap()
+                      "eyes came able.")))).wrap()
             .render(lp, Coord(0f, PDRectangle.A6.height - 40f))
     //        table
     //        );

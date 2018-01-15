@@ -1,13 +1,22 @@
 package com.planbase.pdf.layoutmanager.pages
 
+import TestManual2.Companion.BULLET_TEXT_STYLE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.BorderStyle
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.Dim
+import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
@@ -204,4 +213,58 @@ class PageGroupingTest {
         pageMgr.save(os)
     }
 
+    @Test fun testPageBreakingTopMargin() {
+        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
+        val bodyWidth = PDRectangle.A6.width - 80f
+
+        val f = File("target/test-classes/graph2.png")
+        val graphPic = ImageIO.read(f)
+
+        val lp = pageMgr.startPageGrouping(PORTRAIT, null)
+
+        val cell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f), null, BorderStyle(LineStyle(CMYK_BLACK, 0.1f)))),
+                        bodyWidth,
+                        listOf(Text(BULLET_TEXT_STYLE,
+                                    ("The " +
+                                     "best points got the economic waters " +
+                                     "and problems gave great. The whole " +
+                                     "countries went the best children and " +
+                                     "eyes came able.")),
+                               Cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f), null, BorderStyle.NO_BORDERS)),
+                                    bodyWidth - 6f,
+                                    listOf(Text(BULLET_TEXT_STYLE,
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                "This paragraph is too long to fit on a single page.  ")), 30f),
+                               ScaledImage(graphPic)))
+        val wrappedCell = cell.wrap()
+        assertEquals(Dim(217.63782f, 509.17203f), wrappedCell.dim)
+
+        // This is not a great test because I'm not sure this feature is really meant to work blocks that cross
+        // multiple pages.  In fact, it looks pretty bad for those blocks.
+        val finalDim = wrappedCell.render(lp, Coord(40f, PDRectangle.A6.height - 40f))
+        assertEquals(Dim(217.63782f, 800.7112f), finalDim)
+
+        lp.commit()
+
+//        val os = FileOutputStream("testPageBreakingTopMargin.pdf")
+//        pageMgr.save(os)
+    }
 }
