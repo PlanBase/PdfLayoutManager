@@ -67,7 +67,12 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
     }
 
     companion object {
-        private const val ASSUMED_IMAGE_DPI = 300f
-        const val IMAGE_SCALE:Float = 1f / (ASSUMED_IMAGE_DPI * PdfLayoutMgr.DOC_UNITS_PER_INCH)
+        private const val ASSUMED_IMAGE_DPI: Float = 300f
+
+        /**
+         * The default scaling factor for images.  Assumes image is normally seen at 300dpi and your output document
+         * uses 72 units per inch.
+         */
+        const val IMAGE_SCALE: Float = 1f / ASSUMED_IMAGE_DPI * PdfLayoutMgr.DOC_UNITS_PER_INCH
     }
 }
