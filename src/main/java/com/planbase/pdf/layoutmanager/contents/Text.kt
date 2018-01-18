@@ -128,7 +128,7 @@ data class Text(val textStyle: TextStyle,
     }
 
     companion object {
-        private val CR = '\n'
+        private const val CR: Char = '\n'
 
         internal fun tryGettingText(maxWidth: Float, startIdx: Int, txt: Text): RowIdx {
             if (maxWidth < 0) {

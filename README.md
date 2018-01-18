@@ -23,7 +23,7 @@ Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayo
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.0.5</version>
+        <version>2.0.6</version>
     </dependency>
 ```
 

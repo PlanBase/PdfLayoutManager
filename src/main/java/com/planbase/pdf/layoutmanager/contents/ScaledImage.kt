@@ -60,8 +60,6 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
 
         override val ascent: Float = dim.height
 
-//        override val descentAndLeading: Float = 0f
-
         override val lineHeight: Float = dim.height
 
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =
@@ -69,7 +67,7 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
     }
 
     companion object {
-        private val ASSUMED_IMAGE_DPI = 300f
-        val IMAGE_SCALE = 1f / ASSUMED_IMAGE_DPI * PdfLayoutMgr.DOC_UNITS_PER_INCH
+        private const val ASSUMED_IMAGE_DPI = 300f
+        const val IMAGE_SCALE:Float = 1f / (ASSUMED_IMAGE_DPI * PdfLayoutMgr.DOC_UNITS_PER_INCH)
     }
 }

@@ -173,9 +173,9 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         pages.add(pb)
         return PageGrouping(this, o, Coord(DEFAULT_MARGIN, DEFAULT_MARGIN),
                             if (o == Orientation.PORTRAIT)
-                                this.pageDim.minus(PageGrouping.DEFAULT_DOUBLE_MARGIN_DIM)
+                                this.pageDim.minus(DEFAULT_DOUBLE_MARGIN_DIM)
                             else
-                                this.pageDim.swapWh().minus(PageGrouping.DEFAULT_DOUBLE_MARGIN_DIM))
+                                this.pageDim.swapWh().minus(DEFAULT_DOUBLE_MARGIN_DIM))
     }
 
     /**
@@ -260,60 +260,19 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     override fun hashCode(): Int = doc.hashCode() + pages.hashCode()
 
     companion object {
-
-        // private Logger logger = Logger.getLogger(PdfLayoutMgr.class);
-
-        //        logger.info("Ascent: " + PDType1Font.HELVETICA.getFontDescriptor().getAscent());
-        //        logger.info("StemH: " + PDType1Font.HELVETICA.getFontDescriptor().getStemH());
-        //        logger.info("CapHeight: " + PDType1Font.HELVETICA.getFontDescriptor().getCapHeight());
-        //        logger.info("XHeight: " + PDType1Font.HELVETICA.getFontDescriptor().getXHeight());
-        //        logger.info("Descent: " + PDType1Font.HELVETICA.getFontDescriptor().getDescent());
-        //        logger.info("Leading: " + PDType1Font.HELVETICA.getFontDescriptor().getLeading());
-        //
-        //        logger.info("Height: " + PDType1Font.HELVETICA.getFontDescriptor().getFontBoundingBox().getHeight());
-        //
-        //        Ascent:    718.0
-        //        StemH:       0.0
-        //        CapHeight: 718.0
-        //        XHeight:   523.0
-        //        Descent:  -207.0
-        //        Leading:     0.0
-        //        Height:   1156.0
-        // CapHeight - descent = 925
-        // 925 - descent = 1132 which is still less than 1156.
-        // I'm going to make line-height =
-        // Java FontMetrics says getHeight() = getAscent() + getDescent() + getLeading().
-        // I think ascent and descent are compatible with this.  I'm going to make Leading be
-        // -descent/2
-
         /**
          * If you use no scaling when printing the output PDF, PDFBox shows approximately 72
          * Document-Units Per Inch.  This makes one pixel on an average desktop monitor correspond to
          * roughly one document unit.  This is a useful constant for page layout math.
          */
-        val DOC_UNITS_PER_INCH = 72f
-        // Some printers need at least 1/2" of margin (36 "pixels") in order to accept a print job.
-        // This amount seems to accommodate all printers.
-        val DEFAULT_MARGIN = 37f
+        const val DOC_UNITS_PER_INCH: Float = 72f
+
+        /**
+         * Some printers need at least 1/2" of margin (36 "pixels") in order to accept a print job.
+         * This amount seems to accommodate all printers.
+         */
+        const val DEFAULT_MARGIN: Float = 37f
+
+        private val DEFAULT_DOUBLE_MARGIN_DIM = Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
     }
-
-    //    public Coord putRect(Coord outerTopLeft, Dim outerDimensions, final PDColor c) {
-    ////        System.out.println("putRect(" + outerTopLeft + " " + outerDimensions + " " +
-    ////                           Utils.toString(c) + ")");
-    //        putRect(outerTopLeft.x(), outerTopLeft.y(), outerDimensions.x(), outerDimensions.y(), c);
-    //        return Coord.of(outerTopLeft.x() + outerDimensions.x(),
-    //                           outerTopLeft.y() - outerDimensions.y());
-    //    }
-
-    //    /**
-    //     Puts text on the page.
-    //     @param x the x-value of the top-left corner.
-    //     @param origY the logical-page Y-value of the top-left corner.
-    //     @param cell the cell containing the styling and text to render.
-    //     @return the bottom Y-value (logical-page) of the rendered cell.
-    //     */
-    //    public float putCell(final float x, float origY, final Cell cell) {
-    //        return cell.processRows(x, origY, false, this);
-    //    }
-
 }

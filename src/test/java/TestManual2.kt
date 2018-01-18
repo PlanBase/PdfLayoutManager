@@ -18,6 +18,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -71,11 +72,11 @@ fun testBodyMargins() {
             .partBuilder()
             .rowBuilder()
             .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, BULLET_CHAR)))
-            .cell(CellStyle.Default, listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
+            .cell(TOP_LEFT_BORDERLESS, listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
             .buildRow()
             .rowBuilder()
             .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, "2.")))
-            .cell(CellStyle.Default, listOf(Text(BULLET_TEXT_STYLE, "Text that has a number")))
+            .cell(TOP_LEFT_BORDERLESS, listOf(Text(BULLET_TEXT_STYLE, "Text that has a number")))
             .buildRow()
             .buildPart()
 

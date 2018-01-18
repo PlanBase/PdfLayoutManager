@@ -294,7 +294,7 @@ class TestManualllyPdfLayoutMgr {
 
         // More landscape pages
         val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK)
-        val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NONE)
+        val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NO_PAD_NO_BORDER)
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE
         ) { pageNum, pb->
             val cell = Cell(pageHeadCellStyle, tableWidth,

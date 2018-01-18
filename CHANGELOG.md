@@ -1,26 +1,31 @@
 # Changelog
 
-## 2.0.5 - 2018-01-15
+## 2.0.6 - 2018-01-18
+ - Renamed BoxStyle.NONE to NO_PAD_NO_BORDER and CellStyle.Default to TOP_LEFT_BORDERLESS.
+ - Added const and JvmField annotations for Java compatibility.
+ - Upgraded to Kotlin 1.2.20
+
+###### 2.0.5 - 2018-01-15
  - Changed PageGrouping.appropriatePage() to ignore requiredSpaceBelow when the given height won't fit on a single page.
  It used to throw an exception.
 
-## 2.0.4 - 2018-01-12
+###### 2.0.4 - 2018-01-12
  - Added requiredSpaceBelow param to Cell as a way to push things like headings onto the next page if there isn't
  going to be enough room under them.
 
-## 2.0.3 - 2018-01-09
+###### 2.0.3 - 2018-01-09
  - Fixed: Line-wrapping sometimes drops the space before the last word on a line.
    Only happened when the last word should have been too long to line wrap by a width of less than one space.
  - Fixed: When nesting tables, the inner table gets extra space beneath it after a page break.
    Went back to earlier idea of adding reallyRender boolean parameter to LineWrapped.render() so
    that we could share all the logic between measuring and actually rendering.
 
-## 2.0.2 - 2018-01-01
+###### 2.0.2 - 2018-01-01
  - Upgraded Apache PDFBox to 2.0.0 and Kotlin to 1.2.10
  - Added this changelog
  - Added Javadocs.
  
-## 2.0.1 - 2017-12-21
+###### 2.0.1 - 2017-12-21
  - Initial release of 2.x and Split from PdfLayoutMgr.  This project is the logical continuation of that one.
    - Removed Glen Peterson from copyright holders
    - Adopted AGPL license

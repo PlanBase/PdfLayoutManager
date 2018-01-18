@@ -108,7 +108,7 @@ class SinglePage(val pageNum: Int,
     override fun toString(): String = "SinglePage($pageNum)"
 
     companion object {
-        val DEFAULT_Z_INDEX = 0f
+        const val DEFAULT_Z_INDEX = 0f
     }
 
     /**

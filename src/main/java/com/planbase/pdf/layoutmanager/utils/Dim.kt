@@ -85,7 +85,10 @@ data class Dim(val width: Float, val height: Float) {
     override fun toString() = "Dim(${width}f, ${height}f)"
 
     companion object {
+        /** Zero-dimension (zero width, zero height) */
+        @JvmField
         val ZERO = Dim(0f, 0f)
+
         fun sum(xys:Iterable<Dim>) = xys.fold(ZERO, { acc, xy -> acc.plus(xy)})
 
         fun assertEquals(xya: Dim, xyb: Dim, latitude:Float) {

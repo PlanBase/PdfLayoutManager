@@ -21,6 +21,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
@@ -38,22 +39,22 @@ import com.planbase.pdf.layoutmanager.utils.Dim
  * @param tableRow if null, this cell is a stand-alone box-model (like a div in HTML).  If non-null,
  * this cell behaves as part of the given table row.
  */
-data class Cell(val cellStyle: CellStyle = CellStyle.Default,
+data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 val width: Float,
                 private var contents: List<LineWrappable>,
                 private val requiredSpaceBelow : Float,
                 private val tableRow: TableRow? = null) : LineWrappable {
 
-    constructor(cellStyle: CellStyle = CellStyle.Default,
+    constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 width: Float,
                 contents: List<LineWrappable>,
                 tableRow: TableRow? = null) : this(cellStyle, width, contents, 0f, tableRow)
 
-    constructor(cellStyle: CellStyle = CellStyle.Default,
+    constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 width: Float,
                 contents: List<LineWrappable>) : this(cellStyle, width, contents, 0f, null)
 
-    constructor(cellStyle: CellStyle = CellStyle.Default,
+    constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 width: Float,
                 contents: List<LineWrappable>,
                 requiredSpaceBelow : Float) : this(cellStyle, width, contents, requiredSpaceBelow, null)

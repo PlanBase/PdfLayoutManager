@@ -37,7 +37,8 @@ data class LineStyle(val color: PDColor?, val thickness: Float) {
     override fun toString() = "LineStyle(${colorToString(color)}, ${thickness}f)"
 
     companion object {
-        val DEFAULT_WIDTH = 1f
+        const val DEFAULT_WIDTH = 1f
+        @JvmField
         val NO_LINE = LineStyle(null, 0f)
     }
 }

@@ -8,6 +8,7 @@ data class CellStyle(val align: Align,
     override fun toString() = "CellStyle($align, $boxStyle)"
 
     companion object {
-        val Default = CellStyle(Align.TOP_LEFT, BoxStyle.NONE)
+        @JvmField
+        val TOP_LEFT_BORDERLESS = CellStyle(Align.TOP_LEFT, BoxStyle.NO_PAD_NO_BORDER)
     }
 }

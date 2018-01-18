@@ -14,9 +14,6 @@ data class BoxStyle(val padding: Padding = Padding.NO_PADDING,
                     val border: BorderStyle = BorderStyle.NO_BORDERS) {
 
     override fun toString() = "BoxStyle($padding, ${colorToString(bgColor)}, $border)"
-    companion object {
-        val NONE = BoxStyle(Padding.NO_PADDING, null, BorderStyle.NO_BORDERS)
-    }
 
     fun interiorSpaceTop():Float = padding.top + (border.top.thickness / 2)
 
@@ -39,5 +36,10 @@ data class BoxStyle(val padding: Padding = Padding.NO_PADDING,
     fun leftRightInteriorSp():Float = interiorSpaceLeft() + interiorSpaceRight()
 
     fun subtractFrom(dim: Dim) = Dim(dim.width - leftRightInteriorSp(), dim.height - topBottomInteriorSp())
+
+    companion object {
+        @JvmField
+        val NO_PAD_NO_BORDER = BoxStyle(Padding.NO_PADDING, null, BorderStyle.NO_BORDERS)
+    }
 }
 

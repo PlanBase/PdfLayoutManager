@@ -21,7 +21,6 @@
 package com.planbase.pdf.layoutmanager.pages
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
@@ -397,16 +396,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //                                        PdfItem.DEFAULT_Z_INDEX))
 //    }
 
-    companion object {
-        val DEFAULT_DOUBLE_MARGIN_DIM = Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
-
-        /**
-        @param pb specific page item will be put on
-        @param y the y-value on that page
-        @param adj the height of the adjustment used to keep the line on one page.
-         */
-        private data class PageBufferAndY(val pb: SinglePage,
-                                          val y: Float,
-                                          val adj: Float)
-    }
+    /**
+    @param pb specific page item will be put on
+    @param y the y-value on that page
+    @param adj the height of the adjustment used to keep the line on one page.
+     */
+    private data class PageBufferAndY(val pb: SinglePage,
+                                      val y: Float,
+                                      val adj: Float)
 }

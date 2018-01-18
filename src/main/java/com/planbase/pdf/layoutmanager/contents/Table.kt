@@ -36,9 +36,9 @@ import kotlin.math.max
  * Still familiarity with HTML may make this class easier to use.
  */
 class Table(val cellWidths:MutableList<Float> = mutableListOf(),
-                   var cellStyle: CellStyle = CellStyle.Default,
-                   var textStyle: TextStyle? = null,
-                   private val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
+            var cellStyle: CellStyle = CellStyle.TOP_LEFT_BORDERLESS,
+            var textStyle: TextStyle? = null,
+            private val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
 
     override fun lineWrapper() =
             LineWrapper.preWrappedLineWrapper(WrappedTable(this.parts.map { TablePart.WrappedTablePart(it) }))
