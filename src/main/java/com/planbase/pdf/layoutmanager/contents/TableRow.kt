@@ -28,6 +28,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.listToStr
 import java.util.ArrayList
 import kotlin.math.max
 
@@ -39,7 +40,7 @@ import kotlin.math.max
 class TableRow(private val tablePart: TablePart) {
     var textStyle: TextStyle? = tablePart.textStyle
     private var cellStyle: CellStyle = tablePart.cellStyle
-    private val cells: MutableList<Cell?> = ArrayList(tablePart.cellWidths.size)
+    private val cells: MutableList<Cell> = ArrayList(tablePart.cellWidths.size)
     var minRowHeight = tablePart.minRowHeight
     private var nextCellIdx = 0
 
@@ -80,15 +81,16 @@ class TableRow(private val tablePart: TablePart) {
 
     fun buildRow(): TablePart {
         // Do we want to fill out the row with blank cells?
-        if (cells.contains(null)) {
-            throw IllegalStateException("Cannot build row when some TableRowCellBuilders have been" +
-                                        " created but the cells not built and added back to the row.")
-        }
+//        if (cells.contains(null)) {
+//            throw IllegalStateException("Cannot build row when some TableRowCellBuilders have been" +
+//                                        " created but the cells not built and added back to the row.")
+//        }
         return tablePart.addRow(this)
     }
 
     fun finalRowHeight():Float {
-        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
+//        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
+        cells.map { c -> c.wrap() }
                 .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dim.height)}
 //        println("finalRowHeight() returns: ${minRowHeight}")
         return minRowHeight
@@ -97,7 +99,7 @@ class TableRow(private val tablePart: TablePart) {
     class WrappedTableRow(row: TableRow) {
         private val minRowHeight:Float = row.minRowHeight
         private val fixedCells:List<WrappedCell> =
-                row.cells.map { c -> c!!.wrap() }
+                row.cells.map { c -> c.wrap() }
                         .toList()
 
         fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
@@ -131,5 +133,9 @@ class TableRow(private val tablePart: TablePart) {
         }
     }
 
-    override fun toString(): String = "TableRow($cells)"
+    override fun toString(): String =
+//            "TableRow($cells)"
+            cells.fold(StringBuilder(""),
+                       {sB, cell -> sB.append(cell.toStringTable())})
+                    .toString()
 }

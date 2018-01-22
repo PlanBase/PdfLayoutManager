@@ -21,6 +21,7 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.colorToString
+import com.planbase.pdf.layoutmanager.utils.floatToStr
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**
@@ -34,7 +35,12 @@ data class LineStyle(val color: PDColor?, val thickness: Float) {
         if (thickness < 0) { throw IllegalArgumentException("LineStyle cannot have a negative width.") }
     }
 
-    override fun toString() = "LineStyle(${colorToString(color)}, ${thickness}f)"
+    override fun toString() =
+            if (this == NO_LINE) {
+                "NO_LINE"
+            } else {
+                "LineStyle(${colorToString(color)}, ${floatToStr(thickness)})"
+            }
 
     companion object {
         const val DEFAULT_WIDTH = 1f

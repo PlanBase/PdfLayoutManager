@@ -22,9 +22,15 @@
 
 package com.planbase.pdf.layoutmanager.utils
 
+import org.apache.pdfbox.pdmodel.font.PDFont
+import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import java.awt.Transparency
+import java.awt.color.ColorSpace
+import java.awt.image.BufferedImage
+import java.awt.image.ColorModel
 import java.util.Arrays
 
 @JvmField
@@ -37,8 +43,7 @@ val RGB_BLACK = PDColor(floatArrayOf(0f, 0f, 0f), PDDeviceRGB.INSTANCE)
 @JvmField
 val RGB_WHITE = PDColor(floatArrayOf(1f, 1f, 1f), PDDeviceRGB.INSTANCE)
 
-@JvmField
-val BULLET_CHAR = "\u2022"
+const val BULLET_CHAR = "\u2022"
 
 /** For implementing briefer toString() methods */
 fun colorToString(color:PDColor?) =
@@ -52,11 +57,8 @@ fun colorToString(color:PDColor?) =
                 if (color.patternName != null) {
                     color.toString()
                 } else {
-                    var ret = color.colorSpace.toString()
-                    if (color.components != null) {
-                        ret += color.components.asList()
-                    }
-                    ret
+                    "PDColor(${collectionToStr("floatArrayOf", color.components.asList())}," +
+                    " PD${color.colorSpace}.INSTANCE)"
                 }
             }
         }
@@ -66,6 +68,119 @@ private fun pdColorEquator(a:PDColor, b:PDColor):Boolean =
         else (a.colorSpace == b.colorSpace) &&
              (a.patternName == b.patternName) &&
              Arrays.equals(a.components, b.components)
+
+private val colorSpaceStrs =
+        mapOf(Pair(ColorSpace.TYPE_XYZ, "TYPE_XYZ"),
+              Pair(ColorSpace.TYPE_Lab, "TYPE_Lab"),
+              Pair(ColorSpace.TYPE_Luv, "TYPE_Luv"),
+              Pair(ColorSpace.TYPE_YCbCr, "TYPE_YCbCr"),
+              Pair(ColorSpace.TYPE_Yxy, "TYPE_Yxy"),
+              Pair(ColorSpace.TYPE_RGB, "TYPE_RGB"),
+              Pair(ColorSpace.TYPE_GRAY, "TYPE_GRAY"),
+              Pair(ColorSpace.TYPE_HSV, "TYPE_HSV"),
+              Pair(ColorSpace.TYPE_HLS, "TYPE_HLS"),
+              Pair(ColorSpace.TYPE_CMYK, "TYPE_CMYK"),
+              Pair(ColorSpace.TYPE_CMY, "TYPE_CMY"),
+              Pair(ColorSpace.TYPE_2CLR, "TYPE_2CLR"),
+              Pair(ColorSpace.TYPE_3CLR, "TYPE_3CLR"),
+              Pair(ColorSpace.TYPE_4CLR, "TYPE_4CLR"),
+              Pair(ColorSpace.TYPE_5CLR, "TYPE_5CLR"),
+              Pair(ColorSpace.TYPE_6CLR, "TYPE_6CLR"),
+              Pair(ColorSpace.TYPE_7CLR, "TYPE_7CLR"),
+              Pair(ColorSpace.TYPE_8CLR, "TYPE_8CLR"),
+              Pair(ColorSpace.TYPE_9CLR, "TYPE_9CLR"),
+              Pair(ColorSpace.TYPE_ACLR, "TYPE_ACLR"),
+              Pair(ColorSpace.TYPE_BCLR, "TYPE_BCLR"),
+              Pair(ColorSpace.TYPE_CCLR, "TYPE_CCLR"),
+              Pair(ColorSpace.TYPE_DCLR, "TYPE_DCLR"),
+              Pair(ColorSpace.TYPE_ECLR, "TYPE_ECLR"),
+              Pair(ColorSpace.TYPE_FCLR, "TYPE_FCLR"))
+
+val transparencyStrs = mapOf(Pair(Transparency.OPAQUE, "OPAQUE"),
+                             Pair(Transparency.BITMASK, "BITMASK"),
+                             Pair(Transparency.TRANSLUCENT, "TRANSLUCENT"))
+
+fun colorSpaceToStr(cs: ColorSpace):String {
+    val type: Int = cs.type
+    val typeStr = colorSpaceStrs[type]
+    return if (typeStr == null) {
+        cs.toString()
+    } else {
+        "$typeStr"
+    }
+}
+
+fun colorModelToStr(cm: ColorModel) =
+        "ColorModel(" +
+//        "${cm.pixelSize}, " +
+        "${Arrays.toString(cm.componentSize)}," +
+        " ${colorSpaceToStr(cm.colorSpace)}," +
+        if (cm.hasAlpha()) { " α," } else { "" } +
+//        " preMult=${cm.isAlphaPremultiplied}," +
+        " ${transparencyStrs[cm.transparency]}" +
+//        ", transIdx=${cm.transferType}" +
+        ")"
+
+fun buffImgToStr(bi: BufferedImage) =
+        "BufferedImage(${colorModelToStr(bi.colorModel)}," +
+        " ${bi.raster.width}x${bi.raster.height}" +
+//        " ${bi.raster}," +
+//        " preMult=${bi.isAlphaPremultiplied}, " +
+        if (bi.propertyNames != null) {
+            " HashTable(${bi.propertyNames.map{"$it=${bi.getProperty(it)},"}})"
+        } else {
+            ""
+        } +
+        ")"
+
+fun floatToStr(f:Float):String {
+    val str = f.toString()
+    return if (str.endsWith(".0")) {
+        str.substring(0, str.length - 2)
+    } else {
+        str
+    } + "f"
+}
+
+fun objToStr(item:Any):String = when (item) {
+    is String -> "\"$item\""
+    is Char   -> "'$item'"
+    is Float  -> floatToStr(item)
+    else      -> item.toString()
+}
+
+fun collectionToStr(collName: String, ls: Iterable<Any>) =
+        ls.fold(StringBuilder(collName).append("("),
+                { sB, item ->
+                    if (sB.length > collName.length + 1) {
+                        sB.append(", ")
+                    }
+                    sB.append(objToStr(item))
+                })
+                .append(")")
+                .toString()
+
+fun mutableListToStr(ls: List<Any>) = collectionToStr("mutableListOf", ls)
+
+fun listToStr(ls: List<Any>) = collectionToStr("listOf", ls)
+
+private val fontStrs =
+        mapOf(Pair(PDType1Font.TIMES_ROMAN, "TIMES_ROMAN"),
+              Pair(PDType1Font.TIMES_BOLD, "TIMES_BOLD"),
+              Pair(PDType1Font.TIMES_ITALIC, "TIMES_ITALIC"),
+              Pair(PDType1Font.TIMES_BOLD_ITALIC, "TIMES_BOLD_ITALIC"),
+              Pair(PDType1Font.HELVETICA, "HELVETICA"),
+              Pair(PDType1Font.HELVETICA_BOLD, "HELVETICA_BOLD"),
+              Pair(PDType1Font.HELVETICA_OBLIQUE, "HELVETICA_OBLIQUE"),
+              Pair(PDType1Font.HELVETICA_BOLD_OBLIQUE, "HELVETICA_BOLD_OBLIQUE"),
+              Pair(PDType1Font.COURIER, "COURIER"),
+              Pair(PDType1Font.COURIER_BOLD, "COURIER_BOLD"),
+              Pair(PDType1Font.COURIER_OBLIQUE, "COURIER_OBLIQUE"),
+              Pair(PDType1Font.COURIER_BOLD_OBLIQUE, "COURIER_BOLD_OBLIQUE"),
+              Pair(PDType1Font.SYMBOL, "SYMBOL"),
+              Pair(PDType1Font.ZAPF_DINGBATS, "ZAPF_DINGBATS"))
+
+fun fontToStr(font: PDFont): String = fontStrs[font] ?: "\"$font\""
 
 //    public static String toString(PDColor c) {
 //        if (c == null) { return "null"; }

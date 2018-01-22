@@ -267,4 +267,33 @@ class PageGroupingTest {
 //        val os = FileOutputStream("testPageBreakingTopMargin.pdf")
 //        pageMgr.save(os)
     }
+
+    @Test fun testPageBreakWithInlineNearBottom() {
+        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
+        val bodyWidth = PDRectangle.A6.width - 80f
+        val lp = pageMgr.startPageGrouping(PORTRAIT, null)
+
+        val cell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f), null, BorderStyle(LineStyle(CMYK_BLACK, 0.1f)))),
+                        bodyWidth,
+                        listOf(Text(BULLET_TEXT_STYLE,
+                                    ("Some stuff.")),
+                               Cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2f), null, BorderStyle.NO_BORDERS)),
+                                    bodyWidth - 6f,
+                                    listOf(Text(BULLET_TEXT_STYLE,
+                                                "This paragraph is too long to fit on a single page.  " +
+                                                        "This paragraph is too long to fit on a single page.  "),
+                                           Text(TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 12f, CMYK_BLACK),
+                                                "This is supposed to span the page break.")))))
+        val wrappedCell = cell.wrap()
+        assertEquals(Dim(217.63782f, 78.276f), wrappedCell.dim)
+
+        // This is not a great test because I'm not sure this feature is really meant to work blocks that cross
+        // multiple pages.  In fact, it looks pretty bad for those blocks.
+        val finalDim = wrappedCell.render(lp, Coord(40f, 110f))
+        assertEquals(Dim(217.63782f, 87.27999f), finalDim)
+
+        lp.commit()
+
+//        pageMgr.save(FileOutputStream("testPageBreakWithInlineNearBottom.pdf"))
+    }
 }

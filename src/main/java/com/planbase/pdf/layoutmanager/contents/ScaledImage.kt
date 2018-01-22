@@ -25,8 +25,8 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import java.awt.image.BufferedImage
 
 /**
@@ -54,6 +54,10 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
     fun wrap():WrappedImage = WrappedImage(bufferedImage, dim)
 
     override fun lineWrapper(): LineWrapper = LineWrapper.preWrappedLineWrapper(WrappedImage(bufferedImage, dim))
+
+    override fun toString(): String =
+//            "ScaledImage(${buffImgToStr(bufferedImage)}, $dim)"
+            "ScaledImage(img, $dim)"
 
     data class WrappedImage(val bufferedImage: BufferedImage,
                             override val dim: Dim) : LineWrapped {

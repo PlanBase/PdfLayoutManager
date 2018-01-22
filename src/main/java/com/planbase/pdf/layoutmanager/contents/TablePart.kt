@@ -26,7 +26,8 @@ import com.planbase.pdf.layoutmanager.contents.TableRow.WrappedTableRow
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
-import java.util.ArrayList
+import com.planbase.pdf.layoutmanager.utils.listToStr
+import com.planbase.pdf.layoutmanager.utils.mutableListToStr
 import kotlin.math.max
 
 /**
@@ -100,7 +101,13 @@ class TablePart(private val table: Table) {
         }
     }
 
-    override fun toString(): String = "TablePart($cellWidths, minRowHeight=$minRowHeight, $rows)"
+    override fun toString(): String =
+//            "TablePart(${listToStr(cellWidths)}, ${floatToStr(minRowHeight)}, ${mutableListToStr(rows)})"
+            rows.fold(StringBuilder(""),
+                       {sB, row -> sB.append("\n.rowBuilder()")
+                               .append(row)
+                               .append("\n.buildRow()")})
+                    .toString()
 
     //    public static Builder builder(TableBuilder t) { return new Builder(t); }
     //

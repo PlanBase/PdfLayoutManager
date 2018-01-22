@@ -22,6 +22,7 @@ package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.floatToStr
 
 /**
  * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
@@ -53,10 +54,12 @@ data class Padding(val top: Float,
     fun leftRightPadding() = left + right
 
     override fun toString() =
-            if ((top == right) && (top == bottom) && (top == left)) {
-                "Padding(${top}f)"
+            if (this == NO_PADDING) {
+                "NO_PADDING"
+            } else if ((top == right) && (top == bottom) && (top == left)) {
+                "Padding(${floatToStr(top)})"
             } else {
-                "Padding(${top}f, ${right}f, ${bottom}f, ${left}f)"
+                "Padding(${floatToStr(top)}, ${floatToStr(right)}, ${floatToStr(bottom)}, ${floatToStr(left)})"
             }
 
     //    public Coord topLeftPadOffset() { return Coord(left, -top); }
@@ -69,6 +72,6 @@ data class Padding(val top: Float,
 
         /** Zero padding all around. */
         @JvmField
-        val NO_PADDING = Padding(0f, 0f, 0f, 0f)
+        val NO_PADDING = Padding(0f)
     }
 }

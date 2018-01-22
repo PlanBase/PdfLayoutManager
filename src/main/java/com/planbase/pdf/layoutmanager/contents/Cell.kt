@@ -27,6 +27,8 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
 import com.planbase.pdf.layoutmanager.utils.Dim
+import com.planbase.pdf.layoutmanager.utils.floatToStr
+import com.planbase.pdf.layoutmanager.utils.listToStr
 
 // TODO: Consider making this an abstract class "Box" with subclasses TableCell and Div
 /**
@@ -90,18 +92,20 @@ data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
 
     override fun lineWrapper() = LineWrapper.preWrappedLineWrapper(this.wrap())
 
-    override fun toString(): String {
-        val sB = StringBuilder("Cell(").append(cellStyle).append(" width=")
-                .append(width).append(" contents=[")
+    override fun toString() =
+            "Cell($cellStyle, ${floatToStr(width)}, ${listToStr(contents)})"
 
-        var i = 0
-        while (i < contents.size && i < 3) {
-            if (i > 0) {
-                sB.append(" ")
-            }
-            sB.append(contents[i])
-            i++
-        }
-        return sB.append("])").toString()
-    }
+    fun toStringTable() =
+            "\n.cell($cellStyle, ${listToStr(contents)})"
+
+//        var i = 0
+//        while (i < contents.size && i < 3) {
+//            if (i > 0) {
+//                sB.append(" ")
+//            }
+//            sB.append(contents[i])
+//            i++
+//        }
+//        return sB.append("])").toString()
+//    }
 }

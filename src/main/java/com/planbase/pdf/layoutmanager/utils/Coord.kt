@@ -30,8 +30,10 @@ import kotlin.math.abs
  */
 data class Coord(val x: Float, val y: Float) {
 
+    // TODO: Rename to withX()
     fun x(newX: Float) = Coord(newX, y)
 
+    // TODO: Rename to withY()
     fun y(newY: Float) = Coord(x, newY)
 
     fun plusX(offset: Float) = if (offset == 0f) { this } else { Coord(x + offset, y) }
@@ -52,5 +54,5 @@ data class Coord(val x: Float, val y: Float) {
 
     fun dimensionTo(that: Coord) = Dim(abs(x - that.x), abs(y - that.y))
 
-    override fun toString(): String = "Coord(${x}f, ${y}f)"
+    override fun toString(): String = "Coord(${floatToStr(x)}, ${floatToStr(y)})"
 }

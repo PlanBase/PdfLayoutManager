@@ -42,8 +42,10 @@ data class Dim(val width: Float, val height: Float) {
      */
     constructor(rect: PDRectangle) : this(rect.width, rect.height)
 
+    // TODO: Rename to withWidth()
     fun width(newX: Float) = Dim(newX, height)
 
+    // TODO: Rename to withHeight()
     fun height(newY: Float) = Dim(width, newY)
 
     /**
@@ -82,7 +84,7 @@ data class Dim(val width: Float, val height: Float) {
     fun lte(that: Dim): Boolean = this.width <= that.width &&
                                   this.height <= that.height
 
-    override fun toString() = "Dim(${width}f, ${height}f)"
+    override fun toString() = "Dim(${floatToStr(width)}, ${floatToStr(height)})"
 
     companion object {
         /** Zero-dimension (zero width, zero height) */

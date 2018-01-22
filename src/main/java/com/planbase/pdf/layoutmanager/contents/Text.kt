@@ -73,14 +73,7 @@ data class Text(val textStyle: TextStyle,
 
     fun maxWidth(): Float = textStyle.stringWidthInDocUnits(text.trim())
 
-    override fun toString(): String {
-        return "Text($textStyle, \"" +
-                (if (text.length > 25) {
-                    text.substring(0, 22) + "..."
-                } else {
-                    text
-                }) + "\")"
-    }
+    override fun toString() = "Text($textStyle, \"$text\")"
 
     override fun lineWrapper(): LineWrapper {
         return TextLineWrapper(this)

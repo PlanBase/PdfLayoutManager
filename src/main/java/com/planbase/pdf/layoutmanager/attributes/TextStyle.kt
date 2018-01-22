@@ -21,6 +21,8 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.colorToString
+import com.planbase.pdf.layoutmanager.utils.floatToStr
+import com.planbase.pdf.layoutmanager.utils.fontToStr
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 
@@ -69,7 +71,7 @@ data class TextStyle(val font: PDFont,    // Tf
 
     constructor(font: PDFont,
                 fontSize: Float,
-                textColor: PDColor) : this(font, fontSize, textColor, font.fontDescriptor.fontBoundingBox.height * fontSize / 1000f)
+                textColor: PDColor) : this(font, fontSize, textColor, defaultLineHeight(font, fontSize))
 
     /** Average character width (for this font, or maybe guessed) as a positive number in document units */
     val avgCharWidth: Float = avgCharWidth(font, fontSize, characterSpacing)
@@ -104,11 +106,20 @@ data class TextStyle(val font: PDFont,    // Tf
 // Tk
 // knockout
 
-    override fun toString() = "TextStyle(\"" + font.toString().replace("PDType1Font", "T1") + "\" " +
-                              fontSize + "f, ${colorToString(textColor)}, ${lineHeight}f" +
-                              if (characterSpacing != 0f) { ", ${characterSpacing}f" } else { "" } +
-                              if (wordSpacing != 0f) { ", ${wordSpacing}f" } else { "" } +
-                              ")"
+    override fun toString():String {
+        val sB = StringBuilder("TextStyle(").append(fontToStr(font)).append(", ")
+                         .append(floatToStr(fontSize)).append(", ${colorToString(textColor)}")
+        if (defaultLineHeight(font, fontSize) != lineHeight) {
+            sB.append(", ${floatToStr(lineHeight)}")
+        }
+        // We don't have separate constructors for all of these, so show all or none.
+        if ( (rise != 0f) ||
+             (characterSpacing != 0f) ||
+             (wordSpacing != 0f) ) {
+            sB.append(", ${floatToStr(rise)}, ${floatToStr(characterSpacing)}, ${floatToStr(wordSpacing)}")
+        }
+        return sB.append(")").toString()
+    }
 
     /**
      Assumes ISO_8859_1 encoding
@@ -150,5 +161,8 @@ data class TextStyle(val font: PDFont,    // Tf
 
             return (avgFontWidth * sz) + csp
         }
+
+        fun defaultLineHeight(font: PDFont, fontSize: Float) =
+                font.fontDescriptor.fontBoundingBox.height * fontSize / 1000f
     }
 }

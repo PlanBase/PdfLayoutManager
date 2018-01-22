@@ -78,10 +78,12 @@ data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
     fun leftRightThickness():Float = left.thickness + right.thickness
 
     override fun toString() =
-            if ((top == right) && (top == bottom) && (top == left)) {
+            if (this == NO_BORDERS) {
+                "NO_BORDERS"
+            } else if ((top == right) && (top == bottom) && (top == left)) {
                 "BorderStyle($top)"
             } else {
-                super.toString()
+                "BorderStyle($top, $right, $bottom, $left)"
             }
 
     companion object {

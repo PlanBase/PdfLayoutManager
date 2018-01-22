@@ -3,18 +3,22 @@ package com.planbase.pdf.layoutmanager.contents
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.CMYK_LIGHT_GREEN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
+import com.planbase.pdf.layoutmanager.attributes.BorderStyle.Companion.NO_BORDERS
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.Padding.Companion.NO_PADDING
+import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
@@ -154,7 +158,7 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
         val bulletTable: Table = Table().addCellWidths(230f)
                 .partBuilder()
                 .rowBuilder()
-                .cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding.NO_PADDING, null, testBorderStyle)),
+                .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, testBorderStyle)),
                       listOf(Text(BULLET_TEXT_STYLE,
                                   "Some text with a bullet. " +
                                   "Some text with a bullet. " +
@@ -163,7 +167,7 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                              Table().addCellWidths(230f)
                                      .partBuilder()
                                      .rowBuilder()
-                                     .cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding.NO_PADDING, CMYK_LIGHT_GREEN, BorderStyle.NO_BORDERS)),
+                                     .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER),
                                            listOf(Text(BULLET_TEXT_STYLE,
                                                        "Subtext is an under and often distinct theme in a piece of writing or convers. " +
                                                        "Subtext is an under and often distinct theme in a piece of writing or convers. " +
@@ -189,4 +193,34 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
         pageMgr.save(os)
     }
 
+    @Test fun testToString() {
+        val bulletTable: Table = Table(mutableListOf(230f))
+                .partBuilder()
+                .rowBuilder()
+                .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1f)))),
+                      listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), "Some text with a bullet."),
+                             Table(mutableListOf(230f))
+                                     .partBuilder()
+                                     .rowBuilder()
+                                     .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), "Subtext is an underneath")))
+                                     .buildRow()
+                                     .buildPart()
+                      ))
+                .buildRow()
+                .buildPart()
+        assertEquals("Table(mutableListOf(230f))\n" +
+                     ".partBuilder()\n" +
+                     ".rowBuilder()\n" +
+                     ".cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1f)))), " +
+                     "listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), \"Some text with a bullet.\"), " +
+                     "Table(mutableListOf(230f))\n" +
+                     ".partBuilder()\n" +
+                     ".rowBuilder()\n" +
+                     ".cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), \"Subtext is an underneath\")))\n" +
+                     ".buildRow()\n" +
+                     ".buildPart()))\n" +
+                     ".buildRow()\n" +
+                     ".buildPart()",
+                     bulletTable.toString())
+    }
 }

@@ -1,9 +1,11 @@
 # Changelog
 
-## 2.0.6 - 2018-01-18
+## 2.0.6 - 2018-01-22
  - Renamed BoxStyle.NONE to NO_PAD_NO_BORDER and CellStyle.Default to TOP_LEFT_BORDERLESS.
  - Added const and JvmField annotations for Java compatibility.
  - Upgraded to Kotlin 1.2.20
+ - Enhanced toString() representations to produce briefer, valid Kotlin code.
+ This facilitates cutting production issues and pasting them into unit tests which saves time reproducing issues.
 
 ###### 2.0.5 - 2018-01-15
  - Changed PageGrouping.appropriatePage() to ignore requiredSpaceBelow when the given height won't fit on a single page.

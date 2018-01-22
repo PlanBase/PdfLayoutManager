@@ -3,15 +3,17 @@ package com.planbase.pdf.layoutmanager.attributes
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
+import com.planbase.pdf.layoutmanager.utils.CMYK_WHITE
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
-import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.test.Test
 
 class TextStyleTest {
     val quickBrownFox = "The quick brown fox jumps over the lazy dog"
@@ -108,5 +110,14 @@ class TextStyleTest {
 //
 //        val ts = TextStyle(PDType1Font.HELVETICA_BOLD, 10f, CMYK_BLACK)
 //        println("ts=$ts")
+    }
+
+    @Test fun testToString() {
+        assertEquals("TextStyle(HELVETICA, 11.125f, CMYK_WHITE)",
+                     TextStyle(HELVETICA, 11.125f, CMYK_WHITE).toString())
+        assertEquals("TextStyle(HELVETICA, 11.125f, CMYK_WHITE, 13.5f)",
+                     TextStyle(HELVETICA, 11.125f, CMYK_WHITE, 13.5f).toString())
+        assertEquals("TextStyle(HELVETICA, 11.125f, CMYK_BLACK, 13.5f, 0.25f, -0.75f, 1f)",
+                     TextStyle(HELVETICA, 11.125f, CMYK_BLACK, 13.5f, 0.25f, -0.75f, 1f).toString())
     }
 }

@@ -20,8 +20,15 @@ class ScaledImageTest {
         assertEquals(145.44f, so.dim.width)
         assertEquals(71.04f, so.dim.height)
 
+//        assertEquals("ScaledImage(BufferedImage(ColorModel([8, 8, 8], TYPE_RGB, OPAQUE), 606x296)," +
+//                     " Dim(145.44f, 71.04f))",
+//                     so.toString())
+
+        assertEquals("ScaledImage(img, Dim(145.44f, 71.04f))", so.toString())
+
         val wo = so.wrap()
         assertEquals(145.44f, wo.dim.width)
         assertEquals(71.04f, wo.dim.height)
+
     }
 }

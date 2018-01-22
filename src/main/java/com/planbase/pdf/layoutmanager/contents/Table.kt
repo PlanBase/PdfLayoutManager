@@ -28,6 +28,8 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
+import com.planbase.pdf.layoutmanager.utils.listToStr
+import com.planbase.pdf.layoutmanager.utils.mutableListToStr
 import kotlin.math.max
 
 /**
@@ -82,6 +84,14 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
         return TablePart(this)
     }
 
+    override fun toString(): String =
+            "Table(${mutableListToStr(cellWidths)})" +
+            parts.fold(StringBuilder(""),
+                       {sB, part -> sB.append("\n.partBuilder()")
+                               .append(part)
+                               .append("\n.buildPart()")})
+                    .toString()
+
     data class WrappedTable(private val parts:List<TablePart.WrappedTablePart>) : LineWrapped {
         override val dim: Dim = Dim.sum(parts.map { part -> part.dim })
         override val ascent: Float = dim.height
@@ -105,6 +115,4 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
 
         override fun toString(): String = "WrappedTable($parts)"
     }
-
-    override fun toString(): String = "TableBuilder($cellWidths, $parts)"
 }
