@@ -99,6 +99,28 @@ class TextTest {
         assertEquals(36, idx)
     }
 
+    @Test fun testTryGettingText() {
+        assertEquals("This is a", Text.tryGettingText(50f, 0, Text(tStyle, "This is a test")).row.string)
+        assertEquals("This is an", Text.tryGettingText(50f, 0, Text(tStyle, "This is an example")).row.string)
+        assertEquals("This is anl", Text.tryGettingText(50f, 0, Text(tStyle, "This is anl example")).row.string)
+        assertEquals("This is anll", Text.tryGettingText(50f, 0, Text(tStyle, "This is anll example")).row.string)
+        assertEquals("This is anlll", Text.tryGettingText(50f, 0, Text(tStyle, "This is anlll example")).row.string)
+        assertEquals("This is anllll", Text.tryGettingText(50f, 0, Text(tStyle, "This is anllll example")).row.string)
+        assertEquals("This is", Text.tryGettingText(50f, 0, Text(tStyle, "This is anlllll example")).row.string)
+        assertEquals("This is true", Text.tryGettingText(50f, 0, Text(tStyle, "This is true / false")).row.string)
+        assertEquals("This is true/", Text.tryGettingText(50f, 0, Text(tStyle, "This is true/false")).row.string)
+    }
+
+    @Test fun testTryGettingText2() {
+        val txt = Text(tStyle, "This is true/false")
+        var ri = Text.tryGettingText(50f, 0, txt)
+        val wrappedText: WrappedText = ri.row
+        assertEquals("This is true/", wrappedText.string)
+
+        ri = Text.tryGettingText(50f, ri.idx, txt)
+        assertEquals("false", ri.row.string)
+    }
+
 //    @Test fun testSubstrNoLeadingSpaceUntilRet() {
 //        var ret = Text.substrNoLeadingSpaceUntilRet("Hello", 0)
 //        assertEquals("Hello", ret.trimmedStr)

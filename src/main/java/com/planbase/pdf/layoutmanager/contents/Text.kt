@@ -144,7 +144,7 @@ data class Text(val textStyle: TextStyle,
                         true
                     }
 
-            val text = row.substring(startIdx, crIdx)
+            val text:String = row.substring(startIdx, crIdx)
 //            println("text:" + text)
 
             val charWidthGuess = txt.avgCharsForWidth(maxWidth)
@@ -161,6 +161,8 @@ data class Text(val textStyle: TextStyle,
             }
             var substr = text.substring(0, idx)
             var strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+
+//            println("Starting guess substr=[$substr]")
 
             //        System.out.println("(strWidth=" + strWidth + " < maxWidth=" + maxWidth + ") && (idx=" + idx + " < textLen=" + textLen + ")");
             // If too short - find shortest string that is too long.
@@ -181,14 +183,19 @@ data class Text(val textStyle: TextStyle,
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
 
+//            println("maybe too long substr=[$substr]")
+
             idx--
             //        System.out.println("(strWidth=" + strWidth + " > maxWidth=" + maxWidth + ") && (idx=" + idx + " > 0)");
             // Too long.  Find longest string that is short enough.
             while (strWidth > maxWidth && idx > 0) {
                 //            System.out.println("find longest string that is short enough");
-                //            System.out.println("strWidth: " + strWidth + " maxWidth: " + maxWidth + " idx: " + idx);
+//                println("strWidth: $strWidth maxWidth: $maxWidth idx: $idx substr=[$substr]")
+                val prevIdx = idx
+
                 // Find previous whitespace run
-                while (idx > -1 && !Character.isWhitespace(text[idx])) {
+                while (idx > -1 && !isLineBreakable(text[idx])) {
+//                    println("Not line-breakable: ${text[idx]}")
                     idx--
                 }
                 // Find last non-whitespace character before whitespace run.
@@ -198,10 +205,30 @@ data class Text(val textStyle: TextStyle,
                 if (idx < 1) {
                     break // no spaces - have to put whole thing in cell and let it run over.
                 }
+                if (idx == prevIdx) {
+                    // Run the previous checks again, but only looking for whitespace this time, not other
+                    // breaking characters.  This ensures that this loop terminates when the line break happens
+                    // in the middle of the "/" in this string: "This is true /"
+                    while (idx > -1 && !Character.isWhitespace(text[idx])) {
+                        idx--
+                    }
+                    // Find last non-whitespace character before whitespace run.
+                    while (idx > -1 && Character.isWhitespace(text[idx])) {
+                        idx--
+                    }
+                    if (idx < 1) {
+                        break // no spaces - have to put whole thing in cell and let it run over.
+                    }
+//                    println("strWidth: $strWidth maxWidth: $maxWidth idx: $idx")
+//                    throw IllegalStateException("Oops!")
+                }
+
                 // Test new width
                 substr = text.substring(0, idx + 1)
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
+
+//            println("substr=[$substr]")
 
             idx++
             val eolIdx = substr.indexOf(char= CR)
@@ -214,15 +241,36 @@ data class Text(val textStyle: TextStyle,
                 return RowIdx(WrappedText(txt.textStyle, substr, strWidth), idx + startIdx + 1, true)
             }
             // Need to test trailing whitespace.
-//            println("idx=" + idx + " substr=\"" + substr + "\"")
+//            println("idx=$idx substr=\"$substr\"")
 
-            return RowIdx(WrappedText(txt.textStyle, substr, strWidth), idx + startIdx + 1,
+            val adjIdx = if ( (idx >= textLen) ||
+                              Character.isWhitespace(text[idx]) ) {
+                idx + 1
+            } else {
+                idx
+            }
+
+            return RowIdx(WrappedText(txt.textStyle, substr, strWidth), startIdx + adjIdx,
                           if (substr == text) {
-                                                                           foundCr
-                                                                       } else {
-                                                                           false
-                                                                       })
+                              foundCr
+                          } else {
+                              false
+                          })
         }
+
+        // Once we have more experience, might want to enhance using data here:
+        // http://unicode.org/reports/tr14/#BreakOpportunities
+        // NEVER include arithmetic minus here, or you'll get wrapping of the sign before a number
+        private val breakableChars: Set<Char> =
+                setOf('/',
+                      '-',
+                      '\u200b', // Zero-width space
+                      '\u2010', // Hyphen
+                      '\u2012', // figure dash
+                      '\u2013', // en-dash
+                      '\u2014') // em-dash
+
+        private fun isLineBreakable(c:Char) = Character.isWhitespace(c) || breakableChars.contains(c)
 
         // From: https://docs.google.com/document/d/1vpbFYqfW7XmJplSwwLLo7zSPOztayO7G4Gw5_EHfpfI/edit#
         //
