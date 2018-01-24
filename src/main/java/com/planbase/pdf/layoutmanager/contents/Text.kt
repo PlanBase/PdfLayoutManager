@@ -45,8 +45,9 @@ data class Text(val textStyle: TextStyle,
     val text = cleanStr(initialText)
 
     /**
-     * Represents a unit of wrapped text.  This could be a whole line, or part of a line that includes other contents
-     * such as images or other text styles.
+     * Represents a unit of wrapped text.  MultiLineWrapped can hold multiple WrappedText or other "Wrapped" objects
+     * per line, but a WrappedText only holds one contiguously styled section of one line of text.  A single
+     * WrappedText could cover a whole line, but no more.
      *
      * @param textStyle the style
      * @param string the actual text that fits in this line

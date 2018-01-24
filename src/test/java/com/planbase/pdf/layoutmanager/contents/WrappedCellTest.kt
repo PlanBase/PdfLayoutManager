@@ -93,12 +93,14 @@ class WrappedCellTest {
                 WrappedCell(Dim(cellWidth,
                                   textStyle.lineHeight + boxStyle.topBottomInteriorSp()),
                             CellStyle(Align.TOP_RIGHT, boxStyle),
-                            listOf(MultiLineWrapped(hello.maxWidth(),
-                                                    textStyle.ascent,
-                                                    textStyle.lineHeight,
-                                                    mutableListOf(Text.WrappedText(textStyle,
-                                                                                   hello.text,
-                                                                                   hello.maxWidth())))), 0f)
+                            listOf({
+                                       val mlw = MultiLineWrapped()
+                                       mlw.width = hello.maxWidth()
+                                       mlw.ascent = textStyle.ascent
+                                       mlw.lineHeight = textStyle.lineHeight
+                                       mlw.append(Text.WrappedText(textStyle, hello.text, hello.maxWidth()))
+                                       mlw
+                                   }.invoke()), 0f)
 //        val wrappedCell = cell.wrap()
 //        println("cell.wrap()=${cell.wrap()}")
 

@@ -136,11 +136,10 @@ class CellTest {
         pageMgr.save(os)
     }
 
-    @Test fun testNestedCellsAcrossPageBreak2() {
-        // TODO: The bold-italic text shows on the wrong page.
-        // Probably because the last line isn't being dealt with as a unit - a total descent maybe needs to be
-        // calculated for the entire line when lineHeight is set or when inline text has a surprising
-        // default lineHeight.
+    @Test fun testCellAcrossPageBreak() {
+        // The bold-italic text showed on the wrong page because the last line wasn't being dealt with as a unit.
+        // A total line height is now calculated for the entire MultiLineWrapped when later inline text has a surprising
+        // default lineHeight.  This test maybe belongs in MultiLineWrapped, but better here than nowhere.
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
         val symbola7p5 = TextStyle(TIMES_ROMAN, 7.5f, CMYK_BLACK)
@@ -151,14 +150,20 @@ class CellTest {
                                                      " they can not communicate "),
                                     Text(TextStyle(TIMES_BOLD_ITALIC, 7f, CMYK_BLACK, 12f), "because they are separated.")))
 
-        val startCoord = Coord(40f, 72f)
-        contentCell.wrap().render(lp, startCoord)
+        val wrappedCell: WrappedCell = contentCell.wrap()
+        assertEquals(Dim(170f, 49.4515f), wrappedCell.dim)
+
+        // Rendered away from the page break, the dimensions are unchanged.
+        val ret1:Dim = wrappedCell.render(lp, Coord(40f, 200f))
+        assertEquals(Dim(170f, 49.451508f), ret1)
+
+        // Rendered across the page break, it's bigger.
+        val ret2:Dim = wrappedCell.render(lp, Coord(40f, 72f))
+        assertEquals(Dim(170f, 58.65849f), ret2)
 
         lp.commit()
-        // We're just going to write to a file.
-        val os = FileOutputStream("testNestedCellsAcrossPageBreak2.pdf")
-        // Commit it to the output stream!
-        pageMgr.save(os)
+//        val os = FileOutputStream("testCellAcrossPageBreak.pdf")
+//        pageMgr.save(os)
     }
 
 }

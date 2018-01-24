@@ -6,6 +6,9 @@
  - Upgraded to Kotlin 1.2.20
  - Enhanced toString() representations to produce briefer, valid Kotlin code.
  This facilitates cutting production issues and pasting them into unit tests which saves time reproducing issues.
+ - Allowed text to line-wrap on a slash ("/") or several types of hyphens.
+ - Fixed bug where a bigger text style later on a line could sometimes end up on the next page - now it takes the whole
+ line with it.
 
 ###### 2.0.5 - 2018-01-15
  - Changed PageGrouping.appropriatePage() to ignore requiredSpaceBelow when the given height won't fit on a single page.

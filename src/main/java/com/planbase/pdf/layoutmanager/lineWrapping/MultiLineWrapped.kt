@@ -24,11 +24,14 @@ import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 
-/** A mutable data structure to hold a wrapped line consisting of multiple items. */
-class MultiLineWrapped(var width: Float = 0f,
-                       override var ascent: Float = 0f,
-                       override var lineHeight: Float = 0f,
-                       val items: MutableList<LineWrapped> = mutableListOf()) : LineWrapped {
+/** A mutable data structure to hold a single wrapped line consisting of multiple items. */
+class MultiLineWrapped : LineWrapped {
+
+    var width: Float = 0f
+    override var ascent: Float = 0f
+    override var lineHeight: Float = 0f
+    internal val items: MutableList<LineWrapped> = mutableListOf()
+
     override val dim: Dim
             get() = Dim(width, lineHeight)
 
@@ -49,35 +52,51 @@ class MultiLineWrapped(var width: Float = 0f,
         var x:Float = topLeft.x
         val y = topLeft.y
         // lineHeight has to be ascent + descentLeading because we align on the baseline
-        var maxAscent = ascent
+        var maxAscentIncPageBreak = ascent
         var maxDescentLeading = lineHeight - ascent
+
+        // Go through each wrapped item in this line in case any single item (especially later in this line)
+        // should push the whole line onto the next page.
         for (item: LineWrapped in items) {
             // Text rendering calculation spot 2/3
             // ascent is the maximum ascent for anything on this line.
             //               _____
-            //          /   |     \
-            //         |    |      \
-            // (max)   |    |      |
-            // ascent <     |_____/      ___.
-            //         |    |     \     /   |
-            //         |    |      \   |    |
-            //          \. .|. . . .\. .\___| . . . .
-            //                              |
-            //                          \__/
+            //          /   |     \        \
+            //         |    |      \        |
+            // (max)   |    |      |         > ascentDiff
+            // ascent <     |_____/         |
+            //         |    |     \     _  /
+            //         |    |      \   |_)
+            //          \. .|. . . .\. | \. . . .
+            //                          ^item
+            //
             // Subtracting that from the top-y
             // yields the baseline, which is what we want to align on.
 //            println("y=$y ascent=$ascent item=${item}")
             val ascentDiff = ascent - item.ascent
             val innerUpperLeft = Coord(x, y - ascentDiff)
 //            println("ascentDiff=$ascentDiff innerUpperLeft=$innerUpperLeft")
-            val adjHeight = item.render(lp, innerUpperLeft, reallyRender).height
+            val adjHeight = item.render(lp, innerUpperLeft, false).height
             val adjustment = adjHeight - item.lineHeight
 //            println("adjHeight=$adjHeight item.lineHeight=${item.lineHeight} adjustment=$adjustment")
-            maxAscent = maxOf(maxAscent, item.ascent + adjustment)
+            maxAscentIncPageBreak = maxOf(maxAscentIncPageBreak, item.ascent + adjustment)
             maxDescentLeading = maxOf(maxDescentLeading, item.lineHeight - item.ascent)
             x += item.dim.width
         }
-        return Dim(x - topLeft.x, maxAscent + maxDescentLeading)
+
+        if (reallyRender) {
+            x = topLeft.x
+            // Now that we've accounted for anything on the line that could cause a page-break,
+            // really render each wrapped item in this line
+            for (item: LineWrapped in items) {
+                val ascentDiff = maxAscentIncPageBreak - item.ascent
+                val innerUpperLeft = Coord(x, y - ascentDiff)
+                item.render(lp, innerUpperLeft, true).height
+                x += item.dim.width
+            }
+        }
+
+        return Dim(x - topLeft.x, maxAscentIncPageBreak + maxDescentLeading)
     }
 
     override fun toString(): String {
