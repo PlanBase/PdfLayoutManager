@@ -20,10 +20,11 @@
 
 package com.planbase.pdf.layoutmanager.lineWrapping
 
+import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
-
+// TODO: Rename to MultiItemWrappedLine?
 /** A mutable data structure to hold a single wrapped line consisting of multiple items. */
 class MultiLineWrapped : LineWrapped {
 
@@ -48,7 +49,7 @@ class MultiLineWrapped : LineWrapped {
         return this
     }
 
-    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
+    fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Float): Dim {
         var x:Float = topLeft.x
         val y = topLeft.y
         // lineHeight has to be ascent + descentLeading because we align on the baseline
@@ -85,10 +86,32 @@ class MultiLineWrapped : LineWrapped {
         }
 
         if (reallyRender) {
+            var tempItems = items
+
+            // Do we need to justify text?
+            if (justifyWidth > 0f) {
+                val contentWidth:Float = x - topLeft.x
+                // Justified text only looks good if the line is long enough.
+                if (contentWidth > justifyWidth * 0.7f) {
+                    val numSpaces: Int = items
+                            .filter{ it is Text.WrappedText }
+                            .sumBy{ (it as Text.WrappedText).numSpaces() }
+                    val wordSpacing = (justifyWidth - contentWidth) / numSpaces
+                    tempItems = items.map {
+                        if (it is Text.WrappedText) {
+                            it.withWordSpacing(wordSpacing)
+                        } else {
+                            it
+                        }
+                    }.toMutableList()
+                }
+            }
+
+            // Reset x to left-hand side of line.
             x = topLeft.x
             // Now that we've accounted for anything on the line that could cause a page-break,
             // really render each wrapped item in this line
-            for (item: LineWrapped in items) {
+            for (item: LineWrapped in tempItems) {
                 val ascentDiff = maxAscentIncPageBreak - item.ascent
                 val innerUpperLeft = Coord(x, y - ascentDiff)
                 item.render(lp, innerUpperLeft, true).height
@@ -97,7 +120,10 @@ class MultiLineWrapped : LineWrapped {
         }
 
         return Dim(x - topLeft.x, maxAscentIncPageBreak + maxDescentLeading)
-    }
+    } // end fun render()
+
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim
+            = render(lp, topLeft, reallyRender, 0f)
 
     override fun toString(): String {
         return "MultiLineWrapped(width=$width, ascent=$ascent, lineHeight=$lineHeight," +

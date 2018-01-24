@@ -6,6 +6,7 @@ import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT
+import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT_JUSTIFY
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
@@ -143,7 +144,7 @@ class CellTest {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
         val symbola7p5 = TextStyle(TIMES_ROMAN, 7.5f, CMYK_BLACK)
-        val contentCell=Cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), 170f,
+        val contentCell=Cell(CellStyle(TOP_LEFT_JUSTIFY, NO_PAD_NO_BORDER), 170f,
                              listOf(Text(symbola7p5, "Men often hate each other because they fear each other; they" +
                                                      " fear each other because they don't know each other; they" +
                                                      " don't know each other because they can not communicate;" +

@@ -20,9 +20,11 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
+import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
+import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
@@ -30,7 +32,7 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 // TODO: This should be a private inner class of Cell
 class WrappedCell(override val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
-                  private val items: List<LineWrapped>,
+                  private val rows: List<MultiLineWrapped>,
                   private val requiredSpaceBelow : Float) : LineWrapped {
 
     override val ascent: Float
@@ -41,16 +43,20 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
     override val lineHeight: Float
         get() = dim.height
 
-    override fun toString() = "WrappedCell($dim, $cellStyle, $items)"
+    override fun toString() = "WrappedCell($dim, $cellStyle, $rows)"
 
     private val wrappedBlockDim: Dim = {
-        var dim = Dim.ZERO
-        for (row in items) {
+        var width = 0f
+        var height = 0f
+        for (row in rows) {
             val rowDim = row.dim
-            dim = Dim(Math.max(dim.width, rowDim.width),
-                             dim.height + rowDim.height)
+            width = Math.max(width, rowDim.width)
+            height += rowDim.height
         }
-        dim
+        if (cellStyle.align == Align.TOP_LEFT_JUSTIFY) {
+            width = dim.width - cellStyle.boxStyle.leftRightInteriorSp()
+        }
+        Dim(width, height)
     }()
 
     override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =
@@ -103,12 +109,17 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 //        println("  innerTopLeft=$innerTopLeft")
 
         var y = innerTopLeft.y
-        for (item in items) {
-//            println("item=$item")
-            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, item.dim.width)
-            val thisLineHeight = item.render(lp, Coord(rowXOffset + innerTopLeft.x, y), reallyRender).height
+        for (row in rows) {
+//            println("row=$row")
+            val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, row.dim.width)
+            val thisLineHeight = row.render(lp, Coord(rowXOffset + innerTopLeft.x, y), reallyRender,
+                                            if (cellStyle.align == Align.TOP_LEFT_JUSTIFY) {
+                                                innerDim.width
+                                            } else {
+                                                0f
+                                            }).height
 //            println("thisLineHeight=$thisLineHeight")
-            y -= thisLineHeight // y is always the lowest item in the cell.
+            y -= thisLineHeight // y is always the lowest row in the cell.
         }
 //        println("  y=$y")
 //        println("  totalHeight=${innerTopLeft.y - y}")

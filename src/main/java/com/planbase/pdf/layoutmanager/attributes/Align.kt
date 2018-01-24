@@ -32,6 +32,10 @@ enum class Align {
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
         override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
     },
+    TOP_LEFT_JUSTIFY {
+        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
+        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
+    },
     TOP_CENTER {
         override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = (outerWidth - innerWidth) / 2
         override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f

@@ -83,7 +83,7 @@ fun testBodyMargins() {
     val heading = Cell(HEADING_CELL_STYLE, bodyWidth - 6f,
                        listOf(Text(HEADING_TEXT_STYLE, "Some Heading Thing")))
 
-    Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_PALE_PEACH, BorderStyle(CMYK_QUEEN_PINK))),
+    Cell(CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(2f), CMYK_PALE_PEACH, BorderStyle(CMYK_QUEEN_PINK))),
          bodyWidth,
          listOf(Text(BULLET_TEXT_STYLE,
                      "The long "),

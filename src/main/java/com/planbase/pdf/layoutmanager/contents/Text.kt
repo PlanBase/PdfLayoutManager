@@ -55,13 +55,22 @@ data class Text(val textStyle: TextStyle,
      */
     data class WrappedText(val textStyle: TextStyle,
                            val string: String,
-                           val width: Float) : LineWrapped {
+                           val width: Float = textStyle.stringWidthInDocUnits(string)) : LineWrapped {
 
         override val lineHeight: Float = textStyle.lineHeight
 
         override val dim: Dim = Dim(width, lineHeight)
 
         override val ascent: Float = textStyle.ascent
+
+
+        /** Returns the number of literal space characters in this WrappedText */
+        fun numSpaces(): Int = string.count { it == ' ' }
+
+        fun withWordSpacing(spacing:Float):WrappedText {
+            val newTextStyle = textStyle.withWordSpacing(spacing)
+            return WrappedText(newTextStyle, string)
+        }
 
         // Text rendering calculation spot 1/3
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =

@@ -85,6 +85,9 @@ data class TextStyle(val font: PDFont,    // Tf
     // default leading.
     val ascent = font.fontDescriptor.ascent * fontSize / 1000f
 
+    fun withWordSpacing(spacing:Float) =
+            TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing, spacing)
+
 // Below taken from Section 9.3 page 243 of PDF 32000-1:2008
 //
 // Some of these parameters are expressed in unscaled text space units. This means that they shall be specified

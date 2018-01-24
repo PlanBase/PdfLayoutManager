@@ -64,7 +64,7 @@ class TestManualllyPdfLayoutMgr {
                                                           NO_LINE, LineStyle(RGB_WHITE))))
 
         val regular = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
-        val regularCell = CellStyle(TOP_LEFT,
+        val regularCell = CellStyle(TOP_LEFT_JUSTIFY,
                                     BoxStyle(textCellPadding, null,
                                              BorderStyle(NO_LINE, LineStyle(RGB_BLACK),
                                                          LineStyle(RGB_BLACK), LineStyle(RGB_BLACK))))
@@ -313,7 +313,7 @@ class TestManualllyPdfLayoutMgr {
         tB = Table(colWidths.toMutableList(), headingCell, heading)
         tB.partBuilder()
                 .rowBuilder()
-                .cell(headingCell, listOf(Text(heading, "Transliterated Russian (with un-transliterated Chinese below)")))
+                .cell(headingCell, listOf(Text(heading, "Stuff")))
                 .cell(headingCellR, listOf(Text(heading, "US English")))
                 .cell(headingCellR, listOf(Text(heading, "Finnish")))
                 .cell(headingCellR, listOf(Text(heading, "German")))
@@ -323,17 +323,11 @@ class TestManualllyPdfLayoutMgr {
                 .rowBuilder()
                 .cell(regularCell,
                       listOf(Text(regular,
-                                  "This used to have Russian and Chinese text.\n" +
-                                  "The Russian was transliterated and the\n" +
-                                  "Chinese was turned into bullets.\n" +
-                                  "PDFBox 2.x, now handles many characters better,\n" +
-                                  "but throws exceptions for\n" +
-                                  "characters it doesn't understand.\n" +
-                                  "Truth be told, I don't understand so well how\n" +
-                                  "it works, but I think if you get an exception,\n" +
-                                  "you need to load a font like:\n" +
-                                  "PDFont font = PDTrueTypeFont.loadTTF(document, \"Arial.ttf\");\n" +
-                                  "See:\n" +
+                                  "This used to have Russian and Chinese text. " +
+                                  "The Russian was transliterated and the Chinese was turned into bullets. " +
+                                  "PDFBox 2.x, allows you to load fonts to show these characters, but throws" +
+                                  " an exception if the character is not in the chosen font. " +
+                                  "See how liberationFont is loaded in this test or see:\n" +
                                   "https://pdfbox.apache.org/1.8/cookbook/\n" +
                                   "workingwithfonts.html\n" +
                                   "\n\n" +
@@ -379,8 +373,13 @@ class TestManualllyPdfLayoutMgr {
                                   //                                   "冒著敵人的炮火，前進！ \n" +
                                   //                                   "前進！前進！進！\n" +
                                   "\n\n" +
-                                  "Here is a picture with the default and other sizes.  Though\n" +
-                                  " it shows up several times, the image data is only attached\n" +
+                                  "\n\n" +
+                                  "\n\n" +
+                                  "\n\n" +
+                                  "\n\n" +
+                                  "\n\n" +
+                                  "Here is a picture with the default and other sizes.  Though" +
+                                  " it shows up several times, the image data is only attached" +
                                   " to the file once and reused."),
                              ScaledImage(melonPic),
                              ScaledImage(melonPic, Dim(50f, 50f)),
@@ -409,10 +408,6 @@ class TestManualllyPdfLayoutMgr {
                                                 "In full glory reflected now shines in the stream:\n" +
                                                 "'Tis the star-spangled banner, O! long may it wave\n" +
                                                 "O'er the land of the free and the home of the brave.\n" +
-                                                "\n" +
-                                                "\n" +
-                                                "\n" +
-                                                "\n" +
                                                 "\n" +
                                                 "And where is that band who so vauntingly swore\n" +
                                                 "That the havoc of war and the battle's confusion,\n" +

@@ -1,9 +1,10 @@
 # Changelog
 
 ## 2.0.6 - 2018-01-22
+ - Added justified text style (Align.TOP_LEFT_JUSTIFY)
  - Renamed BoxStyle.NONE to NO_PAD_NO_BORDER and CellStyle.Default to TOP_LEFT_BORDERLESS.
  - Added const and JvmField annotations for Java compatibility.
- - Upgraded to Kotlin 1.2.20
+ - Upgraded to Kotlin 1.2.21
  - Enhanced toString() representations to produce briefer, valid Kotlin code.
  This facilitates cutting production issues and pasting them into unit tests which saves time reproducing issues.
  - Allowed text to line-wrap on a slash ("/") or several types of hyphens.

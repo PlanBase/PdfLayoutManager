@@ -79,7 +79,6 @@ interface LineWrapped {
 
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim = dim
     }
-
 //    companion object {
 //
 //        fun preWrappedLineWrapper(item: LineWrapped) = object : LineWrapper {
