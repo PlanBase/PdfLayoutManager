@@ -63,7 +63,7 @@ fun testBodyMargins() {
                 val leftMargin:Float = if (isLeft) 37f else 45f
                 //            System.out.println("pageNum " + pageNum);
                 pb.drawLine(Coord(leftMargin, 30f), Coord(leftMargin + bodyWidth, 30f),
-                            LineStyle(CMYK_BLACK), true)
+                            LineStyle(CMYK_THISTLE), true)
                 pb.drawStyledText(Coord(leftMargin, 20f), "Page # " + pageNum,
                                   TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK), true)
                 leftMargin })
@@ -83,7 +83,7 @@ fun testBodyMargins() {
     val heading = Cell(HEADING_CELL_STYLE, bodyWidth - 6f,
                        listOf(Text(HEADING_TEXT_STYLE, "Some Heading Thing")))
 
-    Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_LIGHT_GREEN, BorderStyle(CMYK_DARK_GRAY))),
+    Cell(CellStyle(TOP_LEFT, BoxStyle(Padding(2f), CMYK_PALE_PEACH, BorderStyle(CMYK_QUEEN_PINK))),
          bodyWidth,
          listOf(Text(BULLET_TEXT_STYLE,
                      "The long "),
@@ -138,17 +138,20 @@ fun testBodyMargins() {
 
     companion object {
 
-        val CMYK_DARK_GRAY = PDColor(floatArrayOf(0f, 0f, 0f, 0.2f), PDDeviceCMYK.INSTANCE)
+        val CMYK_COOL_GRAY = PDColor(floatArrayOf(0.13f, 0.2f, 0f, 0.57f), PDDeviceCMYK.INSTANCE)
         val CMYK_LIGHT_GREEN = PDColor(floatArrayOf(0.05f, 0f, 0.1f, 0.01f), PDDeviceCMYK.INSTANCE)
-        val CMYK_YELLOW = PDColor(floatArrayOf(0f, 0.2f, 1f, 0f), PDDeviceCMYK.INSTANCE)
+        val CMYK_QUEEN_PINK = PDColor(floatArrayOf(0.0f, 0.11f, 0f, 0.09f), PDDeviceCMYK.INSTANCE)
+        val CMYK_PALE_PEACH = PDColor(floatArrayOf(0.0f, 0.055f, 0.06f, 0f), PDDeviceCMYK.INSTANCE)
+        val CMYK_THISTLE = PDColor(floatArrayOf(0.05f, 0.19f, 0f, 0.09f), PDDeviceCMYK.INSTANCE)
+        val CMYK_VIOLET = PDColor(floatArrayOf(0.46f, 0.48f, 0f, 0f), PDDeviceCMYK.INSTANCE)
 
         internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT, BoxStyle(Padding(0f, 4f, 15f, 0f), null, BorderStyle.NO_BORDERS))
         internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK)
 
-        internal val HEADING_TEXT_STYLE = TextStyle(PDType1Font.TIMES_BOLD, 16f, CMYK_BLACK)
+        internal val HEADING_TEXT_STYLE = TextStyle(PDType1Font.TIMES_BOLD, 16f, CMYK_COOL_GRAY)
         internal val HEADING_CELL_STYLE = CellStyle(BOTTOM_LEFT,
                                                     BoxStyle(Padding(10f, 0f, 0f, 0f), null, // TODO: Make this a background color!
-                                                             BorderStyle(LineStyle(CMYK_YELLOW, 1f))))
+                                                             BorderStyle(LineStyle(CMYK_VIOLET, 1f))))
 
         // adj plNoun verb adj descriptiveNoun
         // and
