@@ -93,7 +93,7 @@ fun testBodyMargins() {
                      " needed the national words and women said new."),
                 heading,
                 Text(BULLET_TEXT_STYLE,
-                     "The new companies told the possible hands and books was low.\n\n"),
+                     "The new companies told the possible hands that the books were low.\n\n"),
                 bulletTable,
                 Text(BULLET_TEXT_STYLE,
                      "The new companies told the possible hands  and books was low. The other " +
@@ -120,11 +120,10 @@ fun testBodyMargins() {
                       "mothers turned unimaginatively.  ")),
                 ScaledImage(graphPic),
                 Text(BULLET_TEXT_STYLE,
-                     ("The " +
-                      "best points got the economic waters " +
+                     ("The best points got the economic waters " +
                       "and problems gave great. The whole " +
                       "countries went the best children and " +
-                      "eyes came able.")))).wrap()
+                      "eyes became able to see clearly.")))).wrap()
             .render(lp, Coord(0f, PDRectangle.A6.height - 40f))
     //        table
     //        );

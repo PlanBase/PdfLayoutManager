@@ -109,11 +109,13 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 //        println("  innerTopLeft=$innerTopLeft")
 
         var y = innerTopLeft.y
-        for (row in rows) {
+        for ((index, row) in rows.withIndex()) {
 //            println("row=$row")
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, row.dim.width)
             val thisLineHeight = row.render(lp, Coord(rowXOffset + innerTopLeft.x, y), reallyRender,
-                                            if (cellStyle.align == Align.TOP_LEFT_JUSTIFY) {
+                                            // Even if we're justifying text, the last row looks better unjustified.
+                                            if ( (index < rows.size - 1) &&
+                                                 (cellStyle.align == Align.TOP_LEFT_JUSTIFY) ) {
                                                 innerDim.width
                                             } else {
                                                 0f

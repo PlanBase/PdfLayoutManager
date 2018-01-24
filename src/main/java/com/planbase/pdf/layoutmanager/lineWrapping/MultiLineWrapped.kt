@@ -92,7 +92,7 @@ class MultiLineWrapped : LineWrapped {
             if (justifyWidth > 0f) {
                 val contentWidth:Float = x - topLeft.x
                 // Justified text only looks good if the line is long enough.
-                if (contentWidth > justifyWidth * 0.7f) {
+                if (contentWidth > justifyWidth * 0.75f) {
                     val numSpaces: Int = items
                             .filter{ it is Text.WrappedText }
                             .sumBy{ (it as Text.WrappedText).numSpaces() }

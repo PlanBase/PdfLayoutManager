@@ -1,7 +1,9 @@
 # Changelog
 
 ## 2.0.6 - 2018-01-22
- - Added justified text style (Align.TOP_LEFT_JUSTIFY)
+ - Added justified text style: Align.TOP_LEFT_JUSTIFY.
+ This may be expanded some day by allowing the client application to supply a hyphenation dictionary
+ (key on the whole-word, value is the preferred hyphenation)
  - Renamed BoxStyle.NONE to NO_PAD_NO_BORDER and CellStyle.Default to TOP_LEFT_BORDERLESS.
  - Added const and JvmField annotations for Java compatibility.
  - Upgraded to Kotlin 1.2.21
