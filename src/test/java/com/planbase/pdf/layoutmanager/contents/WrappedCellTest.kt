@@ -8,6 +8,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
@@ -45,8 +46,8 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        val dim = wrappedCell.render(lp, upperLeft)
-        Dim.assertEquals(wrappedCell.dim, dim, 0.00002f)
+        val dimAndPages: DimAndPages = wrappedCell.render(lp, upperLeft)
+        Dim.assertEquals(wrappedCell.dim, dimAndPages.dim, 0.00002f)
 
         lp.commit()
     }
@@ -115,13 +116,13 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        val dim: Dim = wrappedCell.render(lp, upperLeft)
+        val dimAndPages: DimAndPages = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
-        assertEquals(cellWidth, dim.width)
+        assertEquals(cellWidth, dimAndPages.dim.width)
 
-        Dim.assertEquals(wrappedCell.dim, dim, 0.00002f)
+        Dim.assertEquals(wrappedCell.dim, dimAndPages.dim, 0.00002f)
 
         lp.commit()
 
@@ -151,9 +152,9 @@ class WrappedCellTest {
 
         TestCase.assertEquals(120f, wrappedTable.dim.width)
 
-        val renderedDim: Dim = wrappedTable.render(lp, lp.bodyTopLeft())
+        val dimAndPages: DimAndPages = wrappedTable.render(lp, lp.bodyTopLeft())
 
-        Dim.assertEquals(wrappedTable.dim, renderedDim, 0.00003f)
+        Dim.assertEquals(wrappedTable.dim, dimAndPages.dim, 0.00003f)
 
         lp.commit()
 //        val os = FileOutputStream("test3.pdf")

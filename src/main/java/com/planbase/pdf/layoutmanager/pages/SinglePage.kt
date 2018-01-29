@@ -59,34 +59,34 @@ class SinglePage(val pageNum: Int,
         return dim.height
     }
 
-    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): Float {
+    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): HeightAndPage {
         if (reallyRender) {
             items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, DEFAULT_Z_INDEX))
         }
         // This does not account for a page break because this class represents a single page.
-        return wi.dim.height
+        return HeightAndPage(wi.dim.height, pageNum)
     }
 
     private fun drawLineStrip(points: List<Coord>, ls: LineStyle, z: Float) {
         items.add(DrawLine(points.map{ it.plusX(xOff) }.toList(), ls, lastOrd++, z))
     }
 
-    override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): SinglePage {
+    override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
         if (reallyRender) {
             drawLineStrip(points, lineStyle, DEFAULT_Z_INDEX)
         }
-        return this
+        return IntRange(pageNum, pageNum)
     }
 
     private fun drawStyledText(baselineLeft: Coord, text: String, s: TextStyle, z: Float) {
         items.add(Text(baselineLeft.plusX(xOff), text, s, lastOrd++, z))
     }
 
-    override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
+    override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): HeightAndPage {
         if (reallyRender) {
             drawStyledText(baselineLeft, text, textStyle, DEFAULT_Z_INDEX)
         }
-        return textStyle.lineHeight
+        return HeightAndPage(textStyle.lineHeight, pageNum)
     }
 
     /**

@@ -11,6 +11,7 @@ import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -88,12 +89,12 @@ class CellTest {
 //        println("lp=$lp")
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 
-        val dim: Dim = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
+        val dim: DimAndPages = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")
 
-        assertEquals(squareDim, dim.height)
+        assertEquals(squareDim, dim.dim.height)
         lp.commit()
 
 //        val os = FileOutputStream("testCell1.pdf")
@@ -127,8 +128,8 @@ class CellTest {
 
         val startCoord = Coord(40f, 140f)
 
-        val after:Dim = wrappedCell.render(lp, startCoord)
-        TestCase.assertEquals(Dim(230.0f, 186.23203f), after)
+        val after:DimAndPages = wrappedCell.render(lp, startCoord)
+        TestCase.assertEquals(Dim(230.0f, 186.23203f), after.dim)
 
         lp.commit()
         // We're just going to write to a file.
@@ -155,12 +156,12 @@ class CellTest {
         assertEquals(Dim(170f, 49.4515f), wrappedCell.dim)
 
         // Rendered away from the page break, the dimensions are unchanged.
-        val ret1:Dim = wrappedCell.render(lp, Coord(40f, 200f))
-        assertEquals(Dim(170f, 49.451508f), ret1)
+        val ret1:DimAndPages = wrappedCell.render(lp, Coord(40f, 200f))
+        assertEquals(Dim(170f, 49.451508f), ret1.dim)
 
         // Rendered across the page break, it's bigger.
-        val ret2:Dim = wrappedCell.render(lp, Coord(40f, 72f))
-        assertEquals(Dim(170f, 58.65849f), ret2)
+        val ret2:DimAndPages = wrappedCell.render(lp, Coord(40f, 72f))
+        assertEquals(Dim(170f, 58.65849f), ret2.dim)
 
         lp.commit()
 //        val os = FileOutputStream("testCellAcrossPageBreak.pdf")

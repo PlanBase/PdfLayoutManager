@@ -20,6 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
@@ -73,8 +74,9 @@ data class Text(val textStyle: TextStyle,
         }
 
         // Text rendering calculation spot 1/3
-        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =
-                dim.height(lp.drawStyledText(topLeft.minusY(ascent), string, textStyle, reallyRender))
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages =
+                lp.drawStyledText(topLeft.minusY(ascent), string, textStyle, reallyRender)
+                        .dimAndPagesFromWidth(dim)
 
         override fun toString() = "WrappedText($textStyle, \"$string\", $width)"
     }

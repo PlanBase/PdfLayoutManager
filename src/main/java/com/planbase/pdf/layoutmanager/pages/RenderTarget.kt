@@ -23,8 +23,8 @@ package com.planbase.pdf.layoutmanager.pages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**
@@ -41,10 +41,8 @@ interface RenderTarget {
      * @param reallyRender Only render this if true.  Otherwise, just measure and return.
      * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean = true): RenderTarget {
+    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean = true): IntRange =
         drawLineStrip(listOf(start, end), lineStyle, reallyRender)
-        return this
-    }
 
     /**
      * Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
@@ -55,7 +53,7 @@ interface RenderTarget {
      * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
     @Suppress("unused")
-    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle): RenderTarget
+    fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle): IntRange
             = drawLine(start, end, lineStyle, true)
 
     /**
@@ -67,7 +65,7 @@ interface RenderTarget {
      * @param reallyRender Only render this if true.  Otherwise, just measure and return.
      * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
-    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean = true): RenderTarget
+    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean = true): IntRange
 
     /**
      * Draws lines from the first point to the last.  Direction is important if using mitering.
@@ -78,7 +76,7 @@ interface RenderTarget {
      * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
     @Suppress("unused")
-    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle): RenderTarget =
+    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle): IntRange =
             drawLineStrip(points, lineStyle, true)
 
     /**
@@ -90,7 +88,10 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean = true): Float
+    fun drawStyledText(baselineLeft: Coord,
+                       text: String,
+                       textStyle: TextStyle,
+                       reallyRender: Boolean = true): HeightAndPage
 
     /**
      * Puts styled text on this RenderTarget
@@ -100,7 +101,7 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle): Float =
+    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle): HeightAndPage =
             drawStyledText(baselineLeft, text, textStyle, true)
 
     /**
@@ -111,7 +112,7 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean = true): Float
+    fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean = true): HeightAndPage
 
     /**
      * Puts an image on this RenderTarget
@@ -121,7 +122,7 @@ interface RenderTarget {
      * (may include some extra space above to push items onto the next page).
      */
     @Suppress("unused")
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage): Float = drawImage(bottomLeft, wi, true)
+    fun drawImage(bottomLeft: Coord, wi: WrappedImage): HeightAndPage = drawImage(bottomLeft, wi, true)
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn

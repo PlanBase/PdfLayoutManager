@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.7
+ - Changes to facilitate making a Table of Contents and Index:
+    - Changed RenderTarget methods to return a HeightAndPage instead of Float and  IntRange instead of RenderTarget or void.
+    - Changed LineWrapped.render to return DimAndPages instead of just Dim.
+
 ## 2.0.6 - 2018-01-22
  - Added justified text style: Align.TOP_LEFT_JUSTIFY.
  This may be expanded some day by allowing the client application to supply a hyphenation dictionary

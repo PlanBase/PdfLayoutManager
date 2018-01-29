@@ -8,6 +8,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -18,20 +19,20 @@ import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceGray
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.imageio.ImageIO
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class PageGroupingTest {
     @Test
@@ -131,22 +132,22 @@ class PageGroupingTest {
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.lowerLeftBody.y) {
-            val imgY = lp.drawImage(Coord(melonX, y), bigMelon, true)
-            assertEquals(melonHeight, imgY)
+            val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon, true)
+            assertEquals(melonHeight, imgHaP.height)
 
-            val txtY = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-            assertEquals(bigText.textStyle.lineHeight, txtY)
+            val txtHaP:HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+            assertEquals(bigText.textStyle.lineHeight, txtHaP.height)
 
             val rectY = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
             assertEquals(squareSide, rectY)
 
             diamondRect(lp, Coord(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfCell.dim, cellDim, 0.00004f)
+            val cellDimAndPages: DimAndPages = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfCell.dim, cellDimAndPages.dim, 0.00004f)
 
-            val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfTable.dim, tableDim, 0.00002f)
+            val tableDimAndPages: DimAndPages = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfTable.dim, tableDimAndPages.dim, 0.00002f)
 
             y -= melonHeight
         }
@@ -154,13 +155,13 @@ class PageGroupingTest {
         // This is the page-break.
         // Images must vertically fit entirely on one page,
         // So they are pushed down as necessary to fit.
-        val imgY2: Float = lp.drawImage(Coord(melonX, y), bigMelon, true)
-        assertTrue(melonHeight < imgY2) // When the picture breaks across the page, extra height is added.
+        val imgHaP2: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon, true)
+        assertTrue(melonHeight < imgHaP2.height) // When the picture breaks across the page, extra height is added.
 
         // Words must vertically fit entirely on one page,
         // So they are pushed down as necessary to fit.
-        val txtY2: Float = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-        assertTrue(bigText.textStyle.lineHeight < txtY2)
+        val txtHaP2: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+        assertTrue(bigText.textStyle.lineHeight < txtHaP2.height)
 
         // Rectangles span multiple pages, so their height should be unchanged.
         val rectY2: Float = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
@@ -171,26 +172,26 @@ class PageGroupingTest {
         diamondRect(lp, Coord(lineX1, y), squareSide)
 //            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-        val cellDim2 = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+        val cellDaP2: DimAndPages = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
 //        println("qbfCell.dim=${qbfCell.dim} tableDim2=${cellDim2}")
-        assertTrue(qbfCell.dim.height < cellDim2.height)
+        assertTrue(qbfCell.dim.height < cellDaP2.dim.height)
 
 //        val tableDim2 = qbfTable.render(lp, Coord(tableX1, y))
-        val tableDim2 = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+        val tableDaP2:DimAndPages = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
 //        println("qbfTable.dim=${qbfTable.dim} tableDim2=${tableDim2}")
 
-        assertTrue(qbfTable.dim.height < tableDim2.height)
+        assertTrue(qbfTable.dim.height < tableDaP2.dim.height)
         assertEquals(qbfCell.dim.height, qbfTable.dim.height)
-        assertEquals(cellDim2.height, tableDim2.height)
+        assertEquals(cellDaP2.dim.height, tableDaP2.dim.height)
 
-        y -= listOf(imgY2, txtY2, rectY2).max() as Float
+        y -= listOf(imgHaP2.height, txtHaP2.height, rectY2).max() as Float
 
         while(y >= lp.lowerLeftBody.y - 400) {
-            val imgY:Float = lp.drawImage(Coord(melonX, y), bigMelon, true)
-            assertEquals(melonHeight, imgY)
+            val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon, true)
+            assertEquals(melonHeight, imgHaP.height)
 
-            val txtY:Float = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-            assertEquals(bigText.textStyle.lineHeight, txtY)
+            val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+            assertEquals(bigText.textStyle.lineHeight, txtHaP.height)
 
             val rectY:Float = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
             assertEquals(squareSide, rectY)
@@ -198,14 +199,14 @@ class PageGroupingTest {
             diamondRect(lp, Coord(lineX1, y), squareSide)
 //            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            val cellDim = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
-            assertEquals(qbfCell.dim, cellDim)
+            val cellDaP:DimAndPages = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            assertEquals(qbfCell.dim, cellDaP.dim)
 
 //            val tableDim = qbfTable.render(lp, Coord(tableX1, y))
-            val tableDim = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-            assertEquals(qbfTable.dim, tableDim)
+            val tableDaP:DimAndPages = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            assertEquals(qbfTable.dim, tableDaP.dim)
 
-            y -= listOf(imgY, txtY, rectY).max() as Float
+            y -= listOf(imgHaP.height, txtHaP.height, rectY).max() as Float
         }
 
         lp.commit()
@@ -259,8 +260,8 @@ class PageGroupingTest {
 
         // This is not a great test because I'm not sure this feature is really meant to work blocks that cross
         // multiple pages.  In fact, it looks pretty bad for those blocks.
-        val finalDim = wrappedCell.render(lp, Coord(40f, PDRectangle.A6.height - 40f))
-        assertEquals(Dim(217.63782f, 800.7112f), finalDim)
+        val finalDaP:DimAndPages = wrappedCell.render(lp, Coord(40f, PDRectangle.A6.height - 40f))
+        assertEquals(Dim(217.63782f, 800.7112f), finalDaP.dim)
 
         lp.commit()
 
@@ -289,8 +290,8 @@ class PageGroupingTest {
 
         // This is not a great test because I'm not sure this feature is really meant to work blocks that cross
         // multiple pages.  In fact, it looks pretty bad for those blocks.
-        val finalDim = wrappedCell.render(lp, Coord(40f, 110f))
-        assertEquals(Dim(217.63782f, 87.27999f), finalDim)
+        val finalDaP: DimAndPages = wrappedCell.render(lp, Coord(40f, 110f))
+        assertEquals(Dim(217.63782f, 87.27999f), finalDaP.dim)
 
         lp.commit()
 

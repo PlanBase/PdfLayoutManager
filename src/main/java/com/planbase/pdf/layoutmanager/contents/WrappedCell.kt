@@ -23,11 +23,13 @@ package com.planbase.pdf.layoutmanager.contents
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.INVALID_PAGE_RANGE
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 
 // TODO: This should be a private inner class of Cell
 class WrappedCell(override val dim: Dim, // measured on the border lines
@@ -59,11 +61,13 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         Dim(width, height)
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim =
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages =
             tableRender(lp, topLeft, dim.height, reallyRender)
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
-    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height:Float, reallyRender:Boolean): Dim {
+    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height:Float, reallyRender:Boolean): DimAndPages {
+        var pageNums:IntRange = INVALID_PAGE_RANGE
+
         val adj = if (requiredSpaceBelow == 0f) {
             0f
         } else {
@@ -112,16 +116,18 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         for ((index, row) in rows.withIndex()) {
 //            println("row=$row")
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, row.dim.width)
-            val thisLineHeight = row.render(lp, Coord(rowXOffset + innerTopLeft.x, y), reallyRender,
-                                            // Even if we're justifying text, the last row looks better unjustified.
-                                            if ( (index < rows.size - 1) &&
-                                                 (cellStyle.align == Align.TOP_LEFT_JUSTIFY) ) {
-                                                innerDim.width
-                                            } else {
-                                                0f
-                                            }).height
+
+            val dimAndPages = row.render(lp, Coord(rowXOffset + innerTopLeft.x, y), reallyRender,
+                                         if ( (index < rows.size - 1) &&
+                                              (cellStyle.align == Align.TOP_LEFT_JUSTIFY) ) {
+                                             // Even if we're justifying text, the last row looks better unjustified.
+                                             innerDim.width
+                                         } else {
+                                             0f
+                                         })
 //            println("thisLineHeight=$thisLineHeight")
-            y -= thisLineHeight // y is always the lowest row in the cell.
+            y -= dimAndPages.dim.height // y is always the lowest row in the cell.
+            pageNums = dimAndPages.maxExtents(pageNums)
         }
 //        println("  y=$y")
 //        println("  totalHeight=${innerTopLeft.y - y}")
@@ -162,7 +168,8 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             }
         }
 
-        return Dim(rightX - topLeft.x,
-                   (topLeft.y - y) + adj)
+        return DimAndPages(Dim( rightX - topLeft.x,
+                                (topLeft.y - y) + adj ),
+                           pageNums)
     }
 }

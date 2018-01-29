@@ -7,6 +7,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -49,22 +50,22 @@ class SinglePageTest {
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.lowerLeftBody.y) {
-            val imgY = page.drawImage(Coord(melonX, y), bigMelon, true)
-            assertEquals(melonHeight, imgY)
+            val imgHaP:HeightAndPage = page.drawImage(Coord(melonX, y), bigMelon, true)
+            assertEquals(melonHeight, imgHaP.height)
 
-            val txtY = page.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-            assertEquals(bigText.textStyle.lineHeight, txtY)
+            val txtHaP:HeightAndPage = page.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+            assertEquals(bigText.textStyle.lineHeight, txtHaP.height)
 
             val rectY = page.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
             assertEquals(squareSide, rectY)
 
             diamondRect(page, Coord(lineX1, y), squareSide)
 
-            val cellDim = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfCell.dim, cellDim, 0.00004f)
+            val cellDaP: DimAndPages = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.00004f)
 
-            val tableDim = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfTable.dim, tableDim, 0.00002f)
+            val tableDaP: DimAndPages = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.00002f)
 
             y -= melonHeight
         }
@@ -101,7 +102,7 @@ fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Float) {
                        ls, true)
 }
 
-val squareSide = 70f
+const val squareSide = 70f
 val times15 = TextStyle(PDType1Font.TIMES_ROMAN, 15f, RGB_BLACK)
 val paleGreenLeft = CellStyle(Align.TOP_LEFT,
                               BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK)))

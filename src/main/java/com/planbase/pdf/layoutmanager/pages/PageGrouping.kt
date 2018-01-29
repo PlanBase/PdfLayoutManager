@@ -23,6 +23,8 @@ package com.planbase.pdf.layoutmanager.pages
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.maxExtents
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
@@ -116,12 +118,11 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * Width of the entire page (in document units).  This is the short dimension for portrait,
      * the long dimension for landscape.
      */
-    fun pageWidth(): Float {
-        return if (orientation == PORTRAIT)
-            mgr.pageDim.width
-        else
-            mgr.pageDim.height
-    }
+    fun pageWidth(): Float =
+            if (orientation == PORTRAIT)
+                mgr.pageDim.width
+            else
+                mgr.pageDim.height
 
     //    /**
     //     Height of the entire page (in document units).  This is the long dimension for portrait,
@@ -140,7 +141,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return mgr
     }
 
-    override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): Float {
+    override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): HeightAndPage {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -148,10 +149,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         val belowBaseline = textStyle.lineHeight - textStyle.ascent
         val pby = appropriatePage(baselineLeft.y - belowBaseline, textStyle.lineHeight, 0f)
         pby.pb.drawStyledText(baselineLeft.y(pby.y + belowBaseline), text, textStyle, reallyRender)
-        return textStyle.lineHeight + pby.adj
+        return HeightAndPage(textStyle.lineHeight + pby.adj, pby.pb.pageNum)
     }
 
-    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): Float {
+    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): HeightAndPage {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -159,7 +160,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         val pby = appropriatePage(bottomLeft.y, wi.dim.height, 0f)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(bottomLeft.y(pby.y), wi, reallyRender)
-        return wi.dim.height + pby.adj
+        return HeightAndPage(wi.dim.height + pby.adj, pby.pb.pageNum)
     }
 
     override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float {
@@ -223,22 +224,24 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     // TODO: this should be the have all the gory details.  drawLine should inherit from the default implementation
-    override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): PageGrouping {
+    override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
 
         // TODO: Find min and max Y.  If they are on the same page, just pass params to SinglePage.drawLineStrip
         var start: Coord = points[0]
+        var pageNums:IntRange = DimAndPages.INVALID_PAGE_RANGE
         for (i in 1..points.lastIndex) {
             val end = points[i]
-            drawLine(start, end, lineStyle, reallyRender)
+            val currRange:IntRange = drawLine(start, end, lineStyle, reallyRender)
+            pageNums = maxExtents(pageNums, currRange)
             start = end
         }
-        return this
+        return pageNums
     }
 
-    override fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean): PageGrouping {
+    override fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -322,7 +325,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             }
         }
 
-        return this
+        return IntRange(pby1.pb.pageNum, pby2.pb.pageNum)
     }
 
     override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float =

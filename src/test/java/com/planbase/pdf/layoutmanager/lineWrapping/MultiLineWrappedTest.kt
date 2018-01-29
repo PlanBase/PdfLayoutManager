@@ -3,6 +3,7 @@ package com.planbase.pdf.layoutmanager.lineWrapping
 //import kotlin.test.assertEquals
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
@@ -28,19 +29,19 @@ class MultiLineWrappedTest {
         val tStyle2 = TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK)
         val txt2 = Text(tStyle2, "gruel ")
         val txt3 = Text(tStyle1, "world!")
-        val line = MultiLineWrapped()
+        val wrappedText = MultiLineWrapped()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
-        line.append(txt1.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle1.lineHeight, line.dim.height, floatCloseEnough)
-        assertEquals(tStyle1.ascent, line.ascent)
+        wrappedText.append(txt1.lineWrapper().getSomething(999f).item)
+        assertEquals(tStyle1.lineHeight, wrappedText.dim.height, floatCloseEnough)
+        assertEquals(tStyle1.ascent, wrappedText.ascent)
 
-        line.append(txt2.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight, line.dim.height, floatCloseEnough)
-        assertEquals(tStyle2.ascent, line.ascent)
+        wrappedText.append(txt2.lineWrapper().getSomething(999f).item)
+        assertEquals(tStyle2.lineHeight, wrappedText.dim.height, floatCloseEnough)
+        assertEquals(tStyle2.ascent, wrappedText.ascent)
 
-        line.append(txt3.lineWrapper().getSomething(999f).item)
-        assertEquals(tStyle2.lineHeight, line.dim.height, floatCloseEnough)
-        assertEquals(tStyle2.ascent, line.ascent)
+        wrappedText.append(txt3.lineWrapper().getSomething(999f).item)
+        assertEquals(tStyle2.lineHeight, wrappedText.dim.height, floatCloseEnough)
+        assertEquals(tStyle2.ascent, wrappedText.ascent)
 
         // This is for the baseline!
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
@@ -58,10 +59,10 @@ class MultiLineWrappedTest {
         lp.drawLine(Coord(0f, top2), Coord(lp.pageWidth(), top2), LineStyle(PDColor(floatArrayOf(0.5f, 0.5f, 0.5f), PDDeviceRGB.INSTANCE), 0.125f), true)
         lp.drawLine(Coord(0f, yBaseline), Coord(lp.pageWidth(), yBaseline), LineStyle(RGB_BLACK, 0.125f), true)
         lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
-        val dim = line.render(lp, upperLeft)
+        val dap:DimAndPages = wrappedText.render(lp, upperLeft)
 //        println("tStyle1=$tStyle1")
 //        println("tStyle2=$tStyle2")
-        assertEquals(line.dim, dim)
+        assertEquals(wrappedText.dim, dap.dim)
 
         lp.commit()
         val os = FileOutputStream("multiLineBaseline.pdf")

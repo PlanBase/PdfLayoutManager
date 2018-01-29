@@ -12,6 +12,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
+import com.planbase.pdf.layoutmanager.pages.HeightAndPage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
@@ -231,8 +232,8 @@ class TextTest {
         lp.drawLine(Coord(margin, yTop), Coord(pageRightMargin, yTop), thinLine, true)
         lp.drawLine(Coord(margin, yBaseline), Coord(pageRightMargin, yBaseline), thinLine, true)
         lp.drawLine(Coord(margin, yBottom), Coord(pageRightMargin, yBottom), thinLine, true)
-        val deltaY = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent), txt1.text, tStyle1, true)
-        assertEquals(tStyle1.lineHeight, deltaY)
+        val heightAndPage: HeightAndPage = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent), txt1.text, tStyle1, true)
+        assertEquals(tStyle1.lineHeight, heightAndPage.height)
 
         logicalPage.commit()
 //        val os = FileOutputStream("textBaseline.pdf")

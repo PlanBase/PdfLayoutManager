@@ -3,6 +3,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle.Companion.NO_LINE
 import com.planbase.pdf.layoutmanager.attributes.Padding
@@ -121,10 +122,10 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xya: Dim = tB.wrap()
+        val xya: DimAndPages = tB.wrap()
                 .render(lp, lp.bodyTopLeft())
 
-        assertEquals(Dim(360.0f, 375f), xya)
+        assertEquals(Dim(360.0f, 375f), xya.dim)
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
@@ -174,10 +175,10 @@ class TestManualllyPdfLayoutMgr {
                                               "Line three")
                 .buildRow()
                 .buildPart()
-        val xyb: Dim = tB.wrap()
-                .render(lp, lp.bodyTopLeft().plusX(xya.width + 10))
+        val xyb: DimAndPages = tB.wrap()
+                .render(lp, lp.bodyTopLeft().plusX(xya.dim.width + 10))
 
-        assertEquals(Dim(300.0f, 315f), xyb)
+        assertEquals(Dim(300.0f, 315f), xyb.dim)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -211,7 +212,7 @@ class TestManualllyPdfLayoutMgr {
                 .align(TOP_LEFT).addTextCells("Line 1").buildRow()
                 .buildPart()
                 .wrap()
-                .render(lp, Coord(lp.bodyTopLeft().x + xya.width + 10, lp.yBodyTop() - xyb.height - 10))
+                .render(lp, Coord(lp.bodyTopLeft().x + xya.dim.width + 10, lp.yBodyTop() - xyb.dim.height - 10))
 
         lp.commit()
 
@@ -263,7 +264,7 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xyc: Dim = tB
+        val xyc: DimAndPages = tB
                 .wrap()
                 .render(lp, lp.bodyTopLeft())
 
@@ -275,7 +276,7 @@ class TestManualllyPdfLayoutMgr {
              200f,
              listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Liberation Mono Bold Font!")))
                 .wrap()
-                .render(lp, lp.bodyTopLeft().plusXMinusY(xyc))
+                .render(lp, lp.bodyTopLeft().plusXMinusY(xyc.dim))
 
         tB = Table()
         tB.addCellWidths(listOf(100f))

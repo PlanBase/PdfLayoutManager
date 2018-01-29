@@ -1,14 +1,13 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.BULLET_TEXT_STYLE
-import TestManual2.Companion.CMYK_LIGHT_GREEN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
-import com.planbase.pdf.layoutmanager.attributes.BorderStyle.Companion.NO_BORDERS
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding.Companion.NO_PADDING
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -45,9 +44,9 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
-        assertEquals(twoHundred, ret.width)
+        assertEquals(twoHundred, ret.dim.width)
         assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.height, 0.00003f)
+                     ret.dim.height, 0.00003f)
 
         // TODO: Make rendered section of all items below.
     }
@@ -73,9 +72,9 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
-        assertEquals(helloHelloWidth, ret.width, 0.00001f)
+        assertEquals(helloHelloWidth, ret.dim.width, 0.00001f)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.height, 0.00003f)
+                     ret.dim.height, 0.00003f)
     }
 
     @Test fun testTwoCells() {
@@ -99,9 +98,9 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
-        assertEquals(twoHundred + twoHundred, ret.width)
+        assertEquals(twoHundred + twoHundred, ret.dim.width)
         assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.height, 0.00003f)
+                     ret.dim.height, 0.00003f)
     }
 
     @Test fun testTwoCellsWrapped() {
@@ -125,9 +124,9 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.bodyTopLeft())
-        assertEquals(helloHelloWidth + helloHelloWidth, ret.width, 0.00001f)
+        assertEquals(helloHelloWidth + helloHelloWidth, ret.dim.width, 0.00001f)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.height, 0.00003f)
+                     ret.dim.height, 0.00003f)
     }
 
     /*
@@ -183,8 +182,8 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
 
         val startCoord = Coord(40f, 140f)
 
-        val after:Dim = wrappedTable.render(lp, startCoord)
-        assertEquals(Dim(230.0f, 130.74399f), after)
+        val after:DimAndPages = wrappedTable.render(lp, startCoord)
+        assertEquals(Dim(230.0f, 130.74399f), after.dim)
 
         lp.commit()
         // We're just going to write to a file.

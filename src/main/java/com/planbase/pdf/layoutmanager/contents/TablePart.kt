@@ -21,13 +21,12 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.TableRow.WrappedTableRow
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.listToStr
-import com.planbase.pdf.layoutmanager.utils.mutableListToStr
+import com.planbase.pdf.layoutmanager.utils.Dim
 import kotlin.math.max
 
 /**
@@ -89,15 +88,17 @@ class TablePart(private val table: Table) {
                 part.rows.map { WrappedTableRow(it) }
                         .toList()
 
-        fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
+        fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages {
+            var pageNums:IntRange = DimAndPages.INVALID_PAGE_RANGE
             var y = topLeft.y
             var maxWidth = 0f
             for (row in rows) {
-                val (width, height) = row.render(lp, topLeft.y(y), reallyRender)
-                maxWidth = max(maxWidth, width)
-                y -= height
+                val dimAndPages: DimAndPages = row.render(lp, topLeft.y(y), reallyRender)
+                maxWidth = max(maxWidth, dimAndPages.dim.width)
+                y -= dimAndPages.dim.height
+                pageNums = dimAndPages.maxExtents(pageNums)
             }
-            return Dim(maxWidth, topLeft.y - y)
+            return DimAndPages(Dim(maxWidth, topLeft.y - y), pageNums)
         }
     }
 

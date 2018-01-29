@@ -21,6 +21,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
@@ -28,7 +29,6 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.listToStr
 import com.planbase.pdf.layoutmanager.utils.mutableListToStr
 import kotlin.math.max
 
@@ -102,15 +102,17 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
          * Renders item and all child-items with given width and returns the x-y pair of the
          * lower-right-hand corner of the last line (e.g. of text).
          */
-        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim {
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages {
             var y = topLeft.y
             var maxWidth = 0f
+            var pageNums:IntRange = DimAndPages.INVALID_PAGE_RANGE
             for (part in parts) {
-                val (width, height) = part.render(lp, topLeft.y(y), reallyRender)
-                maxWidth = max(maxWidth, width)
-                y -= height
+                val dimAndPages: DimAndPages = part.render(lp, topLeft.y(y), reallyRender)
+                maxWidth = max(maxWidth, dimAndPages.dim.width)
+                y -= dimAndPages.dim.height
+                pageNums = dimAndPages.maxExtents(pageNums)
             }
-            return Dim(maxWidth, topLeft.y - y)
+            return DimAndPages(Dim(maxWidth, topLeft.y - y), pageNums)
         }
 
         override fun toString(): String = "WrappedTable($parts)"

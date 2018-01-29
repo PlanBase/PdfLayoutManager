@@ -20,10 +20,12 @@
 
 package com.planbase.pdf.layoutmanager.lineWrapping
 
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
+
 // TODO: Rename to MultiItemWrappedLine?
 /** A mutable data structure to hold a single wrapped line consisting of multiple items. */
 class MultiLineWrapped : LineWrapped {
@@ -49,12 +51,13 @@ class MultiLineWrapped : LineWrapped {
         return this
     }
 
-    fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Float): Dim {
+    fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Float): DimAndPages {
         var x:Float = topLeft.x
         val y = topLeft.y
         // lineHeight has to be ascent + descentLeading because we align on the baseline
         var maxAscentIncPageBreak = ascent
         var maxDescentLeading = lineHeight - ascent
+        var pageNums:IntRange = DimAndPages.INVALID_PAGE_RANGE
 
         // Go through each wrapped item in this line in case any single item (especially later in this line)
         // should push the whole line onto the next page.
@@ -77,12 +80,13 @@ class MultiLineWrapped : LineWrapped {
             val ascentDiff = ascent - item.ascent
             val innerUpperLeft = Coord(x, y - ascentDiff)
 //            println("ascentDiff=$ascentDiff innerUpperLeft=$innerUpperLeft")
-            val adjHeight = item.render(lp, innerUpperLeft, false).height
-            val adjustment = adjHeight - item.lineHeight
+            val dimAndPages: DimAndPages = item.render(lp, innerUpperLeft, false)
+            val adjustment = dimAndPages.dim.height - item.lineHeight
 //            println("adjHeight=$adjHeight item.lineHeight=${item.lineHeight} adjustment=$adjustment")
             maxAscentIncPageBreak = maxOf(maxAscentIncPageBreak, item.ascent + adjustment)
             maxDescentLeading = maxOf(maxDescentLeading, item.lineHeight - item.ascent)
             x += item.dim.width
+            pageNums = dimAndPages.maxExtents(pageNums)
         }
 
         if (reallyRender) {
@@ -114,15 +118,15 @@ class MultiLineWrapped : LineWrapped {
             for (item: LineWrapped in tempItems) {
                 val ascentDiff = maxAscentIncPageBreak - item.ascent
                 val innerUpperLeft = Coord(x, y - ascentDiff)
-                item.render(lp, innerUpperLeft, true).height
+                item.render(lp, innerUpperLeft, true)
                 x += item.dim.width
             }
         }
 
-        return Dim(x - topLeft.x, maxAscentIncPageBreak + maxDescentLeading)
+        return DimAndPages(Dim(x - topLeft.x, maxAscentIncPageBreak + maxDescentLeading), pageNums)
     } // end fun render()
 
-    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): Dim
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages
             = render(lp, topLeft, reallyRender, 0f)
 
     override fun toString(): String {
