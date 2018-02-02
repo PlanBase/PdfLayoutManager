@@ -23,11 +23,14 @@ package com.planbase.pdf.layoutmanager.pages
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.maxExtents
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
@@ -341,8 +344,30 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      */
     fun add(topLeft: Coord, block: LineWrapped): DimAndPages {
         this.pageBreakingTopMargin(topLeft.y - bodyDim.height, bodyDim.height, 0f)
-        return block.render(this, topLeft)
+        val dap:DimAndPages = block.render(this, topLeft)
+        cursorY = topLeft.y - dap.dim.height
+        return dap
     }
+
+    var cursorY:Float = bodyTopLeft.y
+
+    /**
+     * Add LineWrapped items directly to the page grouping at the current cursor.
+     * The cursor is always at the left-hand side of the body at the bottom of the last item put on the page.
+     *
+     * @param block the LineWrapped item to display
+     */
+    fun append(block: LineWrapped): DimAndPages =
+            add(Coord(0f, cursorY), block)
+
+    /**
+     * Add LineWrapped items directly to the page grouping at the current cursor.
+     * The cursor is always at the left-hand side of the body at the bottom of the last item put on the page.
+     *
+     * @param block the LineWrapped item to display
+     */
+    fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPages =
+            add(Coord(0f, cursorY), Cell(cellStyle, bodyDim.width, contents).wrap())
 
     override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float =
             appropriatePage(bottomY, height, requiredSpaceBelow).adj
