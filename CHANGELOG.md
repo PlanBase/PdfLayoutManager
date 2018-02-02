@@ -1,9 +1,13 @@
 # Changelog
 
-#### 2.0.7
- - Changes to facilitate making a Table of Contents and Index:
-    - Changed RenderTarget methods to return a HeightAndPage instead of Float and  IntRange instead of RenderTarget or void.
-    - Changed LineWrapped.render to return DimAndPages instead of just Dim.
+#### 2.0.7 - 2018-02-01 "Page Numbers"
+Together these changes should allow the creation of a table of contents and an index.
+Instead of adding each paragraph to a single cell for a whole chapter, you can now add each top-level LineWrapped element directly to the page.
+Each add returns the page number range that the final rendered element so that you can store it and later insert page numbers.
+ - Changed RenderTarget methods to return a HeightAndPage instead of Float and  IntRange instead of RenderTarget or void.
+ - Changed LineWrapped.render to return DimAndPages instead of just Dim.
+ - Changed PageGrouping constructor to take the top-left of the Body (was the lower-left).
+ - Added PageGrouping.add() which returns an adjusted height and page range.
 
 ## 2.0.6 - 2018-01-22
  - Added justified text style: Align.TOP_LEFT_JUSTIFY.

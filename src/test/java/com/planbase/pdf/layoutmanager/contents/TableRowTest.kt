@@ -107,7 +107,7 @@ class TableRowTest {
                 .cell(headingCellR, listOf(Text(heading, "German")))
                 .buildRow()
                 .buildPart()
-        tB.wrap().render(lp, lp.bodyTopLeft())
+        tB.wrap().render(lp, lp.bodyTopLeft)
         lp.commit()
 
 //        val os = FileOutputStream("rowHeight2.pdf")

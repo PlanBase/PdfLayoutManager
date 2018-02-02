@@ -43,7 +43,7 @@ class TableTest {
         val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
-        val ret = wrappedTable.render(page, lp.bodyTopLeft())
+        val ret = wrappedTable.render(page, lp.bodyTopLeft)
         assertEquals(twoHundred, ret.dim.width)
         assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.dim.height, 0.00003f)
@@ -71,7 +71,7 @@ class TableTest {
         val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
-        val ret = wrappedTable.render(page, lp.bodyTopLeft())
+        val ret = wrappedTable.render(page, lp.bodyTopLeft)
         assertEquals(helloHelloWidth, ret.dim.width, 0.00001f)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.dim.height, 0.00003f)
@@ -97,7 +97,7 @@ class TableTest {
         val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
-        val ret = wrappedTable.render(page, lp.bodyTopLeft())
+        val ret = wrappedTable.render(page, lp.bodyTopLeft)
         assertEquals(twoHundred + twoHundred, ret.dim.width)
         assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.dim.height, 0.00003f)
@@ -123,7 +123,7 @@ class TableTest {
         val lp = pageMgr.startPageGrouping()
         val page: SinglePage = pageMgr.page(0)
 
-        val ret = wrappedTable.render(page, lp.bodyTopLeft())
+        val ret = wrappedTable.render(page, lp.bodyTopLeft)
         assertEquals(helloHelloWidth + helloHelloWidth, ret.dim.width, 0.00001f)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
                      ret.dim.height, 0.00003f)

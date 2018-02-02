@@ -23,6 +23,11 @@ package com.planbase.pdf.layoutmanager.pages
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.utils.Dim
 
+/**
+ * Represents the height of an item (adjusted to include page breaks) and the last page it goes on.
+ * @param height the height of the item (not the y-offset)
+ * @param pageNum the last page the item touches
+ */
 data class HeightAndPage(val height:Float,
                          private val pageNum:Int) {
     fun dimAndPagesFromWidth(dim:Dim) = DimAndPages(Dim(dim.width, height), IntRange(pageNum, pageNum))

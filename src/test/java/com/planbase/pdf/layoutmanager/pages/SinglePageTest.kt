@@ -41,7 +41,7 @@ class SinglePageTest {
 
         val squareDim = Dim(squareSide, squareSide)
 
-        val melonX = lp.bodyTopLeft().x
+        val melonX = lp.bodyTopLeft.x
         val textX = melonX + melonWidth + 10
         val squareX = textX + bigText.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10
@@ -49,7 +49,7 @@ class SinglePageTest {
         val tableX1 = cellX1 + squareSide + 10
         var y = lp.yBodyTop() - melonHeight
 
-        while(y >= lp.lowerLeftBody.y) {
+        while (y >= lp.yBodyBottom) {
             val imgHaP:HeightAndPage = page.drawImage(Coord(melonX, y), bigMelon, true)
             assertEquals(melonHeight, imgHaP.height)
 
