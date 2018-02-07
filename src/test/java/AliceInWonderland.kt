@@ -88,7 +88,7 @@ class AliceInWonderland {
                 lp.appendCell(chapTitleCellStyle,
                             listOf(Text(incipit, "1. "),
                                    Text(heading, "Down the Rabbit Hole")))
-//        assertEquals(IntRange(1, 1), dap.pageNums)
+        assertEquals(IntRange(1, 1), dap.pageNums)
         tableOfContents.add(TitlePage("1. Down the Rabbit Hole", dap.pageNums.start))
 
         dap = lp.appendCell(bodyCellStyle,
@@ -100,7 +100,7 @@ class AliceInWonderland {
                                    Text(thought, "and what is the use of a book,"),
                                    Text(body, " thought Alice, "),
                                    Text(thought, "without pictures or conversation?")))
-//        assertEquals(IntRange(1, 1), dap.pageNums)
+        assertEquals(IntRange(1, 1), dap.pageNums)
         addToIndex("Bank", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
@@ -110,7 +110,7 @@ class AliceInWonderland {
                                         " pleasure of making a daisy-chain would be worth the trouble of" +
                                         " getting up and picking the daisies, when suddenly a White Rabbit" +
                                         " with pink eyes ran close by her.")))
-//        assertEquals(IntRange(1, 1), dap.pageNums)
+        assertEquals(IntRange(1, 1), dap.pageNums)
         addToIndex("White Rabbit", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
@@ -126,7 +126,7 @@ class AliceInWonderland {
                                         " with either a waistcoat-pocket, or a watch to take out of it, and," +
                                         " burning with curiosity, she ran across the field after it, and was" +
                                         " just in time to see it pop down a large rabbit-hole under the hedge.")))
-//        assertEquals(IntRange(1, 2), dap.pageNums)
+        assertEquals(IntRange(1, 2), dap.pageNums)
         addToIndex("Feet", dap, index)
         addToIndex("Waistcoat-pocket", dap, index)
 
@@ -134,14 +134,14 @@ class AliceInWonderland {
                             listOf(Text(body,
                                         "In another moment down went Alice after it, never once considering how" +
                                         " in the world she was to get out again....")))
-//        assertEquals(IntRange(2, 2), dap.pageNums)
+        assertEquals(IntRange(2, 2), dap.pageNums)
 
 
         dap = lp.append(Cell(chapTitleCellStyle, bodyWidth,
                               listOf(Text(incipit, "2. "),
                                      Text(heading, "The Pool of Tears")),
                              200f).wrap()) // Probably forces a new page.
-//        assertEquals(IntRange(3, 3), dap.pageNums)
+        assertEquals(IntRange(3, 3), dap.pageNums)
         tableOfContents.add(TitlePage("2. The Pool of Tears", dap.pageNums.start))
 
         dap = lp.appendCell(bodyCellStyle,
@@ -156,7 +156,7 @@ class AliceInWonderland {
                                         " about you: you must manage the best way you can—but I must be kind to" +
                                         " them,\" thought Alice, \"or perhaps they won't walk the way I want to go!" +
                                         " Let me see. I’ll give them a new pair of boots every Christmas.\"")))
-//        assertEquals(IntRange(3, 3), dap.pageNums)
+        assertEquals(IntRange(3, 3), dap.pageNums)
         addToIndex("Feet", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
@@ -178,14 +178,14 @@ class AliceInWonderland {
                                         "Just then her head struck against the roof of the hall: in fact she was" +
                                         " now more than nine feet high, and she at once took up the little golden" +
                                         " key and hurried off to the garden door....")))
-//        assertEquals(IntRange(4, 4), dap.pageNums)
+        assertEquals(IntRange(4, 4), dap.pageNums)
         addToIndex("Feet", dap, index)
 
         dap = lp.append(Cell(chapTitleCellStyle, bodyWidth,
                              listOf(Text(incipit, "3. "),
                                     Text(heading, "A Caucus-Race and a Long Tale")),
                              200f).wrap()) // Probably forces a new page.
-//        assertEquals(IntRange(5, 5), dap.pageNums)
+        assertEquals(IntRange(5, 5), dap.pageNums)
         tableOfContents.add(TitlePage("3. A Caucus-Race and a Long Tale", dap.pageNums.start))
 
         dap = lp.appendCell(bodyCellStyle,
@@ -193,7 +193,7 @@ class AliceInWonderland {
                                         "They were indeed a queer-looking party that assembled on the bank—the" +
                                         " birds with draggled feathers, the animals with their fur clinging close" +
                                         " to them, and all dripping wet, cross, and uncomfortable.")))
-//        assertEquals(IntRange(5, 5), dap.pageNums)
+        assertEquals(IntRange(5, 5), dap.pageNums)
         addToIndex("Bank", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
@@ -206,7 +206,7 @@ class AliceInWonderland {
                                         " than you, and must know better.\" And this Alice would not allow, without" +
                                         " knowing how old it was, and, as the Lory positively refused to tell its" +
                                         " age, there was no more to be said.")))
-//        assertEquals(IntRange(5, 6), dap.pageNums)
+        assertEquals(IntRange(5, 6), dap.pageNums)
         addToIndex("Lory, the", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
@@ -216,7 +216,7 @@ class AliceInWonderland {
                                         " you dry enough!\" They all sat down at once, in a large ring, with the" +
                                         " Mouse in the middle. Alice kept her eyes anxiously fixed on it, for she" +
                                         " felt sure she would catch a bad cold if she did not get dry very soon....")))
-//        assertEquals(IntRange(6, 6), dap.pageNums)
+        assertEquals(IntRange(6, 6), dap.pageNums)
 
         dap = lp.append(Cell(chapTitleCellStyle, bodyWidth,
                              listOf(Text(heading, "Index")),
@@ -243,16 +243,19 @@ class AliceInWonderland {
         }
 
 
-        var sp = SinglePage(-1, pageMgr, null, lp.body)
+        var sp = SinglePage(-2, pageMgr, null, lp.body)
         sp.cursorY =  sp.cursorY - 100f
         dap = sp.appendCell(bodyCellStyle, listOf(Text(incipit, "Alice in Wonderland")))
+        assertEquals(IntRange(-2, -2), dap.pageNums)
         dap = sp.appendCell(bodyCellStyle, listOf(Text(heading, "By Lewis Carroll")))
+        assertEquals(IntRange(-2, -2), dap.pageNums)
         pageMgr.insertPageAt(sp, 0)
 
         sp = SinglePage(-1, pageMgr, null, lp.body)
 
         dap = sp.appendCell(chapTitleCellStyle,
                              listOf(Text(heading, "Table of Contents")))
+        assertEquals(IntRange(-1, -1), dap.pageNums)
 
         var table = Table(mutableListOf(200f, 25f))
         var rowBuilder = table.partBuilder()
@@ -264,9 +267,9 @@ class AliceInWonderland {
         }
         table = rowBuilder.buildRow().buildPart()
 
-        sp.add(sp.body.topLeft.minusY(dap.dim.height), table.wrap())
+        dap = sp.add(sp.body.topLeft.minusY(dap.dim.height), table.wrap())
+        assertEquals(IntRange(-1, -1), dap.pageNums)
         pageMgr.insertPageAt(sp, 1)
-
 
         lp.commit()
         // We're just going to write to a file.
