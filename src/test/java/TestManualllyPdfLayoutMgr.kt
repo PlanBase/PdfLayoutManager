@@ -123,7 +123,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         val xya: DimAndPages = tB.wrap()
-                .render(lp, lp.bodyTopLeft)
+                .render(lp, lp.body.topLeft)
 
         assertEquals(Dim(360.0f, 375f), xya.dim)
 
@@ -176,7 +176,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         val xyb: DimAndPages = tB.wrap()
-                .render(lp, lp.bodyTopLeft.plusX(xya.dim.width + 10))
+                .render(lp, lp.body.topLeft.plusX(xya.dim.width + 10))
 
         assertEquals(Dim(300.0f, 315f), xyb.dim)
 
@@ -212,7 +212,7 @@ class TestManualllyPdfLayoutMgr {
                 .align(TOP_LEFT).addTextCells("Line 1").buildRow()
                 .buildPart()
                 .wrap()
-                .render(lp, Coord(lp.bodyTopLeft.x + xya.dim.width + 10, lp.yBodyTop() - xyb.dim.height - 10))
+                .render(lp, Coord(lp.body.topLeft.x + xya.dim.width + 10, lp.yBodyTop() - xyb.dim.height - 10))
 
         lp.commit()
 
@@ -266,7 +266,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         val xyc: DimAndPages = tB
                 .wrap()
-                .render(lp, lp.bodyTopLeft)
+                .render(lp, lp.body.topLeft)
 
         // This was very hastily added to this test to prove that font loading works (it does).
         val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
@@ -276,7 +276,7 @@ class TestManualllyPdfLayoutMgr {
              200f,
              listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Liberation Mono Bold Font!")))
                 .wrap()
-                .render(lp, lp.bodyTopLeft.plusXMinusY(xyc.dim))
+                .render(lp, lp.body.topLeft.plusXMinusY(xyc.dim))
 
         tB = Table()
         tB.addCellWidths(listOf(100f))
@@ -484,7 +484,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildRow()
                 .buildPart()
         tB.wrap()
-                .render(lp, lp.bodyTopLeft)
+                .render(lp, lp.body.topLeft)
         lp.commit()
 
         val lineStyle = LineStyle(RGB_BLACK, 1f)

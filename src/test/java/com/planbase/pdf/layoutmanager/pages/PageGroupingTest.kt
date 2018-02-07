@@ -11,6 +11,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
@@ -46,14 +47,14 @@ class PageGroupingTest {
         assertEquals((LETTER.width - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(PdfLayoutMgr.DEFAULT_MARGIN.toDouble(), lp.yBodyBottom.toDouble(), 0.000000001)
         assertEquals(LETTER.height.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
-        assertEquals((LETTER.width - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
+        assertEquals((LETTER.width - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         lp = pageMgr.startPageGrouping(PORTRAIT)
 
         assertEquals((LETTER.height - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(PdfLayoutMgr.DEFAULT_MARGIN.toDouble(), lp.yBodyBottom.toDouble(), 0.000000001)
         assertEquals(LETTER.width.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
-        assertEquals((LETTER.height - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
+        assertEquals((LETTER.height - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
         lp.commit()
@@ -66,14 +67,14 @@ class PageGroupingTest {
         assertEquals((A1.height - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(PdfLayoutMgr.DEFAULT_MARGIN.toDouble(), lp.yBodyBottom.toDouble(), 0.000000001)
         assertEquals(A1.width.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
-        assertEquals((A1.height - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
+        assertEquals((A1.height - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         lp = pageMgr.startPageGrouping()
 
         assertEquals((A1.width - PdfLayoutMgr.DEFAULT_MARGIN).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(PdfLayoutMgr.DEFAULT_MARGIN.toDouble(), lp.yBodyBottom.toDouble(), 0.000000001)
         assertEquals(A1.height.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
-        assertEquals((A1.width - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
+        assertEquals((A1.width - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
         lp.commit()
@@ -85,13 +86,13 @@ class PageGroupingTest {
         pageMgr = PdfLayoutMgr(PDDeviceGray.INSTANCE, Dim(A6))
         val bodyDim: Dim = pageMgr.pageDim.minus(Dim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM))
         lp = PageGrouping(pageMgr, PORTRAIT,
-                          Coord(PdfLayoutMgr.DEFAULT_MARGIN, bottomM + bodyDim.height),
-                          bodyDim)
+                          PageArea(Coord(PdfLayoutMgr.DEFAULT_MARGIN, bottomM + bodyDim.height),
+                                   bodyDim))
 
         assertEquals((A6.height - topM).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(bottomM.toDouble(), lp.yBodyBottom.toDouble(), 0.000000001)
         assertEquals(A6.width.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
-        assertEquals((A6.height - (topM + bottomM)).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
+        assertEquals((A6.height - (topM + bottomM)).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
         lp.commit()
@@ -103,13 +104,13 @@ class PageGroupingTest {
         val bodyDim2: Dim = pageMgr.pageDim.swapWh()
                 .minus(Dim(PdfLayoutMgr.DEFAULT_MARGIN * 2, topM + bottomM))
         lp = PageGrouping(pageMgr, LANDSCAPE,
-                          Coord(PdfLayoutMgr.DEFAULT_MARGIN, bottomM + bodyDim2.height),
-                          bodyDim2)
+                          PageArea(Coord(PdfLayoutMgr.DEFAULT_MARGIN, bottomM + bodyDim2.height),
+                                   bodyDim2))
 
         assertEquals((A6.width - topM).toDouble(), lp.yBodyTop().toDouble(), 0.000000001)
         assertEquals(bottomM.toDouble(), lp.yBodyBottom.toDouble(), 0.000000001)
         assertEquals(A6.height.toDouble(), lp.pageWidth().toDouble(), 0.000000001)
-        assertEquals((A6.width - (topM + bottomM)).toDouble(), lp.bodyDim.height.toDouble(), 0.000000001)
+        assertEquals((A6.width - (topM + bottomM)).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
         lp.commit()
@@ -128,7 +129,7 @@ class PageGroupingTest {
 
         val squareDim = Dim(squareSide, squareSide)
 
-        val melonX = lp.bodyTopLeft.x
+        val melonX = lp.body.topLeft.x
         val textX = melonX + melonWidth + 10
         val squareX = textX + bigText.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10

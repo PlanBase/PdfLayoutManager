@@ -27,6 +27,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.maxExtents
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
@@ -92,32 +93,29 @@ import java.util.TreeSet
  * Constructor
  * @param mgr the PdfLayoutMgr you are using.
  * @param orientation page orientation for this logical page grouping.
- * @param bodyTopLeft the offset (in document units) from the lower-left hand corner of the page to
- * the top-left of the body area.
- * @param bodyDim the dim of the body area.
+ * @param body the offset and size of the body area.
  * @return a new PageGrouping with the given settings.
  */
 class PageGrouping(private val mgr: PdfLayoutMgr,
                    val orientation: Orientation,
-                   val bodyTopLeft: Coord,
-                   val bodyDim: Dim) : RenderTarget { // AKA Document Section
+                   override val body: PageArea) : RenderTarget { // AKA Document Section
 
     // borderItems apply to a logical section
     private val borderItems = TreeSet<SinglePage.PdfItem>()
 
-    val yBodyBottom:Float = bodyTopLeft.y - bodyDim.height
+    val yBodyBottom:Float = body.topLeft.y - body.dim.height
 
     private var valid = true
 
     override fun toString(): String =
             "PageGrouping(pageDim=${if (orientation == PORTRAIT) mgr.pageDim else mgr.pageDim.swapWh()}" +
-            " $orientation bodyTopLeft=$bodyTopLeft bodyDim=$bodyDim)"
+            " $orientation body=$body)"
 
     // ===================================== Instance Methods =====================================
 
     // TODO: could be a val instead of a fun.
     /** The Y-value for top of the body section (in document units)  */
-    fun yBodyTop(): Float = bodyTopLeft.y
+    fun yBodyTop(): Float = body.topLeft.y
 
     /**
      * Width of the entire page (in document units).  This is the short dimension for portrait,
@@ -343,13 +341,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * @param block the LineWrapped item to display
      */
     fun add(topLeft: Coord, block: LineWrapped): DimAndPages {
-        this.pageBreakingTopMargin(topLeft.y - bodyDim.height, bodyDim.height, 0f)
+        this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
         val dap:DimAndPages = block.render(this, topLeft)
         cursorY = topLeft.y - dap.dim.height
         return dap
     }
 
-    var cursorY:Float = bodyTopLeft.y
+    var cursorY:Float = body.topLeft.y
 
     /**
      * Add LineWrapped items directly to the page grouping at the current cursor.
@@ -358,16 +356,18 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * @param block the LineWrapped item to display
      */
     fun append(block: LineWrapped): DimAndPages =
+            // TODO: Should have x=0 only if there is a pageReactor???
             add(Coord(0f, cursorY), block)
 
     /**
-     * Add LineWrapped items directly to the page grouping at the current cursor.
-     * The cursor is always at the left-hand side of the body at the bottom of the last item put on the page.
+     * Cell goes at x=0 and cursorY.  Cell width is bodyDim.width.
      *
-     * @param block the LineWrapped item to display
+     * @param cellStyle the style for the cell to make
+     * @param contents the contents of the cell
      */
     fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPages =
-            add(Coord(0f, cursorY), Cell(cellStyle, bodyDim.width, contents).wrap())
+            // TODO: Should have x=0 only if there is a pageReactor???
+            add(Coord(0f, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
     override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float =
             appropriatePage(bottomY, height, requiredSpaceBelow).adj
@@ -383,7 +383,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     private fun appropriatePage(bottomY: Float, height: Float, requiredSpaceBelow:Float): PageBufferAndY {
 //        println("appropriatePage(bottomY=$bottomY, height=$height)")
         // Used to throw exception, but this is a valid situation.
-        val spaceBelow: Float = if ( (height + requiredSpaceBelow) > bodyDim.height ) {
+        val spaceBelow: Float = if ( (height + requiredSpaceBelow) > body.dim.height ) {
             0f
         } else {
             requiredSpaceBelow
@@ -399,9 +399,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         // the printable area.
         while ( (y - spaceBelow) < yBodyBottom ) {
 //            println("  y=$y lowerLeftBody.y=${lowerLeftBody.y}")
-            y += bodyDim.height
+            y += body.dim.height
             idx++
-            mgr.ensurePageIdx(idx)
+            mgr.ensurePageIdx(idx, body)
         }
         val ps = mgr.page(idx)
         var adj = 0f

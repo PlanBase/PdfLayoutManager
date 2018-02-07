@@ -67,21 +67,21 @@ class TextStyleTest {
 
         val times20 = TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK)
         val leading = times20.lineHeight
-        page.drawStyledText(lp.bodyTopLeft.minusY(leading), quickBrownFox, times20)
+        page.drawStyledText(lp.body.topLeft.minusY(leading), quickBrownFox, times20)
 
-        page.drawStyledText(lp.bodyTopLeft.minusY(leading * 2), quickBrownFox,
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 2), quickBrownFox,
                             TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 1f, 0f))
 
-        page.drawStyledText(lp.bodyTopLeft.minusY(leading * 3), quickBrownFox,
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 3), quickBrownFox,
                             TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, -1f, 0f))
 
-        page.drawStyledText(lp.bodyTopLeft.minusY(leading * 4), quickBrownFox,
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 4), quickBrownFox,
                             TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 0f, 2f))
 
-        page.drawStyledText(lp.bodyTopLeft.minusY(leading * 5), quickBrownFox,
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 5), quickBrownFox,
                             TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 0f, -2f))
 
-        val helloOff = lp.bodyTopLeft.minusY(leading * 6)
+        val helloOff = lp.body.topLeft.minusY(leading * 6)
         page.drawStyledText(helloOff, "Hello", times20)
         page.drawStyledText(helloOff.plusX(times20.stringWidthInDocUnits("Hello")), "subscript",
                             TextStyle(PDType1Font.TIMES_ROMAN, 11f, CMYK_BLACK, 11f, -4f, 0f, 0f))

@@ -21,6 +21,8 @@
 package com.planbase.pdf.layoutmanager
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
@@ -146,9 +148,14 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     fun page(idx:Int):SinglePage = pages[idx]
 
-    fun ensurePageIdx(idx:Int) {
+    /** Allows inserting a single page before already created pages.  Use with caution. */
+    fun insertPageAt(page:SinglePage, idx:Int) {
+        pages.add(idx, page)
+    }
+
+    fun ensurePageIdx(idx:Int, body:PageArea) {
         while (pages.size <= idx) {
-            pages.add(SinglePage(pages.size + 1, this, pageReactor))
+            pages.add(SinglePage(pages.size + 1, this, pageReactor, body))
         }
     }
 
@@ -169,14 +176,23 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     fun startPageGrouping(o: Orientation,
                           pr: ((Int, SinglePage) -> Float)?): PageGrouping {
         pageReactor = pr
-        val pb = SinglePage(pages.size + 1, this, pageReactor)
+        val body: PageArea = pageArea(o)
+        val pb = SinglePage(pages.size + 1, this, pageReactor, body)
         pages.add(pb)
-        val bodyDim: Dim = if (o == Orientation.PORTRAIT)
-            this.pageDim.minus(DEFAULT_DOUBLE_MARGIN_DIM)
-        else
-            this.pageDim.swapWh().minus(DEFAULT_DOUBLE_MARGIN_DIM)
-        return PageGrouping(this, o, Coord(DEFAULT_MARGIN, DEFAULT_MARGIN + bodyDim.height), bodyDim)
+        return PageGrouping(this, o, body)
     }
+
+    private fun pageArea(o: Orientation, margins:Padding = Padding(DEFAULT_MARGIN)):PageArea {
+        val bodyDim:Dim = margins.subtractFrom(if (o == Orientation.PORTRAIT) {
+            pageDim
+        } else {
+            pageDim.swapWh()
+        })
+        return PageArea(Coord(margins.left, margins.bottom + bodyDim.height),
+                        bodyDim)
+    }
+
+    fun defaultPageArea(o: Orientation = LANDSCAPE) = pageArea(o)
 
     /**
      * Tells this PdfLayoutMgr that you want to start a new logical page (which may be broken across

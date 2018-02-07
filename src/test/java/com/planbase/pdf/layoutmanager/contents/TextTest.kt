@@ -220,7 +220,7 @@ class TextTest {
         // This is for the baseline!
         val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val logicalPage = mgr.startPageGrouping()
-        mgr.ensurePageIdx(0)
+        mgr.ensurePageIdx(0, mgr.defaultPageArea())
         val lp = mgr.page(0)
         val margin = 40f
         val pageDim = mgr.pageDim.swapWh()

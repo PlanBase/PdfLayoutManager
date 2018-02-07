@@ -21,9 +21,15 @@
 package com.planbase.pdf.layoutmanager.pages
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -38,10 +44,12 @@ import java.util.TreeSet
  * to the cache and what controls the drawing.  You generally want to use [PageGrouping] when
  * you want automatic page-breaking.  SinglePage is for when you want to force something onto a
  * specific page only.
+ * @param body the offset and size of the body area.
  */
 class SinglePage(val pageNum: Int,
                  private val mgr: PdfLayoutMgr,
-                 pageReactor: ((Int, SinglePage) -> Float)?) : RenderTarget {
+                 pageReactor: ((Int, SinglePage) -> Float)?,
+                 override val body: PageArea) : RenderTarget {
     private var items : SortedSet<PdfItem> = TreeSet()
     private var lastOrd: Long = 0
     // The x-offset for the body section of this page (left-margin-ish)
@@ -88,6 +96,44 @@ class SinglePage(val pageNum: Int,
         }
         return HeightAndPage(textStyle.lineHeight, pageNum)
     }
+
+    var cursorY:Float = body.topLeft.y
+
+    /**
+     * Add LineWrapped items directly to the page grouping at the specified coordinate.  This is a little more
+     * work than adding an entire chapter to a cell and calling Cell.render(), but it allows each top level item
+     * to return a page range.  These pages can later be used to create a table of contents or an index.
+     *
+     * @param topLeft the coordinate to add the item at.  Might want to make a convenience version of this method
+     * that internally updates a cursor so you never have to specify this.
+     * @param block the LineWrapped item to display
+     */
+    fun add(topLeft: Coord, block: LineWrapped): DimAndPages {
+        this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
+        val dap: DimAndPages = block.render(this, topLeft)
+        cursorY = topLeft.y - dap.dim.height
+        return dap
+    }
+
+    /**
+     * Add LineWrapped items directly to the page grouping at the current cursor and body-left.
+     * The cursor is always at the left-hand side of the body at the bottom of the last item put on the page.
+     *
+     * @param block the LineWrapped item to display
+     */
+    fun append(block: LineWrapped): DimAndPages =
+            // TODO: Should have body.topLeft.x ONLY IF NO PAGErEACTOR
+            add(Coord(body.topLeft.x, cursorY), block)
+
+    /**
+     * Cell goes at bodyTopLeft.x and cursorY.  Cell width is bodyDim.width.
+     *
+     * @param cellStyle the style for the cell to make
+     * @param contents the contents of the cell
+     */
+    fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPages =
+            // TODO: Should have body.topLeft.x ONLY IF NO PAGErEACTOR
+            add(Coord(body.topLeft.x, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
     /**
      * Returns the top margin necessary to push this item onto a new page if it won't fit on this one.

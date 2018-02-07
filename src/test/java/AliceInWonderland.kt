@@ -243,30 +243,30 @@ class AliceInWonderland {
         }
 
 
-//        frontMatter.appendCell(bodyCellStyle,
-//                            listOf(Text(incipit, "Alice in Wonderland")))
-//        frontMatter.appendCell(bodyCellStyle,
-//                               listOf(Text(heading, "By Lewis Carroll")))
+        var sp = SinglePage(-1, pageMgr, null, lp.body)
+        sp.cursorY =  sp.cursorY - 100f
+        dap = sp.appendCell(bodyCellStyle, listOf(Text(incipit, "Alice in Wonderland")))
+        dap = sp.appendCell(bodyCellStyle, listOf(Text(heading, "By Lewis Carroll")))
+        pageMgr.insertPageAt(sp, 0)
 
-//        dap = frontMatter.append(Cell(chapTitleCellStyle, bodyWidth,
-//                             listOf(Text(heading, "Table of Contents")),
-//                             200f).wrap()) // Probably forces a new page.
-////        assertEquals(IntRange(1, 1), dap.pageNums)
-//
-//        var table = Table(mutableListOf(200f, 25f))
-//        var rowBuilder = table.partBuilder()
-//                .rowBuilder()
-//
-//        tableOfContents.forEach {
-//            item -> rowBuilder = rowBuilder.cell(bodyCellStyle, listOf(Text(body, item.title)))
-//                .cell(bodyCellStyle, listOf(Text(body, "" + item.p))).buildRow().rowBuilder()
-//        }
-//        table = rowBuilder.buildRow().buildPart()
-//
-//        frontMatter.append(table.wrap())
-//
-//        frontMatter.commit()
-//
+        sp = SinglePage(-1, pageMgr, null, lp.body)
+
+        dap = sp.appendCell(chapTitleCellStyle,
+                             listOf(Text(heading, "Table of Contents")))
+
+        var table = Table(mutableListOf(200f, 25f))
+        var rowBuilder = table.partBuilder()
+                .rowBuilder()
+
+        tableOfContents.forEach {
+            item -> rowBuilder = rowBuilder.cell(bodyCellStyle, listOf(Text(body, item.title)))
+                .cell(bodyCellStyle, listOf(Text(body, "" + item.p))).buildRow().rowBuilder()
+        }
+        table = rowBuilder.buildRow().buildPart()
+
+        sp.add(sp.body.topLeft.minusY(dap.dim.height), table.wrap())
+        pageMgr.insertPageAt(sp, 1)
+
 
         lp.commit()
         // We're just going to write to a file.

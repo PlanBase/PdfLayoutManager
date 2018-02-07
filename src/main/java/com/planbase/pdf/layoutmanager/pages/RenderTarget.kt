@@ -21,6 +21,7 @@
 package com.planbase.pdf.layoutmanager.pages
 
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.utils.Coord
@@ -32,6 +33,9 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
  * implementation.  For a fixed, single page use the [SinglePage] implementation.
  */
 interface RenderTarget {
+    /** the offset and size of the body area. */
+    val body: PageArea
+
     /**
      * Draws a line from (x1, y1) to (x2, y2).  Direction is important if using mitering.
      *

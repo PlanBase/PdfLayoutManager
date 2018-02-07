@@ -152,7 +152,7 @@ class WrappedCellTest {
 
         TestCase.assertEquals(120f, wrappedTable.dim.width)
 
-        val dimAndPages: DimAndPages = wrappedTable.render(lp, lp.bodyTopLeft)
+        val dimAndPages: DimAndPages = wrappedTable.render(lp, lp.body.topLeft)
 
         Dim.assertEquals(wrappedTable.dim, dimAndPages.dim, 0.00003f)
 

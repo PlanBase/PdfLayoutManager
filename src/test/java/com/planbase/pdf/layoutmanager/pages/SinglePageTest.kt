@@ -41,7 +41,7 @@ class SinglePageTest {
 
         val squareDim = Dim(squareSide, squareSide)
 
-        val melonX = lp.bodyTopLeft.x
+        val melonX = lp.body.topLeft.x
         val textX = melonX + melonWidth + 10
         val squareX = textX + bigText.maxWidth() + 10
         val lineX1 = squareX + squareSide + 10
