@@ -12,43 +12,28 @@
  // See the License for the specific language governing permissions and
  // limitations under the License.
 
-import TestManual2.Companion.BULLET_TEXT_STYLE
-import TestManual2.Companion.CMYK_PALE_PEACH
-import TestManual2.Companion.CMYK_THISTLE
-import TestManual2.Companion.CMYK_VIOLET
-import TestManual2.Companion.HEADING_TEXT_STYLE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.Align.*
-import com.planbase.pdf.layoutmanager.attributes.BorderStyle
+import com.planbase.pdf.layoutmanager.attributes.Align.BOTTOM_LEFT
+import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT_JUSTIFY
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle.Companion.NO_BORDERS
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.contents.Cell
-import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.pages.SinglePage
-import com.planbase.pdf.layoutmanager.utils.BULLET_CHAR
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.junit.Test
-import java.io.File
 import java.io.FileOutputStream
-import java.util.SortedMap
 import java.util.TreeMap
-import javax.imageio.ImageIO
 import kotlin.test.assertEquals
 
 /**
@@ -136,11 +121,12 @@ class AliceInWonderland {
                                         " in the world she was to get out again....")))
         assertEquals(IntRange(2, 2), dap.pageNums)
 
+        // Forces a new page.
+        lp.cursorToNewPage()
 
-        dap = lp.append(Cell(chapTitleCellStyle, bodyWidth,
+        dap = lp.appendCell(chapTitleCellStyle,
                               listOf(Text(incipit, "2. "),
-                                     Text(heading, "The Pool of Tears")),
-                             200f).wrap()) // Probably forces a new page.
+                                     Text(heading, "The Pool of Tears")))
         assertEquals(IntRange(3, 3), dap.pageNums)
         tableOfContents.add(TitlePage("2. The Pool of Tears", dap.pageNums.start))
 
@@ -181,10 +167,12 @@ class AliceInWonderland {
         assertEquals(IntRange(4, 4), dap.pageNums)
         addToIndex("Feet", dap, index)
 
-        dap = lp.append(Cell(chapTitleCellStyle, bodyWidth,
+        lp.cursorToNewPage()
+
+        // TODO: Here there's no space between "a" and "Long".  I thought that bug was fixed!
+        dap = lp.appendCell(chapTitleCellStyle,
                              listOf(Text(incipit, "3. "),
-                                    Text(heading, "A Caucus-Race and a Long Tale")),
-                             200f).wrap()) // Probably forces a new page.
+                                    Text(heading, "A Caucus-Race and a Long Tale")))
         assertEquals(IntRange(5, 5), dap.pageNums)
         tableOfContents.add(TitlePage("3. A Caucus-Race and a Long Tale", dap.pageNums.start))
 
@@ -218,9 +206,10 @@ class AliceInWonderland {
                                         " felt sure she would catch a bad cold if she did not get dry very soon....")))
         assertEquals(IntRange(6, 6), dap.pageNums)
 
-        dap = lp.append(Cell(chapTitleCellStyle, bodyWidth,
-                             listOf(Text(heading, "Index")),
-                             200f).wrap()) // Probably forces a new page.
+        lp.cursorToNewPage()
+
+        dap = lp.appendCell(chapTitleCellStyle,
+                             listOf(Text(heading, "Index")))
         tableOfContents.add(TitlePage("Index", dap.pageNums.start))
 
         for (item in index) {

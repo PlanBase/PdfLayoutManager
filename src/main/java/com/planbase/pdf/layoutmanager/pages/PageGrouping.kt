@@ -341,6 +341,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * @param block the LineWrapped item to display
      */
     fun add(topLeft: Coord, block: LineWrapped): DimAndPages {
+        // TODO: Why is the return value ignored here?
         this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
         val dap:DimAndPages = block.render(this, topLeft)
         cursorY = topLeft.y - dap.dim.height
@@ -348,6 +349,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     var cursorY:Float = body.topLeft.y
+
+    fun cursorToNewPage() {
+        cursorY -= this.pageBreakingTopMargin(cursorY, body.dim.height, 0f)
+    }
 
     /**
      * Add LineWrapped items directly to the page grouping at the current cursor.

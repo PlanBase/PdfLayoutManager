@@ -148,8 +148,16 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     fun page(idx:Int):SinglePage = pages[idx]
 
-    /** Allows inserting a single page before already created pages.  Use with caution. */
+    /**
+     * Allows inserting a single page before already created pages.  Use with caution.
+     * @param page the page to insert
+     * @param idx the index to insert at (shifting the pages currently at that index and all greater indices up one.
+     * This must be >= the unCommittedPageIdx.  You cannot insert before already committed pages.
+     */
     fun insertPageAt(page:SinglePage, idx:Int) {
+        if (idx < unCommittedPageIdx) {
+            throw IllegalStateException("Can't insert page before already committed pages.")
+        }
         pages.add(idx, page)
     }
 
