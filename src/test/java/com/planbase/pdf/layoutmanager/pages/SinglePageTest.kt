@@ -70,7 +70,7 @@ class SinglePageTest {
             y -= melonHeight
         }
 
-        lp.commit()
+        pageMgr.commit()
         val os = FileOutputStream("singlePage.pdf")
         pageMgr.save(os)
     }

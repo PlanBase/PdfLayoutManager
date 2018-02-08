@@ -91,7 +91,7 @@ class TextStyleTest {
         page.drawStyledText(stuffOff.plusX(times20.stringWidthInDocUnits("Stuff") + 1f), "superscript",
                             TextStyle(PDType1Font.TIMES_ROMAN, 11f, CMYK_BLACK, 11f, 10f, 0f, 0f))
 
-        lp.commit()
+        pageMgr.commit()
         val os = FileOutputStream("textStyleTest.pdf")
         pageMgr.save(os)
 

@@ -54,7 +54,7 @@ class TestMultiPageLines {
 
         // middle line
         lp.drawLine(Coord(pMargin, 0f), Coord(pageRMargin, 0f), lineStyle, true)
-        lp.commit()
+        pageMgr.commit()
 
 //        val os = FileOutputStream("multiPageLines.pdf")
 //        pageMgr.save(os)

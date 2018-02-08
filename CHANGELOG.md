@@ -8,6 +8,8 @@ Each add returns the page number range that the final rendered element so that y
  - Changed LineWrapped.render to return DimAndPages instead of just Dim.
  - Changed PageGrouping constructor to take the top-left of the Body (was the lower-left).
  - Added PageGrouping.add() which returns an adjusted height and page range.
+ - Moved commit() from PageGrouping to PdfLayoutMgr and made PdfLayoutMgr.logicalPageEnd() private.
+ - Added PageGrouping cursor with cursorToNewPage() function for adding pages.
 
 ## 2.0.6 - 2018-01-22
  - Added justified text style: Align.TOP_LEFT_JUSTIFY.

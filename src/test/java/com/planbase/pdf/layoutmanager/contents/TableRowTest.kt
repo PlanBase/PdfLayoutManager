@@ -63,7 +63,7 @@ class TableRowTest {
                 .buildPart()
                 .wrap().render(lp, upperLeft)
 
-        lp.commit()
+        pageMgr.commit()
         // We're just going to write to a file.
         // Commit it to the output stream!
 //        val os = FileOutputStream("rowHeight.pdf")
@@ -108,7 +108,7 @@ class TableRowTest {
                 .buildRow()
                 .buildPart()
         tB.wrap().render(lp, lp.body.topLeft)
-        lp.commit()
+        pageMgr.commit()
 
 //        val os = FileOutputStream("rowHeight2.pdf")
 //        pageMgr.save(os)

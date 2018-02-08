@@ -95,7 +95,7 @@ class CellTest {
 //        println("xya=$xya")
 
         assertEquals(squareDim, dim.dim.height)
-        lp.commit()
+        pageMgr.commit()
 
 //        val os = FileOutputStream("testCell1.pdf")
 //        pageMgr.save(os)
@@ -131,7 +131,7 @@ class CellTest {
         val after:DimAndPages = wrappedCell.render(lp, startCoord)
         TestCase.assertEquals(Dim(230.0f, 186.23203f), after.dim)
 
-        lp.commit()
+        pageMgr.commit()
         // We're just going to write to a file.
         val os = FileOutputStream("testNestedCellsAcrossPageBreak.pdf")
         // Commit it to the output stream!
@@ -163,7 +163,7 @@ class CellTest {
         val ret2:DimAndPages = wrappedCell.render(lp, Coord(40f, 72f))
         assertEquals(Dim(170f, 58.65849f), ret2.dim)
 
-        lp.commit()
+        pageMgr.commit()
 //        val os = FileOutputStream("testCellAcrossPageBreak.pdf")
 //        pageMgr.save(os)
     }

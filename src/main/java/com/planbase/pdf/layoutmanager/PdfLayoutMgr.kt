@@ -106,6 +106,8 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     private val pages:MutableList<SinglePage> = mutableListOf()
 
+    private val uncommittedPageGroupings:MutableList<PageGrouping> = mutableListOf()
+
     // pages.size() counts the first page as 1, so 0 is the appropriate sentinel value
     private var unCommittedPageIdx:Int = 0
 
@@ -187,7 +189,9 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         val body: PageArea = pageArea(o)
         val pb = SinglePage(pages.size + 1, this, pageReactor, body)
         pages.add(pb)
-        return PageGrouping(this, o, body)
+        val pg = PageGrouping(this, o, body)
+        uncommittedPageGroupings.add(pg)
+        return pg
     }
 
     private fun pageArea(o: Orientation, margins:Padding = Padding(DEFAULT_MARGIN)):PageArea {
@@ -220,6 +224,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     @Throws(IOException::class)
     fun loadTrueTypeFont(fontFile: File): PDType0Font = PDType0Font.load(doc, fontFile)
 
+    fun commit() {
+        uncommittedPageGroupings.forEach { logicalPageEnd(it) }
+        uncommittedPageGroupings.clear()
+    }
+
     /**
      * Call this when you are through with your current set of pages to commit all pending text and
      * drawing operations.  This is the only method that throws an IOException because the purpose of
@@ -227,10 +236,12 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * written to the underlying stream.  This method turns the potential pages into real output.
      * Call when you need a page break, or your document is done and you need to write it out.
      *
+     * Once you call this method, you cannot insert or modify earlier pages.
+     *
      * @throws IOException if there is a failure writing to the underlying stream.
      */
     @Throws(IOException::class)
-    fun logicalPageEnd(lp: PageGrouping) {
+    private fun logicalPageEnd(lp: PageGrouping) {
 
         // Write out all uncommitted pages.
         while (unCommittedPageIdx < pages.size) {
@@ -264,6 +275,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
             }
             unCommittedPageIdx++
         }
+        lp.invalidate()
     }
 
     override fun equals(other: Any?): Boolean {

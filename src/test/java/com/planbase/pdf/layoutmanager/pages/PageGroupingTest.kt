@@ -32,6 +32,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.imageio.ImageIO
+import kotlin.math.nextDown
+import kotlin.math.nextUp
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -57,7 +59,7 @@ class PageGroupingTest {
         assertEquals((LETTER.height - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
-        lp.commit()
+        pageMgr.commit()
         pageMgr.save(ByteArrayOutputStream())
 
         // Make a new manager for a new test.
@@ -77,7 +79,7 @@ class PageGroupingTest {
         assertEquals((A1.width - PdfLayoutMgr.DEFAULT_MARGIN * 2).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
-        lp.commit()
+        pageMgr.commit()
         pageMgr.save(ByteArrayOutputStream())
 
         val topM = 20f
@@ -95,7 +97,7 @@ class PageGroupingTest {
         assertEquals((A6.height - (topM + bottomM)).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
-        lp.commit()
+        pageMgr.commit()
         pageMgr.save(ByteArrayOutputStream())
 
         // Make a new manager for a new test.
@@ -113,7 +115,7 @@ class PageGroupingTest {
         assertEquals((A6.width - (topM + bottomM)).toDouble(), lp.body.dim.height.toDouble(), 0.000000001)
 
         // Write to nothing to suppress the "stream not committed" warning
-        lp.commit()
+        pageMgr.commit()
         pageMgr.save(ByteArrayOutputStream())
     }
 
@@ -215,7 +217,7 @@ class PageGroupingTest {
             y -= listOf(imgHaP.height, txtHaP.height, rectY).max() as Float
         }
 
-        lp.commit()
+        pageMgr.commit()
         val os = FileOutputStream("pageGrouping.pdf")
         pageMgr.save(os)
     }
@@ -269,7 +271,7 @@ class PageGroupingTest {
         val finalDaP:DimAndPages = wrappedCell.render(lp, Coord(40f, PDRectangle.A6.height - 40f))
         assertEquals(Dim(217.63782f, 800.7112f), finalDaP.dim)
 
-        lp.commit()
+        pageMgr.commit()
 
 //        val os = FileOutputStream("testPageBreakingTopMargin.pdf")
 //        pageMgr.save(os)
@@ -299,8 +301,34 @@ class PageGroupingTest {
         val finalDaP: DimAndPages = wrappedCell.render(lp, Coord(40f, 110f))
         assertEquals(Dim(217.63782f, 87.27999f), finalDaP.dim)
 
-        lp.commit()
+        pageMgr.commit()
 
 //        pageMgr.save(FileOutputStream("testPageBreakWithInlineNearBottom.pdf"))
+    }
+
+    @Test fun testAppropriatePage() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping()
+        val melonHeight = 100f
+
+        var y:Float = lp.yBodyBottom
+//        println("lp.yBodyBottom=${lp.yBodyBottom}, y=$y, lp.body=${lp.body} pageMgr.pageDim=${pageMgr.pageDim}")
+//        var unCommittedPageIdx = pageMgr.unCommittedPageIdx()
+        var pby:PageGrouping.PageBufferAndY = lp.appropriatePage(y, melonHeight, 0f)
+        assertEquals(0f, pby.adj)
+        assertEquals(y, pby.y)
+        assertEquals(1, pby.pb.pageNum)
+
+        y = lp.yBodyBottom.nextUp()
+        pby = lp.appropriatePage(y, melonHeight, 0f)
+        assertEquals(0f, pby.adj)
+        assertEquals(y, pby.y)
+        assertEquals(1, pby.pb.pageNum)
+
+        y = lp.yBodyBottom.nextDown()
+        pby = lp.appropriatePage(y, melonHeight, 0f)
+        assertEquals(melonHeight, pby.adj)
+        assertEquals(2, pby.pb.pageNum)
+        assertEquals(lp.yBodyTop() - 100f, pby.y)
     }
 }

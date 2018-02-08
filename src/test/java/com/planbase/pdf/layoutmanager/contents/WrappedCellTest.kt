@@ -49,7 +49,7 @@ class WrappedCellTest {
         val dimAndPages: DimAndPages = wrappedCell.render(lp, upperLeft)
         Dim.assertEquals(wrappedCell.dim, dimAndPages.dim, 0.00002f)
 
-        lp.commit()
+        pageMgr.commit()
     }
 
     @Test fun testMultiLine() {
@@ -75,7 +75,7 @@ class WrappedCellTest {
                                  wrappedCell.dim.width)
 
         wrappedCell.render(lp, upperLeft)
-        lp.commit()
+        pageMgr.commit()
 
 //        val os = FileOutputStream("test4.pdf")
 //        pageMgr.save(os)
@@ -124,7 +124,7 @@ class WrappedCellTest {
 
         Dim.assertEquals(wrappedCell.dim, dimAndPages.dim, 0.00002f)
 
-        lp.commit()
+        pageMgr.commit()
 
 //        // We're just going to write to a file.
 //        // Commit it to the output stream!
@@ -156,7 +156,7 @@ class WrappedCellTest {
 
         Dim.assertEquals(wrappedTable.dim, dimAndPages.dim, 0.00003f)
 
-        lp.commit()
+        pageMgr.commit()
 //        val os = FileOutputStream("test3.pdf")
 //        pageMgr.save(os)
     }

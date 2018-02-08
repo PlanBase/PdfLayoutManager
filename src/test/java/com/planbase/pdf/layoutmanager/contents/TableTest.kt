@@ -185,7 +185,7 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
         val after:DimAndPages = wrappedTable.render(lp, startCoord)
         assertEquals(Dim(230.0f, 130.74399f), after.dim)
 
-        lp.commit()
+        pageMgr.commit()
         // We're just going to write to a file.
         val os = FileOutputStream("testNestedTablesAcrossPageBreak.pdf")
         // Commit it to the output stream!

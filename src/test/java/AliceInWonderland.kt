@@ -231,7 +231,6 @@ class AliceInWonderland {
             lp.appendCell(bodyCellStyle, ret)
         }
 
-
         var sp = SinglePage(-2, pageMgr, null, lp.body)
         sp.cursorY =  sp.cursorY - 100f
         dap = sp.appendCell(bodyCellStyle, listOf(Text(incipit, "Alice in Wonderland")))
@@ -260,7 +259,7 @@ class AliceInWonderland {
         assertEquals(IntRange(-1, -1), dap.pageNums)
         pageMgr.insertPageAt(sp, 1)
 
-        lp.commit()
+        pageMgr.commit()
         // We're just going to write to a file.
         val os = FileOutputStream("alice.pdf")
 

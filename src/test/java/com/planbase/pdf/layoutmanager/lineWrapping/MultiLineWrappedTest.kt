@@ -8,16 +8,15 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
+import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.FileOutputStream
 import kotlin.test.assertTrue
 
 class MultiLineWrappedTest {
@@ -64,9 +63,9 @@ class MultiLineWrappedTest {
 //        println("tStyle2=$tStyle2")
         assertEquals(wrappedText.dim, dap.dim)
 
-        lp.commit()
-        val os = FileOutputStream("multiLineBaseline.pdf")
-        pageMgr.save(os)
+        pageMgr.commit()
+//        val os = FileOutputStream("multiLineBaseline.pdf")
+//        pageMgr.save(os)
     }
 
 //    @Ignore

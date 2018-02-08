@@ -214,7 +214,7 @@ class TestManualllyPdfLayoutMgr {
                 .wrap()
                 .render(lp, Coord(lp.body.topLeft.x + xya.dim.width + 10, lp.yBodyTop() - xyb.dim.height - 10))
 
-        lp.commit()
+        pageMgr.commit()
 
         // Let's do a portrait page now.  I just copied this from the previous page.
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
@@ -291,7 +291,7 @@ class TestManualllyPdfLayoutMgr {
                 .render(lp, Coord(lp.pageWidth() - (100 + pMargin),
                                   lp.yBodyBottom + 15 + pMargin))
 
-        lp.commit()
+        pageMgr.commit()
 
         // More landscape pages
         val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK)
@@ -485,7 +485,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         tB.wrap()
                 .render(lp, lp.body.topLeft)
-        lp.commit()
+        pageMgr.commit()
 
         val lineStyle = LineStyle(RGB_BLACK, 1f)
 
@@ -523,7 +523,7 @@ class TestManualllyPdfLayoutMgr {
 
         // middle line
         lp.drawLine(Coord(pMargin, 0f), Coord(pageRMargin, 0f), lineStyle, true)
-        lp.commit()
+        pageMgr.commit()
 
         // All done - write it out!
 

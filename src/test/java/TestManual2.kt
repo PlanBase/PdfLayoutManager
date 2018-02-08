@@ -185,7 +185,7 @@ class TestManual2 {
         coord = coord.minusY(dap.dim.height)
         lp.drawLine(coord, coord.plusX(bodyWidth), LineStyle(CMYK_QUEEN_PINK))
 
-        lp.commit()
+        pageMgr.commit()
         // We're just going to write to a file.
         val os = FileOutputStream("test2.pdf")
 

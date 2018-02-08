@@ -219,7 +219,7 @@ class TextTest {
 
         // This is for the baseline!
         val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val logicalPage = mgr.startPageGrouping()
+        mgr.startPageGrouping()
         mgr.ensurePageIdx(0, mgr.defaultPageArea())
         val lp = mgr.page(0)
         val margin = 40f
@@ -235,7 +235,7 @@ class TextTest {
         val heightAndPage: HeightAndPage = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent), txt1.text, tStyle1, true)
         assertEquals(tStyle1.lineHeight, heightAndPage.height)
 
-        logicalPage.commit()
+        mgr.commit()
 //        val os = FileOutputStream("textBaseline.pdf")
 //        mgr.save(os)
     }
