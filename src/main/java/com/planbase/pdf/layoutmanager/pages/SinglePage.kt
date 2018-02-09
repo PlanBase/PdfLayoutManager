@@ -54,7 +54,7 @@ class SinglePage(val pageNum: Int,
     private var lastOrd: Long = 0
     // The x-offset for the body section of this page (left-margin-ish)
     // THIS MUST COME LAST as items will not be initialized if it comes before.
-    private val xOff: Float = pageReactor?.invoke(pageNum, this) ?: 0f
+    private val xOff: Float = pageReactor?.invoke(pageNum, this) ?: body.topLeft.x
 
     private fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, zIdx: Float) {
         items.add(FillRect(bottomLeft.plusX(xOff), dim, c, lastOrd++, zIdx))
@@ -122,8 +122,7 @@ class SinglePage(val pageNum: Int,
      * @param block the LineWrapped item to display
      */
     fun append(block: LineWrapped): DimAndPages =
-            // TODO: Should have body.topLeft.x ONLY IF NO PAGErEACTOR
-            add(Coord(body.topLeft.x, cursorY), block)
+            add(Coord(xOff, cursorY), block)
 
     /**
      * Cell goes at bodyTopLeft.x and cursorY.  Cell width is bodyDim.width.
@@ -132,8 +131,7 @@ class SinglePage(val pageNum: Int,
      * @param contents the contents of the cell
      */
     fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPages =
-            // TODO: Should have body.topLeft.x ONLY IF NO PAGErEACTOR
-            add(Coord(body.topLeft.x, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
+            add(Coord(xOff, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
     /**
      * Returns the top margin necessary to push this item onto a new page if it won't fit on this one.

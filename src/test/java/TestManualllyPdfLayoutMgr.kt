@@ -266,17 +266,17 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         val xyc: DimAndPages = tB
                 .wrap()
-                .render(lp, lp.body.topLeft)
+                .render(lp, lp.body.topLeft.x(0f))
 
         // This was very hastily added to this test to prove that font loading works (it does).
         val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         Cell(CellStyle(MIDDLE_CENTER,
                        BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
-             200f,
+             170f,
              listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Liberation Mono Bold Font!")))
                 .wrap()
-                .render(lp, lp.body.topLeft.plusXMinusY(xyc.dim))
+                .render(lp, lp.body.topLeft.minusY(xyc.dim.height).x(xyc.dim.width))
 
         tB = Table()
         tB.addCellWidths(listOf(100f))
@@ -288,7 +288,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         // Where's the lower-right-hand corner?  Put a cell there.
         tB.wrap()
-                .render(lp, Coord(lp.pageWidth() - (100 + pMargin),
+                .render(lp, Coord(lp.body.dim.width - 100,
                                   lp.yBodyBottom + 15 + pMargin))
 
         pageMgr.commit()
