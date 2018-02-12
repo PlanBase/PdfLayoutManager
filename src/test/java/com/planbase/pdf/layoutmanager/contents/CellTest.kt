@@ -2,9 +2,12 @@ package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.CMYK_LIGHT_GREEN
+import TestManual2.Companion.a6PortraitBody
 import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT
 import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT_JUSTIFY
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
@@ -58,7 +61,7 @@ class CellTest {
 
     @Test fun testWrapTable() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         val cellStyle = CellStyle(
                 TOP_LEFT, BoxStyle(Padding(2f),
@@ -105,7 +108,7 @@ class CellTest {
     @Test fun testNestedCellsAcrossPageBreak() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
-        val lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
+        val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
         val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.1f))
 
         val bulletCell = Cell(CellStyle(TOP_LEFT, BoxStyle(Padding.NO_PADDING, null, testBorderStyle)), 230f,
@@ -126,7 +129,7 @@ class CellTest {
         val wrappedCell: WrappedCell = bulletCell.wrap()
         TestCase.assertEquals(Dim(230.0f, 124.948f), wrappedCell.dim)
 
-        val startCoord = Coord(40f, 140f)
+        val startCoord = Coord(0f, 140f)
 
         val after:DimAndPages = wrappedCell.render(lp, startCoord)
         TestCase.assertEquals(Dim(230.0f, 186.23203f), after.dim)
@@ -143,7 +146,7 @@ class CellTest {
         // A total line height is now calculated for the entire MultiLineWrapped when later inline text has a surprising
         // default lineHeight.  This test maybe belongs in MultiLineWrapped, but better here than nowhere.
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
-        val lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
+        val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
         val symbola7p5 = TextStyle(TIMES_ROMAN, 7.5f, CMYK_BLACK)
         val contentCell=Cell(CellStyle(TOP_LEFT_JUSTIFY, NO_PAD_NO_BORDER), 170f,
                              listOf(Text(symbola7p5, "Men often hate each other because they fear each other; they" +

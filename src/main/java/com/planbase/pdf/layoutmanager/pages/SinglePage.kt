@@ -110,7 +110,10 @@ class SinglePage(val pageNum: Int,
      */
     fun add(topLeft: Coord, block: LineWrapped): DimAndPages {
         this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
-        val dap: DimAndPages = block.render(this, topLeft)
+        // We subtract xOff here because it will get added back on when render() calls back to SinglePage.
+        // Better to design this to leave the value alone since addition/subtraction of floats/doubles
+        // introduces inaccuracies.
+        val dap: DimAndPages = block.render(this, topLeft.plusX(- xOff))
         cursorY = topLeft.y - dap.dim.height
         return dap
     }

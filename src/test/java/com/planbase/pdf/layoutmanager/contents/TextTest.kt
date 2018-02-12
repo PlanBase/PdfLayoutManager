@@ -1,7 +1,9 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.BULLET_TEXT_STYLE
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
@@ -219,8 +221,8 @@ class TextTest {
 
         // This is for the baseline!
         val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        mgr.startPageGrouping()
-        mgr.ensurePageIdx(0, mgr.defaultPageArea())
+        mgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
+        mgr.ensurePageIdx(0, letterLandscapeBody)
         val lp = mgr.page(0)
         val margin = 40f
         val pageDim = mgr.pageDim.swapWh()

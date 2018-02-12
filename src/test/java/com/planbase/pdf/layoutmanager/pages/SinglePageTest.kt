@@ -2,7 +2,9 @@ package com.planbase.pdf.layoutmanager.pages
 
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_BLUE
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
@@ -19,6 +21,7 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
@@ -29,8 +32,8 @@ import javax.imageio.ImageIO
 
 class SinglePageTest {
     @Test fun testBasics() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val page:SinglePage = pageMgr.page(0)
         val f = File("target/test-classes/melon.jpg")
         val melonPic = ImageIO.read(f)

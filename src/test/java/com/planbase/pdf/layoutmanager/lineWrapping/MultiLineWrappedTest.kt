@@ -2,7 +2,9 @@ package com.planbase.pdf.layoutmanager.lineWrapping
 
 //import kotlin.test.assertEquals
 import TestManual2.Companion.BULLET_TEXT_STYLE
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -12,6 +14,7 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -43,8 +46,8 @@ class MultiLineWrappedTest {
         assertEquals(tStyle2.ascent, wrappedText.ascent)
 
         // This is for the baseline!
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val yTop = lp.yBodyTop()
 //        println("yBodyTop=$yTop")
         val yBottom = yTop - tStyle2.lineHeight

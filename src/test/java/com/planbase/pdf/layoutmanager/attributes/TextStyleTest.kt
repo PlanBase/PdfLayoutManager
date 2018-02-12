@@ -1,6 +1,8 @@
 package com.planbase.pdf.layoutmanager.attributes
 
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.CMYK_WHITE
@@ -61,7 +63,7 @@ class TextStyleTest {
                      TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 0f, 1f, 0f)
                              .stringWidthInDocUnits("Hello World"))
 
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val page: SinglePage = pageMgr.page(0)
 
 

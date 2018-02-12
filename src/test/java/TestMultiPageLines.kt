@@ -1,4 +1,6 @@
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
@@ -21,7 +23,7 @@ class TestMultiPageLines {
         // the bottom of a page, a new page is automatically created for you with the settings taken
         // from the LogicPage grouping. If you don't want a new page, be sure to stay within the
         // bounds of the current one!
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         // Set up some useful constants for later.
         val tableWidth = lp.pageWidth() - 2 * pMargin

@@ -5,7 +5,10 @@ import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
 import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import TestManualllyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManualllyPdfLayoutMgr.Companion.letterPortraitBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
@@ -25,7 +28,7 @@ import org.junit.Test
 class TableRowTest {
     @Test fun testBasics() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         val upperLeft = Coord(100f, 500f)
 
@@ -75,7 +78,7 @@ class TableRowTest {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
 
         val pMargin = PdfLayoutMgr.DOC_UNITS_PER_INCH / 2
-        var lp = pageMgr.startPageGrouping()
+        var lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         // Set up some useful constants for later.
         val tableWidth = lp.pageWidth() - 2 * pMargin
@@ -95,7 +98,7 @@ class TableRowTest {
                                                           LineStyle.NO_LINE, LineStyle(RGB_WHITE))))
 
         // Let's do a portrait page now.  I just copied this from the previous page.
-        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
+        lp = pageMgr.startPageGrouping(PORTRAIT, letterPortraitBody)
 
         val tB = Table(colWidths.toMutableList(), headingCell, heading)
         tB.partBuilder()

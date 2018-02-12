@@ -21,12 +21,10 @@
 package com.planbase.pdf.layoutmanager
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
-import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
@@ -94,6 +92,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * This method is provided so you can do things like add encryption or use other features of PDFBox not yet
      * directly supported by PdfLayoutMgr.
      */
+    @Suppress("unused") // Required part of public API
     fun getPDDocButBeCareful(): PDDocument = doc
 
     // You can have many DrawJpegs backed by only a few images - it is a flyweight, and this
@@ -141,7 +140,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                 }
             }
 
-            imageCache.put(bufferedImage, temp!!)
+            imageCache[bufferedImage] = temp!!
         }
         return temp
     }
@@ -183,39 +182,29 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
      * two or more physical pages) in the requested page orientation.
      */
     // Part of end-user public interface
-    fun startPageGrouping(o: Orientation,
-                          pr: ((Int, SinglePage) -> Float)?): PageGrouping {
+    fun startPageGrouping(orientation: Orientation,
+                          body:PageArea,
+                          pr: ((Int, SinglePage) -> Float)? = null): PageGrouping {
         pageReactor = pr
-        val body: PageArea = pageArea(o)
         val pb = SinglePage(pages.size + 1, this, pageReactor, body)
         pages.add(pb)
-        val pg = PageGrouping(this, o, body)
+        val pg = PageGrouping(this, orientation, body)
         uncommittedPageGroupings.add(pg)
         return pg
     }
 
-    private fun pageArea(o: Orientation, margins:Padding = Padding(DEFAULT_MARGIN)):PageArea {
-        val bodyDim:Dim = margins.subtractFrom(if (o == Orientation.PORTRAIT) {
-            pageDim
-        } else {
-            pageDim.swapWh()
-        })
-        return PageArea(Coord(margins.left, margins.bottom + bodyDim.height),
-                        bodyDim)
-    }
+//    private fun pageArea(o: Orientation, margins:Padding = Padding(DEFAULT_MARGIN)):PageArea {
+//        val bodyDim:Dim = margins.subtractFrom(if (o == Orientation.PORTRAIT) {
+//            pageDim
+//        } else {
+//            pageDim.swapWh()
+//        })
+//        return PageArea(Coord(margins.left, margins.bottom + bodyDim.height),
+//                        bodyDim)
+//    }
 
-    fun defaultPageArea(o: Orientation = LANDSCAPE) = pageArea(o)
-
-    /**
-     * Tells this PdfLayoutMgr that you want to start a new logical page (which may be broken across
-     * two or more physical pages) in the requested page orientation.
-     */
-    fun startPageGrouping(o: Orientation): PageGrouping = startPageGrouping(o, null)
-
-    /**
-     * Get a new logical page (which may be broken across two or more physical pages) in Landscape orientation.
-     */
-    fun startPageGrouping(): PageGrouping = startPageGrouping(LANDSCAPE, null)
+//    fun startPageGrouping(orientation: Orientation,
+//                          body:PageArea): PageGrouping = startPageGrouping(orientation, body, null)
 
     /**
      * Loads a TrueType font (and embeds it into the document?) from the given file into a
@@ -309,6 +298,6 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
          */
         const val DEFAULT_MARGIN: Float = 37f
 
-        private val DEFAULT_DOUBLE_MARGIN_DIM = Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
+//        private val DEFAULT_DOUBLE_MARGIN_DIM = Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
     }
 }

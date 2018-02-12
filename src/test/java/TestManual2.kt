@@ -13,6 +13,7 @@
  // limitations under the License.
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.Align.*
@@ -22,6 +23,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
@@ -60,6 +62,7 @@ class TestManual2 {
 
         val lp = pageMgr.startPageGrouping(
                 PORTRAIT,
+                a6PortraitBody,
                 { pageNum:Int, pb: SinglePage ->
                     val isLeft = pageNum % 2 == 1
                     val leftMargin:Float = if (isLeft) 37f else 45f
@@ -201,6 +204,9 @@ class TestManual2 {
         val CMYK_PALE_PEACH = PDColor(floatArrayOf(0.0f, 0.055f, 0.06f, 0f), PDDeviceCMYK.INSTANCE)
         val CMYK_THISTLE = PDColor(floatArrayOf(0.05f, 0.19f, 0f, 0.09f), PDDeviceCMYK.INSTANCE)
         val CMYK_VIOLET = PDColor(floatArrayOf(0.46f, 0.48f, 0f, 0f), PDDeviceCMYK.INSTANCE)
+
+        val a6PortraitBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.A6.height - DEFAULT_MARGIN),
+                                      Dim(PDRectangle.A6).minus(Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)))
 
         internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT,
                                                    BoxStyle(Padding(0f, 4f, 15f, 0f), CMYK_PALE_PEACH,

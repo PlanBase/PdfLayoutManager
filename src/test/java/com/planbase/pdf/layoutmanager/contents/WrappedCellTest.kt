@@ -3,7 +3,9 @@ package com.planbase.pdf.layoutmanager.contents
 import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import TestManualllyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
@@ -26,7 +28,7 @@ class WrappedCellTest {
 
     @Test fun testBasics() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val cellWidth = 200f
         val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
@@ -54,7 +56,7 @@ class WrappedCellTest {
 
     @Test fun testMultiLine() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val cellWidth = 300f
         val hello = Text(textStyle, "Hello\nThere\nWorld!")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
@@ -83,7 +85,7 @@ class WrappedCellTest {
 
     @Test fun testRightAlign() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         val cellWidth = 200f
         val hello = Text(textStyle, "Hello")
@@ -134,7 +136,7 @@ class WrappedCellTest {
 
     @Test fun testCellHeightBug() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        val lp = pageMgr.startPageGrouping()
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val textStyle = TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT)
         val cellStyle = CellStyle(Align.BOTTOM_CENTER, BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)))
 

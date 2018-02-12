@@ -1,4 +1,7 @@
-import com.planbase.pdf.layoutmanager.*
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.Align.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
@@ -7,6 +10,7 @@ import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle.Companion.NO_LINE
 import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
@@ -32,7 +36,7 @@ class TestManualllyPdfLayoutMgr {
 
     @Test fun testPdf() {
         // Nothing happens without a PdfLayoutMgr.
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
 
         // One inch is 72 document units.  36 is about a half-inch - enough margin to satisfy most
         // printers. A typical monitor has 72 dots per inch, so you can think of these as pixels
@@ -44,7 +48,7 @@ class TestManualllyPdfLayoutMgr {
         // the bottom of a page, a new page is automatically created for you with the settings taken
         // from the LogicPage grouping. If you don't want a new page, be sure to stay within the
         // bounds of the current one!
-        var lp = pageMgr.startPageGrouping()
+        var lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         // Set up some useful constants for later.
         val tableWidth = lp.pageWidth() - 2 * pMargin
@@ -217,7 +221,7 @@ class TestManualllyPdfLayoutMgr {
         pageMgr.commit()
 
         // Let's do a portrait page now.  I just copied this from the previous page.
-        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT)
+        lp = pageMgr.startPageGrouping(PORTRAIT, letterPortraitBody)
         tB = Table()
         tB.addCellWidths(listOf(120f, 120f, 120f))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
@@ -296,14 +300,17 @@ class TestManualllyPdfLayoutMgr {
         // More landscape pages
         val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK)
         val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NO_PAD_NO_BORDER)
-        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE
-        ) { pageNum, pb->
-            val cell = Cell(pageHeadCellStyle, tableWidth,
-                            listOf(Text(pageHeadTextStyle, "Test Logical Page Three (physical page $pageNum)")))
+        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE,
+                                       letterLandscapeBody,
+                                       { pageNum, pb->
+                                           val cell = Cell(pageHeadCellStyle, tableWidth,
+                                                           listOf(Text(pageHeadTextStyle,
+                                                                       "Test Logical Page Three" +
+                                                                       " (physical page $pageNum)")))
 
-            cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
-            0f // Don't offset whole page.
-        }
+                                           cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
+                                           0f // reverts to regular page offset.
+                                       })
 
         // We're going to reset and reuse this y variable.
 //        var y = lp.yBodyTop()
@@ -489,14 +496,16 @@ class TestManualllyPdfLayoutMgr {
 
         val lineStyle = LineStyle(RGB_BLACK, 1f)
 
-        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE
-        ) { pageNum, pb->
-            val cell = Cell(pageHeadCellStyle, tableWidth,
-                            listOf(Text(pageHeadTextStyle,
-                                        "Test Logical Page Four  (physical page $pageNum)")))
-            cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
-            0f // Don't offset whole page.
-        }
+        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE,
+                                       letterLandscapeBody,
+                                       { pageNum, pb->
+                                           val cell = Cell(pageHeadCellStyle, tableWidth,
+                                                           listOf(Text(pageHeadTextStyle,
+                                                                       "Test Logical Page Four" +
+                                                                       " (physical page $pageNum)")))
+                                           cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
+                                           0f // reverts to regular page offset.
+                                       })
 
         // Make a big 3-page X in a box.  Notice that we code it as though it's on one page, and the
         // API adds two more pages as needed.  This is a great test for how geometric shapes break
@@ -549,5 +558,11 @@ class TestManualllyPdfLayoutMgr {
         internal val RGB_LIGHT_GREEN = PDColor(floatArrayOf(0.8f, 1f, 0.8f), PDDeviceRGB.INSTANCE)
         internal val RGB_LIGHT_BLUE = PDColor(floatArrayOf(0.8f, 1f, 1f), PDDeviceRGB.INSTANCE)
         internal val RGB_YELLOW_BRIGHT = PDColor(floatArrayOf(1f, 1f, 0f), PDDeviceRGB.INSTANCE)
+
+        val letterPortraitBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.LETTER.height - DEFAULT_MARGIN),
+                                          Dim(PDRectangle.LETTER).minus(Dim(DEFAULT_MARGIN * 2f, DEFAULT_MARGIN * 2f)))
+
+        val letterLandscapeBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.LETTER.width - DEFAULT_MARGIN),
+                                           letterPortraitBody.dim.swapWh())
     }
 }

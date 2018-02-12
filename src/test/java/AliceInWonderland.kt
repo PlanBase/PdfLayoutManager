@@ -12,6 +12,7 @@
  // See the License for the specific language governing permissions and
  // limitations under the License.
 
+import TestManual2.Companion.a6PortraitBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.Align.BOTTOM_LEFT
@@ -44,21 +45,21 @@ class AliceInWonderland {
     @Test
     fun testBook() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
-        val bodyWidth = PDRectangle.A6.width - 80f
 
         val incipit = TextStyle(PDType1Font.TIMES_ROMAN, 36f, CMYK_BLACK, 30f)
         val chapTitleCellStyle = CellStyle(BOTTOM_LEFT, BoxStyle(Padding(60f, 0f, 0f, 0f), null, NO_BORDERS))
         val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(10f, 0f, 0f, 0f), null, NO_BORDERS))
         val heading = TextStyle(PDType1Font.TIMES_BOLD, 16f, CMYK_BLACK, 16f, 0f, 0.2f, 0f)
-        val body = TextStyle(PDType1Font.TIMES_ROMAN, 12f, CMYK_BLACK)
+        val bodyText = TextStyle(PDType1Font.TIMES_ROMAN, 12f, CMYK_BLACK)
         val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12f, CMYK_BLACK)
 
         val lp = pageMgr.startPageGrouping(
                 PORTRAIT,
+                a6PortraitBody,
                 { pageNum:Int, pb: SinglePage ->
                     val isLeft = pageNum % 2 == 1
                     val leftMargin:Float = if (isLeft) 37f else 45f
-                    pb.drawStyledText(Coord(leftMargin + (bodyWidth / 2), 20f), "$pageNum.",
+                    pb.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20f), "$pageNum.",
                                       TextStyle(PDType1Font.TIMES_ROMAN, 8f, CMYK_BLACK), true)
                     leftMargin })
 
@@ -77,19 +78,19 @@ class AliceInWonderland {
         tableOfContents.add(TitlePage("1. Down the Rabbit Hole", dap.pageNums.start))
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "Alice was beginning to get very tired of sitting by her sister on" +
                                         " the bank, and of having nothing to do: once or twice she had" +
                                         " peeped into the book her sister was reading, but it had no" +
                                         " pictures or conversations in it, "),
                                    Text(thought, "and what is the use of a book,"),
-                                   Text(body, " thought Alice, "),
+                                   Text(bodyText, " thought Alice, "),
                                    Text(thought, "without pictures or conversation?")))
         assertEquals(IntRange(1, 1), dap.pageNums)
         addToIndex("Bank", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "So she was considering, in her own mind (as well as she could, for" +
                                         " the hot day made her feel very sleepy and stupid), whether the" +
                                         " pleasure of making a daisy-chain would be worth the trouble of" +
@@ -99,7 +100,7 @@ class AliceInWonderland {
         addToIndex("White Rabbit", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "There was nothing so very remarkable in that; nor did Alice think" +
                                         " it so very much out of the way to hear the Rabbit say to itself," +
                                         " \"Oh dear! Oh dear! I shall be too late!\" (when she thought it" +
@@ -116,7 +117,7 @@ class AliceInWonderland {
         addToIndex("Waistcoat-pocket", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "In another moment down went Alice after it, never once considering how" +
                                         " in the world she was to get out again....")))
         assertEquals(IntRange(2, 2), dap.pageNums)
@@ -131,7 +132,7 @@ class AliceInWonderland {
         tableOfContents.add(TitlePage("2. The Pool of Tears", dap.pageNums.start))
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "\"Curiouser and curiouser!\" cried Alice (she was so much surprised, that" +
                                         " for the moment she quite forgot how to speak good English). \"Now I'm" +
                                         " opening out like the largest telescope that ever was! Good-bye, feet!\"" +
@@ -146,10 +147,10 @@ class AliceInWonderland {
         addToIndex("Feet", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "And she went on planning to herself how she would manage it. "),
                                    Text(thought, "They must go by the carrier, "),
-                                   Text(body, "she thought; "),
+                                   Text(bodyText, "she thought; "),
                                    Text(thought,
                                         "and how funny it’ll seem, sending presents to one’s own feet!" +
                                         " And how odd the directions will look!\n" +
@@ -160,7 +161,7 @@ class AliceInWonderland {
                                         "(with Alice’s love).\n" +
                                         "\n" +
                                         "Oh dear, what nonsense I’m talking!\n\n"),
-                                   Text(body,
+                                   Text(bodyText,
                                         "Just then her head struck against the roof of the hall: in fact she was" +
                                         " now more than nine feet high, and she at once took up the little golden" +
                                         " key and hurried off to the garden door....")))
@@ -177,7 +178,7 @@ class AliceInWonderland {
         tableOfContents.add(TitlePage("3. A Caucus-Race and a Long Tale", dap.pageNums.start))
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "They were indeed a queer-looking party that assembled on the bank—the" +
                                         " birds with draggled feathers, the animals with their fur clinging close" +
                                         " to them, and all dripping wet, cross, and uncomfortable.")))
@@ -185,7 +186,7 @@ class AliceInWonderland {
         addToIndex("Bank", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "The first question of course was, how to get dry again: they had a" +
                                         " consultation about this, and after a few minutes it seemed quite" +
                                         " natural to Alice to find herself talking familiarly with them, as if" +
@@ -198,7 +199,7 @@ class AliceInWonderland {
         addToIndex("Lory, the", dap, index)
 
         dap = lp.appendCell(bodyCellStyle,
-                            listOf(Text(body,
+                            listOf(Text(bodyText,
                                         "At last the Mouse, who seemed to be a person of authority among them," +
                                         " called out, \"Sit down, all of you, and listen to me! I’ll soon make" +
                                         " you dry enough!\" They all sat down at once, in a large ring, with the" +
@@ -213,15 +214,15 @@ class AliceInWonderland {
         tableOfContents.add(TitlePage("Index", dap.pageNums.start))
 
         for (item in index) {
-            val ret = mutableListOf(Text(body, "${item.key}: "))
+            val ret = mutableListOf(Text(bodyText, "${item.key}: "))
             var first = true
             for (it in item.value) {
                 if (first) {
                     first = false
                 } else {
-                    ret.add(Text(body, ","))
+                    ret.add(Text(bodyText, ","))
                 }
-                ret.add(Text(body, if (it.start == it.endInclusive) {
+                ret.add(Text(bodyText, if (it.start == it.endInclusive) {
                     " ${it.start}"
                 } else {
                     " ${it.start}-${it.endInclusive}"
@@ -250,8 +251,8 @@ class AliceInWonderland {
                 .rowBuilder()
 
         tableOfContents.forEach {
-            item -> rowBuilder = rowBuilder.cell(bodyCellStyle, listOf(Text(body, item.title)))
-                .cell(bodyCellStyle, listOf(Text(body, "" + item.p))).buildRow().rowBuilder()
+            item -> rowBuilder = rowBuilder.cell(bodyCellStyle, listOf(Text(bodyText, item.title)))
+                .cell(bodyCellStyle, listOf(Text(bodyText, "" + item.p))).buildRow().rowBuilder()
         }
         table = rowBuilder.buildRow().buildPart()
 
