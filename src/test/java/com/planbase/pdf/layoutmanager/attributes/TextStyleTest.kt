@@ -43,10 +43,10 @@ class TextStyleTest {
         assertEquals(105.5f, TextStyle(PDType1Font.COURIER_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
         assertEquals(105.1f, TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
 
-        val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
+        val fontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
-        assertEquals(113.28125f, TextStyle(liberationFont, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(125.19531f, TextStyle(liberationFont, 100f, CMYK_BLACK).lineHeight)
 
         // TODO: Test character spacing and word spacing!
 

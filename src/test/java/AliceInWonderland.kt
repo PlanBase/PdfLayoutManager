@@ -30,9 +30,11 @@ import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.junit.Test
+import java.io.File
 import java.io.FileOutputStream
 import java.util.TreeMap
 import kotlin.test.assertEquals
@@ -46,10 +48,13 @@ class AliceInWonderland {
     fun testBook() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
-        val incipit = TextStyle(PDType1Font.TIMES_ROMAN, 36f, CMYK_BLACK, 30f)
-        val chapTitleCellStyle = CellStyle(BOTTOM_LEFT, BoxStyle(Padding(60f, 0f, 0f, 0f), null, NO_BORDERS))
+        val titleFontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
+        val titleFont: PDType0Font = pageMgr.loadTrueTypeFont(titleFontFile)
+
+        val incipit = TextStyle(titleFont, 36f, CMYK_BLACK, 30f)
+        val chapTitleCellStyle = CellStyle(BOTTOM_LEFT, BoxStyle(Padding(50f, 0f, 10f, 0f), null, NO_BORDERS))
         val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(10f, 0f, 0f, 0f), null, NO_BORDERS))
-        val heading = TextStyle(PDType1Font.TIMES_BOLD, 16f, CMYK_BLACK, 16f, 0f, 0.2f, 0f)
+        val heading = TextStyle(titleFont, 16f, CMYK_BLACK, 16f, 0f, 0.2f, 0f)
         val bodyText = TextStyle(PDType1Font.TIMES_ROMAN, 12f, CMYK_BLACK)
         val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12f, CMYK_BLACK)
 

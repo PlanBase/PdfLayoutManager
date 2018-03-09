@@ -273,12 +273,12 @@ class TestManualllyPdfLayoutMgr {
                 .render(lp, lp.body.topLeft.x(0f))
 
         // This was very hastily added to this test to prove that font loading works (it does).
-        val fontFile = File("target/test-classes/LiberationMono-Bold.ttf")
+        val fontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         Cell(CellStyle(MIDDLE_CENTER,
                        BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
              170f,
-             listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Liberation Mono Bold Font!")))
+             listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Emily's Candy Font!")))
                 .wrap()
                 .render(lp, lp.body.topLeft.minusY(xyc.dim.height).x(xyc.dim.width))
 
