@@ -1,6 +1,11 @@
 # Changelog
 
-#### 2.0.7 - 2018-02-01 "Page Numbers"
+### 2.0.8 - 2018-03-23 "Room Below Cursor"
+ - Added roomBelowCursor() to PageGrouping.
+ - Bumped Kotlin version
+ - IDEA reports 87% test coverage by line for the entire project.
+
+#### 2.0.7 - 2018-02-01 "Table of Contents"
 Together these changes should allow the creation of a table of contents and an index.
 Instead of adding each paragraph to a single cell for a whole chapter, you can now add each top-level LineWrapped element directly to the page.
 Each add returns the page number range that the final rendered element so that you can store it and later insert page numbers.

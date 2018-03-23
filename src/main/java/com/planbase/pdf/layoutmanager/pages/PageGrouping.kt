@@ -345,6 +345,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
     var cursorY:Float = body.topLeft.y
 
+    /**
+     * Moves cursor to the bottom of the body of the current page so that whatever you draw will get popped to the
+     * next page.  The new page is not created until it is written to.
+     */
     fun cursorToNewPage() {
         val prevCursorY = cursorY
         cursorY -= this.pageBreakingTopMargin(cursorY, body.dim.height, 0f)
@@ -355,6 +359,11 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
         // Is this a better way?  I mean, if it worked?
 //        cursorY = appropriatePage(cursorY, body.dim.height, 0f).y
+    }
+
+    /** Returns the vertical distance from the cursor to the bottom of the body of this page. */
+    fun roomBelowCursor():Float {
+        return this.pageBreakingTopMargin(cursorY, body.dim.height, 0f)
     }
 
     /**
@@ -381,10 +390,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             appropriatePage(bottomY, height, requiredSpaceBelow).adj
 
     /**
-     * Returns the correct page for the given value of y.  This lets the user use any Y value and
-     * we continue extending their canvas downward (negative) by adding extra pages.
-     * @param bottomY the un-adjusted (bottom) y value.
-     * @param height the height
+     * Returns the correct page for an item with the given height and bottom y-value.
+     * The user may use any Y value and we continue extending their canvas downward (negative) by adding extra pages.
+     * @param bottomY the un-adjusted (bottom) y value of the item we're considering.
+     * @param height the height of the item we're considering
      * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move to the next page.
      * @return the proper page and adjusted y value for that page.
      */
@@ -404,7 +413,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                                         " created by calling mgr.ensurePageIdx(1).")
         }
         var y = bottomY
-        var idxDiff = 0
+        var pageDiff = 0
 
         // Several pages in this page-grouping could be queued up before getting to this point.
         // The following advances to the first possible page our item could start on.
@@ -414,13 +423,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //            println("  y=$y yBodyBottom=$yBodyBottom")
 
             // How many pages behind are we?
-            idxDiff = ceil((yBodyBottom - (y - spaceBelow)) / body.dim.height).toInt()
+            pageDiff = ceil((yBodyBottom - (y - spaceBelow)) / body.dim.height).toInt()
 
             // But repeated addition ruins floating point accuracy, so instead, we'll multiply each time.
-            y = bottomY + (body.dim.height * idxDiff)
+            y = bottomY + (body.dim.height * pageDiff)
         }
 
-        val newIdx = mgr.unCommittedPageIdx() + idxDiff
+        val newIdx = mgr.unCommittedPageIdx() + pageDiff
         mgr.ensurePageIdx(newIdx, body)
 
         val ps = mgr.page(newIdx)

@@ -12,6 +12,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
 import com.planbase.pdf.layoutmanager.attributes.DimAndPages
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
@@ -336,6 +337,65 @@ class PageGroupingTest {
         assertEquals(lp.yBodyTop() - 100f, pby.y)
 
         pageMgr.commit()
+    }
+
+    @Test fun testRoomBelowCursorLandscape() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
+        val bodyHeight:Float = letterLandscapeBody.dim.height
+        val hel12Ts = TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 12f, CMYK_BLACK)
+        assertEquals(lp.yBodyTop(), lp.cursorY)
+        assertEquals(letterLandscapeBody.topLeft.y, lp.cursorY)
+        assertEquals(bodyHeight, lp.roomBelowCursor())
+
+        lp.cursorToNewPage()
+        assertEquals(DEFAULT_MARGIN, lp.cursorY)
+        assertEquals(0.0f, lp.roomBelowCursor())
+
+        lp.appendCell(TOP_LEFT_BORDERLESS,
+                      listOf(Text(hel12Ts, "Hi")))
+        assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
+
+        lp.cursorToNewPage()
+        assertEquals(0.0f, lp.roomBelowCursor())
+
+        lp.appendCell(TOP_LEFT_BORDERLESS,
+                      listOf(Text(hel12Ts, "Hello")))
+        assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
+
+//        pageMgr.commit()
+//        val os = FileOutputStream("roomBelowCursor.pdf")
+//        pageMgr.save(os)
+    }
+
+    @Test fun testRoomBelowCursorPortrait() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.A6))
+        val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
+        val bodyHeight = a6PortraitBody.dim.height
+        val hel12Ts = TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 12f, CMYK_BLACK)
+        assertEquals(lp.yBodyTop(), lp.cursorY)
+        assertEquals(a6PortraitBody.topLeft.y, lp.cursorY)
+        assertEquals(bodyHeight, lp.roomBelowCursor())
+
+        lp.cursorToNewPage()
+        assertEquals(DEFAULT_MARGIN, lp.cursorY)
+        assertEquals(0.0f, lp.roomBelowCursor())
+
+        lp.appendCell(TOP_LEFT_BORDERLESS,
+                      listOf(Text(hel12Ts, "Hi")))
+
+        assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
+
+        lp.cursorToNewPage()
+        assertEquals(0.0f, lp.roomBelowCursor())
+
+        lp.appendCell(TOP_LEFT_BORDERLESS,
+                      listOf(Text(hel12Ts, "Hello")))
+        assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
+
+//        pageMgr.commit()
+//        val os = FileOutputStream("roomBelowCursor.pdf")
+//        pageMgr.save(os)
     }
 
     companion object {

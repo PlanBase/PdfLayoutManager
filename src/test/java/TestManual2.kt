@@ -38,10 +38,10 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
-import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
 import javax.imageio.ImageIO
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**

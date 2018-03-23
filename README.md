@@ -23,7 +23,7 @@ Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayo
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.0.7</version>
+        <version>2.0.8</version>
     </dependency>
 ```
 
@@ -79,9 +79,9 @@ The default lineHeight varies significantly between fonts.
 # FAQ
 
 #### Q: Can I use this in closed-source software?
-**A:** You can purchase a commercial license from [PlanBase Inc.](https://planbase.com)
-Otherwise, you must comply with all the terms of the [Affero GPL](https://www.gnu.org/licenses/agpl-3.0.en.html).
-Affero GPL software cannot be used in closed-source software in the same JVM even if the AGPL software is only availble to end-users over a network or the Internet (without being physically distributed).
+**A:** Yes, if you purchase a commercial license from [PlanBase Inc.](https://planbase.com)
+Otherwise, you must comply with all the terms of the [Affero GPL](https://www.gnu.org/licenses/agpl-3.0.en.html) which requires open-sourcing all software running in the same JVM.
+This applies even if the AGPL software is only availble to end-users over a network or the Internet (without being physically distributed).
 
 #### Q: Can I use this in non-AfferoGPL Open-Sourced software?
 **A:** No.
@@ -118,7 +118,7 @@ The text wrapping algorithm picks a slightly long starting guess for where to wr
 
 # License
 GNU Affero General Public License
-Copyright 2017 PlanBase Inc.
+Copyright 2018 PlanBase Inc.
 
 PdfLayoutMgr2 is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
