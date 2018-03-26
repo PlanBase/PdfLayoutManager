@@ -145,6 +145,9 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         return temp
     }
 
+    // TODO: Is this a good idea?
+    fun numPages():Int = pages.size
+
     fun hasAnyPages():Boolean = pages.size > 0
 
     fun page(idx:Int):SinglePage = pages[idx]

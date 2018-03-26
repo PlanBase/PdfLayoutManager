@@ -4,6 +4,7 @@
  - Added roomBelowCursor() to PageGrouping.
  - Bumped Kotlin version
  - IDEA reports 87% test coverage by line for the entire project.
+ - Added numPages to LayoutMgr (not sure this is a good idea, but it's useful)
 
 #### 2.0.7 - 2018-02-01 "Table of Contents"
 Together these changes should allow the creation of a table of contents and an index.
