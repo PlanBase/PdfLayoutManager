@@ -387,10 +387,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             add(Coord(0f, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
     override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float =
-            appropriatePage(bottomY, height, requiredSpaceBelow).adj
+            calcPage(bottomY, height, requiredSpaceBelow).adj
 
     /**
-     * Returns the correct page for an item with the given height and bottom y-value.
+     * Returns the correct page for an item with the given height and bottom y-value AND MAY ADD A PAGE IN PageMgr.
      * The user may use any Y value and we continue extending their canvas downward (negative) by adding extra pages.
      * @param bottomY the un-adjusted (bottom) y value of the item we're considering.
      * @param height the height of the item we're considering
@@ -400,6 +400,24 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     internal fun appropriatePage(bottomY: Float, height: Float, requiredSpaceBelow:Float): PageBufferAndY {
 //        println("appropriatePage(bottomY=$bottomY, height=$height, requiredSpaceBelow=$requiredSpaceBelow)")
 
+//        println("  y=$y, adj=$adj")
+
+        val iya:IdxYAdj = calcPage(bottomY, height, requiredSpaceBelow)
+        mgr.ensurePageIdx(iya.idx, body)
+        return PageBufferAndY(mgr.page(iya.idx), iya.y, iya.adj)
+    }
+
+    data class IdxYAdj(val idx:Int, val y:Float, val adj:Float)
+
+    /**
+     * Returns the correct page for an item with the given height and bottom y-value WITHOUT ADDING ANY PAGES.
+     * The user may use any Y value and we continue extending their canvas downward (negative) by adding extra pages.
+     * @param bottomY the un-adjusted (bottom) y value of the item we're considering.
+     * @param height the height of the item we're considering
+     * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move to the next page.
+     * @return the proper page and adjusted y value for that page.
+     */
+    private fun calcPage(bottomY: Float, height: Float, requiredSpaceBelow:Float):IdxYAdj {
         // If the requiredSpaceBelow makes it too big to fit on any page, then ignore that param.
         // Used to throw exception, but this is a valid situation.
         val spaceBelow: Float = if ( (height + requiredSpaceBelow) > body.dim.height ) {
@@ -438,10 +456,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             y = yBodyTop() - height
             adj = oldY - y
         }
-//        println("  y=$y, adj=$adj")
-
-        mgr.ensurePageIdx(newIdx, body)
-        return PageBufferAndY(mgr.page(newIdx), y, adj)
+        return IdxYAdj(newIdx, y, adj)
     }
 
     @Throws(IOException::class)
