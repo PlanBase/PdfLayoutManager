@@ -430,9 +430,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         }
 
         val newIdx = mgr.unCommittedPageIdx() + pageDiff
-        mgr.ensurePageIdx(newIdx, body)
 
-        val ps = mgr.page(newIdx)
         var adj = 0f
         if (y + height > yBodyTop()) {
 //            println("  y=$y yBodyTop()=${yBodyTop()}")
@@ -441,7 +439,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             adj = oldY - y
         }
 //        println("  y=$y, adj=$adj")
-        return PageBufferAndY(ps, y, adj)
+
+        mgr.ensurePageIdx(newIdx, body)
+        return PageBufferAndY(mgr.page(newIdx), y, adj)
     }
 
     @Throws(IOException::class)
