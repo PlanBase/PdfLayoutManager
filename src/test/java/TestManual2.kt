@@ -20,7 +20,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.PageArea
@@ -115,7 +115,7 @@ class TestManual2 {
                            listOf(Text(HEADING_TEXT_STYLE, "Some Heading")))
 
         var coord = Coord(0f, pageMgr.pageDim.height - 40f)
-        var dap: DimAndPages =
+        var dap: DimAndPageNums =
                 lp.add(coord,
                        Cell(bodyCellStyle,
                             bodyWidth,

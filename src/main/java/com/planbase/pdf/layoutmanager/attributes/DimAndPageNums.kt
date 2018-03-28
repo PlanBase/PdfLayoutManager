@@ -25,7 +25,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /** The dimensions of a rendered item plus the start and end page numbers */
-data class DimAndPages(val dim:Dim, val pageNums:IntRange) {
+data class DimAndPageNums(val dim:Dim, val pageNums:IntRange) {
 
     fun maxExtents(nums: IntRange): IntRange = Companion.maxExtents(this.pageNums, nums)
 

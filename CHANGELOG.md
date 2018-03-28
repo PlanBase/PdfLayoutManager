@@ -1,7 +1,9 @@
 # Changelog
 
-## 2.0.9 - 2018-03-23 "Room Below Cursor" (bug fix)
+## 2.0.9 - 2018-03-23 "Page for Cursor"
+ - Added PageGrouping.pageForCursor()
  - Fixed bug where an extra page was sometimes added to the document when merely measuring items for fit.
+ - renamed DimAndPages to DimAndPageNums.
 
 #### 2.0.8 - 2018-03-23 "Room Below Cursor"
  - Added roomBelowCursor() to PageGrouping.

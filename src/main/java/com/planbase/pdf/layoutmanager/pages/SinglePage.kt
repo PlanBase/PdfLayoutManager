@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager.pages
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -108,12 +108,12 @@ class SinglePage(val pageNum: Int,
      * that internally updates a cursor so you never have to specify this.
      * @param block the LineWrapped item to display
      */
-    fun add(topLeft: Coord, block: LineWrapped): DimAndPages {
+    fun add(topLeft: Coord, block: LineWrapped): DimAndPageNums {
         this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
         // We subtract xOff here because it will get added back on when render() calls back to SinglePage.
         // Better to design this to leave the value alone since addition/subtraction of floats/doubles
         // introduces inaccuracies.
-        val dap: DimAndPages = block.render(this, topLeft.plusX(- xOff))
+        val dap: DimAndPageNums = block.render(this, topLeft.plusX(- xOff))
         cursorY = topLeft.y - dap.dim.height
         return dap
     }
@@ -124,7 +124,7 @@ class SinglePage(val pageNum: Int,
      *
      * @param block the LineWrapped item to display
      */
-    fun append(block: LineWrapped): DimAndPages =
+    fun append(block: LineWrapped): DimAndPageNums =
             add(Coord(xOff, cursorY), block)
 
     /**
@@ -133,7 +133,7 @@ class SinglePage(val pageNum: Int,
      * @param cellStyle the style for the cell to make
      * @param contents the contents of the cell
      */
-    fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPages =
+    fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPageNums =
             add(Coord(xOff, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
     /**

@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
@@ -67,7 +67,7 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
 
         override val lineHeight: Float = dim.height
 
-        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages =
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums =
                 lp.drawImage(topLeft.minusY(dim.height), this, reallyRender)
                         .dimAndPagesFromWidth(dim)
     }

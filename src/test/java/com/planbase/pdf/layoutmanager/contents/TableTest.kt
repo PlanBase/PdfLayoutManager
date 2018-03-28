@@ -11,7 +11,7 @@ import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding.Companion.NO_PADDING
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -186,7 +186,7 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
 
         val startCoord = Coord(0f, 140f)
 
-        val after:DimAndPages = wrappedTable.render(lp, startCoord)
+        val after:DimAndPageNums = wrappedTable.render(lp, startCoord)
         assertEquals(Dim(230.0f, 130.74399f), after.dim)
 
         pageMgr.commit()

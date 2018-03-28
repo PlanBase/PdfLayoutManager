@@ -14,7 +14,7 @@ import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -92,7 +92,7 @@ class CellTest {
 //        println("lp=$lp")
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 
-        val dim: DimAndPages = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
+        val dim: DimAndPageNums = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")
@@ -131,7 +131,7 @@ class CellTest {
 
         val startCoord = Coord(0f, 140f)
 
-        val after:DimAndPages = wrappedCell.render(lp, startCoord)
+        val after:DimAndPageNums = wrappedCell.render(lp, startCoord)
         TestCase.assertEquals(Dim(230.0f, 186.23203f), after.dim)
 
         pageMgr.commit()
@@ -159,11 +159,11 @@ class CellTest {
         assertEquals(Dim(170f, 49.4515f), wrappedCell.dim)
 
         // Rendered away from the page break, the dimensions are unchanged.
-        val ret1:DimAndPages = wrappedCell.render(lp, Coord(40f, 200f))
+        val ret1:DimAndPageNums = wrappedCell.render(lp, Coord(40f, 200f))
         assertEquals(Dim(170f, 49.451508f), ret1.dim)
 
         // Rendered across the page break, it's bigger.
-        val ret2:DimAndPages = wrappedCell.render(lp, Coord(40f, 72f))
+        val ret2:DimAndPageNums = wrappedCell.render(lp, Coord(40f, 72f))
         assertEquals(Dim(170f, 58.65849f), ret2.dim)
 
         pageMgr.commit()

@@ -20,7 +20,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT_JUSTIFY
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle.Companion.NO_BORDERS
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Table
@@ -75,7 +75,7 @@ class AliceInWonderland {
         val tableOfContents:MutableList<TitlePage> = mutableListOf()
         val index:TreeMap<String,MutableList<IntRange>> = TreeMap()
 
-        var dap: DimAndPages =
+        var dap: DimAndPageNums =
                 lp.appendCell(chapTitleCellStyle,
                             listOf(Text(incipit, "1. "),
                                    Text(heading, "Down the Rabbit Hole")))
@@ -275,7 +275,7 @@ class AliceInWonderland {
 
     private fun addToIndex(
             key: String,
-            dap: DimAndPages,
+            dap: DimAndPageNums,
             index: TreeMap<String, MutableList<IntRange>>) {
         val pp: MutableList<IntRange> = index.getOrDefault(key, mutableListOf())
         pp.add(dap.pageNums)

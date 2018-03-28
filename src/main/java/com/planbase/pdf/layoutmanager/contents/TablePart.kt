@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.TableRow.WrappedTableRow
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
@@ -88,17 +88,17 @@ class TablePart(private val table: Table) {
                 part.rows.map { WrappedTableRow(it) }
                         .toList()
 
-        fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages {
-            var pageNums:IntRange = DimAndPages.INVALID_PAGE_RANGE
+        fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums {
+            var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
             var y = topLeft.y
             var maxWidth = 0f
             for (row in rows) {
-                val dimAndPages: DimAndPages = row.render(lp, topLeft.y(y), reallyRender)
-                maxWidth = max(maxWidth, dimAndPages.dim.width)
-                y -= dimAndPages.dim.height
-                pageNums = dimAndPages.maxExtents(pageNums)
+                val dimAndPageNums: DimAndPageNums = row.render(lp, topLeft.y(y), reallyRender)
+                maxWidth = max(maxWidth, dimAndPageNums.dim.width)
+                y -= dimAndPageNums.dim.height
+                pageNums = dimAndPageNums.maxExtents(pageNums)
             }
-            return DimAndPages(Dim(maxWidth, topLeft.y - y), pageNums)
+            return DimAndPageNums(Dim(maxWidth, topLeft.y - y), pageNums)
         }
     }
 

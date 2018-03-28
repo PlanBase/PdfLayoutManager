@@ -9,7 +9,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -20,7 +20,6 @@ import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -64,10 +63,10 @@ class SinglePageTest {
 
             diamondRect(page, Coord(lineX1, y), squareSide)
 
-            val cellDaP: DimAndPages = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
+            val cellDaP: DimAndPageNums = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
             Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.00004f)
 
-            val tableDaP: DimAndPages = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
+            val tableDaP: DimAndPageNums = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
             Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.00002f)
 
             y -= melonHeight

@@ -23,8 +23,8 @@ package com.planbase.pdf.layoutmanager.contents
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.INVALID_PAGE_RANGE
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums.Companion.INVALID_PAGE_RANGE
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
@@ -61,11 +61,11 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         Dim(width, height)
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages =
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums =
             tableRender(lp, topLeft, dim.height, reallyRender)
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
-    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height:Float, reallyRender:Boolean): DimAndPages {
+    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height:Float, reallyRender:Boolean): DimAndPageNums {
         var pageNums:IntRange = INVALID_PAGE_RANGE
 
         val adj = if (requiredSpaceBelow == 0f) {
@@ -168,8 +168,8 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             }
         }
 
-        return DimAndPages(Dim( rightX - topLeft.x,
+        return DimAndPageNums(Dim(rightX - topLeft.x,
                                 (topLeft.y - y) + adj ),
-                           pageNums)
+                              pageNums)
     }
 }

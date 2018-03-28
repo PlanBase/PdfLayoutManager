@@ -20,7 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.lineWrapping
 
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
@@ -55,7 +55,7 @@ interface LineWrapped {
      * @return the adjusted Dim which may include extra (vertical) spacing required to nudge some items onto the next
      * page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Coord, reallyRender:Boolean): DimAndPages
+    fun render(lp: RenderTarget, topLeft: Coord, reallyRender:Boolean): DimAndPageNums
 
     /**
      * Sends the underlying object to PDFBox to be drawn. Use the other render() method with reallyRender=false
@@ -67,7 +67,7 @@ interface LineWrapped {
      * @return the adjusted Dim which may include extra (vertical) spacing required to nudge some items onto the next
      * page so they don't end up in the margin or off the page.
      */
-    fun render(lp: RenderTarget, topLeft: Coord): DimAndPages = render(lp, topLeft, true)
+    fun render(lp: RenderTarget, topLeft: Coord): DimAndPageNums = render(lp, topLeft, true)
 
 //    object ZeroLineWrapped: LineWrapped {
 //        override val dim: Dim = Dim.ZERO

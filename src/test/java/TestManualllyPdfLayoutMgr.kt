@@ -6,7 +6,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle.Companion.NO_LINE
 import com.planbase.pdf.layoutmanager.attributes.Padding
@@ -126,7 +126,7 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xya: DimAndPages = tB.wrap()
+        val xya: DimAndPageNums = tB.wrap()
                 .render(lp, lp.body.topLeft)
 
         assertEquals(Dim(360.0f, 375f), xya.dim)
@@ -179,7 +179,7 @@ class TestManualllyPdfLayoutMgr {
                                               "Line three")
                 .buildRow()
                 .buildPart()
-        val xyb: DimAndPages = tB.wrap()
+        val xyb: DimAndPageNums = tB.wrap()
                 .render(lp, lp.body.topLeft.plusX(xya.dim.width + 10))
 
         assertEquals(Dim(300.0f, 315f), xyb.dim)
@@ -268,7 +268,7 @@ class TestManualllyPdfLayoutMgr {
                                                   "Line three")
                 .buildRow()
                 .buildPart()
-        val xyc: DimAndPages = tB
+        val xyc: DimAndPageNums = tB
                 .wrap()
                 .render(lp, lp.body.topLeft.x(0f))
 

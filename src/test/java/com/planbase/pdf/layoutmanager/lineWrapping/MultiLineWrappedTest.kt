@@ -5,7 +5,7 @@ import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
@@ -13,7 +13,6 @@ import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
@@ -61,7 +60,7 @@ class MultiLineWrappedTest {
         lp.drawLine(Coord(0f, top2), Coord(lp.pageWidth(), top2), LineStyle(PDColor(floatArrayOf(0.5f, 0.5f, 0.5f), PDDeviceRGB.INSTANCE), 0.125f), true)
         lp.drawLine(Coord(0f, yBaseline), Coord(lp.pageWidth(), yBaseline), LineStyle(RGB_BLACK, 0.125f), true)
         lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
-        val dap:DimAndPages = wrappedText.render(lp, upperLeft)
+        val dap:DimAndPageNums = wrappedText.render(lp, upperLeft)
 //        println("tStyle1=$tStyle1")
 //        println("tStyle2=$tStyle2")
         assertEquals(wrappedText.dim, dap.dim)

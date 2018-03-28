@@ -22,7 +22,7 @@ package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
@@ -101,22 +101,22 @@ class TableRow(private val tablePart: TablePart) {
                 row.cells.map { c -> c.wrap() }
                         .toList()
 
-        fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPages {
+        fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
 //                .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dim.height)}
-            var pageNums:IntRange = DimAndPages.INVALID_PAGE_RANGE
+            var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
             var x = topLeft.x
             var maxRowHeight = minRowHeight
 //            println("    minRowHeight=$minRowHeight")
             // Find the height of the tallest cell before rendering any cells.
             for (fixedCell in fixedCells) {
 //                println("    beforeRender height=${fixedCell.dim.height}")
-                val dimAndPages: DimAndPages = fixedCell.tableRender(lp, topLeft.x(x), maxRowHeight, false)
+                val dimAndPageNums: DimAndPageNums = fixedCell.tableRender(lp, topLeft.x(x), maxRowHeight, false)
 //                println("    afterRender height=$height") // Size is wrong here!
-                maxRowHeight = max(maxRowHeight, dimAndPages.dim.height)
+                maxRowHeight = max(maxRowHeight, dimAndPageNums.dim.height)
 //                println("    maxRowHeight=$maxRowHeight")
-                x += dimAndPages.dim.width
-                pageNums = dimAndPages.maxExtents(pageNums)
+                x += dimAndPageNums.dim.width
+                pageNums = dimAndPageNums.maxExtents(pageNums)
             }
             val maxWidth = x - topLeft.x
 
@@ -129,7 +129,7 @@ class TableRow(private val tablePart: TablePart) {
                 }
             }
 
-            return DimAndPages(Dim(maxWidth, maxRowHeight), pageNums)
+            return DimAndPageNums(Dim(maxWidth, maxRowHeight), pageNums)
         }
     }
 

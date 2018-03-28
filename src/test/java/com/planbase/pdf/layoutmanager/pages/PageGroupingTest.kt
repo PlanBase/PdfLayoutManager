@@ -13,7 +13,7 @@ import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.PageArea
@@ -156,11 +156,11 @@ class PageGroupingTest {
 
             diamondRect(lp, Coord(lineX1, y), squareSide)
 
-            val cellDimAndPages: DimAndPages = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfCell.dim, cellDimAndPages.dim, 0.00004f)
+            val cellDimAndPageNums: DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfCell.dim, cellDimAndPageNums.dim, 0.00004f)
 
-            val tableDimAndPages: DimAndPages = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfTable.dim, tableDimAndPages.dim, 0.00002f)
+            val tableDimAndPageNums: DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfTable.dim, tableDimAndPageNums.dim, 0.00002f)
 
             y -= melonHeight
         }
@@ -185,12 +185,12 @@ class PageGroupingTest {
         diamondRect(lp, Coord(lineX1, y), squareSide)
 //            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-        val cellDaP2: DimAndPages = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+        val cellDaP2: DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
 //        println("qbfCell.dim=${qbfCell.dim} tableDim2=${cellDim2}")
         assertTrue(qbfCell.dim.height < cellDaP2.dim.height)
 
 //        val tableDim2 = qbfTable.render(lp, Coord(tableX1, y))
-        val tableDaP2:DimAndPages = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+        val tableDaP2:DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
 //        println("qbfTable.dim=${qbfTable.dim} tableDim2=${tableDim2}")
 
         assertTrue(qbfTable.dim.height < tableDaP2.dim.height)
@@ -212,11 +212,11 @@ class PageGroupingTest {
             diamondRect(lp, Coord(lineX1, y), squareSide)
 //            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1f))
 
-            val cellDaP:DimAndPages = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            val cellDaP:DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
             assertEquals(qbfCell.dim, cellDaP.dim)
 
 //            val tableDim = qbfTable.render(lp, Coord(tableX1, y))
-            val tableDaP:DimAndPages = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            val tableDaP:DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
             assertEquals(qbfTable.dim, tableDaP.dim)
 
             y -= listOf(imgHaP.height, txtHaP.height, rectY).max() as Float
@@ -273,7 +273,7 @@ class PageGroupingTest {
 
         // This is not a great test because I'm not sure this feature is really meant to work blocks that cross
         // multiple pages.  In fact, it looks pretty bad for those blocks.
-        val finalDaP:DimAndPages = wrappedCell.render(lp, Coord(40f, PDRectangle.A6.height - 40f))
+        val finalDaP:DimAndPageNums = wrappedCell.render(lp, Coord(40f, PDRectangle.A6.height - 40f))
         assertEquals(Dim(217.63782f, 800.7112f), finalDaP.dim)
 
         pageMgr.commit()
@@ -303,7 +303,7 @@ class PageGroupingTest {
 
         // This is not a great test because I'm not sure this feature is really meant to work blocks that cross
         // multiple pages.  In fact, it looks pretty bad for those blocks.
-        val finalDaP: DimAndPages = wrappedCell.render(lp, Coord(40f, 110f))
+        val finalDaP: DimAndPageNums = wrappedCell.render(lp, Coord(40f, 110f))
         assertEquals(Dim(217.63782f, 87.27999f), finalDaP.dim)
 
         pageMgr.commit()

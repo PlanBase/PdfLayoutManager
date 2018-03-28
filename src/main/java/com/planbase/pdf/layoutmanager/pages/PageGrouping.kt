@@ -24,8 +24,8 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.maxExtents
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums.Companion.maxExtents
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -229,7 +229,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
         // TODO: Find min and max Y.  If they are on the same page, just pass params to SinglePage.drawLineStrip
         var start: Coord = points[0]
-        var pageNums:IntRange = DimAndPages.INVALID_PAGE_RANGE
+        var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
         for (i in 1..points.lastIndex) {
             val end = points[i]
             val currRange:IntRange = drawLine(start, end, lineStyle, reallyRender)
@@ -335,10 +335,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * that internally updates a cursor so you never have to specify this.
      * @param block the LineWrapped item to display
      */
-    fun add(topLeft: Coord, block: LineWrapped): DimAndPages {
+    fun add(topLeft: Coord, block: LineWrapped): DimAndPageNums {
         // TODO: Why is the return value ignored here?
         this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
-        val dap:DimAndPages = block.render(this, topLeft)
+        val dap:DimAndPageNums = block.render(this, topLeft)
         cursorY = topLeft.y - dap.dim.height
         return dap
     }
@@ -362,9 +362,11 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     }
 
     /** Returns the vertical distance from the cursor to the bottom of the body of this page. */
-    fun roomBelowCursor():Float {
-        return this.pageBreakingTopMargin(cursorY, body.dim.height, 0f)
-    }
+    fun roomBelowCursor():Float = this.pageBreakingTopMargin(cursorY, body.dim.height, 0f)
+
+    /** Returns the page the cursor is currently pointing to. */
+    fun pageForCursor():SinglePage =
+            appropriatePage(cursorY, 0f, 0f).pb
 
     /**
      * Add LineWrapped items directly to the page grouping at the current cursor.
@@ -372,7 +374,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      *
      * @param block the LineWrapped item to display
      */
-    fun append(block: LineWrapped): DimAndPages =
+    fun append(block: LineWrapped): DimAndPageNums =
             // TODO: Should have x=0 only if there is a pageReactor???
             add(Coord(0f, cursorY), block)
 
@@ -382,7 +384,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * @param cellStyle the style for the cell to make
      * @param contents the contents of the cell
      */
-    fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPages =
+    fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPageNums =
             // TODO: Should have x=0 only if there is a pageReactor???
             add(Coord(0f, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 

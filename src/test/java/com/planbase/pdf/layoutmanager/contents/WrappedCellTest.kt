@@ -10,7 +10,7 @@ import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
@@ -48,8 +48,8 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        val dimAndPages: DimAndPages = wrappedCell.render(lp, upperLeft)
-        Dim.assertEquals(wrappedCell.dim, dimAndPages.dim, 0.00002f)
+        val dimAndPageNums: DimAndPageNums = wrappedCell.render(lp, upperLeft)
+        Dim.assertEquals(wrappedCell.dim, dimAndPageNums.dim, 0.00002f)
 
         pageMgr.commit()
     }
@@ -118,13 +118,13 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        val dimAndPages: DimAndPages = wrappedCell.render(lp, upperLeft)
+        val dimAndPageNums: DimAndPageNums = wrappedCell.render(lp, upperLeft)
 //        println("upperLeft=" + upperLeft)
 //        println("xyOff=" + xyOff)
 
-        assertEquals(cellWidth, dimAndPages.dim.width)
+        assertEquals(cellWidth, dimAndPageNums.dim.width)
 
-        Dim.assertEquals(wrappedCell.dim, dimAndPages.dim, 0.00002f)
+        Dim.assertEquals(wrappedCell.dim, dimAndPageNums.dim, 0.00002f)
 
         pageMgr.commit()
 
@@ -154,9 +154,9 @@ class WrappedCellTest {
 
         TestCase.assertEquals(120f, wrappedTable.dim.width)
 
-        val dimAndPages: DimAndPages = wrappedTable.render(lp, lp.body.topLeft)
+        val dimAndPageNums: DimAndPageNums = wrappedTable.render(lp, lp.body.topLeft)
 
-        Dim.assertEquals(wrappedTable.dim, dimAndPages.dim, 0.00003f)
+        Dim.assertEquals(wrappedTable.dim, dimAndPageNums.dim, 0.00003f)
 
         pageMgr.commit()
 //        val os = FileOutputStream("test3.pdf")

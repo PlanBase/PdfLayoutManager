@@ -20,7 +20,7 @@
 
 package com.planbase.pdf.layoutmanager.pages
 
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.utils.Dim
 
 /**
@@ -30,5 +30,5 @@ import com.planbase.pdf.layoutmanager.utils.Dim
  */
 data class HeightAndPage(val height:Float,
                          private val pageNum:Int) {
-    fun dimAndPagesFromWidth(dim:Dim) = DimAndPages(Dim(dim.width, height), IntRange(pageNum, pageNum))
+    fun dimAndPagesFromWidth(dim:Dim) = DimAndPageNums(Dim(dim.width, height), IntRange(pageNum, pageNum))
 }

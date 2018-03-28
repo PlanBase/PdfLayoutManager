@@ -1,11 +1,11 @@
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.INVALID_PAGE_RANGE
-import com.planbase.pdf.layoutmanager.attributes.DimAndPages.Companion.maxExtents
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums.Companion.INVALID_PAGE_RANGE
+import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums.Companion.maxExtents
 import org.junit.Assert.*
 import org.junit.Test
 
-class DimAndPagesTest {
+class DimAndPageNumsTest {
     @Test fun testMaxExtentsStaticFun() {
         val ir0to1 = IntRange(0, 1)
         assertEquals(ir0to1, maxExtents(INVALID_PAGE_RANGE, ir0to1))
