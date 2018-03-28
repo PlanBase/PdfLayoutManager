@@ -1,6 +1,9 @@
 # Changelog
 
-### 2.0.8 - 2018-03-23 "Room Below Cursor"
+## 2.0.9 - 2018-03-23 "Room Below Cursor" (bug fix)
+ - Fixed bug where an extra page was sometimes added to the document when merely measuring items for fit.
+
+#### 2.0.8 - 2018-03-23 "Room Below Cursor"
  - Added roomBelowCursor() to PageGrouping.
  - Bumped Kotlin version
  - IDEA reports 87% test coverage by line for the entire project.
