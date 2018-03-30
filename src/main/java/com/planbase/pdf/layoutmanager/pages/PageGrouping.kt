@@ -176,7 +176,6 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         if (topY < bottomY) {
             throw IllegalStateException("height must be positive")
         }
-        // logger.info("About to put line: (" + x1 + "," + y1 + "), (" + x2 + "," + y2 + ")");
         val pby1 = appropriatePage(topY, 0f, 0f)
         val pby2 = appropriatePage(bottomY, 0f, 0f)
         if (pby1 == pby2) {
@@ -207,7 +206,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     yBodyBottom
                 }
 
-                currPage.fillRect(Coord(left, yb), Dim(width, ya - yb), c, reallyRender)
+                // It's possible with floating point addition and subtraction to accrue a significant margin of error.
+                // If that makes our area negative or zero, just don't draw anything on this page.
+                val finalHeight:Float = ya - yb
+                if (finalHeight > 0) {
+                    currPage.fillRect(Coord(left, yb), Dim(width, finalHeight), c, reallyRender)
+                }
 
                 // pageNum is one-based while get is zero-based, so passing get the current
                 // pageNum actually gets the next page.  Don't get another one after we already
@@ -215,7 +219,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                 if (pageNum < totalPages) {
                     currPage = mgr.page(currPage.pageNum)
                 }
-            }
+            } // end for (pageNum in 1..totalPages)
         }
 
         return maxHeight + pby2.adj

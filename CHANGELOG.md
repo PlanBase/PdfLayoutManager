@@ -4,6 +4,8 @@
  - Added PageGrouping.pageForCursor()
  - Fixed bug where an extra page was sometimes added to the document when merely measuring items for fit.
  - renamed DimAndPages to DimAndPageNums.
+ - Fixed bug where after a hundred or more pages, the edge of a fill-rect could slip between the floating point gaps
+ and cause an exception.
 
 #### 2.0.8 - 2018-03-23 "Room Below Cursor"
  - Added roomBelowCursor() to PageGrouping.

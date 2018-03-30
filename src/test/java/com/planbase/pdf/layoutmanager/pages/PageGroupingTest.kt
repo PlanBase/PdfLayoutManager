@@ -26,9 +26,11 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.fail
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceGray
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -396,6 +398,63 @@ class PageGroupingTest {
 //        pageMgr.commit()
 //        val os = FileOutputStream("roomBelowCursor.pdf")
 //        pageMgr.save(os)
+    }
+
+    @Test fun testFillRectAtBottomOfPage() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.A6))
+        val lp = pageMgr.startPageGrouping(PORTRAIT,
+                                           PageArea(Coord(DEFAULT_MARGIN.nextDown(), PDRectangle.A6.height.nextUp() - 17.333333f),
+                                                    Dim(PDRectangle.A6).minus(Dim(13.11111f, 13.11111f))))
+
+        // Spent all afternoon wondering why printing 20 pages worked, but printing 200 threw an exception.
+        // PageGrouping uses floating point arithmetic, but only blew up when one number was big enough and the
+        // other small enough that the ADDITION FAILED.  How could this be?
+        //
+        // Floating point has a fixed number of "decimal places" so that as numbers get bigger, the difference
+        // between adjacent floating point representations get bigger as well.
+
+        // for (i = 1; i < Int.MAX_VALUE/10; i++) {
+        //    println("${n}, ${n.toFloat().nextUp()}")
+        // }
+        // 1.0, 1.0000001
+        // 10.0, 10.000001
+        // 100.0, 100.00001
+        // 1000.0, 1000.00006
+        // 10000.0, 10000.001
+        // 100000.0, 100000.01
+        // 1000000.0, 1000000.06
+        // 10000000, 10000001
+        // 100000000, 100000008
+
+        // So if you add 100,000,000 + 1, you get 100,000,000.  Even similar sized numbers accumulate small
+        // errors with addition and subtraction, but the bigger the difference between the numbers you are
+        // adding/subtracting, the bigger the error.
+
+        // So here, we add 100 pages so that the floating point numbers have big enough gaps between them.
+        for (i in 1 .. 100) {
+            lp.cursorToNewPage()
+                    lp.appendCell(TOP_LEFT_BORDERLESS, listOf(Text(TextStyle(TIMES_ROMAN, 14f, CMYK_BLACK), "Page $i")))
+        }
+
+        var testY = lp.cursorY - lp.roomBelowCursor()
+        // Now we knock it off by just a tiny bit.
+        testY -= 0.1f
+//        println("testY=${testY}f") // testY=-40645.824f      Exception testY was -40645.977
+        val endTest = testY - 1f
+
+        // We're expecting an exception with the Dim having a negative width.
+        try {
+            while (testY > endTest) {
+                testY = testY.nextDown()
+//                    println("testY=${testY}f")
+                lp.fillRect(Coord(40f, testY), Dim(10f, 0.11111f), CMYK_BLACK, true)
+            }
+        } catch (e: Exception) {
+//            println("Exception: $e")
+//            println("testY was $testY")
+            fail()
+        }
+
     }
 
     companion object {

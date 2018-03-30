@@ -32,7 +32,7 @@ import java.lang.Math.abs
 data class Dim(val width: Float, val height: Float) {
     init {
         if (width < 0 || height < 0) {
-            throw IllegalArgumentException("Dim must be positive")
+            throw IllegalArgumentException("Dimensions must be positive: width=${width}f height=${height}f")
         }
     }
 
