@@ -33,6 +33,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.escapeStr
 
 /**
  Represents styled text kind of like a #Text node in HTML.
@@ -85,7 +86,7 @@ data class Text(val textStyle: TextStyle,
 
     fun maxWidth(): Float = textStyle.stringWidthInDocUnits(text.trim())
 
-    override fun toString() = "Text($textStyle, \"$text\")"
+    override fun toString() = "Text($textStyle, \"${escapeStr(text)}\")"
 
     override fun lineWrapper(): LineWrapper {
         return TextLineWrapper(this)

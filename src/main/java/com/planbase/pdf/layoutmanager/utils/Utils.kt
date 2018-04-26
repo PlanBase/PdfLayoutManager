@@ -143,11 +143,15 @@ fun floatToStr(f:Float):String {
 }
 
 fun objToStr(item:Any):String = when (item) {
-    is String -> "\"$item\""
+    is String -> "\"" + escapeStr(item) + "\""
     is Char   -> "'$item'"
     is Float  -> floatToStr(item)
     else      -> item.toString()
 }
+
+fun escapeStr(s:String):String =
+        s.replace("\n".toRegex(), "\\n")
+                .replace("\"".toRegex(), "\\\"")
 
 fun collectionToStr(collName: String, ls: Iterable<Any>) =
         ls.fold(StringBuilder(collName).append("("),
