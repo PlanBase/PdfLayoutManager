@@ -42,7 +42,7 @@ import kotlin.test.assertEquals
 /**
  * Another how-to-use example file
  */
-class AliceInWonderland {
+class TestAliceInWonderland {
 
     @Test
     fun testBook() {
