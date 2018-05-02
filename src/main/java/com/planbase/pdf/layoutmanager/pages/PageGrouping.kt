@@ -433,7 +433,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         }
 
         if (!mgr.hasAnyPages()) {
-            throw IllegalStateException("Cannot work with the any pages until one has been" +
+            throw IllegalStateException("Cannot work with pages until one has been" +
                                         " created by calling mgr.ensurePageIdx(1).")
         }
         var y = bottomY

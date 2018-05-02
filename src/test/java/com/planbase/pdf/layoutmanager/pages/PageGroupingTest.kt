@@ -126,6 +126,7 @@ class PageGroupingTest {
 //        pageMgr.save(ByteArrayOutputStream())
     }
 
+//    @Ignore
     @Test fun testBasics2() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
@@ -365,7 +366,7 @@ class PageGroupingTest {
                       listOf(Text(hel12Ts, "Hello")))
         assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
 
-//        pageMgr.commit()
+        pageMgr.commit()
 //        val os = FileOutputStream("roomBelowCursor.pdf")
 //        pageMgr.save(os)
     }
@@ -395,7 +396,7 @@ class PageGroupingTest {
                       listOf(Text(hel12Ts, "Hello")))
         assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
 
-//        pageMgr.commit()
+        pageMgr.commit()
 //        val os = FileOutputStream("roomBelowCursor.pdf")
 //        pageMgr.save(os)
     }
@@ -455,6 +456,7 @@ class PageGroupingTest {
             fail()
         }
 
+        pageMgr.commit()
     }
 
     companion object {

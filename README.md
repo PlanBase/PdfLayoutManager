@@ -29,14 +29,12 @@ Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayo
 
 # Positioning
 
-You probably don't need to know this to start using PdfLayoutMgr, but it's here to refer to when you're ready.
-
 #### User Space
 Everything is positioned on the page according to User Space which uses the familiar [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system).
 Most people learned about this by drawing graphs in basic algebra in elementary school.
 
 #### 1/72" is default unit.
-This corresponds to one definition of a "point" and to a common screen resolution for older monitors.
+This corresponds to one definition of a "point" and a common screen resolution for older monitors.
 
 #### Lower-Left
 * The point (0,0) is the lower-left-hand corner of the page (in portrait orientation, in landscape it may be below the bottom of the page).
@@ -44,7 +42,6 @@ Positive Y is up.  Positive X is right.
 * Rectangles and Images are positioned by their lower-left corners.
 
 #### Baseline
-* Text is positioned by its baseline.
 * The baseline is what the characters in most scripts "sit" on.
 Letters like "N" are entirely above it.
 Others like "g" dip below it.
@@ -52,6 +49,7 @@ The *ascent* is everything above the baseline.
 *Descent* is below the baseline, but there is usually extra space between the lowest descent and the total lineHeight.
 You can remove this by manually setting the lineHeight independently of the size of the font.
 * The baseline of images and tables is their bottom (they have no descent or additional line height) 
+* Text is positioned by its baseline.
 * Line-wrapping is done based on the baseline.
 
 #### Upper-Left
