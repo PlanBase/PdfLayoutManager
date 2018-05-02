@@ -274,14 +274,17 @@ data class Text(val textStyle: TextStyle,
         // Once we have more experience, might want to enhance using data here:
         // http://unicode.org/reports/tr14/#BreakOpportunities
         // NEVER include arithmetic minus here, or you'll get wrapping of the sign before a number
+        // Might want to add more from here: https://en.wikipedia.org/wiki/Dash
         private val breakableChars: Set<Char> =
                 setOf('/',
-                      '-',
+                      '-', // Line-breakable because there exists a non-breaking hyphen '\u2011' &#8209;.
                       '\u200b', // Zero-width space
                       '\u2010', // Hyphen
                       '\u2012', // figure dash
                       '\u2013', // en-dash
-                      '\u2014') // em-dash
+                      '\u2014', // em-dash
+                      '\u2015', // Horizontal bar
+                      '\u2053') // Swung Dash (like a horizontally stretched tilde)
 
         private fun isLineBreakable(c:Char) = Character.isWhitespace(c) || breakableChars.contains(c)
 
