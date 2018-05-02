@@ -32,6 +32,30 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.mutableListToStr
 import kotlin.math.max
 
+/*
+Algorithm for choosing column sizes dynamically:
+
+ - For each cell, figure out min and max width.
+ - For each column figure out min and max width.
+
+ - If all columns fit with max-width, then do that, shrinking total table width as needed: END.
+ - If columns do not fit with min-width, then expand total table width to fit every column min-width and use that: END.
+
+ - If any column overflows, then figure out some ratio of min to max width for the cells in that column, an average width.
+
+colAvgWidth = (sumMinWidths + sumMaxWidths) / (numRows * 2)
+
+Then figure proportion of average column widths
+
+colProportion1 = colAvgWidth / sumColAvgWidths
+
+colWidth1 = tableMaxWidth * colProportion1
+
+ - Each column must have at least min-width size.  So check all colWidth1's and adjust any that are less than that size.
+ - Proportion the remaining columns and find colProportion2 and colWidth2
+ - Repeat until all columns have at least min-width.
+ */
+
 /**
  * Use this to create Tables.  This strives to remind the programmer of HTML tables but because you
  * can resize and scroll a browser window, and not a piece of paper, this is fundamentally different.
