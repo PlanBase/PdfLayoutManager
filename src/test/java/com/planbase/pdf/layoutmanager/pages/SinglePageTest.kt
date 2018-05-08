@@ -4,7 +4,7 @@ import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_BLUE
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
@@ -14,32 +14,29 @@ import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
-import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.Text
+import com.planbase.pdf.layoutmanager.pages.PageGroupingTest.Companion.bigMelon
+import com.planbase.pdf.layoutmanager.pages.PageGroupingTest.Companion.bigText
+import com.planbase.pdf.layoutmanager.pages.PageGroupingTest.Companion.melonHeight
+import com.planbase.pdf.layoutmanager.pages.PageGroupingTest.Companion.melonWidth
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import org.apache.pdfbox.pdmodel.common.PDRectangle.*
+import org.apache.pdfbox.cos.COSString
+import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.apache.pdfbox.util.Charsets
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
 import java.io.FileOutputStream
-import javax.imageio.ImageIO
 
 class SinglePageTest {
     @Test fun testBasics() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val page:SinglePage = pageMgr.page(0)
-        val f = File("target/test-classes/melon.jpg")
-        val melonPic = ImageIO.read(f)
-        val melonHeight = 100.0
-        val melonWidth = 170.0
-        val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90.0, RGB_BLACK), "gN")
 
         val squareDim = Dim(squareSide, squareSide)
 
@@ -64,19 +61,23 @@ class SinglePageTest {
             diamondRect(page, Coord(lineX1, y), squareSide)
 
             val cellDaP: DimAndPageNums = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.00004)
+            Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.0)
 
             val tableDaP: DimAndPageNums = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.00002)
+            Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.0)
 
             y -= melonHeight
         }
 
         pageMgr.commit()
-        val os = FileOutputStream("singlePage.pdf")
-        pageMgr.save(os)
+
+        val docId = COSString("SinglePage test PDF".toByteArray(Charsets.ISO_8859_1))
+        pageMgr.setFileIdentifiers(docId, docId)
+
+        pageMgr.save(FileOutputStream("singlePage.pdf"))
     }
 }
+
 fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Double) {
     val ls = LineStyle(RGB_BLACK, 1.0)
     val (xLeft, yBot) = lowerLeft

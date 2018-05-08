@@ -27,6 +27,7 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.fail
+import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -34,6 +35,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceGray
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.apache.pdfbox.util.Charsets
+import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -126,16 +129,9 @@ class PageGroupingTest {
 //        pageMgr.save(ByteArrayOutputStream())
     }
 
-//    @Ignore
     @Test fun testBasics2() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
-        val f = File("target/test-classes/melon.jpg")
-        val melonPic = ImageIO.read(f)
-        val melonHeight = 98.0
-        val melonWidth = 170.0
-        val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 93.75, RGB_BLACK), "gN")
 
         val squareDim = Dim(squareSide, squareSide)
 
@@ -160,10 +156,10 @@ class PageGroupingTest {
             diamondRect(lp, Coord(lineX1, y), squareSide)
 
             val cellDimAndPageNums: DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfCell.dim, cellDimAndPageNums.dim, 0.00004)
+            Dim.assertEquals(qbfCell.dim, cellDimAndPageNums.dim, 0.0)
 
             val tableDimAndPageNums: DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfTable.dim, tableDimAndPageNums.dim, 0.00002)
+            Dim.assertEquals(qbfTable.dim, tableDimAndPageNums.dim, 0.0)
 
             y -= melonHeight
         }
@@ -226,8 +222,11 @@ class PageGroupingTest {
         }
 
         pageMgr.commit()
-        val os = FileOutputStream("pageGrouping.pdf")
-        pageMgr.save(os)
+
+        val docId = COSString("PageGrouping test PDF".toByteArray(Charsets.ISO_8859_1))
+        pageMgr.setFileIdentifiers(docId, docId)
+
+        pageMgr.save(FileOutputStream("pageGrouping.pdf"))
     }
 
     @Test fun testPageBreakingTopMargin() {
@@ -315,7 +314,7 @@ class PageGroupingTest {
     }
 
     @Test fun testAppropriatePage() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val melonHeight = 100.0
 
@@ -343,7 +342,7 @@ class PageGroupingTest {
     }
 
     @Test fun testRoomBelowCursorLandscape() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val bodyHeight: Double = letterLandscapeBody.dim.height
         val hel12Ts = TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 12.0, CMYK_BLACK)
@@ -466,5 +465,11 @@ class PageGroupingTest {
 
         val a1LandscapeBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.A1.width - DEFAULT_MARGIN),
                                        a1PortraitBody.dim.swapWh())
+
+        val melonPic: BufferedImage = ImageIO.read(File("target/test-classes/melon.jpg"))
+        const val melonHeight = 98.0
+        const val melonWidth = 170.0
+        val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 93.75, RGB_BLACK), "gN")
     }
 }
