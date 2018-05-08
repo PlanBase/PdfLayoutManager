@@ -62,10 +62,10 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
     }()
 
     override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums =
-            tableRender(lp, topLeft, dim.height, reallyRender)
+            renderCustom(lp, topLeft, dim.height, reallyRender)
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
-    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height: Double, reallyRender:Boolean): DimAndPageNums {
+    fun renderCustom(lp: RenderTarget, tempTopLeft: Coord, height: Double, reallyRender:Boolean): DimAndPageNums {
         var pageNums:IntRange = INVALID_PAGE_RANGE
 
         val adj = if (requiredSpaceBelow == 0.0) {

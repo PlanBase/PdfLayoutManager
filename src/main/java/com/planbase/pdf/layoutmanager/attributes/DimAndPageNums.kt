@@ -27,7 +27,9 @@ import kotlin.math.min
 /** The dimensions of a rendered item plus the start and end page numbers */
 data class DimAndPageNums(val dim:Dim, val pageNums:IntRange) {
 
-    fun maxExtents(nums: IntRange): IntRange = Companion.maxExtents(this.pageNums, nums)
+    fun maxExtents(nums: IntRange): IntRange = maxExtents(pageNums, nums)
+
+    override fun toString(): String = "DimAndPageNums($dim, $pageNums)"
 
     companion object {
 //        const val INVALID_PAGE_NUM = Int.MIN_VALUE
