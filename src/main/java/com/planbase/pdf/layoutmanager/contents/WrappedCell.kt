@@ -61,6 +61,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
     fun renderCustom(lp: RenderTarget, tempTopLeft: Coord, height: Double, reallyRender:Boolean): DimAndPageNums {
+//        println("WrappedCell.renderCustom(${lp.javaClass.simpleName}, $tempTopLeft, $height, $reallyRender)")
         var pageNums:IntRange = INVALID_PAGE_RANGE
 
         val adj = if (requiredSpaceBelow == 0.0) {

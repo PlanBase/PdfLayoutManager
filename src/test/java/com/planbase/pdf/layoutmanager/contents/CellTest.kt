@@ -2,6 +2,7 @@ package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.CMYK_LIGHT_GREEN
+import TestManual2.Companion.CMYK_PALE_PEACH
 import TestManual2.Companion.a6PortraitBody
 import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
@@ -23,15 +24,17 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase
+import junit.framework.TestCase.assertEquals
+import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_BOLD_ITALIC
 import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.apache.pdfbox.util.Charsets
 import org.junit.Test
 import java.io.FileOutputStream
-import kotlin.test.assertEquals
 
 const val twoHundred:Double = 200.0
 val cellStyle = CellStyle(
@@ -140,35 +143,4 @@ class CellTest {
         // Commit it to the output stream!
         pageMgr.save(os)
     }
-
-    @Test fun testCellAcrossPageBreak() {
-        // The bold-italic text showed on the wrong page because the last line wasn't being dealt with as a unit.
-        // A total line height is now calculated for the entire MultiLineWrapped when later inline text has a surprising
-        // default lineHeight.  This test maybe belongs in MultiLineWrapped, but better here than nowhere.
-        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
-        val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
-        val symbola7p5 = TextStyle(TIMES_ROMAN, 7.5, CMYK_BLACK)
-        val contentCell=Cell(CellStyle(TOP_LEFT_JUSTIFY, NO_PAD_NO_BORDER), 170.0,
-                             listOf(Text(symbola7p5, "Men often hate each other because they fear each other; they" +
-                                                     " fear each other because they don't know each other; they" +
-                                                     " don't know each other because they can not communicate;" +
-                                                     " they can not communicate "),
-                                    Text(TextStyle(TIMES_BOLD_ITALIC, 7.0, CMYK_BLACK, 12.0), "because they are separated.")))
-
-        val wrappedCell: WrappedCell = contentCell.wrap()
-        Dim.assertEquals(Dim(170.0, 49.4515), wrappedCell.dim, 0.00000001)
-
-        // Rendered away from the page break, the dimensions are unchanged.
-        val ret1:DimAndPageNums = wrappedCell.render(lp, Coord(40.0, 200.0))
-        Dim.assertEquals(Dim(170.0, 49.451508), ret1.dim, 0.00001)
-
-        // Rendered across the page break, it's bigger.
-        val ret2:DimAndPageNums = wrappedCell.render(lp, Coord(40.0, 72.0))
-        Dim.assertEquals(Dim(170.0, 58.65849), ret2.dim, 0.00002)
-
-        pageMgr.commit()
-//        val os = FileOutputStream("testCellAcrossPageBreak.pdf")
-//        pageMgr.save(os)
-    }
-
 }
