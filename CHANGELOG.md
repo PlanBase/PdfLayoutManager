@@ -10,6 +10,21 @@
  - Renamed Coord.x() .y() to .withX() and .withY() and Dim.width() .height() to .withWidth() and .withHeight() because it's clearer.
  - Made WrappedText a top-level class like WrappedCell.
 
+Upgrade Instructions
+```
+Replace Regex to fix any float literals without a decimal point:
+([0-9]+)f
+$1.0
+
+Replace Regex fix float literals with a decimal point:
+([0-9]+)[.]([0-9]+)f
+$1.$2
+
+Replace Words:
+Float
+Double
+```
+
 # 2.0.10 - 2018-03-29 "Fill-Rect after many pages"
  - Fixed bug where after a hundred or more pages, the edge of a fill-rect in a PageGrouping could slip between the
  floating point gaps and cause an exception.
