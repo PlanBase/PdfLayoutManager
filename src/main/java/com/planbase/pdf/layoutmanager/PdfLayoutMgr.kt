@@ -26,6 +26,8 @@ import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Dim
+import org.apache.pdfbox.cos.COSArray
+import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -219,6 +221,23 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     fun commit() {
         uncommittedPageGroupings.forEach { logicalPageEnd(it) }
         uncommittedPageGroupings.clear()
+    }
+
+    /** Returns a COSArray of two COSString's.  See [setFileIdentifiers] for details */
+    fun getFileIdentifiers() : COSArray? = doc.document.documentID
+
+    /**
+     * This an optional value in the PDF spec designed to hold two hashcode for later file compares.
+     * The first represents the original state of the file, the second the latest.
+     * If left null, PDFBox fills it in with an md5 hash of the file info plus timestamp.
+     * Construct a COSString like: COSString("Whatever".toByteArray(Charsets.ISO_8859_1))
+     * or just by passing it a byte array directly.
+     */
+    fun setFileIdentifiers(original: COSString, latest: COSString) {
+        val ca = COSArray()
+        ca.add(original)
+        ca.add(latest)
+        doc.document.documentID = ca
     }
 
     /**

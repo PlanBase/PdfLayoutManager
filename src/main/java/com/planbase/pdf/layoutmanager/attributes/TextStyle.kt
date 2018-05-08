@@ -58,10 +58,10 @@ lineHeight <            V    \   \_  _/   /
 data class TextStyle(val font: PDFont,    // Tf
                      val fontSize: Double, // Tfs
                      val textColor: PDColor,
-                     val lineHeight: Double,
-                     val rise: Double,
-                     val characterSpacing: Double,
-                     val wordSpacing: Double) {
+                     val lineHeight: Double = defaultLineHeight(font, fontSize),
+                     val rise: Double = 0.0,
+                     val characterSpacing: Double = 0.0,
+                     val wordSpacing: Double = 0.0) {
     constructor(font: PDFont,
                 fontSize: Double,
                 textColor: PDColor,

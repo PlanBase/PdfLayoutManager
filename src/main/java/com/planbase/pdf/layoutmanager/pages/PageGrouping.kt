@@ -385,12 +385,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     /**
      * Cell goes at x=0 and cursorY.  Cell width is bodyDim.width.
      *
+     * @param xOffset the offset from the left-hand side of the body area
      * @param cellStyle the style for the cell to make
      * @param contents the contents of the cell
      */
-    fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPageNums =
-            // TODO: Should have x=0 only if there is a pageReactor???
-            add(Coord(0.0, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
+    fun appendCell(xOffset:Double, cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPageNums =
+            add(Coord(xOffset, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
     override fun pageBreakingTopMargin(bottomY: Double, height: Double, requiredSpaceBelow: Double): Double =
             calcPage(bottomY, height, requiredSpaceBelow).adj

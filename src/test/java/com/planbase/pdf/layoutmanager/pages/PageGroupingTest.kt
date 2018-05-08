@@ -355,14 +355,14 @@ class PageGroupingTest {
         assertEquals(DEFAULT_MARGIN, lp.cursorY)
         assertEquals(0.0, lp.roomBelowCursor())
 
-        lp.appendCell(TOP_LEFT_BORDERLESS,
+        lp.appendCell(0.0, TOP_LEFT_BORDERLESS,
                       listOf(Text(hel12Ts, "Hi")))
         assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
 
         lp.cursorToNewPage()
         assertEquals(0.0, lp.roomBelowCursor())
 
-        lp.appendCell(TOP_LEFT_BORDERLESS,
+        lp.appendCell(0.0, TOP_LEFT_BORDERLESS,
                       listOf(Text(hel12Ts, "Hello")))
         assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
 
@@ -384,7 +384,7 @@ class PageGroupingTest {
         assertEquals(DEFAULT_MARGIN, lp.cursorY)
         assertEquals(0.0, lp.roomBelowCursor())
 
-        lp.appendCell(TOP_LEFT_BORDERLESS,
+        lp.appendCell(0.0, TOP_LEFT_BORDERLESS,
                       listOf(Text(hel12Ts, "Hi")))
 
         assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
@@ -392,7 +392,7 @@ class PageGroupingTest {
         lp.cursorToNewPage()
         assertEquals(0.0, lp.roomBelowCursor())
 
-        lp.appendCell(TOP_LEFT_BORDERLESS,
+        lp.appendCell(0.0, TOP_LEFT_BORDERLESS,
                       listOf(Text(hel12Ts, "Hello")))
         assertEquals(bodyHeight - hel12Ts.lineHeight, lp.roomBelowCursor())
 
@@ -434,7 +434,7 @@ class PageGroupingTest {
         // So here, we add 100 pages so that the floating point numbers have big enough gaps between them.
         for (i in 1 .. 10000) {
             lp.cursorToNewPage()
-                    lp.appendCell(TOP_LEFT_BORDERLESS, listOf(Text(TextStyle(TIMES_ROMAN, 14.0, CMYK_BLACK), "Page $i")))
+                    lp.appendCell(0.0, TOP_LEFT_BORDERLESS, listOf(Text(TextStyle(TIMES_ROMAN, 14.0, CMYK_BLACK), "Page $i")))
         }
 
         var testY = lp.cursorY - lp.roomBelowCursor()
