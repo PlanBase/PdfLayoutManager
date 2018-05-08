@@ -272,7 +272,7 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         val xyc: DimAndPageNums = tB
                 .wrap()
-                .render(lp, lp.body.topLeft.x(0.0))
+                .render(lp, lp.body.topLeft.withX(0.0))
 
         // This was very hastily added to this test to prove that font loading works (it does).
         val fontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
@@ -282,7 +282,7 @@ class TestManualllyPdfLayoutMgr {
              170.0,
              listOf(Text(TextStyle(liberationFont, 12.0, RGB_BLACK), "Hello Emily's Candy Font!")))
                 .wrap()
-                .render(lp, lp.body.topLeft.minusY(xyc.dim.height).x(xyc.dim.width))
+                .render(lp, lp.body.topLeft.minusY(xyc.dim.height).withX(xyc.dim.width))
 
         tB = Table()
         tB.addCellWidths(listOf(100.0))

@@ -30,11 +30,9 @@ import kotlin.math.abs
  */
 data class Coord(val x: Double, val y: Double) {
 
-    // TODO: Rename to withX()
-    fun x(newX: Double) = Coord(newX, y)
+    fun withX(newX: Double) = Coord(newX, y)
 
-    // TODO: Rename to withY()
-    fun y(newY: Double) = Coord(x, newY)
+    fun withY(newY: Double) = Coord(x, newY)
 
     fun plusX(offset: Double) = if (offset == 0.0) { this } else { Coord(x + offset, y) }
 

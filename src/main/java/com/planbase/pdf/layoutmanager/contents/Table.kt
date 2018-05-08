@@ -129,7 +129,7 @@ class Table(val cellWidths:MutableList<Double> = mutableListOf(),
             var maxWidth = 0.0
             var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
             for (part in parts) {
-                val dimAndPageNums: DimAndPageNums = part.render(lp, topLeft.y(y), reallyRender)
+                val dimAndPageNums: DimAndPageNums = part.render(lp, topLeft.withY(y), reallyRender)
                 maxWidth = max(maxWidth, dimAndPageNums.dim.width)
                 y -= dimAndPageNums.dim.height
                 pageNums = dimAndPageNums.maxExtents(pageNums)

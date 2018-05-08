@@ -32,7 +32,7 @@ import java.lang.Math.abs
 data class Dim(val width: Double, val height: Double) {
     init {
         if (width < 0 || height < 0) {
-            throw IllegalArgumentException("Dimensions must be positive: width=${width}f height=${height}f")
+            throw IllegalArgumentException("Dimensions must be positive: width=width height=height")
         }
     }
 
@@ -42,11 +42,9 @@ data class Dim(val width: Double, val height: Double) {
      */
     constructor(rect: PDRectangle) : this(rect.width.toDouble(), rect.height.toDouble())
 
-    // TODO: Rename to withWidth()
-    fun width(newX: Double) = Dim(newX, height)
+    fun withWidth(newX: Double) = Dim(newX, height)
 
-    // TODO: Rename to withHeight()
-    fun height(newY: Double) = Dim(width, newY)
+    fun withHeight(newY: Double) = Dim(width, newY)
 
     /**
      * If true, returns this, if false, returns a new Dim with width and height values swapped.

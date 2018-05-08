@@ -93,7 +93,7 @@ class TablePart(private val table: Table) {
             var y = topLeft.y
             var maxWidth = 0.0
             for (row in rows) {
-                val dimAndPageNums: DimAndPageNums = row.render(lp, topLeft.y(y), reallyRender)
+                val dimAndPageNums: DimAndPageNums = row.render(lp, topLeft.withY(y), reallyRender)
                 maxWidth = max(maxWidth, dimAndPageNums.dim.width)
                 y -= dimAndPageNums.dim.height
                 pageNums = dimAndPageNums.maxExtents(pageNums)

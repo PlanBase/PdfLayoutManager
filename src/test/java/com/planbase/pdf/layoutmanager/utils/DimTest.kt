@@ -15,7 +15,7 @@ class DimTest {
         val xyd2 = Dim(PDRectangle(Float.MAX_VALUE, Float.MIN_VALUE))
         assertEquals(Float.MAX_VALUE, xyd2.width.toFloat(), 0.000001f)
         assertEquals(Float.MIN_VALUE, xyd2.height.toFloat(), 0.000001f)
-        val xyd3 = Dim.ZERO.width(max).height(min)
+        val xyd3 = Dim.ZERO.withWidth(max).withHeight(min)
         assertEquals(max, xyd3.width, 0.00000001)
         assertEquals(min, xyd3.height, 0.00000001)
 

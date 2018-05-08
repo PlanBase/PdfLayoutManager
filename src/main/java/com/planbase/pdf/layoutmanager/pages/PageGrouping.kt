@@ -146,7 +146,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         // Text rendering calculation spot 3/3
         val belowBaseline = textStyle.lineHeight - textStyle.ascent
         val pby = appropriatePage(baselineLeft.y - belowBaseline, textStyle.lineHeight, 0.0)
-        pby.pb.drawStyledText(baselineLeft.y(pby.y + belowBaseline), text, textStyle, reallyRender)
+        pby.pb.drawStyledText(baselineLeft.withY(pby.y + belowBaseline), text, textStyle, reallyRender)
         return HeightAndPage(textStyle.lineHeight + pby.adj, pby.pb.pageNum)
     }
 
@@ -157,7 +157,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         // Calculate what page image should start on
         val pby = appropriatePage(bottomLeft.y, wi.dim.height, 0.0)
         // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawImage(bottomLeft.y(pby.y), wi, reallyRender)
+        pby.pb.drawImage(bottomLeft.withY(pby.y), wi, reallyRender)
         return HeightAndPage(wi.dim.height + pby.adj, pby.pb.pageNum)
     }
 
@@ -256,9 +256,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //        println("pby1=$pby1, pby2=$pby2")
         if (pby1 == pby2) {
             if (flip) {
-                pby1.pb.drawLine(end.y(pby1.y), start.y(pby2.y), lineStyle, reallyRender)
+                pby1.pb.drawLine(end.withY(pby1.y), start.withY(pby2.y), lineStyle, reallyRender)
             } else {
-                pby1.pb.drawLine(start.y(pby1.y), end.y(pby2.y), lineStyle, reallyRender)
+                pby1.pb.drawLine(start.withY(pby1.y), end.withY(pby2.y), lineStyle, reallyRender)
             }
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1

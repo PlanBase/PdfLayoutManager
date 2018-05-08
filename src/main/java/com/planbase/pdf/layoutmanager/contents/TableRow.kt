@@ -111,7 +111,7 @@ class TableRow(private val tablePart: TablePart) {
             // Find the height of the tallest cell before rendering any cells.
             for (fixedCell in fixedCells) {
 //                println("    beforeRender height=${fixedCell.dim.height}")
-                val dimAndPageNums: DimAndPageNums = fixedCell.renderCustom(lp, topLeft.x(x), maxRowHeight,
+                val dimAndPageNums: DimAndPageNums = fixedCell.renderCustom(lp, topLeft.withX(x), maxRowHeight,
                                                                             reallyRender = false)
 //                println("    afterRender height=$height") // Size is wrong here!
                 maxRowHeight = max(maxRowHeight, dimAndPageNums.dim.height)
@@ -125,7 +125,7 @@ class TableRow(private val tablePart: TablePart) {
                 // Now render the cells
                 x = topLeft.x
                 for (fixedCell in fixedCells) {
-                    val width = fixedCell.renderCustom(lp, topLeft.x(x), maxRowHeight, reallyRender = true).dim.width
+                    val width = fixedCell.renderCustom(lp, topLeft.withX(x), maxRowHeight, reallyRender = true).dim.width
                     x += width
                 }
             }

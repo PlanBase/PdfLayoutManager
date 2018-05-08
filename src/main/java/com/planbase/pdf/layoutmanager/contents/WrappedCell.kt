@@ -96,7 +96,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 
         // Draw contents over background, but under border
         val finalDim = if (dim.height < height) {
-            dim.height(height)
+            dim.withHeight(height)
         } else {
             dim
         }
@@ -133,7 +133,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         // Draw background first (if necessary) so that everything else ends up on top of it.
         if (boxStyle.bgColor != null) {
             //            System.out.println("\tCell.render calling putRect...");
-            lp.fillRect(topLeft.y(y), dim.height(topLeft.y - y), boxStyle.bgColor, reallyRender)
+            lp.fillRect(topLeft.withY(y), dim.withHeight(topLeft.y - y), boxStyle.bgColor, reallyRender)
             //            System.out.println("\tCell.render back from putRect");
         }
 
