@@ -1,14 +1,12 @@
 package com.planbase.pdf.layoutmanager.contents
 
-import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
 import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
-import com.planbase.pdf.layoutmanager.contents.Text.WrappedText
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
@@ -23,7 +21,6 @@ import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.junit.Assert
 import org.junit.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -239,17 +236,4 @@ class TextTest {
 //        val os = FileOutputStream("textBaseline.pdf")
 //        mgr.save(os)
     }
-
-    @Test fun testExactLineWrapping() {
-        val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
-        Assert.assertEquals(214.104, text.maxWidth(), 0.0)
-        Assert.assertEquals(makeContinuing(BULLET_TEXT_STYLE, text.text),
-                            text.lineWrapper().getSomething(214.104))
-
-        Assert.assertEquals(makeContinuing(BULLET_TEXT_STYLE, "months showed the possible money"),
-                            text.lineWrapper().getSomething(214.103))
-    }
 }
-
-fun makeContinuing(textStyle:TextStyle, str:String):Continuing =
-        Continuing(WrappedText(textStyle, str, textStyle.stringWidthInDocUnits(str)))

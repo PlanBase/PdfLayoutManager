@@ -8,6 +8,7 @@
  - Changed PageGrouping.appendCell() to take an x-offset as the first parameter (usually set to zero)
  - Removed LineWrapped.lineHeight because it entirely duplicated .dim.height.
  - Renamed Coord.x() .y() to .withX() and .withY() and Dim.width() .height() to .withWidth() and .withHeight() because it's clearer.
+ - Made WrappedText a top-level class like WrappedCell.
 
 # 2.0.10 - 2018-03-29 "Fill-Rect after many pages"
  - Fixed bug where after a hundred or more pages, the edge of a fill-rect in a PageGrouping could slip between the

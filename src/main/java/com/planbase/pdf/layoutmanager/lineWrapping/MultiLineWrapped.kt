@@ -21,7 +21,7 @@
 package com.planbase.pdf.layoutmanager.lineWrapping
 
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
-import com.planbase.pdf.layoutmanager.contents.Text
+import com.planbase.pdf.layoutmanager.contents.WrappedText
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
@@ -98,11 +98,11 @@ class MultiLineWrapped : LineWrapped {
                 // Justified text only looks good if the line is long enough.
                 if (contentWidth > justifyWidth * 0.75) {
                     val numSpaces: Int = items
-                            .filter{ it is Text.WrappedText }
-                            .sumBy{ (it as Text.WrappedText).numSpaces() }
+                            .filter{ it is WrappedText }
+                            .sumBy{ (it as WrappedText).numSpaces() }
                     val wordSpacing = (justifyWidth - contentWidth) / numSpaces
                     tempItems = items.map {
-                        if (it is Text.WrappedText) {
+                        if (it is WrappedText) {
                             it.withWordSpacing(wordSpacing)
                         } else {
                             it

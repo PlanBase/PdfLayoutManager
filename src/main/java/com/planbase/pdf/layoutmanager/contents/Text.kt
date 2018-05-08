@@ -20,19 +20,14 @@
 
 package com.planbase.pdf.layoutmanager.contents
 
-import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
-import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
-import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.escapeStr
 
 /**
@@ -45,40 +40,6 @@ data class Text(val textStyle: TextStyle,
     // This removes all tabs, transforms all line-terminators into "\n", and removes all runs of spaces that
     // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
     val text = cleanStr(initialText)
-
-    /**
-     * Represents a unit of wrapped text.  MultiLineWrapped can hold multiple WrappedText or other "Wrapped" objects
-     * per line, but a WrappedText only holds one contiguously styled section of one line of text.  A single
-     * WrappedText could cover a whole line, but no more.
-     *
-     * @param textStyle the style
-     * @param string the actual text that fits in this line
-     * @param width the width of that string in this textStyle
-     */
-    data class WrappedText(val textStyle: TextStyle,
-                           val string: String,
-                           val width: Double = textStyle.stringWidthInDocUnits(string)) : LineWrapped {
-
-        override val dim: Dim = Dim(width, textStyle.lineHeight)
-
-        override val ascent: Double = textStyle.ascent
-
-
-        /** Returns the number of literal space characters in this WrappedText */
-        fun numSpaces(): Int = string.count { it == ' ' }
-
-        fun withWordSpacing(spacing: Double):WrappedText {
-            val newTextStyle = textStyle.withWordSpacing(spacing)
-            return WrappedText(newTextStyle, string)
-        }
-
-        // Text rendering calculation spot 1/3
-        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums =
-                lp.drawStyledText(topLeft.minusY(ascent), string, textStyle, reallyRender)
-                        .dimAndPagesFromWidth(dim)
-
-        override fun toString() = "WrappedText($textStyle, \"$string\", $width)"
-    }
 
     fun avgCharsForWidth(width: Double): Int = (width * 1220.0 / textStyle.avgCharWidth).toInt()
 
@@ -109,7 +70,7 @@ data class Text(val textStyle: TextStyle,
 
         override fun getSomething(maxWidth: Double): ConTerm {
             if (maxWidth < 0) {
-                throw IllegalArgumentException("Illegal negative width: " + maxWidth)
+                throw IllegalArgumentException("Illegal negative width: $maxWidth")
             }
             val rowIdx = tryGettingText(maxWidth, idx, txt)
             idx = rowIdx.idx

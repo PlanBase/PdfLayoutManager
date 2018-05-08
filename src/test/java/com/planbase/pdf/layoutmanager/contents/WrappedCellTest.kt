@@ -101,7 +101,13 @@ class WrappedCellTest {
                                        mlw.width = hello.maxWidth()
                                        mlw.ascent = textStyle.ascent
                                        mlw.lineHeight = textStyle.lineHeight
-                                       mlw.append(Text.WrappedText(textStyle, hello.text, hello.maxWidth()))
+                                       mlw.append(
+                                               WrappedText(
+                                                       textStyle,
+                                                       hello.text,
+                                                       hello.maxWidth()
+                                               )
+                                       )
                                        mlw
                                    }.invoke()), 0.0)
 //        val wrappedCell = cell.wrap()
@@ -134,6 +140,15 @@ class WrappedCellTest {
 //        pageMgr.save(os)
     }
 
+    // There was only one significant line changed when I added this test without any comments.
+    // Looks like I had assumed pageBreakingTopMargin wanted the text baseline which was above the curent y-value,
+    // but it actually needs the bottom of the text area which is below the current y-value.
+    //
+    // This comment is based on:
+    // git diff 13d097b86807ff458191a01633e1d507abcf3fc3 e2958def12f99beb699fc7546f5f7f0024b22df7
+    // In class WrappedCell:
+    // - val adjY = lp.pageBreakingTopMargin(y + line.descentAndLeading, line.lineHeight) + line.lineHeight
+    // + val adjY = lp.pageBreakingTopMargin(y - line.lineHeight, line.lineHeight) + line.lineHeight
     @Test fun testCellHeightBug() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)

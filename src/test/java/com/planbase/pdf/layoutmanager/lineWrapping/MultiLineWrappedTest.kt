@@ -9,6 +9,7 @@ import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text
+import com.planbase.pdf.layoutmanager.contents.WrappedText
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
@@ -79,7 +80,7 @@ class MultiLineWrappedTest {
         assertEquals(text,
                      line.items
                              .fold(StringBuilder(),
-                                   {acc, item -> acc.append((item as Text.WrappedText).string)})
+                                   {acc, item -> acc.append((item as WrappedText).string)})
                              .toString())
     }
 
