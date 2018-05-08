@@ -63,9 +63,9 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
     data class WrappedImage(val bufferedImage: BufferedImage,
                             override val dim: Dim) : LineWrapped {
 
-        override val ascent: Float = dim.height
+        override val ascent: Double = dim.height
 
-        override val lineHeight: Float = dim.height
+        override val lineHeight: Double = dim.height
 
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums =
                 lp.drawImage(topLeft.minusY(dim.height), this, reallyRender)
@@ -73,12 +73,12 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
     }
 
     companion object {
-        private const val ASSUMED_IMAGE_DPI: Float = 300f
+        private const val ASSUMED_IMAGE_DPI: Double = 300.0
 
         /**
          * The default scaling factor for images.  Assumes image is normally seen at 300dpi and your output document
          * uses 72 units per inch.
          */
-        const val IMAGE_SCALE: Float = PdfLayoutMgr.DOC_UNITS_PER_INCH / ASSUMED_IMAGE_DPI
+        const val IMAGE_SCALE: Double = PdfLayoutMgr.DOC_UNITS_PER_INCH / ASSUMED_IMAGE_DPI
     }
 }

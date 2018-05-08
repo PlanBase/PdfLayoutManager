@@ -35,21 +35,21 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 class WrappedCell(override val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
                   private val rows: List<MultiLineWrapped>,
-                  private val requiredSpaceBelow : Float) : LineWrapped {
+                  private val requiredSpaceBelow : Double) : LineWrapped {
 
-    override val ascent: Float
+    override val ascent: Double
         get() = dim.height
 
-//    override val descentAndLeading: Float = 0f
+//    override val descentAndLeading: Double = 0.0
 
-    override val lineHeight: Float
+    override val lineHeight: Double
         get() = dim.height
 
     override fun toString() = "WrappedCell($dim, $cellStyle, $rows)"
 
     private val wrappedBlockDim: Dim = {
-        var width = 0f
-        var height = 0f
+        var width = 0.0
+        var height = 0.0
         for (row in rows) {
             val rowDim = row.dim
             width = Math.max(width, rowDim.width)
@@ -65,16 +65,16 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             tableRender(lp, topLeft, dim.height, reallyRender)
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
-    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height:Float, reallyRender:Boolean): DimAndPageNums {
+    fun tableRender(lp: RenderTarget, tempTopLeft: Coord, height: Double, reallyRender:Boolean): DimAndPageNums {
         var pageNums:IntRange = INVALID_PAGE_RANGE
 
-        val adj = if (requiredSpaceBelow == 0f) {
-            0f
+        val adj = if (requiredSpaceBelow == 0.0) {
+            0.0
         } else {
             lp.pageBreakingTopMargin(tempTopLeft.y - dim.height, dim.height, requiredSpaceBelow)
         }
 
-        val topLeft: Coord = if (requiredSpaceBelow == 0f) {
+        val topLeft: Coord = if (requiredSpaceBelow == 0.0) {
             tempTopLeft
         } else {
             // Not part of a table.
@@ -123,7 +123,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
                                              // Even if we're justifying text, the last row looks better unjustified.
                                              innerDim.width
                                          } else {
-                                             0f
+                                             0.0
                                          })
 //            println("thisLineHeight=$thisLineHeight")
             y -= dimAndPages.dim.height // y is always the lowest row in the cell.

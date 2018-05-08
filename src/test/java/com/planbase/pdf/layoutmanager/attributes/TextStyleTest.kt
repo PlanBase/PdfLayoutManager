@@ -23,75 +23,75 @@ class TextStyleTest {
     @Test fun basics() {
 
         // Natural height
-        assertEquals(115.6f, TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(115.6, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK).lineHeight, 0.0)
 
         // Should take whatever height we give it!
-        assertEquals(50f, TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 50f).lineHeight)
-        assertEquals(200f, TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 200f).lineHeight)
+        assertEquals(50.0, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 50.0).lineHeight, 0.0)
+        assertEquals(200.0, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 200.0).lineHeight, 0.0)
 
         // Natural heights of other fonts
-        assertEquals(119.0f, TextStyle(PDType1Font.HELVETICA_BOLD, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(115.6f, TextStyle(PDType1Font.HELVETICA_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(119.0f, TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(111.6f, TextStyle(PDType1Font.TIMES_ROMAN, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(119.0, TextStyle(PDType1Font.HELVETICA_BOLD, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(115.6, TextStyle(PDType1Font.HELVETICA_OBLIQUE, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(119.0, TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(111.6, TextStyle(PDType1Font.TIMES_ROMAN, 100.0, CMYK_BLACK).lineHeight, 0.0)
 
-        assertEquals(115.3f, TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(110f, TextStyle(PDType1Font.TIMES_ITALIC, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(113.9f, TextStyle(PDType1Font.TIMES_BOLD_ITALIC, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(105.5f, TextStyle(PDType1Font.COURIER, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(105.1f, TextStyle(PDType1Font.COURIER_BOLD, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(105.5f, TextStyle(PDType1Font.COURIER_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
-        assertEquals(105.1f, TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(115.3, TextStyle(PDType1Font.TIMES_BOLD, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(110.0, TextStyle(PDType1Font.TIMES_ITALIC, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(113.9, TextStyle(PDType1Font.TIMES_BOLD_ITALIC, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(105.5, TextStyle(PDType1Font.COURIER, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(105.1, TextStyle(PDType1Font.COURIER_BOLD, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(105.5, TextStyle(PDType1Font.COURIER_OBLIQUE, 100.0, CMYK_BLACK).lineHeight, 0.0)
+        assertEquals(105.1, TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 100.0, CMYK_BLACK).lineHeight, 0.0)
 
         val fontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
-        assertEquals(125.19531f, TextStyle(liberationFont, 100f, CMYK_BLACK).lineHeight)
+        assertEquals(125.19531, TextStyle(liberationFont, 100.0, CMYK_BLACK).lineHeight, 0.00001)
 
         // TODO: Test character spacing and word spacing!
 
-        val helvetica100 = TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK)
-        val basicWidth = 516.7f
+        val helvetica100 = TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK)
+        val basicWidth = 516.7
 
-        assertEquals(basicWidth, helvetica100.stringWidthInDocUnits("Hello World"))
+        assertEquals(basicWidth, helvetica100.stringWidthInDocUnits("Hello World"), 0.0)
 
-        assertEquals(basicWidth + 10f,
-                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 0f, 0f, 10f)
-                             .stringWidthInDocUnits("Hello World"))
+        assertEquals(basicWidth + 10.0,
+                     TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 100.0, 0.0, 0.0, 10.0)
+                             .stringWidthInDocUnits("Hello World"), 0.0)
 
-        assertEquals(basicWidth + ("Hello World".length * 1f),
-                     TextStyle(PDType1Font.HELVETICA, 100f, CMYK_BLACK, 100f, 0f, 1f, 0f)
-                             .stringWidthInDocUnits("Hello World"))
+        assertEquals(basicWidth + ("Hello World".length * 1.0),
+                     TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 100.0, 0.0, 1.0, 0.0)
+                             .stringWidthInDocUnits("Hello World"), 0.0)
 
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
         val page: SinglePage = pageMgr.page(0)
 
 
-        val times20 = TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK)
+        val times20 = TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK)
         val leading = times20.lineHeight
         page.drawStyledText(lp.body.topLeft.minusY(leading), quickBrownFox, times20)
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 2), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 1f, 0f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, 1.0, 0.0))
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 3), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, -1f, 0f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, -1.0, 0.0))
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 4), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 0f, 2f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, 0.0, 2.0))
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 5), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20f, CMYK_BLACK, 20f, 0f, 0f, -2f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, 0.0, -2.0))
 
         val helloOff = lp.body.topLeft.minusY(leading * 6)
         page.drawStyledText(helloOff, "Hello", times20)
         page.drawStyledText(helloOff.plusX(times20.stringWidthInDocUnits("Hello")), "subscript",
-                            TextStyle(PDType1Font.TIMES_ROMAN, 11f, CMYK_BLACK, 11f, -4f, 0f, 0f))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, 11.0, -4.0, 0.0, 0.0))
 
         val stuffOff = helloOff.plusX(times20.stringWidthInDocUnits("hellosubscript"))
         page.drawStyledText(stuffOff, "Stuff", times20)
-        page.drawStyledText(stuffOff.plusX(times20.stringWidthInDocUnits("Stuff") + 1f), "superscript",
-                            TextStyle(PDType1Font.TIMES_ROMAN, 11f, CMYK_BLACK, 11f, 10f, 0f, 0f))
+        page.drawStyledText(stuffOff.plusX(times20.stringWidthInDocUnits("Stuff") + 1.0), "superscript",
+                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, 11.0, 10.0, 0.0, 0.0))
 
         pageMgr.commit()
         val os = FileOutputStream("textStyleTest.pdf")
@@ -110,16 +110,16 @@ class TextStyleTest {
 //        println("stemV=${fd.stemV}")
 //        println("stemH=${fd.stemH}")
 //
-//        val ts = TextStyle(PDType1Font.HELVETICA_BOLD, 10f, CMYK_BLACK)
+//        val ts = TextStyle(PDType1Font.HELVETICA_BOLD, 10.0, CMYK_BLACK)
 //        println("ts=$ts")
     }
 
     @Test fun testToString() {
-        assertEquals("TextStyle(HELVETICA, 11.125f, CMYK_WHITE)",
-                     TextStyle(HELVETICA, 11.125f, CMYK_WHITE).toString())
-        assertEquals("TextStyle(HELVETICA, 11.125f, CMYK_WHITE, 13.5f)",
-                     TextStyle(HELVETICA, 11.125f, CMYK_WHITE, 13.5f).toString())
-        assertEquals("TextStyle(HELVETICA, 11.125f, CMYK_BLACK, 13.5f, 0.25f, -0.75f, 1f)",
-                     TextStyle(HELVETICA, 11.125f, CMYK_BLACK, 13.5f, 0.25f, -0.75f, 1f).toString())
+        assertEquals("TextStyle(HELVETICA, 11.125, CMYK_WHITE)",
+                     TextStyle(HELVETICA, 11.125, CMYK_WHITE).toString())
+        assertEquals("TextStyle(HELVETICA, 11.125, CMYK_WHITE, 13.5)",
+                     TextStyle(HELVETICA, 11.125, CMYK_WHITE, 13.5).toString())
+        assertEquals("TextStyle(HELVETICA, 11.125, CMYK_BLACK, 13.5, 0.25, -0.75, 1.0)",
+                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, 13.5, 0.25, -0.75, 1.0).toString())
     }
 }

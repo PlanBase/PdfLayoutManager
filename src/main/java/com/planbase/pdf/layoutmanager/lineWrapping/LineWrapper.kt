@@ -29,14 +29,14 @@ interface LineWrapper {
 //            return item != null
 //        }
 //
-//        override fun getSomething(maxWidth: Float): ConTerm {
+//        override fun getSomething(maxWidth: Double): ConTerm {
 //            val dim = item!!.calcDimensions(maxWidth)
-//            val ret = FixedItemImpl(item, dim.width(), dim.height(), 0f, dim.height())
+//            val ret = FixedItemImpl(item, dim.width(), dim.height(), 0.0, dim.height())
 //            item = null
 //            return ConTerm.continuing(ret)
 //        }
 //
-//        override fun getIfFits(remainingWidth: Float): ConTermNone {
+//        override fun getIfFits(remainingWidth: Double): ConTermNone {
 //            val dim = item!!.calcDimensions(remainingWidth)
 //            if (dim.width() <= remainingWidth) {
 //                val something = getSomething(remainingWidth)
@@ -52,22 +52,22 @@ interface LineWrapper {
      * Called when line is empty.  Returns something less than maxWidth if possible, but always
      * returns something even if it won’t fit.  Call this when line is empty.
      */
-    fun getSomething(maxWidth: Float): ConTerm
+    fun getSomething(maxWidth: Double): ConTerm
 
     /**
      * Called when line is not empty to try to fit on this line.  If it doesn't fit, then the
      * caller will probably create a new line and call getSomething(maxWidth) to start that line.
      */
-    fun getIfFits(remainingWidth: Float): ConTermNone
+    fun getIfFits(remainingWidth: Double): ConTermNone
 
     object EmptyLineWrapper : LineWrapper {
         override fun hasMore() = false
 
-        override fun getSomething(maxWidth: Float): ConTerm {
+        override fun getSomething(maxWidth: Double): ConTerm {
             throw UnsupportedOperationException("Can't call getSomething on a NullLineWrapper")
         }
 
-        override fun getIfFits(remainingWidth: Float): ConTermNone {
+        override fun getIfFits(remainingWidth: Double): ConTermNone {
             throw UnsupportedOperationException("Can't call getIfFits on a NullLineWrapper")
         }
     }
@@ -77,12 +77,12 @@ interface LineWrapper {
             private var hasMore = true
             override fun hasMore(): Boolean = hasMore
 
-            override fun getSomething(maxWidth: Float): ConTerm {
+            override fun getSomething(maxWidth: Double): ConTerm {
                 hasMore = false
                 return Continuing(item)
             }
 
-            override fun getIfFits(remainingWidth: Float): ConTermNone =
+            override fun getIfFits(remainingWidth: Double): ConTermNone =
                     if (hasMore && (item.dim.width <= remainingWidth)) {
                         hasMore = false
                         Continuing(item)

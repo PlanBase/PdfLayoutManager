@@ -20,20 +20,19 @@
 
 package com.planbase.pdf.layoutmanager.attributes
 
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.floatToStr
+import com.planbase.pdf.layoutmanager.utils.Dim
 
 /**
  * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
  */
-data class Padding(val top: Float,
-                   val right: Float,
-                   val bottom: Float,
-                   val left: Float) {
+data class Padding(val top: Double,
+                   val right: Double,
+                   val bottom: Double,
+                   val left: Double) {
 
     /** Sets all padding values equally  */
-    constructor(a:Float) : this(a, a, a, a)
+    constructor(a: Double) : this(a, a, a, a)
 
 //    fun topLeftPadDim(): Dim = Dim(left, top)
 //
@@ -57,9 +56,9 @@ data class Padding(val top: Float,
             if (this == NO_PADDING) {
                 "NO_PADDING"
             } else if ((top == right) && (top == bottom) && (top == left)) {
-                "Padding(${floatToStr(top)})"
+                "Padding($top)"
             } else {
-                "Padding(${floatToStr(top)}, ${floatToStr(right)}, ${floatToStr(bottom)}, ${floatToStr(left)})"
+                "Padding($top, $right, $bottom, $left)"
             }
 
     //    public Coord topLeftPadOffset() { return Coord(left, -top); }
@@ -68,10 +67,10 @@ data class Padding(val top: Float,
     companion object {
         /** Default padding of 1.5, 1.5, 2. 1.5 (top, right, bottom, left) */
         @JvmField
-        val DEFAULT_TEXT_PADDING = Padding(1.5f, 1.5f, 2f, 1.5f)
+        val DEFAULT_TEXT_PADDING = Padding(1.5, 1.5, 2.0, 1.5)
 
         /** Zero padding all around. */
         @JvmField
-        val NO_PADDING = Padding(0f)
+        val NO_PADDING = Padding(0.0)
     }
 }

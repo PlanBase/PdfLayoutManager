@@ -42,29 +42,29 @@ import com.planbase.pdf.layoutmanager.utils.listToStr
  * this cell behaves as part of the given table row.
  */
 data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
-                val width: Float,
+                val width: Double,
                 private var contents: List<LineWrappable>,
-                private val requiredSpaceBelow : Float,
+                private val requiredSpaceBelow : Double,
                 private val tableRow: TableRow? = null) : LineWrappable {
 
     constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
-                width: Float,
+                width: Double,
                 contents: List<LineWrappable>,
-                tableRow: TableRow? = null) : this(cellStyle, width, contents, 0f, tableRow)
+                tableRow: TableRow? = null) : this(cellStyle, width, contents, 0.0, tableRow)
 
     constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
-                width: Float,
-                contents: List<LineWrappable>) : this(cellStyle, width, contents, 0f, null)
+                width: Double,
+                contents: List<LineWrappable>) : this(cellStyle, width, contents, 0.0, null)
 
     constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
-                width: Float,
+                width: Double,
                 contents: List<LineWrappable>,
-                requiredSpaceBelow : Float) : this(cellStyle, width, contents, requiredSpaceBelow, null)
+                requiredSpaceBelow : Double) : this(cellStyle, width, contents, requiredSpaceBelow, null)
     init {
         if (width < 0) {
             throw IllegalArgumentException("A cell cannot have a negative width")
         }
-        if ( (tableRow != null) && (requiredSpaceBelow != 0f) ) {
+        if ( (tableRow != null) && (requiredSpaceBelow != 0.0) ) {
             throw IllegalArgumentException("Can either be a table cell or have required space below, not both.")
         }
     }
@@ -93,7 +93,7 @@ data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
     override fun lineWrapper() = LineWrapper.preWrappedLineWrapper(this.wrap())
 
     override fun toString() =
-            "Cell($cellStyle, ${floatToStr(width)}, ${listToStr(contents)})"
+            "Cell($cellStyle, $width, ${listToStr(contents)})"
 
     fun toStringTable() =
             "\n.cell($cellStyle, ${listToStr(contents)})"

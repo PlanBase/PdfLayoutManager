@@ -30,23 +30,23 @@ class TableRowTest {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
-        val upperLeft = Coord(100f, 500f)
+        val upperLeft = Coord(100.0, 500.0)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
         // the way cells extend vertically (but not horizontally) to fit the text you put in them.
         val tB = Table()
-        tB.addCellWidths(listOf(100f, 100f, 100f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
+        tB.addCellWidths(listOf(100.0, 100.0, 100.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0,
                                      RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(Align.BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(Align.MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
+                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
                 .rowBuilder()
                 .align(Align.BOTTOM_RIGHT).addTextCells("Line 1")
                 .align(Align.BOTTOM_CENTER).addTextCells("Line 1\n" +
@@ -82,12 +82,12 @@ class TableRowTest {
 
         // Set up some useful constants for later.
         val tableWidth = lp.pageWidth() - 2 * pMargin
-        val colWidth = tableWidth / 4f
-        val colWidths = floatArrayOf(colWidth + 10, colWidth + 10, colWidth + 10, colWidth - 30)
-        val textCellPadding = Padding(2f)
+        val colWidth = tableWidth / 4.0
+        val colWidths = doubleArrayOf(colWidth + 10.0, colWidth + 10.0, colWidth + 10.0, colWidth - 30.0)
+        val textCellPadding = Padding(2.0)
 
         // Set up some useful styles for later
-        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, RGB_WHITE)
+        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5, RGB_WHITE)
         val headingCell = CellStyle(Align.BOTTOM_CENTER,
                                     BoxStyle(textCellPadding, RGB_BLUE,
                                              BorderStyle(LineStyle.NO_LINE, LineStyle(RGB_WHITE),

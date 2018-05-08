@@ -83,7 +83,7 @@ import java.util.HashMap
  */
 class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                    val pageDim: Dim,
-                   private var pageReactor:((Int, SinglePage) -> Float)? = null) {
+                   private var pageReactor:((Int, SinglePage) -> Double)? = null) {
     private val doc = PDDocument()
 
     /**
@@ -187,7 +187,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     // Part of end-user public interface
     fun startPageGrouping(orientation: Orientation,
                           body:PageArea,
-                          pr: ((Int, SinglePage) -> Float)? = null): PageGrouping {
+                          pr: ((Int, SinglePage) -> Double)? = null): PageGrouping {
         pageReactor = pr
         val pb = SinglePage(pages.size + 1, this, pageReactor, body)
         pages.add(pb)
@@ -247,7 +247,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                 doc.addPage(pdPage)
 
                 if (lp.orientation === LANDSCAPE) {
-                    stream.transform(Matrix(0f, 1f, -1f, 0f, pageDim.width, 0f))
+                    stream.transform(Matrix(0f, 1f, -1f, 0f, pageDim.width.toFloat(), 0f))
                 }
                 stream.setStrokingColor(colorSpace.initialColor)
                 stream.setNonStrokingColor(colorSpace.initialColor)
@@ -293,13 +293,13 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
          * Document-Units Per Inch.  This makes one pixel on an average desktop monitor correspond to
          * roughly one document unit.  This is a useful constant for page layout math.
          */
-        const val DOC_UNITS_PER_INCH: Float = 72f
+        const val DOC_UNITS_PER_INCH: Double = 72.0
 
         /**
          * Some printers need at least 1/2" of margin (36 "pixels") in order to accept a print job.
          * This amount seems to accommodate all printers.
          */
-        const val DEFAULT_MARGIN: Float = 37f
+        const val DEFAULT_MARGIN: Double = 37.0
 
 //        private val DEFAULT_DOUBLE_MARGIN_DIM = Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)
     }

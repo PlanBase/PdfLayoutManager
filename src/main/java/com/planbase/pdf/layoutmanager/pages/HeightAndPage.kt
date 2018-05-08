@@ -28,7 +28,7 @@ import com.planbase.pdf.layoutmanager.utils.Dim
  * @param height the height of the item (not the y-offset)
  * @param pageNum the last page the item touches
  */
-data class HeightAndPage(val height:Float,
+data class HeightAndPage(val height: Double,
                          private val pageNum:Int) {
     fun dimAndPagesFromWidth(dim:Dim) = DimAndPageNums(Dim(dim.width, height), IntRange(pageNum, pageNum))
 }

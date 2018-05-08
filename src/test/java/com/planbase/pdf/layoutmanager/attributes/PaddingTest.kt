@@ -10,37 +10,37 @@ import org.organicdesign.testUtils.EqualsContract.equalsDistinctHashCode
 class PaddingTest {
     @Test
     fun staticFactoryTest() {
-        assertTrue(NO_PADDING == Padding(0f))
-        assertTrue(NO_PADDING == Padding(0f, 0f, 0f, 0f))
-        assertTrue(DEFAULT_TEXT_PADDING == Padding(1.5f, 1.5f, 2f, 1.5f))
+        assertTrue(NO_PADDING == Padding(0.0))
+        assertTrue(NO_PADDING == Padding(0.0, 0.0, 0.0, 0.0))
+        assertTrue(DEFAULT_TEXT_PADDING == Padding(1.5, 1.5, 2.0, 1.5))
 
-        val (top, right, bottom, left) = Padding(2f)
-        assertEquals(2.0f, top, 0.0f)
-        assertEquals(2.0f, right, 0.0f)
-        assertEquals(2.0f, bottom, 0.0f)
-        assertEquals(2.0f, left, 0.0f)
+        val (top, right, bottom, left) = Padding(2.0)
+        assertEquals(2.0, top, 0.0)
+        assertEquals(2.0, right, 0.0)
+        assertEquals(2.0, bottom, 0.0)
+        assertEquals(2.0, left, 0.0)
 
-        val (top1, right1, bottom1, left1) = Padding(3f, 5f, 7f, 11f)
-        assertEquals(3.0f, top1, 0.0f)
-        assertEquals(5.0f, right1, 0.0f)
-        assertEquals(7.0f, bottom1, 0.0f)
-        assertEquals(11.0f, left1, 0.0f)
+        val (top1, right1, bottom1, left1) = Padding(3.0, 5.0, 7.0, 11.0)
+        assertEquals(3.0, top1, 0.0)
+        assertEquals(5.0, right1, 0.0)
+        assertEquals(7.0, bottom1, 0.0)
+        assertEquals(11.0, left1, 0.0)
     }
 
     @Test
     fun equalHashTest() {
         // Test first item different
-        equalsDistinctHashCode(Padding(1f), Padding(1f, 1f, 1f, 1f), Padding(1f),
-                               Padding(2f, 1f, 1f, 1f))
+        equalsDistinctHashCode(Padding(1.0), Padding(1.0, 1.0, 1.0, 1.0), Padding(1.0),
+                               Padding(2.0, 1.0, 1.0, 1.0))
 
         // Test transposed middle items are different (but have same hashcode)
-        equalsDistinctHashCode(Padding(3f, 5f, 7f, 1.1f), Padding(3f, 5f, 7f, 1.1f),
-                               Padding(3f, 5f, 7f, 1.1f),
-                               Padding(3f, 7f, 5f, 1.1f))
+        equalsDistinctHashCode(Padding(3.0, 5.0, 7.0, 1.1), Padding(3.0, 5.0, 7.0, 1.1),
+                               Padding(3.0, 5.0, 7.0, 1.1),
+                               Padding(3.0, 7.0, 5.0, 1.1))
 
-        // Padding values that differ by less than 0.1f have the same hashcode
+        // Padding values that differ by less than 0.1 have the same hashcode
         // but are not equal.  Prove it (also tests last item is different):
-        equalsDistinctHashCode(Padding(1f), Padding(1f, 1f, 1f, 1f), Padding(1f),
-                               Padding(1f, 1f, 1f, 1.0001f))
+        equalsDistinctHashCode(Padding(1.0), Padding(1.0, 1.0, 1.0, 1.0), Padding(1.0),
+                               Padding(1.0, 1.0, 1.0, 1.0001))
     }
 }

@@ -29,7 +29,7 @@ class WrappedCellTest {
     @Test fun testBasics() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
-        val cellWidth = 200f
+        val cellWidth = 200.0
         val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
                         cellWidth, listOf(hello), null)
@@ -43,13 +43,13 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        val upperLeft = Coord(100f, 500f)
+        val upperLeft = Coord(100.0, 500.0)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
         val dimAndPageNums: DimAndPageNums = wrappedCell.render(lp, upperLeft)
-        Dim.assertEquals(wrappedCell.dim, dimAndPageNums.dim, 0.00002f)
+        Dim.assertEquals(wrappedCell.dim, dimAndPageNums.dim, 0.00002)
 
         pageMgr.commit()
     }
@@ -57,7 +57,7 @@ class WrappedCellTest {
     @Test fun testMultiLine() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
-        val cellWidth = 300f
+        val cellWidth = 300.0
         val hello = Text(textStyle, "Hello\nThere\nWorld!")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
                         cellWidth, listOf(hello), null)
@@ -71,7 +71,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        val upperLeft = Coord(100f, 500f)
+        val upperLeft = Coord(100.0, 500.0)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
@@ -87,7 +87,7 @@ class WrappedCellTest {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
-        val cellWidth = 200f
+        val cellWidth = 200.0
         val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.TOP_RIGHT, boxStyle),
                         cellWidth, listOf(hello), null)
@@ -103,7 +103,7 @@ class WrappedCellTest {
                                        mlw.lineHeight = textStyle.lineHeight
                                        mlw.append(Text.WrappedText(textStyle, hello.text, hello.maxWidth()))
                                        mlw
-                                   }.invoke()), 0f)
+                                   }.invoke()), 0.0)
 //        val wrappedCell = cell.wrap()
 //        println("cell.wrap()=${cell.wrap()}")
 
@@ -113,7 +113,7 @@ class WrappedCellTest {
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
 
-        val upperLeft = Coord(100f, 500f)
+        val upperLeft = Coord(100.0, 500.0)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
@@ -124,7 +124,7 @@ class WrappedCellTest {
 
         assertEquals(cellWidth, dimAndPageNums.dim.width)
 
-        Dim.assertEquals(wrappedCell.dim, dimAndPageNums.dim, 0.00002f)
+        Dim.assertEquals(wrappedCell.dim, dimAndPageNums.dim, 0.00002)
 
         pageMgr.commit()
 
@@ -137,11 +137,11 @@ class WrappedCellTest {
     @Test fun testCellHeightBug() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
-        val textStyle = TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT)
-        val cellStyle = CellStyle(Align.BOTTOM_CENTER, BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)))
+        val textStyle = TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT)
+        val cellStyle = CellStyle(Align.BOTTOM_CENTER, BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)))
 
         val tB = Table()
-                .addCellWidths(listOf(120f))
+                .addCellWidths(listOf(120.0))
                 .textStyle(textStyle)
                 .partBuilder()
                 .cellStyle(cellStyle)
@@ -152,11 +152,11 @@ class WrappedCellTest {
         TestCase.assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
                               wrappedTable.dim.height)
 
-        TestCase.assertEquals(120f, wrappedTable.dim.width)
+        TestCase.assertEquals(120.0, wrappedTable.dim.width)
 
         val dimAndPageNums: DimAndPageNums = wrappedTable.render(lp, lp.body.topLeft)
 
-        Dim.assertEquals(wrappedTable.dim, dimAndPageNums.dim, 0.00003f)
+        Dim.assertEquals(wrappedTable.dim, dimAndPageNums.dim, 0.00003)
 
         pageMgr.commit()
 //        val os = FileOutputStream("test3.pdf")
@@ -164,7 +164,7 @@ class WrappedCellTest {
     }
 
     companion object {
-        val boxStyle = BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))
-        private val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
+        val boxStyle = BoxStyle(Padding(2.0), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))
+        private val textStyle = TextStyle(PDType1Font.HELVETICA, 9.5, RGB_BLACK)
     }
 }

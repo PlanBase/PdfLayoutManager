@@ -29,44 +29,44 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 /** Horizontal and vertical alignment options for cell contents  */
 enum class Align {
     TOP_LEFT {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = 0.0
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = 0.0
     },
     TOP_LEFT_JUSTIFY {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = 0.0
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = 0.0
     },
     TOP_CENTER {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = (outerWidth - innerWidth) / 2
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = (outerWidth - innerWidth) / 2
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = 0.0
     },
     TOP_RIGHT {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = outerWidth - innerWidth
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = 0f
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = outerWidth - innerWidth
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = 0.0
     },
     MIDDLE_LEFT {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = (outerHeight - innerHeight) / 2
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = 0.0
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = (outerHeight - innerHeight) / 2
     },
     MIDDLE_CENTER {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = (outerWidth - innerWidth) / 2
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = (outerHeight - innerHeight) / 2
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = (outerWidth - innerWidth) / 2
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = (outerHeight - innerHeight) / 2
     },
     MIDDLE_RIGHT {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = outerWidth - innerWidth
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = (outerHeight - innerHeight) / 2
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = outerWidth - innerWidth
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = (outerHeight - innerHeight) / 2
     },
     BOTTOM_LEFT {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = 0f
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = outerHeight - innerHeight
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = 0.0
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = outerHeight - innerHeight
     },
     BOTTOM_CENTER {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = (outerWidth - innerWidth) / 2
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = outerHeight - innerHeight
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = (outerWidth - innerWidth) / 2
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = outerHeight - innerHeight
     },
     BOTTOM_RIGHT {
-        override fun leftOffset(outerWidth: Float, innerWidth: Float): Float = outerWidth - innerWidth
-        override fun topOffset(outerHeight: Float, innerHeight: Float): Float = outerHeight - innerHeight
+        override fun leftOffset(outerWidth: Double, innerWidth: Double): Double = outerWidth - innerWidth
+        override fun topOffset(outerHeight: Double, innerHeight: Double): Double = outerHeight - innerHeight
     };
 
     /**
@@ -82,8 +82,8 @@ enum class Align {
                                 topOffset(outer.height, inner.height))
 
     /** How far from the left do we need to start for this alignment? */
-    abstract fun leftOffset(outerWidth: Float, innerWidth: Float): Float
+    abstract fun leftOffset(outerWidth: Double, innerWidth: Double): Double
 
     /** How far from the top do we need to start for this alignment? */
-    abstract fun topOffset(outerHeight: Float, innerHeight: Float): Float
+    abstract fun topOffset(outerHeight: Double, innerHeight: Double): Double
 }

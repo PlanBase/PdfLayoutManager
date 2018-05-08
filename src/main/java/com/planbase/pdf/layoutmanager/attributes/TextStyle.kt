@@ -21,12 +21,10 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.colorToString
-import com.planbase.pdf.layoutmanager.utils.floatToStr
 import com.planbase.pdf.layoutmanager.utils.fontToStr
+import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
-
-import org.apache.pdfbox.pdmodel.font.PDFont
 
 /*
  Represents the attributes of some text.
@@ -58,34 +56,34 @@ lineHeight <            V    \   \_  _/   /
  */
 /** Specifies font, font-size, and color. */
 data class TextStyle(val font: PDFont,    // Tf
-                     val fontSize: Float, // Tfs
+                     val fontSize: Double, // Tfs
                      val textColor: PDColor,
-                     val lineHeight:Float,
-                     val rise:Float,
-                     val characterSpacing:Float,
-                     val wordSpacing:Float) {
+                     val lineHeight: Double,
+                     val rise: Double,
+                     val characterSpacing: Double,
+                     val wordSpacing: Double) {
     constructor(font: PDFont,
-                fontSize: Float,
+                fontSize: Double,
                 textColor: PDColor,
-                lineHeight:Float) : this(font, fontSize, textColor, lineHeight, 0f, 0f, 0f)
+                lineHeight: Double) : this(font, fontSize, textColor, lineHeight, 0.0, 0.0, 0.0)
 
     constructor(font: PDFont,
-                fontSize: Float,
+                fontSize: Double,
                 textColor: PDColor) : this(font, fontSize, textColor, defaultLineHeight(font, fontSize))
 
     /** Average character width (for this font, or maybe guessed) as a positive number in document units */
-    val avgCharWidth: Float = avgCharWidth(font, fontSize, characterSpacing)
+    val avgCharWidth: Double = avgCharWidth(font, fontSize, characterSpacing)
 
     // Somewhere it says that font units are 1000 times page units, but my tests with
     // PDType1Font.HELVETICA and PDType1Font.HELVETICA_BOLD from size 5-200 show that 960x is
     // pretty darn good.  If we find a font this doesn't work for, we'll have to adjust.
-    private val factor = fontSize / 1000f
+    private val factor: Double = fontSize / 1000.0
 
     // Characters look best with the descent size both above and below.  Also acts as a good
     // default leading.
-    val ascent = font.fontDescriptor.ascent * fontSize / 1000f
+    val ascent = font.fontDescriptor.ascent * fontSize / 1000.0
 
-    fun withWordSpacing(spacing:Float) =
+    fun withWordSpacing(spacing: Double) =
             TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing, spacing)
 
 // Below taken from Section 9.3 page 243 of PDF 32000-1:2008
@@ -101,7 +99,7 @@ data class TextStyle(val font: PDFont,    // Tf
 // scale = 100
 //
 // Tl Text leading (aka lineHeight) shall be used only by the T*, ', and " operators.  The vertical distance between the baselines of adjacent lines of text
-// leading = 0f
+// leading = 0.0
 //
 // Tmode
 // renderingMode = 0 // integer
@@ -111,15 +109,15 @@ data class TextStyle(val font: PDFont,    // Tf
 
     override fun toString():String {
         val sB = StringBuilder("TextStyle(").append(fontToStr(font)).append(", ")
-                         .append(floatToStr(fontSize)).append(", ${colorToString(textColor)}")
+                         .append(fontSize).append(", ${colorToString(textColor)}")
         if (defaultLineHeight(font, fontSize) != lineHeight) {
-            sB.append(", ${floatToStr(lineHeight)}")
+            sB.append(", $lineHeight")
         }
         // We don't have separate constructors for all of these, so show all or none.
-        if ( (rise != 0f) ||
-             (characterSpacing != 0f) ||
-             (wordSpacing != 0f) ) {
-            sB.append(", ${floatToStr(rise)}, ${floatToStr(characterSpacing)}, ${floatToStr(wordSpacing)}")
+        if ( (rise != 0.0) ||
+             (characterSpacing != 0.0) ||
+             (wordSpacing != 0.0) ) {
+            sB.append(", $rise, $characterSpacing, $wordSpacing")
         }
         return sB.append(")").toString()
     }
@@ -129,9 +127,9 @@ data class TextStyle(val font: PDFont,    // Tf
      @param text ISO_8859_1 encoded text
      @return the width of this text rendered in this font.
      */
-    fun stringWidthInDocUnits(text: String): Float  {
-        var ret = try {
-            font.getStringWidth(text) * factor
+    fun stringWidthInDocUnits(text: String): Double  {
+        var ret: Double = try {
+            font.getStringWidth(text).toDouble() * factor
 
         } catch (ioe: IOException) {
             // logger.error("IOException probably means an issue reading font metrics from the underlying" +
@@ -139,10 +137,10 @@ data class TextStyle(val font: PDFont,    // Tf
             // Calculate our default if there's an exception.
             text.length * avgCharWidth
         }
-        if (characterSpacing != 0f) {
+        if (characterSpacing != 0.0) {
             ret += text.length * characterSpacing
         }
-        if (wordSpacing != 0f) {
+        if (wordSpacing != 0.0) {
 //            println("ret before wordspacing = $ret   text='$text'  count=${text.count{ it == ' ' }}")
             ret += text.count{ it == ' ' } * wordSpacing
 //            println("ret after wordspacing = $ret")
@@ -152,10 +150,10 @@ data class TextStyle(val font: PDFont,    // Tf
 
     companion object {
 
-        fun avgCharWidth(f : PDFont, sz:Float, csp: Float) : Float {
-            var avgFontWidth = 500f
+        fun avgCharWidth(f : PDFont, sz: Double, csp: Double) : Double {
+            var avgFontWidth = 500.0
             try {
-                avgFontWidth = f.averageFontWidth
+                avgFontWidth = f.averageFontWidth.toDouble()
             } catch (ioe: Exception) {
                 //throw new IllegalStateException("IOException probably means an issue reading font
                 // metrics from the underlying font file used in this PDF", ioe);
@@ -165,7 +163,7 @@ data class TextStyle(val font: PDFont,    // Tf
             return (avgFontWidth * sz) + csp
         }
 
-        fun defaultLineHeight(font: PDFont, fontSize: Float) =
-                font.fontDescriptor.fontBoundingBox.height * fontSize / 1000f
+        fun defaultLineHeight(font: PDFont, fontSize: Double) =
+                font.fontDescriptor.fontBoundingBox.height * fontSize / 1000.0
     }
 }

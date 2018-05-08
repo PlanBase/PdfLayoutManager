@@ -23,7 +23,7 @@ class MultiLineWrapper(private val items: Iterator<LineWrappable>) : LineWrapper
                internLineWrapper.hasMore()
     }
 
-    override fun getSomething(maxWidth: Float): ConTerm {
+    override fun getSomething(maxWidth: Double): ConTerm {
         if (maxWidth < 0) {
             throw IllegalArgumentException("Illegal negative width: " + maxWidth)
         }
@@ -31,7 +31,7 @@ class MultiLineWrapper(private val items: Iterator<LineWrappable>) : LineWrapper
         return internLineWrapper.getSomething(maxWidth)
     }
 
-    override fun getIfFits(remainingWidth: Float): ConTermNone {
+    override fun getIfFits(remainingWidth: Double): ConTermNone {
         if (remainingWidth < 0) {
             return None
         }

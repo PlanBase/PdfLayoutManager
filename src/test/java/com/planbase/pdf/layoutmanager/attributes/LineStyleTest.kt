@@ -8,6 +8,6 @@ import kotlin.test.Test
 class LineStyleTest {
     @Test fun testToString() {
         assertEquals("NO_LINE", NO_LINE.toString())
-        assertEquals("LineStyle(CMYK_BLACK, 7.25f)", LineStyle(CMYK_BLACK, 7.25f).toString())
+        assertEquals("LineStyle(CMYK_BLACK, 7.25)", LineStyle(CMYK_BLACK, 7.25).toString())
     }
 }

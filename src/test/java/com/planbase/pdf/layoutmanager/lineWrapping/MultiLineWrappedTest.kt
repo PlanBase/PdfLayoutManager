@@ -22,27 +22,27 @@ import org.junit.Test
 import kotlin.test.assertTrue
 
 class MultiLineWrappedTest {
-    private val floatCloseEnough = 0.000004f
+    private val floatCloseEnough = 0.000004
 
     @Test fun testLine() {
-        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 60f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 60.0, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.TIMES_BOLD, 100f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.TIMES_BOLD, 100.0, CMYK_BLACK)
         val txt2 = Text(tStyle2, "gruel ")
         val txt3 = Text(tStyle1, "world!")
         val wrappedText = MultiLineWrapped()
 //        println("txt1.style().lineHeight(): " + txt1.style().lineHeight())
-        wrappedText.append(txt1.lineWrapper().getSomething(999f).item)
+        wrappedText.append(txt1.lineWrapper().getSomething(999.0).item)
         assertEquals(tStyle1.lineHeight, wrappedText.dim.height, floatCloseEnough)
-        assertEquals(tStyle1.ascent, wrappedText.ascent)
+        assertEquals(tStyle1.ascent, wrappedText.ascent, 0.0)
 
-        wrappedText.append(txt2.lineWrapper().getSomething(999f).item)
+        wrappedText.append(txt2.lineWrapper().getSomething(999.0).item)
         assertEquals(tStyle2.lineHeight, wrappedText.dim.height, floatCloseEnough)
-        assertEquals(tStyle2.ascent, wrappedText.ascent)
+        assertEquals(tStyle2.ascent, wrappedText.ascent, 0.0)
 
-        wrappedText.append(txt3.lineWrapper().getSomething(999f).item)
+        wrappedText.append(txt3.lineWrapper().getSomething(999.0).item)
         assertEquals(tStyle2.lineHeight, wrappedText.dim.height, floatCloseEnough)
-        assertEquals(tStyle2.ascent, wrappedText.ascent)
+        assertEquals(tStyle2.ascent, wrappedText.ascent, 0.0)
 
         // This is for the baseline!
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
@@ -55,11 +55,11 @@ class MultiLineWrappedTest {
         val ascentDiff = tStyle2.ascent - tStyle1.ascent
         val top2 = yTop - ascentDiff
 //        println("ascentDiff=$ascentDiff")
-        val upperLeft = Coord(40f, yTop)
-        lp.drawLine(Coord(0f, yTop), Coord(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125f), true)
-        lp.drawLine(Coord(0f, top2), Coord(lp.pageWidth(), top2), LineStyle(PDColor(floatArrayOf(0.5f, 0.5f, 0.5f), PDDeviceRGB.INSTANCE), 0.125f), true)
-        lp.drawLine(Coord(0f, yBaseline), Coord(lp.pageWidth(), yBaseline), LineStyle(RGB_BLACK, 0.125f), true)
-        lp.drawLine(Coord(0f, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125f), true)
+        val upperLeft = Coord(40.0, yTop)
+        lp.drawLine(Coord(0.0, yTop), Coord(lp.pageWidth(), yTop), LineStyle(RGB_BLACK, 0.125), true)
+        lp.drawLine(Coord(0.0, top2), Coord(lp.pageWidth(), top2), LineStyle(PDColor(floatArrayOf(0.5f, 0.5f, 0.5f), PDDeviceRGB.INSTANCE), 0.125), true)
+        lp.drawLine(Coord(0.0, yBaseline), Coord(lp.pageWidth(), yBaseline), LineStyle(RGB_BLACK, 0.125), true)
+        lp.drawLine(Coord(0.0, yBottom), Coord(lp.pageWidth(), yBottom), LineStyle(RGB_BLACK, 0.125), true)
         val dap:DimAndPageNums = wrappedText.render(lp, upperLeft)
 //        println("tStyle1=$tStyle1")
 //        println("tStyle2=$tStyle2")
@@ -72,7 +72,7 @@ class MultiLineWrappedTest {
 
 //    @Ignore
 
-    fun verifyLine(line: MultiLineWrapped, lineHeight:Float, maxWidth:Float, text:String) {
+    fun verifyLine(line: MultiLineWrapped, lineHeight:Double, maxWidth:Double, text:String) {
 //        println("line: " + line)
         assertEquals(lineHeight, line.dim.height, floatCloseEnough)
         assertTrue(line.width < maxWidth)
@@ -84,12 +84,12 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLines() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.375f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.375, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13.54166671f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13.54166671, CMYK_BLACK)
         val txt2 = Text(tStyle2, "there ")
         val txt3 = Text(tStyle1, "world! This is great stuff.")
-        val maxWidth = 60f
+        val maxWidth = 60.0
 
         val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
 //        println(wrappedLines)
@@ -104,12 +104,12 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLines2() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.0, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello ")
-        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13f, CMYK_BLACK)
+        val tStyle2 = TextStyle(PDType1Font.HELVETICA_BOLD, 13.0, CMYK_BLACK)
         val txt2 = Text(tStyle2, "there ")
         val txt3 = Text(tStyle1, "world! This is great stuff.")
-        val maxWidth = 90f
+        val maxWidth = 90.0
 
         val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
 //        println(wrappedLines)
@@ -122,9 +122,9 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLines3() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.0, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello there world! This is great stuff.")
-        val maxWidth = 300f
+        val maxWidth = 300.0
 
         val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
@@ -136,11 +136,11 @@ class MultiLineWrappedTest {
 
 
     @Test fun testRenderablesToLinesTerminal() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.0, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello\nthere world! This\nis great stuff.")
         // This is 300 just like previous test, showing this can fit on one line
         // So we know the line breaks are due to the \n characters.
-        val maxWidth = 300f
+        val maxWidth = 300.0
 
         val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
@@ -153,11 +153,11 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLinesTerminal2() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.0, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hello\nthere world! This\nis great stuff.\n")
         // This is 300 just like previous test, showing this can fit on one line
         // So we know the line breaks are due to the \n characters.
-        val maxWidth = 300f
+        val maxWidth = 300.0
 
         val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
@@ -174,11 +174,11 @@ class MultiLineWrappedTest {
     }
 
     @Test fun testRenderablesToLinesMultiReturn() {
-        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK)
+        val tStyle1 = TextStyle(PDType1Font.HELVETICA, 9.0, CMYK_BLACK)
         val txt1 = Text(tStyle1, " Hello    \n\n\n  there world! This\n\nis great stuff.     \n\n")
         // This is 300 just like previous test, showing this can fit on one line
         // So we know the line breaks are due to the \n characters.
-        val maxWidth = 300f
+        val maxWidth = 300.0
 
         val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
@@ -198,15 +198,15 @@ class MultiLineWrappedTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun testRenderablesToLinesEx() {
-        wrapLines(listOf(), -1f)
+        wrapLines(listOf(), -1.0)
     }
 
     @Test fun testStuff() {
         // See: TextTest.testExactLineWrapping()
         val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
-        assertEquals(214.104f, text.maxWidth())
+        assertEquals(214.104, text.maxWidth(), 0.0)
 
-        val wrapped2:List<MultiLineWrapped> = wrapLines(listOf(text), 213f) //212.63782f)
+        val wrapped2:List<MultiLineWrapped> = wrapLines(listOf(text), 213.0) //212.63782)
 //        println("\nwrapped2: $wrapped2")
         assertEquals(2, wrapped2.size)
     }

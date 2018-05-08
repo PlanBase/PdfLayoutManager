@@ -133,7 +133,7 @@ fun buffImgToStr(bi: BufferedImage) =
         } +
         ")"
 
-fun floatToStr(f:Float):String {
+fun floatToStr(f: Float):String {
     val str = f.toString()
     return if (str.endsWith(".0")) {
         str.substring(0, str.length - 2)

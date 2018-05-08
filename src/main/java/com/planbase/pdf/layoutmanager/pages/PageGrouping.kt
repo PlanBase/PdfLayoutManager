@@ -104,7 +104,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     // borderItems apply to a logical section
     private val borderItems = TreeSet<SinglePage.PdfItem>()
 
-    val yBodyBottom:Float = body.topLeft.y - body.dim.height
+    val yBodyBottom: Double = body.topLeft.y - body.dim.height
 
     private var valid = true
 
@@ -118,13 +118,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
     // TODO: could be a val instead of a fun.
     /** The Y-value for top of the body section (in document units)  */
-    fun yBodyTop(): Float = body.topLeft.y
+    fun yBodyTop(): Double = body.topLeft.y
 
     /**
      * Width of the entire page (in document units).  This is the short dimension for portrait,
      * the long dimension for landscape.
      */
-    fun pageWidth(): Float =
+    fun pageWidth(): Double =
             if (orientation == PORTRAIT)
                 mgr.pageDim.width
             else
@@ -145,7 +145,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         }
         // Text rendering calculation spot 3/3
         val belowBaseline = textStyle.lineHeight - textStyle.ascent
-        val pby = appropriatePage(baselineLeft.y - belowBaseline, textStyle.lineHeight, 0f)
+        val pby = appropriatePage(baselineLeft.y - belowBaseline, textStyle.lineHeight, 0.0)
         pby.pb.drawStyledText(baselineLeft.y(pby.y + belowBaseline), text, textStyle, reallyRender)
         return HeightAndPage(textStyle.lineHeight + pby.adj, pby.pb.pageNum)
     }
@@ -155,13 +155,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
-        val pby = appropriatePage(bottomLeft.y, wi.dim.height, 0f)
+        val pby = appropriatePage(bottomLeft.y, wi.dim.height, 0.0)
         // draw image based on baseline and decrement y appropriately for image.
         pby.pb.drawImage(bottomLeft.y(pby.y), wi, reallyRender)
         return HeightAndPage(wi.dim.height + pby.adj, pby.pb.pageNum)
     }
 
-    override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float {
+    override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Double {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -176,8 +176,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         if (topY < bottomY) {
             throw IllegalStateException("height must be positive")
         }
-        val pby1 = appropriatePage(topY, 0f, 0f)
-        val pby2 = appropriatePage(bottomY, 0f, 0f)
+        val pby1 = appropriatePage(topY, 0.0, 0.0)
+        val pby2 = appropriatePage(bottomY, 0.0, 0.0)
         if (pby1 == pby2) {
             pby1.pb.fillRect(Coord(left, pby1.y), Dim(width, maxHeight), c, reallyRender)
         } else {
@@ -186,8 +186,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             var currPage = pby1.pb
             // The first x and y are correct for the first page.  The second x and y will need to
             // be adjusted below.
-            var ya:Float
-            var yb:Float
+            var ya: Double
+            var yb: Double
 
             for (pageNum in 1..totalPages) {
                 // On all except the first page the first y will start at the top of the page.
@@ -208,7 +208,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
                 // It's possible with floating point addition and subtraction to accrue a significant margin of error.
                 // If that makes our area negative or zero, just don't draw anything on this page.
-                val finalHeight:Float = ya - yb
+                val finalHeight: Double = ya - yb
                 if (finalHeight > 0) {
                     currPage.fillRect(Coord(left, yb), Dim(width, finalHeight), c, reallyRender)
                 }
@@ -251,8 +251,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //        println("About to put line: start=$start end=$end")
         val flip:Boolean = end.y > start.y
 
-        val pby1 = appropriatePage(if (flip) { end.y } else { start.y }, 0f, 0f)
-        val pby2 = appropriatePage(if (flip) { start.y } else { end.y }, 0f, 0f)
+        val pby1 = appropriatePage(if (flip) { end.y } else { start.y }, 0.0, 0.0)
+        val pby2 = appropriatePage(if (flip) { start.y } else { end.y }, 0.0, 0.0)
 //        println("pby1=$pby1, pby2=$pby2")
         if (pby1 == pby2) {
             if (flip) {
@@ -271,7 +271,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             // The first x and y are correct for the first page.  The second x and y will need to
             // be adjusted below.
             var xa = if (flip) { end.x } else { start.x }
-            var xb = 0f // left of page.
+            var xb = 0.0 // left of page.
 
             for (pageNum in 1..totalPages) {
                 if (pageNum > 1) {
@@ -287,7 +287,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                     pby1.y
                 }
 
-                val yb:Float
+                val yb: Double
                 if (pageNum == totalPages) {
                     xb = if (flip) { start.x } else { end.x }
                     // the second Y must be adjusted by the height of the pages already printed.
@@ -341,13 +341,13 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      */
     fun add(topLeft: Coord, block: LineWrapped): DimAndPageNums {
         // TODO: Why is the return value ignored here?
-        this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
+        this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0.0)
         val dap:DimAndPageNums = block.render(this, topLeft)
         cursorY = topLeft.y - dap.dim.height
         return dap
     }
 
-    var cursorY:Float = body.topLeft.y
+    var cursorY: Double = body.topLeft.y
 
     /**
      * Moves cursor to the bottom of the body of the current page so that whatever you draw will get popped to the
@@ -355,22 +355,22 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      */
     fun cursorToNewPage() {
         val prevCursorY = cursorY
-        cursorY -= this.pageBreakingTopMargin(cursorY, body.dim.height, 0f)
+        cursorY -= this.pageBreakingTopMargin(cursorY, body.dim.height, 0.0)
         if (cursorY == prevCursorY) {
             cursorY -= body.dim.height
 //            cursorY = cursorY.nextDown()
         }
 
         // Is this a better way?  I mean, if it worked?
-//        cursorY = appropriatePage(cursorY, body.dim.height, 0f).y
+//        cursorY = appropriatePage(cursorY, body.dim.height, 0.0).y
     }
 
     /** Returns the vertical distance from the cursor to the bottom of the body of this page. */
-    fun roomBelowCursor():Float = this.pageBreakingTopMargin(cursorY, body.dim.height, 0f)
+    fun roomBelowCursor(): Double = this.pageBreakingTopMargin(cursorY, body.dim.height, 0.0)
 
     /** Returns the page the cursor is currently pointing to. */
     fun pageForCursor():SinglePage =
-            appropriatePage(cursorY, 0f, 0f).pb
+            appropriatePage(cursorY, 0.0, 0.0).pb
 
     /**
      * Add LineWrapped items directly to the page grouping at the current cursor.
@@ -380,7 +380,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      */
     fun append(block: LineWrapped): DimAndPageNums =
             // TODO: Should have x=0 only if there is a pageReactor???
-            add(Coord(0f, cursorY), block)
+            add(Coord(0.0, cursorY), block)
 
     /**
      * Cell goes at x=0 and cursorY.  Cell width is bodyDim.width.
@@ -390,9 +390,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      */
     fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPageNums =
             // TODO: Should have x=0 only if there is a pageReactor???
-            add(Coord(0f, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
+            add(Coord(0.0, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
-    override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float =
+    override fun pageBreakingTopMargin(bottomY: Double, height: Double, requiredSpaceBelow: Double): Double =
             calcPage(bottomY, height, requiredSpaceBelow).adj
 
     /**
@@ -403,7 +403,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move to the next page.
      * @return the proper page and adjusted y value for that page.
      */
-    internal fun appropriatePage(bottomY: Float, height: Float, requiredSpaceBelow:Float): PageBufferAndY {
+    internal fun appropriatePage(bottomY: Double, height: Double, requiredSpaceBelow: Double): PageBufferAndY {
 //        println("appropriatePage(bottomY=$bottomY, height=$height, requiredSpaceBelow=$requiredSpaceBelow)")
 
 //        println("  y=$y, adj=$adj")
@@ -413,7 +413,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return PageBufferAndY(mgr.page(iya.idx), iya.y, iya.adj)
     }
 
-    data class IdxYAdj(val idx:Int, val y:Float, val adj:Float)
+    data class IdxYAdj(val idx:Int, val y: Double, val adj: Double)
 
     /**
      * Returns the correct page for an item with the given height and bottom y-value WITHOUT ADDING ANY PAGES.
@@ -423,11 +423,11 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
      * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move to the next page.
      * @return the proper page and adjusted y value for that page.
      */
-    private fun calcPage(bottomY: Float, height: Float, requiredSpaceBelow:Float):IdxYAdj {
+    private fun calcPage(bottomY: Double, height: Double, requiredSpaceBelow: Double):IdxYAdj {
         // If the requiredSpaceBelow makes it too big to fit on any page, then ignore that param.
         // Used to throw exception, but this is a valid situation.
-        val spaceBelow: Float = if ( (height + requiredSpaceBelow) > body.dim.height ) {
-            0f
+        val spaceBelow: Double = if ( (height + requiredSpaceBelow) > body.dim.height ) {
+            0.0
         } else {
             requiredSpaceBelow
         }
@@ -455,7 +455,7 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
         val newIdx = mgr.unCommittedPageIdx() + pageDiff
 
-        var adj = 0f
+        var adj = 0.0
         if (y + height > yBodyTop()) {
 //            println("  y=$y yBodyTop()=${yBodyTop()}")
             val oldY = y
@@ -496,6 +496,6 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     @param adj the height of the adjustment used to keep the line on one page.
      */
     internal data class PageBufferAndY(val pb: SinglePage,
-                                       val y: Float,
-                                       val adj: Float)
+                                       val y: Double,
+                                       val adj: Double)
 }

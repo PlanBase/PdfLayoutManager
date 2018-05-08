@@ -5,13 +5,13 @@ import kotlin.test.Test
 
 class CoordTest {
     @Test fun testDimensionTo() {
-        assertEquals(Dim(11f, 13f), Coord(0f, 0f).dimensionTo(Coord(11f, 13f)))
-        assertEquals(Dim(11f, 13f), Coord(0f, 0f).dimensionTo(Coord(-11f, -13f)))
-        assertEquals(Dim(11f, 13f), Coord(11f, 13f).dimensionTo(Coord(0f, 0f)))
-        assertEquals(Dim(11f, 13f), Coord(-11f, -13f).dimensionTo(Coord(0f, 0f)))
+        assertEquals(Dim(11.0, 13.0), Coord(0.0, 0.0).dimensionTo(Coord(11.0, 13.0)))
+        assertEquals(Dim(11.0, 13.0), Coord(0.0, 0.0).dimensionTo(Coord(-11.0, -13.0)))
+        assertEquals(Dim(11.0, 13.0), Coord(11.0, 13.0).dimensionTo(Coord(0.0, 0.0)))
+        assertEquals(Dim(11.0, 13.0), Coord(-11.0, -13.0).dimensionTo(Coord(0.0, 0.0)))
     }
 
     @Test fun testToString() {
-        assertEquals("Coord(1f, 3.5f)", Coord(1f, 3.5f).toString())
+        assertEquals("Coord(1.0, 3.5)", Coord(1.0, 3.5).toString())
     }
 }

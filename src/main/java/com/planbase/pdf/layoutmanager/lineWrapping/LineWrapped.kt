@@ -31,17 +31,17 @@ import com.planbase.pdf.layoutmanager.utils.Coord
 interface LineWrapped {
     /** These are the dim *without/before* page-breaking adjustments. */
     val dim: Dim
-//    fun width(): Float = width
-//    fun totalHeight(): Float = heightAboveBase + depthBelowBase
+//    fun width(): Double = width
+//    fun totalHeight(): Double = heightAboveBase + depthBelowBase
 
     /** Height above the baseline of this line */
-    val ascent: Float
+    val ascent: Double
 
     /** Depth below the baseline of this line */
-//    val descentAndLeading: Float
+//    val descentAndLeading: Double
 
     /** Total vertical height this line, both above and below the baseline */
-    val lineHeight: Float
+    val lineHeight: Double
 
     /**
      * Sends the underlying object to PDFBox to be drawn.
@@ -72,11 +72,11 @@ interface LineWrapped {
 //    object ZeroLineWrapped: LineWrapped {
 //        override val dim: Dim = Dim.ZERO
 //
-//        override val ascent: Float = 0f
+//        override val ascent: Double = 0.0
 //
-////        override val descentAndLeading: Float = 0f
+////        override val descentAndLeading: Double = 0.0
 //
-//        override val lineHeight: Float = 0f
+//        override val lineHeight: Double = 0.0
 //
 //        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean) = DimAndPages(dim, lp.)
 //
@@ -87,12 +87,12 @@ interface LineWrapped {
 //            private var hasMore = true
 //            override fun hasMore(): Boolean = hasMore
 //
-//            override fun getSomething(maxWidth: Float): ConTerm {
+//            override fun getSomething(maxWidth: Double): ConTerm {
 //                hasMore = false
 //                return Continuing(item)
 //            }
 //
-//            override fun getIfFits(remainingWidth: Float): ConTermNone =
+//            override fun getIfFits(remainingWidth: Double): ConTermNone =
 //                    if (hasMore && (item.dim.width <= remainingWidth)) {
 //                        hasMore = false
 //                        Continuing(item)

@@ -51,21 +51,21 @@ class TestAliceInWonderland {
         val titleFontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
         val titleFont: PDType0Font = pageMgr.loadTrueTypeFont(titleFontFile)
 
-        val incipit = TextStyle(titleFont, 36f, CMYK_BLACK, 30f)
-        val chapTitleCellStyle = CellStyle(BOTTOM_LEFT, BoxStyle(Padding(50f, 0f, 10f, 0f), null, NO_BORDERS))
-        val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(10f, 0f, 0f, 0f), null, NO_BORDERS))
-        val heading = TextStyle(titleFont, 16f, CMYK_BLACK, 16f, 0f, 0.2f, 0f)
-        val bodyText = TextStyle(PDType1Font.TIMES_ROMAN, 12f, CMYK_BLACK)
-        val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12f, CMYK_BLACK)
+        val incipit = TextStyle(titleFont, 36.0, CMYK_BLACK, 30.0)
+        val chapTitleCellStyle = CellStyle(BOTTOM_LEFT, BoxStyle(Padding(50.0, 0.0, 10.0, 0.0), null, NO_BORDERS))
+        val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(10.0, 0.0, 0.0, 0.0), null, NO_BORDERS))
+        val heading = TextStyle(titleFont, 16.0, CMYK_BLACK, 16.0, 0.0, 0.2, 0.0)
+        val bodyText = TextStyle(PDType1Font.TIMES_ROMAN, 12.0, CMYK_BLACK)
+        val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12.0, CMYK_BLACK)
 
         val lp = pageMgr.startPageGrouping(
                 PORTRAIT,
                 a6PortraitBody,
                 { pageNum:Int, pb: SinglePage ->
                     val isLeft = pageNum % 2 == 1
-                    val leftMargin:Float = if (isLeft) 37f else 45f
-                    pb.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20f), "$pageNum.",
-                                      TextStyle(PDType1Font.TIMES_ROMAN, 8f, CMYK_BLACK), true)
+                    val leftMargin:Double = if (isLeft) 37.0 else 45.0
+                    pb.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20.0), "$pageNum.",
+                                      TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK), true)
                     leftMargin })
 
 //        pageMgr.logicalPageEnd(lp)
@@ -238,7 +238,7 @@ class TestAliceInWonderland {
         }
 
         var sp = SinglePage(-2, pageMgr, null, lp.body)
-        sp.cursorY =  sp.cursorY - 100f
+        sp.cursorY =  sp.cursorY - 100.0
         dap = sp.appendCell(bodyCellStyle, listOf(Text(incipit, "Alice in Wonderland")))
         assertEquals(IntRange(-2, -2), dap.pageNums)
         dap = sp.appendCell(bodyCellStyle, listOf(Text(heading, "By Lewis Carroll")))
@@ -251,7 +251,7 @@ class TestAliceInWonderland {
                              listOf(Text(heading, "Table of Contents")))
         assertEquals(IntRange(-1, -1), dap.pageNums)
 
-        var table = Table(mutableListOf(200f, 25f))
+        var table = Table(mutableListOf(200.0, 25.0))
         var rowBuilder = table.partBuilder()
                 .rowBuilder()
 

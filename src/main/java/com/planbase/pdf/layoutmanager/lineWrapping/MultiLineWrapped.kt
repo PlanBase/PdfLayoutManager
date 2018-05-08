@@ -30,9 +30,9 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 /** A mutable data structure to hold a single wrapped line consisting of multiple items. */
 class MultiLineWrapped : LineWrapped {
 
-    var width: Float = 0f
-    override var ascent: Float = 0f
-    override var lineHeight: Float = 0f
+    var width: Double = 0.0
+    override var ascent: Double = 0.0
+    override var lineHeight: Double = 0.0
     internal val items: MutableList<LineWrapped> = mutableListOf()
 
     override val dim: Dim
@@ -51,8 +51,8 @@ class MultiLineWrapped : LineWrapped {
         return this
     }
 
-    fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Float): DimAndPageNums {
-        var x:Float = topLeft.x
+    fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Double): DimAndPageNums {
+        var x: Double = topLeft.x
         val y = topLeft.y
         // lineHeight has to be ascent + descentLeading because we align on the baseline
         var maxAscentIncPageBreak = ascent
@@ -93,10 +93,10 @@ class MultiLineWrapped : LineWrapped {
             var tempItems = items
 
             // Do we need to justify text?
-            if (justifyWidth > 0f) {
-                val contentWidth:Float = x - topLeft.x
+            if (justifyWidth > 0.0) {
+                val contentWidth: Double = x - topLeft.x
                 // Justified text only looks good if the line is long enough.
-                if (contentWidth > justifyWidth * 0.75f) {
+                if (contentWidth > justifyWidth * 0.75) {
                     val numSpaces: Int = items
                             .filter{ it is Text.WrappedText }
                             .sumBy{ (it as Text.WrappedText).numSpaces() }
@@ -127,7 +127,7 @@ class MultiLineWrapped : LineWrapped {
     } // end fun render()
 
     override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums
-            = render(lp, topLeft, reallyRender, 0f)
+            = render(lp, topLeft, reallyRender, 0.0)
 
     override fun toString(): String {
         return "MultiLineWrapped(width=$width, ascent=$ascent, lineHeight=$lineHeight," +
@@ -159,7 +159,7 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
-fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Float) : List<MultiLineWrapped> {
+fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<MultiLineWrapped> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
     }

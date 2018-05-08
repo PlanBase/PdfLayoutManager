@@ -48,7 +48,7 @@ class UtilsTest {
                      listToStr(listOf('a', 'b', 'c', 'd')))
 
         // rad 2, e, pi
-        assertEquals("listOf(1.41421f, 2.71828f, 3.14159f)",
-                     listToStr(listOf(1.41421f, 2.71828f, 3.14159f)))
+        assertEquals("listOf(1.41421, 2.71828, 3.14159)",
+                     listToStr(listOf(1.41421, 2.71828, 3.14159)))
     }
 }

@@ -138,7 +138,7 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean = true): Float
+    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean = true): Double
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
@@ -150,7 +150,7 @@ interface RenderTarget {
      * (may include some extra space above to push items onto the next page).
      */
     @Suppress("unused")
-    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor): Float = fillRect(bottomLeft, dim, c, true)
+    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor): Double = fillRect(bottomLeft, dim, c, true)
 
     /**
      * Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
@@ -160,5 +160,5 @@ interface RenderTarget {
      * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move chunk to the top
      * of the next page.
      */
-    fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float
+    fun pageBreakingTopMargin(bottomY: Double, height: Double, requiredSpaceBelow: Double): Double
 }

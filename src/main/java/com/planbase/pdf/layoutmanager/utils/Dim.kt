@@ -29,7 +29,7 @@ import java.lang.Math.abs
  (0, 0) at the bottom of the page.
  Remember: a Dimensions on a Portrait orientation may have the width and height *reversed*.
  */
-data class Dim(val width: Float, val height: Float) {
+data class Dim(val width: Double, val height: Double) {
     init {
         if (width < 0 || height < 0) {
             throw IllegalArgumentException("Dimensions must be positive: width=${width}f height=${height}f")
@@ -40,13 +40,13 @@ data class Dim(val width: Float, val height: Float) {
      * Returns an Dim with the width and height taken from the same-named fields on the given
      * rectangle.
      */
-    constructor(rect: PDRectangle) : this(rect.width, rect.height)
+    constructor(rect: PDRectangle) : this(rect.width.toDouble(), rect.height.toDouble())
 
     // TODO: Rename to withWidth()
-    fun width(newX: Float) = Dim(newX, height)
+    fun width(newX: Double) = Dim(newX, height)
 
     // TODO: Rename to withHeight()
-    fun height(newY: Float) = Dim(width, newY)
+    fun height(newY: Double) = Dim(width, newY)
 
     /**
      * If true, returns this, if false, returns a new Dim with width and height values swapped.
@@ -58,7 +58,7 @@ data class Dim(val width: Float, val height: Float) {
     fun swapWh() = Dim(height, width)
 
     /** Returns a PDRectangle with the given width and height (but no/0 offset)  */
-    fun toRect() = PDRectangle(width, height)
+    fun toRect() = PDRectangle(width.toFloat(), height.toFloat())
 
     //    /** Returns a PDRectangle with the given width and height (but no/0 offset) */
     //    public PDRectangle toRect(Coord off) {
@@ -84,16 +84,16 @@ data class Dim(val width: Float, val height: Float) {
     fun lte(that: Dim): Boolean = this.width <= that.width &&
                                   this.height <= that.height
 
-    override fun toString() = "Dim(${floatToStr(width)}, ${floatToStr(height)})"
+    override fun toString() = "Dim($width, $height)"
 
     companion object {
         /** Zero-dimension (zero width, zero height) */
         @JvmField
-        val ZERO = Dim(0f, 0f)
+        val ZERO = Dim(0.0, 0.0)
 
         fun sum(xys:Iterable<Dim>) = xys.fold(ZERO, { acc, xy -> acc.plus(xy)})
 
-        fun assertEquals(xya: Dim, xyb: Dim, latitude:Float) {
+        fun assertEquals(xya: Dim, xyb: Dim, latitude: Double) {
             if ((abs(xya.height - xyb.height) > latitude) ||
                 (abs(xya.width - xyb.width) > latitude)) {
                 throw Error("\n" +

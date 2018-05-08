@@ -13,25 +13,25 @@ data class BoxStyle(val padding: Padding = Padding.NO_PADDING,
                     val bgColor: PDColor?,
                     val border: BorderStyle = BorderStyle.NO_BORDERS) {
 
-    fun interiorSpaceTop():Float = padding.top + (border.top.thickness / 2)
+    fun interiorSpaceTop(): Double = padding.top + (border.top.thickness / 2.0)
 
-    fun interiorSpaceRight():Float = padding.right + (border.right.thickness / 2)
+    fun interiorSpaceRight(): Double = padding.right + (border.right.thickness / 2.0)
 
-    fun interiorSpaceBottom():Float = padding.bottom + (border.bottom.thickness / 2)
+    fun interiorSpaceBottom(): Double = padding.bottom + (border.bottom.thickness / 2.0)
 
-    fun interiorSpaceLeft():Float = padding.left + (border.left.thickness / 2)
+    fun interiorSpaceLeft(): Double = padding.left + (border.left.thickness / 2.0)
 
     fun applyTopLeft(xy: Coord) = Coord(xy.x + interiorSpaceLeft(), xy.y - interiorSpaceTop())
 
     /**
      The top and bottom padding plus half of the top and bottom border thickness.
      */
-    fun topBottomInteriorSp():Float = interiorSpaceTop() + interiorSpaceBottom()
+    fun topBottomInteriorSp(): Double = interiorSpaceTop() + interiorSpaceBottom()
 
     /**
     The left and right padding plus half of the left and right border thickness.
      */
-    fun leftRightInteriorSp():Float = interiorSpaceLeft() + interiorSpaceRight()
+    fun leftRightInteriorSp(): Double = interiorSpaceLeft() + interiorSpaceRight()
 
     fun subtractFrom(dim: Dim) = Dim(dim.width - leftRightInteriorSp(), dim.height - topBottomInteriorSp())
 

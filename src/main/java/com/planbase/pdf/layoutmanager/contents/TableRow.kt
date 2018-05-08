@@ -63,7 +63,7 @@ class TableRow(private val tablePart: TablePart) {
         return this
     }
 
-    fun minRowHeight(f: Float): TableRow {
+    fun minRowHeight(f: Double): TableRow {
         minRowHeight = f
         return this
     }
@@ -87,7 +87,7 @@ class TableRow(private val tablePart: TablePart) {
         return tablePart.addRow(this)
     }
 
-    fun finalRowHeight():Float {
+    fun finalRowHeight(): Double {
 //        cells.map { c -> c?.wrap() ?: LineWrapped.ZeroLineWrapped }
         cells.map { c -> c.wrap() }
                 .forEach{ c -> minRowHeight = Math.max(minRowHeight, c.dim.height)}
@@ -96,7 +96,7 @@ class TableRow(private val tablePart: TablePart) {
     }
 
     class WrappedTableRow(row: TableRow) {
-        private val minRowHeight:Float = row.minRowHeight
+        private val minRowHeight: Double = row.minRowHeight
         private val fixedCells:List<WrappedCell> =
                 row.cells.map { c -> c.wrap() }
                         .toList()

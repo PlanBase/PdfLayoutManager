@@ -42,7 +42,7 @@ class TestManualllyPdfLayoutMgr {
         // printers. A typical monitor has 72 dots per inch, so you can think of these as pixels
         // even though they aren't.  Things can be aligned right, center, top, or anywhere within
         // a "pixel".
-        val pMargin = PdfLayoutMgr.DOC_UNITS_PER_INCH / 2
+        val pMargin:Double = PdfLayoutMgr.DOC_UNITS_PER_INCH / 2.0
 
         // A PageGrouping is a group of pages with the same settings.  When your contents scroll off
         // the bottom of a page, a new page is automatically created for you with the settings taken
@@ -51,14 +51,14 @@ class TestManualllyPdfLayoutMgr {
         var lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         // Set up some useful constants for later.
-        val tableWidth = lp.pageWidth() - 2 * pMargin
+        val tableWidth = lp.pageWidth() - 2.0 * pMargin
         val pageRMargin = pMargin + tableWidth
-        val colWidth = tableWidth / 4f
-        val colWidths = floatArrayOf(colWidth + 10, colWidth + 10, colWidth + 10, colWidth - 30)
-        val textCellPadding = Padding(2f)
+        val colWidth = tableWidth / 4.0
+        val colWidths = doubleArrayOf(colWidth + 10.0, colWidth + 10, colWidth + 10, colWidth - 30)
+        val textCellPadding = Padding(2.0)
 
         // Set up some useful styles for later
-        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5f, RGB_WHITE)
+        val heading = TextStyle(PDType1Font.HELVETICA_BOLD, 9.5, RGB_WHITE)
         val headingCell = CellStyle(BOTTOM_CENTER,
                                     BoxStyle(textCellPadding, RGB_BLUE,
                                              BorderStyle(NO_LINE, LineStyle(RGB_WHITE),
@@ -68,7 +68,7 @@ class TestManualllyPdfLayoutMgr {
                                               BorderStyle(NO_LINE, LineStyle(RGB_BLACK),
                                                           NO_LINE, LineStyle(RGB_WHITE))))
 
-        val regular = TextStyle(PDType1Font.HELVETICA, 9.5f, RGB_BLACK)
+        val regular = TextStyle(PDType1Font.HELVETICA, 9.5, RGB_BLACK)
         val regularCell = CellStyle(TOP_LEFT_JUSTIFY,
                                     BoxStyle(textCellPadding, null,
                                              BorderStyle(NO_LINE, LineStyle(RGB_BLACK),
@@ -79,19 +79,19 @@ class TestManualllyPdfLayoutMgr {
         // Draw the first table with lots of extra room to show off the vertical and horizontal
         // alignment.
         var tB = Table()
-        tB.addCellWidths(listOf(120f, 120f, 120f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
+        tB.addCellWidths(listOf(120.0, 120.0, 120.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
                 .partBuilder()
-                .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2f),
+                .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2.0),
                                                              RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
                 .buildPart()
                 .partBuilder()
-                .cellStyle(CellStyle(MIDDLE_CENTER, BoxStyle(Padding(2f),
+                .cellStyle(CellStyle(MIDDLE_CENTER, BoxStyle(Padding(2.0),
                                                              RGB_LIGHT_GREEN,
                                                              BorderStyle(RGB_DARK_GRAY))))
-                .minRowHeight(120f)
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                .minRowHeight(120.0)
+                .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
                 .rowBuilder()
                 .align(TOP_LEFT).addTextCells("Line 1\n" +
                                               "Line two\n" +
@@ -129,22 +129,22 @@ class TestManualllyPdfLayoutMgr {
         val xya: DimAndPageNums = tB.wrap()
                 .render(lp, lp.body.topLeft)
 
-        assertEquals(Dim(360.0f, 375f), xya.dim)
+        assertEquals(Dim(360.0, 375.0), xya.dim)
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
         tB = Table()
-        tB.addCellWidths(listOf(100f, 100f, 100f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
+        tB.addCellWidths(listOf(100.0, 100.0, 100.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("January", "February", "March").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
+                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
-                .minRowHeight(100f)
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                .minRowHeight(100.0)
+                .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
                 .rowBuilder()
                 .align(BOTTOM_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
@@ -182,22 +182,22 @@ class TestManualllyPdfLayoutMgr {
         val xyb: DimAndPageNums = tB.wrap()
                 .render(lp, lp.body.topLeft.plusX(xya.dim.width + 10))
 
-        assertEquals(Dim(300.0f, 315f), xyb.dim)
+        assertEquals(Dim(300.0, 315.0), xyb.dim)
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
         // the way cells extend vertically (but not horizontally) to fit the text you put in them.
         tB = Table()
-        tB.addCellWidths(listOf(100f, 100f, 100f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
+        tB.addCellWidths(listOf(100.0, 100.0, 100.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("Uno", "Dos", "Tres").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
+                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
                 .rowBuilder().align(BOTTOM_RIGHT).addTextCells("Line 1")
                 .align(BOTTOM_CENTER).addTextCells("Line 1\n" +
                                                    "Line two")
@@ -223,17 +223,17 @@ class TestManualllyPdfLayoutMgr {
         // Let's do a portrait page now.  I just copied this from the previous page.
         lp = pageMgr.startPageGrouping(PORTRAIT, letterPortraitBody)
         tB = Table()
-        tB.addCellWidths(listOf(120f, 120f, 120f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f, RGB_YELLOW_BRIGHT, 10f))
+        tB.addCellWidths(listOf(120.0, 120.0, 120.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
                 .buildPart()
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_LIGHT_GREEN,
+                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
-                .minRowHeight(120f)
-                .textStyle(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK))
+                .minRowHeight(120.0)
+                .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
                 .rowBuilder()
                 .align(TOP_LEFT).addTextCells("Line 1\n" +
                                               "Line two\n" +
@@ -270,24 +270,24 @@ class TestManualllyPdfLayoutMgr {
                 .buildPart()
         val xyc: DimAndPageNums = tB
                 .wrap()
-                .render(lp, lp.body.topLeft.x(0f))
+                .render(lp, lp.body.topLeft.x(0.0))
 
         // This was very hastily added to this test to prove that font loading works (it does).
         val fontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         Cell(CellStyle(MIDDLE_CENTER,
-                       BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
-             170f,
-             listOf(Text(TextStyle(liberationFont, 12f, RGB_BLACK), "Hello Emily's Candy Font!")))
+                       BoxStyle(Padding(2.0), RGB_LIGHT_GREEN, BorderStyle(RGB_DARK_GRAY))),
+             170.0,
+             listOf(Text(TextStyle(liberationFont, 12.0, RGB_BLACK), "Hello Emily's Candy Font!")))
                 .wrap()
                 .render(lp, lp.body.topLeft.minusY(xyc.dim.height).x(xyc.dim.width))
 
         tB = Table()
-        tB.addCellWidths(listOf(100f))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12f,
+        tB.addCellWidths(listOf(100.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0,
                                      RGB_YELLOW_BRIGHT))
                 .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2f), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("Lower-Right").buildRow()
                 .buildPart()
         // Where's the lower-right-hand corner?  Put a cell there.
@@ -298,7 +298,7 @@ class TestManualllyPdfLayoutMgr {
         pageMgr.commit()
 
         // More landscape pages
-        val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7f, RGB_BLACK)
+        val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7.0, RGB_BLACK)
         val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NO_PAD_NO_BORDER)
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE,
                                        letterLandscapeBody,
@@ -308,8 +308,8 @@ class TestManualllyPdfLayoutMgr {
                                                                        "Test Logical Page Three" +
                                                                        " (physical page $pageNum)")))
 
-                                           cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
-                                           0f // reverts to regular page offset.
+                                           cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27.0))
+                                           0.0 // reverts to regular page offset.
                                        })
 
         // We're going to reset and reuse this y variable.
@@ -390,11 +390,11 @@ class TestManualllyPdfLayoutMgr {
                                   " it shows up several times, the image data is only attached" +
                                   " to the file once and reused."),
                              ScaledImage(melonPic),
-                             ScaledImage(melonPic, Dim(50f, 50f)),
+                             ScaledImage(melonPic, Dim(50.0, 50.0)),
                              Text(regular, " Melon "),
-                             ScaledImage(melonPic, Dim(50f, 50f)),
+                             ScaledImage(melonPic, Dim(50.0, 50.0)),
                              Text(regular, " Yum!"),
-                             ScaledImage(melonPic, Dim(170f, 100f)),
+                             ScaledImage(melonPic, Dim(170.0, 100.0)),
                              Text(regular, "Watermelon!")))
                 .cell(regularCell,
                       listOf(Text(textStyle = regular,
@@ -494,7 +494,7 @@ class TestManualllyPdfLayoutMgr {
                 .render(lp, lp.body.topLeft)
         pageMgr.commit()
 
-        val lineStyle = LineStyle(RGB_BLACK, 1f)
+        val lineStyle = LineStyle(RGB_BLACK, 1.0)
 
         lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE,
                                        letterLandscapeBody,
@@ -503,8 +503,8 @@ class TestManualllyPdfLayoutMgr {
                                                            listOf(Text(pageHeadTextStyle,
                                                                        "Test Logical Page Four" +
                                                                        " (physical page $pageNum)")))
-                                           cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27))
-                                           0f // reverts to regular page offset.
+                                           cell.wrap().render(pb, Coord(pMargin, LETTER.width - 27.0))
+                                           0.0 // reverts to regular page offset.
                                        })
 
         // Make a big 3-page X in a box.  Notice that we code it as though it's on one page, and the
@@ -531,7 +531,7 @@ class TestManualllyPdfLayoutMgr {
         lp.drawLine(bottomLeft, topRight, lineStyle, true)
 
         // middle line
-        lp.drawLine(Coord(pMargin, 0f), Coord(pageRMargin, 0f), lineStyle, true)
+        lp.drawLine(Coord(pMargin, 0.0), Coord(pageRMargin, 0.0), lineStyle, true)
         pageMgr.commit()
 
         // All done - write it out!
@@ -560,7 +560,7 @@ class TestManualllyPdfLayoutMgr {
         internal val RGB_YELLOW_BRIGHT = PDColor(floatArrayOf(1f, 1f, 0f), PDDeviceRGB.INSTANCE)
 
         val letterPortraitBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.LETTER.height - DEFAULT_MARGIN),
-                                          Dim(PDRectangle.LETTER).minus(Dim(DEFAULT_MARGIN * 2f, DEFAULT_MARGIN * 2f)))
+                                          Dim(PDRectangle.LETTER).minus(Dim(DEFAULT_MARGIN * 2.0, DEFAULT_MARGIN * 2.0)))
 
         val letterLandscapeBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.LETTER.width - DEFAULT_MARGIN),
                                            letterPortraitBody.dim.swapWh())

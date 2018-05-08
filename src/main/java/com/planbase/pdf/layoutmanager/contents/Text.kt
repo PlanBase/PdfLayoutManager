@@ -57,19 +57,19 @@ data class Text(val textStyle: TextStyle,
      */
     data class WrappedText(val textStyle: TextStyle,
                            val string: String,
-                           val width: Float = textStyle.stringWidthInDocUnits(string)) : LineWrapped {
+                           val width: Double = textStyle.stringWidthInDocUnits(string)) : LineWrapped {
 
-        override val lineHeight: Float = textStyle.lineHeight
+        override val lineHeight: Double = textStyle.lineHeight
 
         override val dim: Dim = Dim(width, lineHeight)
 
-        override val ascent: Float = textStyle.ascent
+        override val ascent: Double = textStyle.ascent
 
 
         /** Returns the number of literal space characters in this WrappedText */
         fun numSpaces(): Int = string.count { it == ' ' }
 
-        fun withWordSpacing(spacing:Float):WrappedText {
+        fun withWordSpacing(spacing: Double):WrappedText {
             val newTextStyle = textStyle.withWordSpacing(spacing)
             return WrappedText(newTextStyle, string)
         }
@@ -82,9 +82,9 @@ data class Text(val textStyle: TextStyle,
         override fun toString() = "WrappedText($textStyle, \"$string\", $width)"
     }
 
-    fun avgCharsForWidth(width: Float): Int = (width * 1220 / textStyle.avgCharWidth).toInt()
+    fun avgCharsForWidth(width: Double): Int = (width * 1220.0 / textStyle.avgCharWidth).toInt()
 
-    fun maxWidth(): Float = textStyle.stringWidthInDocUnits(text.trim())
+    fun maxWidth(): Double = textStyle.stringWidthInDocUnits(text.trim())
 
     override fun toString() = "Text($textStyle, \"${escapeStr(text)}\")"
 
@@ -109,7 +109,7 @@ data class Text(val textStyle: TextStyle,
 
         override fun hasMore(): Boolean = idx < txt.text.length
 
-        override fun getSomething(maxWidth: Float): ConTerm {
+        override fun getSomething(maxWidth: Double): ConTerm {
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Illegal negative width: " + maxWidth)
             }
@@ -118,7 +118,7 @@ data class Text(val textStyle: TextStyle,
             return rowIdx.toContTerm()
         }
 
-        override fun getIfFits(remainingWidth: Float): ConTermNone {
+        override fun getIfFits(remainingWidth: Double): ConTermNone {
             if (remainingWidth <= 0) {
                 return None // TODO: Should we instead? throw IllegalArgumentException("remainingWidth must be > 0")
             }
@@ -136,7 +136,7 @@ data class Text(val textStyle: TextStyle,
     companion object {
         private const val CR: Char = '\n'
 
-        internal fun tryGettingText(maxWidth: Float, startIdx: Int, txt: Text): RowIdx {
+        internal fun tryGettingText(maxWidth: Double, startIdx: Int, txt: Text): RowIdx {
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: " + maxWidth)
             }
@@ -160,7 +160,7 @@ data class Text(val textStyle: TextStyle,
             val text:String = row.substring(startIdx, crIdx)
 //            println("text:" + text)
 
-            val charWidthGuess = txt.avgCharsForWidth(maxWidth)
+            val charWidthGuess:Int = txt.avgCharsForWidth(maxWidth)
 
             val textLen = text.length
             //        System.out.println("text=[" + text + "] len=" + textLen);

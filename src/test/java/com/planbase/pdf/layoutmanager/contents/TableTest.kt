@@ -50,7 +50,7 @@ class TableTest {
         val ret = wrappedTable.render(page, lp.body.topLeft)
         assertEquals(twoHundred, ret.dim.width)
         assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.dim.height, 0.00003f)
+                     ret.dim.height, 0.00003)
 
         // TODO: Make rendered section of all items below.
     }
@@ -76,9 +76,9 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.body.topLeft)
-        assertEquals(helloHelloWidth, ret.dim.width, 0.00001f)
+        assertEquals(helloHelloWidth, ret.dim.width, 0.00001)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.dim.height, 0.00003f)
+                     ret.dim.height, 0.00003)
     }
 
     @Test fun testTwoCells() {
@@ -104,7 +104,7 @@ class TableTest {
         val ret = wrappedTable.render(page, lp.body.topLeft)
         assertEquals(twoHundred + twoHundred, ret.dim.width)
         assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.dim.height, 0.00003f)
+                     ret.dim.height, 0.00003)
     }
 
     @Test fun testTwoCellsWrapped() {
@@ -128,9 +128,9 @@ class TableTest {
         val page: SinglePage = pageMgr.page(0)
 
         val ret = wrappedTable.render(page, lp.body.topLeft)
-        assertEquals(helloHelloWidth + helloHelloWidth, ret.dim.width, 0.00001f)
+        assertEquals(helloHelloWidth + helloHelloWidth, ret.dim.width, 0.00001)
         assertEquals((textStyle.lineHeight * 2) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     ret.dim.height, 0.00003f)
+                     ret.dim.height, 0.00003)
     }
 
     /*
@@ -156,9 +156,9 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
         val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
-        val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.1f))
+        val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.1))
 
-        val bulletTable: Table = Table().addCellWidths(230f)
+        val bulletTable: Table = Table().addCellWidths(230.0)
                 .partBuilder()
                 .rowBuilder()
                 .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, testBorderStyle)),
@@ -167,7 +167,7 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                                   "Some text with a bullet. " +
                                   "Some text with a bullet. " +
                                   "Some text with a bullet. "),
-                             Table().addCellWidths(230f)
+                             Table().addCellWidths(230.0)
                                      .partBuilder()
                                      .rowBuilder()
                                      .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER),
@@ -182,12 +182,12 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                 .buildPart()
 
         val wrappedTable: Table.WrappedTable = bulletTable.wrap()
-        assertEquals(Dim(230.0f, 124.948f), wrappedTable.dim)
+        Dim.assertEquals(Dim(230.0, 124.948), wrappedTable.dim, 0.00000001)
 
-        val startCoord = Coord(0f, 140f)
+        val startCoord = Coord(0.0, 140.0)
 
         val after:DimAndPageNums = wrappedTable.render(lp, startCoord)
-        assertEquals(Dim(230.0f, 130.74399f), after.dim)
+        Dim.assertEquals(Dim(230.0, 130.74399), after.dim, 0.001)
 
         pageMgr.commit()
         // We're just going to write to a file.
@@ -197,29 +197,29 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
     }
 
     @Test fun testToString() {
-        val bulletTable: Table = Table(mutableListOf(230f))
+        val bulletTable: Table = Table(mutableListOf(230.0))
                 .partBuilder()
                 .rowBuilder()
-                .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1f)))),
-                      listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), "Some text with a bullet."),
-                             Table(mutableListOf(230f))
+                .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))),
+                      listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), "Some text with a bullet."),
+                             Table(mutableListOf(230.0))
                                      .partBuilder()
                                      .rowBuilder()
-                                     .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), "Subtext is an underneath")))
+                                     .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), "Subtext is an underneath")))
                                      .buildRow()
                                      .buildPart()
                       ))
                 .buildRow()
                 .buildPart()
-        assertEquals("Table(mutableListOf(230f))\n" +
+        assertEquals("Table(mutableListOf(230.0))\n" +
                      ".partBuilder()\n" +
                      ".rowBuilder()\n" +
-                     ".cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1f)))), " +
-                     "listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), \"Some text with a bullet.\"), " +
-                     "Table(mutableListOf(230f))\n" +
+                     ".cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))), " +
+                     "listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Some text with a bullet.\"), " +
+                     "Table(mutableListOf(230.0))\n" +
                      ".partBuilder()\n" +
                      ".rowBuilder()\n" +
-                     ".cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12f, CMYK_BLACK), \"Subtext is an underneath\")))\n" +
+                     ".cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Subtext is an underneath\")))\n" +
                      ".buildRow()\n" +
                      ".buildPart()))\n" +
                      ".buildRow()\n" +

@@ -34,10 +34,10 @@ import kotlin.math.max
  * dream up.
  */
 class TablePart(private val table: Table) {
-    val cellWidths:List<Float> = table.cellWidths.toList()
+    val cellWidths:List<Double> = table.cellWidths.toList()
     var cellStyle: CellStyle = table.cellStyle
     var textStyle: TextStyle? = table.textStyle
-    var minRowHeight = 0f
+    var minRowHeight = 0.0
     private val rows = ArrayList<TableRow>(1)
 
     fun finalXyDim() = Dim(cellWidths.sum(),
@@ -55,7 +55,7 @@ class TablePart(private val table: Table) {
         return this
     }
 
-    fun minRowHeight(f: Float): TablePart {
+    fun minRowHeight(f: Double): TablePart {
         minRowHeight = f
         return this
     }
@@ -81,8 +81,8 @@ class TablePart(private val table: Table) {
 
     data class WrappedTablePart(private val part:TablePart) {
         val dim: Dim = part.finalXyDim()
-//        val ascent:Float = dim.height
-//        val lineHeight: Float = dim.height
+//        val ascent: Double = dim.height
+//        val lineHeight: Double = dim.height
 
         private val rows: List<WrappedTableRow> =
                 part.rows.map { WrappedTableRow(it) }
@@ -91,7 +91,7 @@ class TablePart(private val table: Table) {
         fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums {
             var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
             var y = topLeft.y
-            var maxWidth = 0f
+            var maxWidth = 0.0
             for (row in rows) {
                 val dimAndPageNums: DimAndPageNums = row.render(lp, topLeft.y(y), reallyRender)
                 maxWidth = max(maxWidth, dimAndPageNums.dim.width)

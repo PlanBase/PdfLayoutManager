@@ -28,19 +28,19 @@ import kotlin.math.abs
  It's pronounced "co-ward" as in, "coordinate."  It's not called Xy because that's too easy to confuse
  with width and height, which this is not - it's an offset from the origin.
  */
-data class Coord(val x: Float, val y: Float) {
+data class Coord(val x: Double, val y: Double) {
 
     // TODO: Rename to withX()
-    fun x(newX: Float) = Coord(newX, y)
+    fun x(newX: Double) = Coord(newX, y)
 
     // TODO: Rename to withY()
-    fun y(newY: Float) = Coord(x, newY)
+    fun y(newY: Double) = Coord(x, newY)
 
-    fun plusX(offset: Float) = if (offset == 0f) { this } else { Coord(x + offset, y) }
+    fun plusX(offset: Double) = if (offset == 0.0) { this } else { Coord(x + offset, y) }
 
-    fun plusY(offset: Float) = if (offset == 0f) { this } else { Coord(x, y + offset) }
+    fun plusY(offset: Double) = if (offset == 0.0) { this } else { Coord(x, y + offset) }
 
-    fun minusY(offset: Float) = if (offset == 0f) { this } else { Coord(x, y - offset) }
+    fun minusY(offset: Double) = if (offset == 0.0) { this } else { Coord(x, y - offset) }
 
 //    fun plusXMinusY(that: Coord) = Coord(x + that.x, y - that.y)
 
@@ -48,11 +48,11 @@ data class Coord(val x: Float, val y: Float) {
             if (dim == Dim.ZERO) this
             else Coord(x + dim.width, y - dim.height)
 
-    fun plusXMinusY(xOff:Float, yOff:Float) =
-            if ( (xOff == 0f) && (yOff == 0f) ) this
+    fun plusXMinusY(xOff: Double, yOff: Double) =
+            if ( (xOff == 0.0) && (yOff == 0.0) ) this
             else Coord(x + xOff, y - yOff)
 
     fun dimensionTo(that: Coord) = Dim(abs(x - that.x), abs(y - that.y))
 
-    override fun toString(): String = "Coord(${floatToStr(x)}, ${floatToStr(y)})"
+    override fun toString(): String = "Coord($x, $y)"
 }

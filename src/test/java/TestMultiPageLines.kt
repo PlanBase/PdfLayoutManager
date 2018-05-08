@@ -29,7 +29,7 @@ class TestMultiPageLines {
         val tableWidth = lp.pageWidth() - 2 * pMargin
         val pageRMargin = pMargin + tableWidth
 
-        val lineStyle = LineStyle(RGB_BLACK, 1f)
+        val lineStyle = LineStyle(RGB_BLACK, 1.0)
 
         // Make a big 3-page X in a box.  Notice that we code it as though it's on one page, and the
         // API adds two more pages as needed.  This is a great test for how geometric shapes break
@@ -55,7 +55,7 @@ class TestMultiPageLines {
         lp.drawLine(bottomLeft, topRight, lineStyle, true)
 
         // middle line
-        lp.drawLine(Coord(pMargin, 0f), Coord(pageRMargin, 0f), lineStyle, true)
+        lp.drawLine(Coord(pMargin, 0.0), Coord(pageRMargin, 0.0), lineStyle, true)
         pageMgr.commit()
 
 //        val os = FileOutputStream("multiPageLines.pdf")

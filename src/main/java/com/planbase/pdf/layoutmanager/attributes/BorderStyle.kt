@@ -31,7 +31,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
  * overwriting it with another.  This example sets all borders except to black and the default width,
  * then removes the top border:
  * <pre>`BorderStyle topBorderStyle = BorderStyle(LineStyle(PDColor.BLACK))
- * .top(LineStyle(PDColor.RED, 2f));`</pre>
+ * .top(LineStyle(PDColor.RED, 2.0));`</pre>
  * If neighboring cells in a cell-row have the same border, only one will be printed.  If different,
  * the left-border of the right cell will override.  You have to manage your own top borders
  * manually.
@@ -56,7 +56,7 @@ data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
 //     * @param w the width of the border.
 //     * @return a new immutable border object
 //     */
-//    constructor(c: PDColor, w: Float) : this (LineStyle(c, w))
+//    constructor(c: PDColor, w: Double) : this (LineStyle(c, w))
 
     /**
      * Returns an equal border on all sides
@@ -73,9 +73,9 @@ data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
                     right == bottom &&
                     bottom == left
 
-    fun topBottomThickness():Float = top.thickness + bottom.thickness
+    fun topBottomThickness(): Double = top.thickness + bottom.thickness
 
-    fun leftRightThickness():Float = left.thickness + right.thickness
+    fun leftRightThickness(): Double = left.thickness + right.thickness
 
     override fun toString() =
             if (this == NO_BORDERS) {

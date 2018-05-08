@@ -30,7 +30,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
  * (like HTML) where the table-free cell is the box.
  */
 interface CellBuilder {
-    val width:Float
+    val width: Double
     
     /** Creates a new CellBuilder with the given BoxStyle  */
     fun cellStyle(cs: CellStyle): CellBuilder

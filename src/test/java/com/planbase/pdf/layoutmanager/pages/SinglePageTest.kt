@@ -36,10 +36,10 @@ class SinglePageTest {
         val page:SinglePage = pageMgr.page(0)
         val f = File("target/test-classes/melon.jpg")
         val melonPic = ImageIO.read(f)
-        val melonHeight = 100f
-        val melonWidth = 170f
+        val melonHeight = 100.0
+        val melonWidth = 170.0
         val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90f, RGB_BLACK), "gN")
+        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 90.0, RGB_BLACK), "gN")
 
         val squareDim = Dim(squareSide, squareSide)
 
@@ -53,21 +53,21 @@ class SinglePageTest {
 
         while (y >= lp.yBodyBottom) {
             val imgHaP:HeightAndPage = page.drawImage(Coord(melonX, y), bigMelon, true)
-            assertEquals(melonHeight, imgHaP.height)
+            assertEquals(melonHeight, imgHaP.height, 0.0)
 
             val txtHaP:HeightAndPage = page.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-            assertEquals(bigText.textStyle.lineHeight, txtHaP.height)
+            assertEquals(bigText.textStyle.lineHeight, txtHaP.height, 0.0)
 
             val rectY = page.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
-            assertEquals(squareSide, rectY)
+            assertEquals(squareSide, rectY, 0.0)
 
             diamondRect(page, Coord(lineX1, y), squareSide)
 
             val cellDaP: DimAndPageNums = qbfCell.render(page, Coord(cellX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.00004f)
+            Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.00004)
 
             val tableDaP: DimAndPageNums = qbfTable.render(page, Coord(tableX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.00002f)
+            Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.00002)
 
             y -= melonHeight
         }
@@ -77,12 +77,12 @@ class SinglePageTest {
         pageMgr.save(os)
     }
 }
-fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Float) {
-    val ls = LineStyle(RGB_BLACK, 1f)
+fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Double) {
+    val ls = LineStyle(RGB_BLACK, 1.0)
     val (xLeft, yBot) = lowerLeft
     val xRight = xLeft + size
     val yTop = yBot + size
-    val halfSize = size / 2f
+    val halfSize = size / 2.0
     val xMid = xLeft + halfSize
     val yMid = yBot + halfSize
 
@@ -104,12 +104,12 @@ fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Float) {
                        ls, true)
 }
 
-const val squareSide = 70f
-val times15 = TextStyle(PDType1Font.TIMES_ROMAN, 15f, RGB_BLACK)
+const val squareSide = 70.0
+val times15 = TextStyle(PDType1Font.TIMES_ROMAN, 15.0, RGB_BLACK)
 val paleGreenLeft = CellStyle(Align.TOP_LEFT,
-                              BoxStyle(Padding(2f), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK)))
+                              BoxStyle(Padding(2.0), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK)))
 val paleBlueLeft = CellStyle(Align.TOP_LEFT,
-                             BoxStyle(Padding(2f), RGB_LIGHT_BLUE, BorderStyle(RGB_BLACK)))
+                             BoxStyle(Padding(2.0), RGB_LIGHT_BLUE, BorderStyle(RGB_BLACK)))
 val qbfCell = Cell(paleGreenLeft, squareSide,
                    listOf(Text(times15, "The quick brown fox jumps over the lazy dog"))).wrap()
 

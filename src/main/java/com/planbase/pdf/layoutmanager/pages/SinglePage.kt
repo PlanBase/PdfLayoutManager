@@ -48,21 +48,21 @@ import java.util.TreeSet
  */
 class SinglePage(val pageNum: Int,
                  private val mgr: PdfLayoutMgr,
-                 pageReactor: ((Int, SinglePage) -> Float)?,
+                 pageReactor: ((Int, SinglePage) -> Double)?,
                  override val body: PageArea) : RenderTarget {
     private var items : SortedSet<PdfItem> = TreeSet()
     private var lastOrd: Long = 0
     // The x-offset for the body section of this page (left-margin-ish)
     // THIS MUST COME LAST as items will not be initialized if it comes before.
-    private val xOff: Float = pageReactor?.invoke(pageNum, this) ?: body.topLeft.x
+    private val xOff: Double = pageReactor?.invoke(pageNum, this) ?: body.topLeft.x
 
-    private fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, zIdx: Float) {
+    private fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, zIdx: Double) {
         items.add(FillRect(bottomLeft.plusX(xOff), dim, c, lastOrd++, zIdx))
     }
 
-    override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Float {
+    override fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean): Double {
         if (reallyRender) {
-            fillRect(bottomLeft, dim, c, -1f)
+            fillRect(bottomLeft, dim, c, -1.0)
         }
         return dim.height
     }
@@ -75,7 +75,7 @@ class SinglePage(val pageNum: Int,
         return HeightAndPage(wi.dim.height, pageNum)
     }
 
-    private fun drawLineStrip(points: List<Coord>, ls: LineStyle, z: Float) {
+    private fun drawLineStrip(points: List<Coord>, ls: LineStyle, z: Double) {
         items.add(DrawLine(points.map{ it.plusX(xOff) }.toList(), ls, lastOrd++, z))
     }
 
@@ -86,7 +86,7 @@ class SinglePage(val pageNum: Int,
         return IntRange(pageNum, pageNum)
     }
 
-    private fun drawStyledText(baselineLeft: Coord, text: String, s: TextStyle, z: Float) {
+    private fun drawStyledText(baselineLeft: Coord, text: String, s: TextStyle, z: Double) {
         items.add(Text(baselineLeft.plusX(xOff), text, s, lastOrd++, z))
     }
 
@@ -97,7 +97,7 @@ class SinglePage(val pageNum: Int,
         return HeightAndPage(textStyle.lineHeight, pageNum)
     }
 
-    var cursorY:Float = body.topLeft.y
+    var cursorY: Double = body.topLeft.y
 
     /**
      * Add LineWrapped items directly to the page grouping at the specified coordinate.  This is a little more
@@ -109,7 +109,7 @@ class SinglePage(val pageNum: Int,
      * @param block the LineWrapped item to display
      */
     fun add(topLeft: Coord, block: LineWrapped): DimAndPageNums {
-        this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0f)
+        this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0.0)
         // We subtract xOff here because it will get added back on when render() calls back to SinglePage.
         // Better to design this to leave the value alone since addition/subtraction of floats/doubles
         // introduces inaccuracies.
@@ -141,7 +141,7 @@ class SinglePage(val pageNum: Int,
      * A single page always returns zero suggesting that something won't flow onto another page, but it may
      * still be truncated when it goes off the edge of this one.
      */
-    override fun pageBreakingTopMargin(bottomY:Float, height:Float, requiredSpaceBelow:Float):Float = 0f
+    override fun pageBreakingTopMargin(bottomY: Double, height: Double, requiredSpaceBelow: Double):Double = 0.0
 
     @Throws(IOException::class)
     fun commit(stream: PDPageContentStream) {
@@ -155,7 +155,7 @@ class SinglePage(val pageNum: Int,
     override fun toString(): String = "SinglePage($pageNum)"
 
     companion object {
-        const val DEFAULT_Z_INDEX = 0f
+        const val DEFAULT_Z_INDEX = 0.0
     }
 
     /**
@@ -168,7 +168,7 @@ class SinglePage(val pageNum: Int,
      * then by creation order.  The default z-index is zero.
      */
     internal abstract class PdfItem(private val serialNumber: Long,
-                                    private val z: Float) : Comparable<PdfItem> {
+                                    private val z: Double) : Comparable<PdfItem> {
         //    public static PdfItem of(final long ord, final float zIndex) {
         //        return new PdfItem(ord, zIndex);
         //    }
@@ -219,16 +219,16 @@ class SinglePage(val pageNum: Int,
     private class DrawLine(private val points:List<Coord>,
                            private val style: LineStyle,
                            ord: Long,
-                           z: Float) : PdfItem(ord, z) {
+                           z: Double) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             stream.setStrokingColor(style.color)
-            stream.setLineWidth(style.thickness)
+            stream.setLineWidth(style.thickness.toFloat())
             var point = points[0]
-            stream.moveTo(point.x, point.y)
+            stream.moveTo(point.x.toFloat(), point.y.toFloat())
             for (i in 1..points.lastIndex) {
                 point = points[i]
-                stream.lineTo(point.x, point.y)
+                stream.lineTo(point.x.toFloat(), point.y.toFloat())
             }
             stream.stroke()
         }
@@ -238,11 +238,11 @@ class SinglePage(val pageNum: Int,
                            val dim: Dim,
                            val color: PDColor,
                            ord: Long,
-                           z: Float) : PdfItem(ord, z) {
+                           z: Double) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             stream.setNonStrokingColor(color)
-            stream.addRect(bottomLeft.x, bottomLeft.y, dim.width, dim.height)
+            stream.addRect(bottomLeft.x.toFloat(), bottomLeft.y.toFloat(), dim.width.toFloat(), dim.height.toFloat())
             stream.fill()
         }
     }
@@ -251,20 +251,21 @@ class SinglePage(val pageNum: Int,
     internal class Text(private val baselineLeft: Coord,
                         val t: String,
                         private val style: TextStyle,
-                        ord: Long, z: Float) : PdfItem(ord, z) {
+                        ord: Long, z: Double) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             // TODO: Just adding the rise to the y value here is kind of a cop-out - could run into the line above or below.
             stream.setNonStrokingColor(style.textColor)
-            stream.setFont(style.font, style.fontSize)
-            val characterSpacing = style.characterSpacing
+            stream.setFont(style.font, style.fontSize.toFloat())
+            val characterSpacing:Float = style.characterSpacing.toFloat()
             if (characterSpacing != 0f) {
                 stream.setCharacterSpacing(characterSpacing)
             }
-            val wordSpacing = style.wordSpacing
+            val wordSpacing = style.wordSpacing.toFloat()
             if (wordSpacing == 0f) {
                 stream.beginText()
-                stream.newLineAtOffset(baselineLeft.x, baselineLeft.y + style.rise)
+                stream.newLineAtOffset(baselineLeft.x.toFloat(),
+                                       (baselineLeft.y + style.rise).toFloat())
                 stream.showText(t)
                 stream.endText()
             } else {
@@ -279,7 +280,8 @@ class SinglePage(val pageNum: Int,
                         } else {
                             val str = word.toString()
                             stream.beginText()
-                            stream.newLineAtOffset(x, baselineLeft.y + style.rise)
+                            stream.newLineAtOffset(x.toFloat(),
+                                                   (baselineLeft.y + style.rise).toFloat())
                             stream.showText(str)
                             stream.endText()
 //                            println("x2=$x")
@@ -294,7 +296,8 @@ class SinglePage(val pageNum: Int,
                 }
                 if (word.isNotEmpty()) {
                     stream.beginText()
-                    stream.newLineAtOffset(x, baselineLeft.y + style.rise)
+                    stream.newLineAtOffset(x.toFloat(),
+                                           (baselineLeft.y + style.rise).toFloat())
                     stream.showText(word.toString())
                     stream.endText()
                 }
@@ -308,14 +311,14 @@ class SinglePage(val pageNum: Int,
     private class DrawImage(val bottomLeft: Coord,
                             val scaledImage: WrappedImage,
                             mgr: PdfLayoutMgr,
-                            ord: Long, z: Float) : PdfItem(ord, z) {
+                            ord: Long, z: Double) : PdfItem(ord, z) {
         private val img: PDImageXObject = mgr.ensureCached(scaledImage)
 
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
             // stream.drawImage(jpeg, x, y);
             val (width, height) = scaledImage.dim
-            stream.drawImage(img, bottomLeft.x, bottomLeft.y, width, height)
+            stream.drawImage(img, bottomLeft.x.toFloat(), bottomLeft.y.toFloat(), width.toFloat(), height.toFloat())
         }
     }
 }

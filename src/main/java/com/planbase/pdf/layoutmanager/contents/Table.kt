@@ -61,7 +61,7 @@ colWidth1 = tableMaxWidth * colProportion1
  * can resize and scroll a browser window, and not a piece of paper, this is fundamentally different.
  * Still familiarity with HTML may make this class easier to use.
  */
-class Table(val cellWidths:MutableList<Float> = mutableListOf(),
+class Table(val cellWidths:MutableList<Double> = mutableListOf(),
             var cellStyle: CellStyle = CellStyle.TOP_LEFT_BORDERLESS,
             var textStyle: TextStyle? = null,
             private val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
@@ -72,19 +72,19 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
     fun wrap(): WrappedTable = WrappedTable(this.parts.map { TablePart.WrappedTablePart(it) })
 
     /** Sets default widths for all table parts.  */
-    fun addCellWidths(x: List<Float>): Table {
+    fun addCellWidths(x: Iterable<Double>): Table {
         cellWidths.addAll(x)
         return this
     }
 
-    fun addCellWidths(vararg ws: Float): Table {
+    fun addCellWidths(vararg ws: Double): Table {
         for (w in ws) {
             cellWidths.add(w)
         }
         return this
     }
 
-//    fun addCellWidth(x: Float): TableBuilder {
+//    fun addCellWidth(x: Double): TableBuilder {
 //        cellWidths.add(x)
 //        return this
 //    }
@@ -118,9 +118,9 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
 
     data class WrappedTable(private val parts:List<TablePart.WrappedTablePart>) : LineWrapped {
         override val dim: Dim = Dim.sum(parts.map { part -> part.dim })
-        override val ascent: Float = dim.height
-//        override val descentAndLeading: Float = 0f
-        override val lineHeight: Float = dim.height
+        override val ascent: Double = dim.height
+//        override val descentAndLeading: Double = 0.0
+        override val lineHeight: Double = dim.height
 
         /*
          * Renders item and all child-items with given width and returns the x-y pair of the
@@ -128,7 +128,7 @@ class Table(val cellWidths:MutableList<Float> = mutableListOf(),
          */
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums {
             var y = topLeft.y
-            var maxWidth = 0f
+            var maxWidth = 0.0
             var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
             for (part in parts) {
                 val dimAndPageNums: DimAndPageNums = part.render(lp, topLeft.y(y), reallyRender)

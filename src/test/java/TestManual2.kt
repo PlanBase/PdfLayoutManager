@@ -54,7 +54,7 @@ class TestManual2 {
         // Nothing happens without a PdfLayoutMgr.
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
-        val bodyWidth = PDRectangle.A6.width - 80f
+        val bodyWidth = PDRectangle.A6.width - 80.0
 
         val f = File("target/test-classes/graph2.png")
 //    println(f.absolutePath)
@@ -65,12 +65,12 @@ class TestManual2 {
                 a6PortraitBody,
                 { pageNum:Int, pb: SinglePage ->
                     val isLeft = pageNum % 2 == 1
-                    val leftMargin:Float = if (isLeft) 37f else 45f
+                    val leftMargin:Double = if (isLeft) 37.0 else 45.0
                     //            System.out.println("pageNum " + pageNum);
-                    pb.drawLine(Coord(leftMargin, 30f), Coord(leftMargin + bodyWidth, 30f),
+                    pb.drawLine(Coord(leftMargin, 30.0), Coord(leftMargin + bodyWidth, 30.0),
                                 LineStyle(CMYK_THISTLE), true)
-                    pb.drawStyledText(Coord(leftMargin, 20f), "Page # " + pageNum,
-                                      TextStyle(PDType1Font.HELVETICA, 9f, CMYK_BLACK), true)
+                    pb.drawStyledText(Coord(leftMargin, 20.0), "Page # " + pageNum,
+                                      TextStyle(PDType1Font.HELVETICA, 9.0, CMYK_BLACK), true)
                     leftMargin })
 
         val bulletTextCellStyle = CellStyle(
@@ -81,7 +81,7 @@ class TestManual2 {
                         LineStyle.NO_LINE, LineStyle.NO_LINE
                 )))
 
-        val bulletTable: Table = Table().addCellWidths(30f, bodyWidth - 30f)
+        val bulletTable: Table = Table().addCellWidths(30.0, bodyWidth - 30.0)
                 .partBuilder()
                 .rowBuilder()
                 .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, BULLET_CHAR)))
@@ -93,15 +93,15 @@ class TestManual2 {
                 .buildRow()
                 .buildPart()
 
-        val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(2f), CMYK_PALE_PEACH, BorderStyle(CMYK_QUEEN_PINK)))
-        val bodyCellContinuation = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(2f, 2f, 8f, 2f), CMYK_PALE_PEACH,
+        val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(2.0), CMYK_PALE_PEACH, BorderStyle(CMYK_QUEEN_PINK)))
+        val bodyCellContinuation = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(2.0, 2.0, 8.0, 2.0), CMYK_PALE_PEACH,
                                                                         BorderStyle(
                                                                                 LineStyle.NO_LINE,
                                                                                 LineStyle(CMYK_QUEEN_PINK),
                                                                                 LineStyle.NO_LINE,
                                                                                 LineStyle(CMYK_QUEEN_PINK))))
 
-        val imageCell = CellStyle(TOP_CENTER, BoxStyle(Padding(0f, 0f, 8f, 0f), CMYK_PALE_PEACH,
+        val imageCell = CellStyle(TOP_CENTER, BoxStyle(Padding(0.0, 0.0, 8.0, 0.0), CMYK_PALE_PEACH,
                                                        BorderStyle(
                                                                LineStyle.NO_LINE,
                                                                LineStyle(CMYK_QUEEN_PINK),
@@ -109,19 +109,19 @@ class TestManual2 {
                                                                LineStyle(CMYK_QUEEN_PINK))))
 
         val heading = Cell(CellStyle(BOTTOM_LEFT,
-                                     BoxStyle(Padding(10f, 2f, 0f, 2f), CMYK_PALE_PEACH,
-                                              BorderStyle(LineStyle(CMYK_VIOLET, 1f)))),
+                                     BoxStyle(Padding(10.0, 2.0, 0.0, 2.0), CMYK_PALE_PEACH,
+                                              BorderStyle(LineStyle(CMYK_VIOLET, 1.0)))),
                            bodyWidth,
                            listOf(Text(HEADING_TEXT_STYLE, "Some Heading")))
 
-        var coord = Coord(0f, pageMgr.pageDim.height - 40f)
+        var coord = Coord(0.0, pageMgr.pageDim.height - 40.0)
         var dap: DimAndPageNums =
                 lp.add(coord,
                        Cell(bodyCellStyle,
                             bodyWidth,
                             listOf(Text(BULLET_TEXT_STYLE,
                                         "The long "),
-                                   Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18f, CMYK_BLACK),
+                                   Text(TextStyle(PDType1Font.HELVETICA_BOLD, 18.0, CMYK_BLACK),
                                         "families"),
                                    Text(BULLET_TEXT_STYLE,
                                         " needed the national words and women said new."))).wrap())
@@ -131,7 +131,7 @@ class TestManual2 {
         dap = lp.add(coord,  heading.wrap())
         assertEquals(IntRange(1, 1), dap.pageNums)
 
-        coord = coord.minusY(dap.dim.height + 0.5f)
+        coord = coord.minusY(dap.dim.height + 0.5)
         dap = lp.add(coord, Cell(bodyCellContinuation, bodyWidth,
                                  listOf(Text(BULLET_TEXT_STYLE,
                                              "The new companies told the possible hands that the books" +
@@ -166,7 +166,7 @@ class TestManual2 {
         dap = lp.add(coord,  heading.wrap())
         assertEquals(IntRange(2, 2), dap.pageNums)
 
-        coord = coord.minusY(dap.dim.height + 0.5f)
+        coord = coord.minusY(dap.dim.height + 0.5)
         dap = lp.add(coord, Cell(bodyCellContinuation, bodyWidth,
                                  listOf(Text(BULLET_TEXT_STYLE,
                                              "The good ways lived the different countries and stories found good." +
@@ -209,12 +209,12 @@ class TestManual2 {
                                       Dim(PDRectangle.A6).minus(Dim(DEFAULT_MARGIN * 2, DEFAULT_MARGIN * 2)))
 
         internal val BULLET_CELL_STYLE = CellStyle(TOP_RIGHT,
-                                                   BoxStyle(Padding(0f, 4f, 15f, 0f), CMYK_PALE_PEACH,
+                                                   BoxStyle(Padding(0.0, 4.0, 15.0, 0.0), CMYK_PALE_PEACH,
                                                             BorderStyle(
                                                                     LineStyle.NO_LINE, LineStyle.NO_LINE,
                                                                     LineStyle.NO_LINE, LineStyle(CMYK_QUEEN_PINK))))
-        internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12f, CMYK_BLACK)
+        internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12.0, CMYK_BLACK)
 
-        internal val HEADING_TEXT_STYLE = TextStyle(PDType1Font.TIMES_BOLD, 16f, CMYK_COOL_GRAY)
+        internal val HEADING_TEXT_STYLE = TextStyle(PDType1Font.TIMES_BOLD, 16.0, CMYK_COOL_GRAY)
     }
 }

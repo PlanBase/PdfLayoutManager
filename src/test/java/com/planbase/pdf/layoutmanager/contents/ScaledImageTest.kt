@@ -1,5 +1,6 @@
 package com.planbase.pdf.layoutmanager.contents
 
+import com.planbase.pdf.layoutmanager.contents.ScaledImage.Companion.IMAGE_SCALE
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.File
@@ -17,18 +18,18 @@ class ScaledImageTest {
         assertEquals(296, graphPic.height)
 
         // Test that our code hasn't changed
-        assertEquals(145.44f, so.dim.width)
-        assertEquals(71.04f, so.dim.height)
+        assertEquals(145.44, so.dim.width, 0.0)
+        assertEquals(71.04, so.dim.height, 0.00000001)
 
 //        assertEquals("ScaledImage(BufferedImage(ColorModel([8, 8, 8], TYPE_RGB, OPAQUE), 606x296)," +
-//                     " Dim(145.44f, 71.04f))",
+//                     " Dim(145.44, 71.04))",
 //                     so.toString())
 
-        assertEquals("ScaledImage(img, Dim(145.44f, 71.04f))", so.toString())
+        assertEquals("ScaledImage(img, Dim(145.44, 71.03999999999999))", so.toString())
 
         val wo = so.wrap()
-        assertEquals(145.44f, wo.dim.width)
-        assertEquals(71.04f, wo.dim.height)
+        assertEquals(145.44, wo.dim.width, 0.0)
+        assertEquals(71.04, wo.dim.height, 0.00000001)
 
     }
 }

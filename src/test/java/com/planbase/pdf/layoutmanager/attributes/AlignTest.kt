@@ -6,20 +6,20 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class AlignTest {
-    val startCoord = Coord(100f, 200f)
-    val outerDim = Dim(17f, 15f)
-    val innerDim = Dim(11f, 13f)
+    val startCoord = Coord(100.0, 200.0)
+    val outerDim = Dim(17.0, 15.0)
+    val innerDim = Dim(11.0, 13.0)
     @Test fun testInnerTopLeft() {
-        assertEquals(Coord(100f, 200f), Align.TOP_LEFT.innerTopLeft(outerDim, innerDim, startCoord))
-        assertEquals(Coord(103f, 200f), Align.TOP_CENTER.innerTopLeft(outerDim, innerDim, startCoord))
-        assertEquals(Coord(106f, 200f), Align.TOP_RIGHT.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(100.0, 200.0), Align.TOP_LEFT.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(103.0, 200.0), Align.TOP_CENTER.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(106.0, 200.0), Align.TOP_RIGHT.innerTopLeft(outerDim, innerDim, startCoord))
 
-        assertEquals(Coord(100f, 199f), Align.MIDDLE_LEFT.innerTopLeft(outerDim, innerDim, startCoord))
-        assertEquals(Coord(103f, 199f), Align.MIDDLE_CENTER.innerTopLeft(outerDim, innerDim, startCoord))
-        assertEquals(Coord(106f, 199f), Align.MIDDLE_RIGHT.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(100.0, 199.0), Align.MIDDLE_LEFT.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(103.0, 199.0), Align.MIDDLE_CENTER.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(106.0, 199.0), Align.MIDDLE_RIGHT.innerTopLeft(outerDim, innerDim, startCoord))
 
-        assertEquals(Coord(100f, 198f), Align.BOTTOM_LEFT.innerTopLeft(outerDim, innerDim, startCoord))
-        assertEquals(Coord(103f, 198f), Align.BOTTOM_CENTER.innerTopLeft(outerDim, innerDim, startCoord))
-        assertEquals(Coord(106f, 198f), Align.BOTTOM_RIGHT.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(100.0, 198.0), Align.BOTTOM_LEFT.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(103.0, 198.0), Align.BOTTOM_CENTER.innerTopLeft(outerDim, innerDim, startCoord))
+        assertEquals(Coord(106.0, 198.0), Align.BOTTOM_RIGHT.innerTopLeft(outerDim, innerDim, startCoord))
     }
 }

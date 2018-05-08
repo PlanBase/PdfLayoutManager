@@ -33,16 +33,16 @@ import org.junit.Test
 import java.io.FileOutputStream
 import kotlin.test.assertEquals
 
-const val twoHundred:Float = 200f
+const val twoHundred:Double = 200.0
 val cellStyle = CellStyle(
-        TOP_LEFT, BoxStyle(Padding(2f),
+        TOP_LEFT, BoxStyle(Padding(2.0),
                            RGB_LIGHT_GREEN,
                            BorderStyle(RGB_DARK_GRAY)))
-val textStyle = TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK)
+val textStyle = TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK)
 val hello = Text(textStyle, "Hello")
 //val helloSpace = Text(textStyle, "Hello ")
 val helloHello = Text(textStyle, "Hello Hello")
-val helloHelloWidth:Float = helloHello.maxWidth() * 0.7f
+val helloHelloWidth:Double = helloHello.maxWidth() * 0.7
 
 class CellTest {
     @Test fun testBasics() {
@@ -64,12 +64,12 @@ class CellTest {
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
 
         val cellStyle = CellStyle(
-                TOP_LEFT, BoxStyle(Padding(2f),
+                TOP_LEFT, BoxStyle(Padding(2.0),
                                    RGB_LIGHT_GREEN,
                                    BorderStyle(RGB_DARK_GRAY)))
-        val theText = Text(TextStyle(PDType1Font.COURIER, 12f, RGB_BLACK), "Line 1")
+        val theText = Text(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK), "Line 1")
 
-        val squareDim = 120f
+        val squareDim = 120.0
 
         val tB = Table()
         val trb: TableRow = tB.addCellWidths(listOf(squareDim))
@@ -92,7 +92,7 @@ class CellTest {
 //        println("lp=$lp")
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 
-        val dim: DimAndPageNums = table.wrap().render(lp, Coord(40f, lp.yBodyTop()))
+        val dim: DimAndPageNums = table.wrap().render(lp, Coord(40.0, lp.yBodyTop()))
 
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")
 //        println("xya=$xya")
@@ -109,30 +109,30 @@ class CellTest {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
         val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
-        val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.1f))
+        val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.1))
 
-        val bulletCell = Cell(CellStyle(TOP_LEFT, BoxStyle(Padding.NO_PADDING, null, testBorderStyle)), 230f,
+        val bulletCell = Cell(CellStyle(TOP_LEFT, BoxStyle(Padding.NO_PADDING, null, testBorderStyle)), 230.0,
                               listOf(Text(BULLET_TEXT_STYLE,
                                           "Some text with a bullet. " +
                                           "Some text with a bullet. " +
                                           "Some text with a bullet. " +
                                           "Some text with a bullet. "),
                                      Cell(CellStyle(TOP_LEFT, BoxStyle(Padding.NO_PADDING, CMYK_LIGHT_GREEN, BorderStyle.NO_BORDERS)),
-                                          203f,
+                                          203.0,
                                           listOf(Text(BULLET_TEXT_STYLE,
                                                       "Subtext is an under and often distinct theme in a piece of writing or convers. " +
                                                       "Subtext is an under and often distinct theme in a piece of writing or convers. " +
                                                       "Subtext is an under and often distinct theme in a piece of writing or convers. ")),
-                                          25f)
+                                          25.0)
                               ))
 
         val wrappedCell: WrappedCell = bulletCell.wrap()
-        TestCase.assertEquals(Dim(230.0f, 124.948f), wrappedCell.dim)
+        Dim.assertEquals(Dim(230.0, 124.948), wrappedCell.dim, 0.0000000001)
 
-        val startCoord = Coord(0f, 140f)
+        val startCoord = Coord(0.0, 140.0)
 
         val after:DimAndPageNums = wrappedCell.render(lp, startCoord)
-        TestCase.assertEquals(Dim(230.0f, 186.23203f), after.dim)
+        Dim.assertEquals(Dim(230.0, 186.23203), after.dim, 0.0001)
 
         pageMgr.commit()
         // We're just going to write to a file.
@@ -147,24 +147,24 @@ class CellTest {
         // default lineHeight.  This test maybe belongs in MultiLineWrapped, but better here than nowhere.
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
-        val symbola7p5 = TextStyle(TIMES_ROMAN, 7.5f, CMYK_BLACK)
-        val contentCell=Cell(CellStyle(TOP_LEFT_JUSTIFY, NO_PAD_NO_BORDER), 170f,
+        val symbola7p5 = TextStyle(TIMES_ROMAN, 7.5, CMYK_BLACK)
+        val contentCell=Cell(CellStyle(TOP_LEFT_JUSTIFY, NO_PAD_NO_BORDER), 170.0,
                              listOf(Text(symbola7p5, "Men often hate each other because they fear each other; they" +
                                                      " fear each other because they don't know each other; they" +
                                                      " don't know each other because they can not communicate;" +
                                                      " they can not communicate "),
-                                    Text(TextStyle(TIMES_BOLD_ITALIC, 7f, CMYK_BLACK, 12f), "because they are separated.")))
+                                    Text(TextStyle(TIMES_BOLD_ITALIC, 7.0, CMYK_BLACK, 12.0), "because they are separated.")))
 
         val wrappedCell: WrappedCell = contentCell.wrap()
-        assertEquals(Dim(170f, 49.4515f), wrappedCell.dim)
+        Dim.assertEquals(Dim(170.0, 49.4515), wrappedCell.dim, 0.00000001)
 
         // Rendered away from the page break, the dimensions are unchanged.
-        val ret1:DimAndPageNums = wrappedCell.render(lp, Coord(40f, 200f))
-        assertEquals(Dim(170f, 49.451508f), ret1.dim)
+        val ret1:DimAndPageNums = wrappedCell.render(lp, Coord(40.0, 200.0))
+        Dim.assertEquals(Dim(170.0, 49.451508), ret1.dim, 0.00001)
 
         // Rendered across the page break, it's bigger.
-        val ret2:DimAndPageNums = wrappedCell.render(lp, Coord(40f, 72f))
-        assertEquals(Dim(170f, 58.65849f), ret2.dim)
+        val ret2:DimAndPageNums = wrappedCell.render(lp, Coord(40.0, 72.0))
+        Dim.assertEquals(Dim(170.0, 58.65849), ret2.dim, 0.00002)
 
         pageMgr.commit()
 //        val os = FileOutputStream("testCellAcrossPageBreak.pdf")
