@@ -38,7 +38,7 @@ class WrappedCellTest {
 //        println(wrappedCell)
 
         kotlin.test.assertEquals(textStyle.lineHeight + cell.cellStyle.boxStyle.topBottomInteriorSp(),
-                                 wrappedCell.lineHeight)
+                                 wrappedCell.dim.height)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
@@ -66,7 +66,7 @@ class WrappedCellTest {
 //        println(wrappedCell)
 
         kotlin.test.assertEquals((textStyle.lineHeight * 3) + cell.cellStyle.boxStyle.topBottomInteriorSp(),
-                                 wrappedCell.lineHeight)
+                                 wrappedCell.dim.height)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)
@@ -108,7 +108,7 @@ class WrappedCellTest {
 //        println("cell.wrap()=${cell.wrap()}")
 
         kotlin.test.assertEquals(textStyle.lineHeight + cell.cellStyle.boxStyle.topBottomInteriorSp(),
-                                 wrappedCell.lineHeight)
+                                 wrappedCell.dim.height)
 
         kotlin.test.assertEquals(cellWidth,
                                  wrappedCell.dim.width)

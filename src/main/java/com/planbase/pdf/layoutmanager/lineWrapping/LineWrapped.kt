@@ -40,8 +40,9 @@ interface LineWrapped {
     /** Depth below the baseline of this line */
 //    val descentAndLeading: Double
 
-    /** Total vertical height this line, both above and below the baseline */
-    val lineHeight: Double
+    // Removed because it entirely duplicated dim.height.
+    // Was "Total vertical height this line, both above and below the baseline"
+//    val lineHeight: Double
 
     /**
      * Sends the underlying object to PDFBox to be drawn.

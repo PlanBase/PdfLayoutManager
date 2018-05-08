@@ -156,7 +156,6 @@ class TextTest {
         val row = ri.item
         assertEquals(tStyle.ascent, row.ascent)
 //        assertEquals(tStyle.descent() + tStyle.leading(), row.descentAndLeading)
-        assertEquals(tStyle.lineHeight, row.lineHeight)
         assertEquals(tStyle.lineHeight, row.dim.height)
         assertEquals(28.250002, row.dim.width, 0.000001)
 
@@ -182,7 +181,6 @@ class TextTest {
         val row = ri.item
         assertEquals(tStyle.ascent, row.ascent)
 //        assertEquals(tStyle.descent() + tStyle.leading(), row.descentAndLeading)
-        assertEquals(tStyle.lineHeight, row.lineHeight)
         assertEquals(tStyle.lineHeight, row.dim.height)
         assertEquals(28.250002, row.dim.width, 0.000001)
 

@@ -59,9 +59,7 @@ data class Text(val textStyle: TextStyle,
                            val string: String,
                            val width: Double = textStyle.stringWidthInDocUnits(string)) : LineWrapped {
 
-        override val lineHeight: Double = textStyle.lineHeight
-
-        override val dim: Dim = Dim(width, lineHeight)
+        override val dim: Dim = Dim(width, textStyle.lineHeight)
 
         override val ascent: Double = textStyle.ascent
 

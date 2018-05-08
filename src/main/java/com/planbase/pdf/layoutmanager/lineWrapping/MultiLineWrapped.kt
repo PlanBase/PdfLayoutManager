@@ -32,7 +32,7 @@ class MultiLineWrapped : LineWrapped {
 
     var width: Double = 0.0
     override var ascent: Double = 0.0
-    override var lineHeight: Double = 0.0
+    internal var lineHeight: Double = 0.0
     internal val items: MutableList<LineWrapped> = mutableListOf()
 
     override val dim: Dim
@@ -44,7 +44,7 @@ class MultiLineWrapped : LineWrapped {
     fun append(fi : LineWrapped): MultiLineWrapped {
         // lineHeight has to be ascent + descentLeading because we align on the baseline
         ascent = maxOf(ascent, fi.ascent)
-        descentLeading = maxOf(descentLeading, fi.lineHeight - fi.ascent)
+        descentLeading = maxOf(descentLeading, fi.dim.height - fi.ascent)
         lineHeight = ascent + descentLeading
         width += fi.dim.width
         items.add(fi)
@@ -81,10 +81,10 @@ class MultiLineWrapped : LineWrapped {
             val innerUpperLeft = Coord(x, y - ascentDiff)
 //            println("ascentDiff=$ascentDiff innerUpperLeft=$innerUpperLeft")
             val dimAndPageNums: DimAndPageNums = item.render(lp, innerUpperLeft, false)
-            val adjustment = dimAndPageNums.dim.height - item.lineHeight
+            val adjustment = dimAndPageNums.dim.height - item.dim.height
 //            println("adjHeight=$adjHeight item.lineHeight=${item.lineHeight} adjustment=$adjustment")
             maxAscentIncPageBreak = maxOf(maxAscentIncPageBreak, item.ascent + adjustment)
-            maxDescentLeading = maxOf(maxDescentLeading, item.lineHeight - item.ascent)
+            maxDescentLeading = maxOf(maxDescentLeading, item.dim.height - item.ascent)
             x += item.dim.width
             pageNums = dimAndPageNums.maxExtents(pageNums)
         }
@@ -228,7 +228,7 @@ private fun addLineCheckBlank(currLine: MultiLineWrapped,
     if (currLine.isEmpty() && wrappedLines.isNotEmpty())  {
         val lastRealItem: LineWrapped = wrappedLines.last().items.last()
         currLine.ascent = lastRealItem.ascent
-        currLine.lineHeight = lastRealItem.lineHeight
+        currLine.lineHeight = lastRealItem.dim.height
     }
     wrappedLines.add(currLine)
 }

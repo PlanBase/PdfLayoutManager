@@ -65,8 +65,6 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
 
         override val ascent: Double = dim.height
 
-        override val lineHeight: Double = dim.height
-
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums =
                 lp.drawImage(topLeft.minusY(dim.height), this, reallyRender)
                         .dimAndPagesFromWidth(dim)

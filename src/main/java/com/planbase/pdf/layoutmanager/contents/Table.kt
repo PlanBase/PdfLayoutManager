@@ -119,8 +119,6 @@ class Table(val cellWidths:MutableList<Double> = mutableListOf(),
     data class WrappedTable(private val parts:List<TablePart.WrappedTablePart>) : LineWrapped {
         override val dim: Dim = Dim.sum(parts.map { part -> part.dim })
         override val ascent: Double = dim.height
-//        override val descentAndLeading: Double = 0.0
-        override val lineHeight: Double = dim.height
 
         /*
          * Renders item and all child-items with given width and returns the x-y pair of the

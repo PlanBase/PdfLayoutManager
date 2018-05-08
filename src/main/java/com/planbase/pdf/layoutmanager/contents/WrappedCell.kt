@@ -40,11 +40,6 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
     override val ascent: Double
         get() = dim.height
 
-//    override val descentAndLeading: Double = 0.0
-
-    override val lineHeight: Double
-        get() = dim.height
-
     override fun toString() = "WrappedCell($dim, $cellStyle, $rows)"
 
     private val wrappedBlockDim: Dim = {
