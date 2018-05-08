@@ -21,12 +21,14 @@ import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
 import junit.framework.TestCase.assertEquals
+import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
 import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.apache.pdfbox.util.Charsets
 import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
@@ -544,11 +546,14 @@ class TestManualllyPdfLayoutMgr {
         // Also, in a web app, you probably want name your action something.pdf and put
         // target="_blank" on your link to the PDF download action.
 
-        // We're just going to write to a file.
-        val os = FileOutputStream("test.pdf")
+        // If we don't set the file identifiers, PDFBox will set them for us.  We only care because we're checking
+        // this into git so that when something breaks, we can easily compare with a known-good file to see how big
+        // a change it is.
+        val docId = COSString("PdfLayoutMgr2 Test/Sample PDF".toByteArray(Charsets.ISO_8859_1))
+        pageMgr.setFileIdentifiers(docId, docId)
 
-        // Commit it to the output stream!
-        pageMgr.save(os)
+        // We're just going to write to a file.
+        pageMgr.save(FileOutputStream("test.pdf"))
     }
 
     companion object {
