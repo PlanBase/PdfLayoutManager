@@ -31,8 +31,8 @@ import java.lang.Math.abs
  */
 data class Dim(val width: Double, val height: Double) {
     init {
-        if (width < 0 || height < 0) {
-            throw IllegalArgumentException("Dimensions must be positive: width=width height=height")
+        if (width < 0.0 || height < 0.0) {
+            throw IllegalArgumentException("Dimensions must be positive: width=$width height=$height")
         }
     }
 

@@ -31,7 +31,6 @@ import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 
-// TODO: This should be a private inner class of Cell
 class WrappedCell(override val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
                   private val rows: List<MultiLineWrapped>,
@@ -89,7 +88,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             tempTopLeft.minusY(adj)
         }
 
-//        println("render($topLeft, $height, $reallyRender)")
+//        println("topLeft=$topLeft")
 //        println("  cellStyle=$cellStyle")
         val boxStyle = cellStyle.boxStyle
         val border = boxStyle.border
@@ -121,7 +120,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
                                          } else {
                                              0.0
                                          })
-//            println("thisLineHeight=$thisLineHeight")
+//            println("dimAndPages.dim.height=${dimAndPages.dim.height}")
             y -= dimAndPages.dim.height // y is always the lowest row in the cell.
             pageNums = dimAndPages.maxExtents(pageNums)
         }

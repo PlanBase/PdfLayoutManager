@@ -143,6 +143,8 @@ class SinglePage(val pageNum: Int,
      */
     override fun pageBreakingTopMargin(bottomY: Double, height: Double, requiredSpaceBelow: Double):Double = 0.0
 
+    override fun pageNumFor(y: Double): Int = pageNum
+
     @Throws(IOException::class)
     fun commit(stream: PDPageContentStream) {
         // Since items are z-ordered, then sub-ordered by entry-order, we will draw

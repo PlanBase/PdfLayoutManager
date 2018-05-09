@@ -161,4 +161,9 @@ interface RenderTarget {
      * of the next page.
      */
     fun pageBreakingTopMargin(bottomY: Double, height: Double, requiredSpaceBelow: Double): Double
+
+    /**
+     * Returns the correct page for the given Y value but MAY ACTUALLY ADD THAT PAGE, so only call if really rendering
+     */
+    fun pageNumFor(y:Double):Int
 }

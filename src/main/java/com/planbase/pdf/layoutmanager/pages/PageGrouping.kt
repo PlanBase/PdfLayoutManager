@@ -372,6 +372,10 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     fun pageForCursor():SinglePage =
             appropriatePage(cursorY, 0.0, 0.0).pb
 
+    // TODO: Make this calculate the page number without creating the page!
+    override fun pageNumFor(y:Double):Int =
+            appropriatePage(y, 0.0, 0.0).pb.pageNum
+
     /**
      * Add LineWrapped items directly to the page grouping at the current cursor.
      * The cursor is always at the left-hand side of the body at the bottom of the last item put on the page.

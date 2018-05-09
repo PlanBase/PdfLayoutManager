@@ -2,9 +2,11 @@ package com.planbase.pdf.layoutmanager.lineWrapping
 
 //import kotlin.test.assertEquals
 import TestManual2.Companion.BULLET_TEXT_STYLE
+import TestManual2.Companion.a6PortraitBody
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
@@ -14,12 +16,17 @@ import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import org.apache.pdfbox.pdmodel.common.PDRectangle.*
+import junit.framework.TestCase
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.FileOutputStream
+import kotlin.math.nextDown
 import kotlin.test.assertTrue
 
 class MultiLineWrappedTest {
@@ -211,4 +218,120 @@ class MultiLineWrappedTest {
 //        println("\nwrapped2: $wrapped2")
         assertEquals(2, wrapped2.size)
     }
+
+    // Here's what this test looks like with approximate boxes around each font:
+    //            _____________________________________________________ _____________________________________
+    //       ^ ^ |  ____  _                                     _      |/ ^ / / / / / / / / / / / / / / / / /|
+    //       | | | |  _ \(_)           /\                      | |     |  | 15.709 difference in ascent. / / |
+    // ascent| | | | |_) |_  __ _     /  \   ___  ___ ___ _ __ | |_    |/ v / / / / / / / / / / / / / / / / /|
+    // 20.49 | | | |  _ <| |/ _` |   / /\ \ / __|/ __/ _ \ '_ \| __|   |--_-----------_----------------------| ^ ^ascent
+    //       | | | | |_) | | (_| |  / ____ \\__ \ (_|  __/ | | | |_ _  | |_) .  _    | \ _  _  _  _ __ _|_   | | |4.781
+    //       v | |_|____/|_|\__, |_/_/____\_\___/\___\___|_|_|_|\__(_)_|_|_)_|_(_|___|_/(/_ > (_ (/_| | |_ ._| | v
+    //   lineHt| |           __/ |                                   ^ |       __|                         ^ | |
+    //   33.48 | |          |___/                    descent = 12.99 v |                                   | | |
+    //         v |_____________________________________________________|                                   | | | lineHt
+    //           |/ / / / / / / / / / / / / / / / / / / / / / / / /  ^ |                                   | | | 40.0
+    //           | / / / / / / / / / / / / / / / / / / / / / / / / / | |                  descent = 35.219 | | |
+    //           |/ / / / / / / / / / / / / / / / / / / / / / / / /  | |                                   | | |
+    //           | / / / / / / / / /  difference in descent = 22.229 | |                                   | | |
+    //           |/ / / / / / / / / / / / / / / / / / / / / / / / /  | |                                   | | |
+    //           | / / / / / / / / / / / / / / / / / / / / / / / / / v |                                   v | v
+    //           +-----------------------------------------------------+-------------------------------------+
+    //
+    // Notice:
+    //  - The two sections of text are aligned exactly on their baseline.
+    //  - The first takes up more space above the baseline by virtue of bing a bigger font.
+    //  - The second takes up more space below due to a very large lineHeight value.
+    //
+    // Raison D'être:
+    // This all works dandy when line-wrapped and rendered mid-page.  The problem came at the page break where the
+    // "Big Descent" text ended up top-aligned - wrong!  Also the height with the page break should be approximately
+    // double the total height (2 * 55.709 = 111.418), but it's returning an even 80.0.
+    @Test fun testPageBreakingDiffAscentDescent() {
+        val topHeavy = TextStyle(PDType1Font.TIMES_ROMAN, 30.0, CMYK_BLACK)
+
+        // Verify our font metrics to ensure a careful and accurate test.
+        TestCase.assertEquals(20.49, topHeavy.ascent)
+        TestCase.assertEquals(33.48, topHeavy.lineHeight)
+
+        val bottomHeavy = TextStyle(PDType1Font.TIMES_ITALIC, 7.0, CMYK_BLACK, 40.0) // ascent=4.781   lineHeight=12
+
+        TestCase.assertEquals(4.781, bottomHeavy.ascent)
+        TestCase.assertEquals(40.0, bottomHeavy.lineHeight)
+
+        // We expect the ascent to equal the biggest ascent which is topHeavy.ascent = 20.49.
+        // We expect the descent to equal the biggest descent which is
+        // bottomHeavy.lineHeight - bottomHeavy.ascent = 35.219
+        val biggerDescent = bottomHeavy.lineHeight - bottomHeavy.ascent
+        TestCase.assertEquals(35.219, biggerDescent)
+
+        // So the total line height is the maxAscent + maxDescent = topHeavy.ascent + biggerDescent = 55.709
+        val combinedLineHeight = topHeavy.ascent + biggerDescent
+        TestCase.assertEquals(55.709, combinedLineHeight)
+
+        val multi = MultiLineWrapped(mutableListOf(WrappedText(topHeavy, "Big ascent."),
+                                                   WrappedText(bottomHeavy, "Big descent.")))
+
+        println("multi=$multi")
+//        width=167.536, ascent=20.49, lineHeight=55.709,
+        val multiWidth = multi.width
+        println("multiWidth=$multiWidth")
+
+        // The bold-italic text showed on the wrong page because the last line wasn't being dealt with as a unit.
+        // A total line height is now calculated for the entire MultiLineWrapped when later inline text has a surprising
+        // default lineHeight.  This test maybe belongs in MultiLineWrapped, but better here than nowhere.
+        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
+        val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
+
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), multi.dim, 0.0)
+
+        var ret1:DimAndPageNums
+
+        // Rendered away from the page break, the dimensions are unchanged.
+        ret1 = lp.add(Coord(0.0, 300.0), multi)
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
+        assertEquals(300.0 - combinedLineHeight, lp.cursorY, 0.000001)
+
+        ret1 = multi.render(lp, Coord(0.0, 200.0))
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
+
+        // This doesn't show up in the output, just going to walk closer and closer to the edge of the page
+        // without going over.
+        ret1 = multi.render(lp, Coord(0.0, 100.0), reallyRender = false)
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
+
+        val breakPoint: Double = lp.yBodyBottom + combinedLineHeight
+
+        ret1 = multi.render(lp, Coord(0.0, breakPoint + 1.0),
+                                  reallyRender = false)
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
+
+        ret1 = multi.render(lp, Coord(0.0, breakPoint + 0.0001),
+                                  reallyRender = false)
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
+
+        ret1 = multi.render(lp, Coord(0.0, breakPoint + 0.0000001),
+                                  reallyRender = false)
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
+
+        ret1 = multi.render(lp, Coord(0.0, breakPoint),
+                                  reallyRender = false)
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
+
+        println("breakPoint=$breakPoint")
+        ret1 = multi.render(lp, Coord(0.0, breakPoint.nextDown()),
+                            reallyRender = true)
+
+        // My theory is that we need an adjustment that pushes *both* halves of the line onto the next page and
+        // that they should still be aligned on a common baseline once they get there.
+        // What was actually happening was that they both go to the next page, but they are top-aligned there,
+        // and the amount that pushes them there is 80.0 instead of 111.418.
+        // So, 80.0 - 55.709 = 24.291
+        Dim.assertEquals(Dim(multiWidth, combinedLineHeight * 2.0), ret1.dim, 0.0)
+
+        pageMgr.commit()
+
+//        pageMgr.save(FileOutputStream("testPgBrkDiffAscDesc.pdf"))
+    }
+
 }

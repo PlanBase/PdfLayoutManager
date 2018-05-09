@@ -280,33 +280,52 @@ class PageGroupingTest {
 
         pageMgr.commit()
 
-//        val os = FileOutputStream("testPageBreakingTopMargin.pdf")
-//        pageMgr.save(os)
+        pageMgr.save(FileOutputStream("testPageBreakingTopMargin.pdf"))
     }
 
+    // One thing this tests is cell-padding across a page break.
     @Test fun testPageBreakWithInlineNearBottom() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val bodyWidth = PDRectangle.A6.width - 80.0
         val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
 
+        // Full disclosure: The text here says, "supposed to span the page break" when in fact the whole inner
+        // paragraph is supposed to end up on the next page.
+        val innerCell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2.0), null, BorderStyle.NO_BORDERS)),
+                             bodyWidth - 6.0,
+                             listOf(Text(BULLET_TEXT_STYLE,
+                                         "This paragraph is too long to fit on a single page.  " +
+                                         "This paragraph is too long to fit on a single page.  "),
+                                    Text(TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 12.0, CMYK_BLACK),
+                                         "It may go to the next page.")))
+
         val cell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2.0), null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))),
                         bodyWidth,
                         listOf(Text(BULLET_TEXT_STYLE,
                                     ("Some stuff.")),
-                               Cell(CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2.0), null, BorderStyle.NO_BORDERS)),
-                                    bodyWidth - 6.0,
-                                    listOf(Text(BULLET_TEXT_STYLE,
-                                                "This paragraph is too long to fit on a single page.  " +
-                                                        "This paragraph is too long to fit on a single page.  "),
-                                           Text(TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 12.0, CMYK_BLACK),
-                                                "This is supposed to span the page break.")))))
+                               innerCell))
         val wrappedCell = cell.wrap()
-        Dim.assertEquals(Dim(217.63782, 78.276), wrappedCell.dim, 0.00001)
+        Dim.assertEquals(Dim(217.637817, 78.276), wrappedCell.dim, 0.000001)
 
-        // This is not a great test because I'm not sure this feature is really meant to work blocks that cross
-        // multiple pages.  In fact, it looks pretty bad for those blocks.
-        val finalDaP: DimAndPageNums = wrappedCell.render(lp, Coord(40.0, 110.0))
-        Dim.assertEquals(Dim(217.637817, 87.28), finalDaP.dim, 0.000001)
+        var dap: DimAndPageNums = wrappedCell.render(lp, Coord(40.0, 210.0), reallyRender = true)
+        Dim.assertEquals(wrappedCell.dim, dap.dim, 0.0)
+
+        dap = wrappedCell.render(lp, Coord(40.0, lp.yBodyBottom + wrappedCell.dim.height), reallyRender = false)
+        Dim.assertEquals(wrappedCell.dim, dap.dim, 0.0)
+
+        // There is a 2.0 padding on the bottom, so we don't get onto the next page until that's used up.
+        val justFitsY = (lp.yBodyBottom + wrappedCell.dim.height) - wrappedCell.cellStyle.boxStyle.interiorSpaceBottom()
+
+        dap = wrappedCell.render(lp, Coord(40.0, justFitsY), reallyRender = false)
+        Dim.assertEquals(wrappedCell.dim, dap.dim, 0.0)
+
+        val innerCellHeight = innerCell.wrap().dim.height
+        val topPartHeight = wrappedCell.dim.height - innerCellHeight
+        val expectedHeight = (topPartHeight + (innerCellHeight * 2)) -
+                             wrappedCell.cellStyle.boxStyle.interiorSpaceBottom()
+
+        dap = wrappedCell.render(lp, Coord(40.0, justFitsY.nextDown().nextDown()), reallyRender = true)
+        Dim.assertEquals(wrappedCell.dim.withHeight(expectedHeight), dap.dim, 0.00000001)
 
         pageMgr.commit()
 

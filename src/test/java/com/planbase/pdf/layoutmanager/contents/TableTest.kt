@@ -25,7 +25,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
-import java.io.FileOutputStream
+import kotlin.math.nextUp
 
 class TableTest {
     @Test fun testSingleCell() {
@@ -156,7 +156,18 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
         val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
-        val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.1))
+        val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.0.nextUp().nextUp()))
+
+        val innerTable = Table().addCellWidths(230.0)
+                .partBuilder()
+                .rowBuilder()
+                .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER),
+                      listOf(Text(BULLET_TEXT_STYLE,
+                                  "Subtext is an under and often distinct theme in a piece of writing or convers. " +
+                                  "Subtext is an under and often distinct theme in a piece of writing or convers. " +
+                                  "Subtext is an under and often distinct theme in a piece of writing or convers. ")))
+                .buildRow()
+                .buildPart()
 
         val bulletTable: Table = Table().addCellWidths(230.0)
                 .partBuilder()
@@ -167,33 +178,33 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                                   "Some text with a bullet. " +
                                   "Some text with a bullet. " +
                                   "Some text with a bullet. "),
-                             Table().addCellWidths(230.0)
-                                     .partBuilder()
-                                     .rowBuilder()
-                                     .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER),
-                                           listOf(Text(BULLET_TEXT_STYLE,
-                                                       "Subtext is an under and often distinct theme in a piece of writing or convers. " +
-                                                       "Subtext is an under and often distinct theme in a piece of writing or convers. " +
-                                                       "Subtext is an under and often distinct theme in a piece of writing or convers. ")))
-                                     .buildRow()
-                                     .buildPart()
-                      ))
+                             innerTable))
                 .buildRow()
                 .buildPart()
 
         val wrappedTable: Table.WrappedTable = bulletTable.wrap()
-        Dim.assertEquals(Dim(230.0, 124.948), wrappedTable.dim, 0.00000001)
+        Dim.assertEquals(Dim(230.0, 124.848), wrappedTable.dim, 0.0)
 
-        val startCoord = Coord(0.0, 140.0)
+        val outerTableHeight = wrappedTable.dim.height
 
-        val after:DimAndPageNums = wrappedTable.render(lp, startCoord)
-        Dim.assertEquals(Dim(230.0, 130.74399), after.dim, 0.001)
+        val breakingY = (lp.yBodyBottom + outerTableHeight)
+
+        var after:DimAndPageNums = wrappedTable.render(lp, Coord(0.0, breakingY.nextUp()), reallyRender = false)
+        Dim.assertEquals(Dim(230.0, outerTableHeight), after.dim, 0.0)
+        assertEquals(1..1, after.pageNums)
+
+        after = wrappedTable.render(lp, Coord(0.0, breakingY), reallyRender = true)
+
+        val innerTableHeight:Double = innerTable.wrap().dim.height
+        val tableHeightDiff = outerTableHeight - innerTableHeight
+
+        Dim.assertEquals(Dim(230.0, tableHeightDiff + (innerTableHeight * 2)), after.dim, 0.00000001)
+        assertEquals(1..2, after.pageNums)
 
         pageMgr.commit()
+
         // We're just going to write to a file.
-        val os = FileOutputStream("testNestedTablesAcrossPageBreak.pdf")
-        // Commit it to the output stream!
-        pageMgr.save(os)
+//        pageMgr.save(FileOutputStream("testNestedTablesAcrossPageBreak.pdf"))
     }
 
     @Test fun testToString() {

@@ -25,15 +25,20 @@ import com.planbase.pdf.layoutmanager.contents.WrappedText
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
+import kotlin.math.nextUp
 
 // TODO: Rename to MultiItemWrappedLine?
 /** A mutable data structure to hold a single wrapped line consisting of multiple items. */
-class MultiLineWrapped : LineWrapped {
-
+class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
+    constructor() : this(listOf())
     var width: Double = 0.0
     override var ascent: Double = 0.0
     internal var lineHeight: Double = 0.0
     internal val items: MutableList<LineWrapped> = mutableListOf()
+
+    init {
+        tempItems?.forEach { append(it) }
+    }
 
     override val dim: Dim
             get() = Dim(width, lineHeight)
@@ -52,42 +57,16 @@ class MultiLineWrapped : LineWrapped {
     }
 
     fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Double): DimAndPageNums {
+//        println("  MultiLineWrapped.render(${lp.javaClass.simpleName}, $topLeft, reallyRender=$reallyRender, $justifyWidth=justifyWidth)")
         var x: Double = topLeft.x
-        val y = topLeft.y
-        // lineHeight has to be ascent + descentLeading because we align on the baseline
-        var maxAscentIncPageBreak = ascent
-        var maxDescentLeading = lineHeight - ascent
-        var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
 
-        // Go through each wrapped item in this line in case any single item (especially later in this line)
-        // should push the whole line onto the next page.
-        for (item: LineWrapped in items) {
-            // Text rendering calculation spot 2/3
-            // ascent is the maximum ascent for anything on this line.
-            //               _____
-            //          /   |     \        \
-            //         |    |      \        |
-            // (max)   |    |      |         > ascentDiff
-            // ascent <     |_____/         |
-            //         |    |     \     _  /
-            //         |    |      \   |_)
-            //          \. .|. . . .\. | \. . . .
-            //                          ^item
-            //
-            // Subtracting that from the top-y
-            // yields the baseline, which is what we want to align on.
-//            println("y=$y ascent=$ascent item=${item}")
-            val ascentDiff = ascent - item.ascent
-            val innerUpperLeft = Coord(x, y - ascentDiff)
-//            println("ascentDiff=$ascentDiff innerUpperLeft=$innerUpperLeft")
-            val dimAndPageNums: DimAndPageNums = item.render(lp, innerUpperLeft, false)
-            val adjustment = dimAndPageNums.dim.height - item.dim.height
-//            println("adjHeight=$adjHeight item.lineHeight=${item.lineHeight} adjustment=$adjustment")
-            maxAscentIncPageBreak = maxOf(maxAscentIncPageBreak, item.ascent + adjustment)
-            maxDescentLeading = maxOf(maxDescentLeading, item.dim.height - item.ascent)
-            x += item.dim.width
-            pageNums = dimAndPageNums.maxExtents(pageNums)
-        }
+        // Note that I'm using height.nextUp() so that if there's a rounding error, our whole line gets thrown to
+        // the next page, not just the line-fragment with the highest ascent.
+        val adj = lp.pageBreakingTopMargin(topLeft.y - dim.height, dim.height.nextUp(), 0.0)
+//        println("  adj=$adj")
+        val y = if (adj == 0.0) { topLeft.y } else { topLeft.y - adj }
+
+        var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
 
         if (reallyRender) {
             var tempItems = items
@@ -115,15 +94,35 @@ class MultiLineWrapped : LineWrapped {
             x = topLeft.x
             // Now that we've accounted for anything on the line that could cause a page-break,
             // really render each wrapped item in this line
+            //
+            // Text rendering calculation spot 2/3
+            // ascent is the maximum ascent for anything on this line.
+            //               _____
+            //          /   |     \        \
+            //         |    |      \        |
+            // (max)   |    |      |         > ascentDiff
+            // ascent <     |_____/         |
+            //         |    |     \     _  /
+            //         |    |      \   |_)
+            //          \. .|. . . .\. | \. . . .
+            //                          ^item
+            //
+            // Subtracting that from the top-y
+            // yields the baseline, which is what we want to align on.
             for (item: LineWrapped in tempItems) {
-                val ascentDiff = maxAscentIncPageBreak - item.ascent
+                val ascentDiff = ascent - item.ascent
+//                println("  item=$item, ascentDiff=$ascentDiff")
                 val innerUpperLeft = Coord(x, y - ascentDiff)
-                item.render(lp, innerUpperLeft, true)
+                val dimAndPageNums: DimAndPageNums = item.render(lp, innerUpperLeft, true)
                 x += item.dim.width
+                pageNums = dimAndPageNums.maxExtents(pageNums)
             }
+        } else {
+            pageNums = lp.pageNumFor(y) .. lp.pageNumFor(y - dim.height)
+            x = topLeft.x + dim.width
         }
 
-        return DimAndPageNums(Dim(x - topLeft.x, maxAscentIncPageBreak + maxDescentLeading), pageNums)
+        return DimAndPageNums(Dim(x - topLeft.x, (topLeft.y - y) + dim.height), pageNums)
     } // end fun render()
 
     override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums
@@ -161,7 +160,7 @@ For each renderable
  */
 fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<MultiLineWrapped> {
     if (maxWidth < 0) {
-        throw IllegalArgumentException("maxWidth must be >= 0, not " + maxWidth)
+        throw IllegalArgumentException("maxWidth must be >= 0, not $maxWidth")
     }
 
     // These are lines consisting of multiple (line-wrapped) items.
