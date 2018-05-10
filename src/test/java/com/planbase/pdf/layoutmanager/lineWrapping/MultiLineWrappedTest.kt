@@ -272,10 +272,10 @@ class MultiLineWrappedTest {
         val multi = MultiLineWrapped(mutableListOf(WrappedText(topHeavy, "Big ascent."),
                                                    WrappedText(bottomHeavy, "Big descent.")))
 
-        println("multi=$multi")
+//        println("multi=$multi")
 //        width=167.536, ascent=20.49, lineHeight=55.709,
         val multiWidth = multi.width
-        println("multiWidth=$multiWidth")
+//        println("multiWidth=$multiWidth")
 
         // The bold-italic text showed on the wrong page because the last line wasn't being dealt with as a unit.
         // A total line height is now calculated for the entire MultiLineWrapped when later inline text has a surprising
@@ -318,7 +318,7 @@ class MultiLineWrappedTest {
                                   reallyRender = false)
         Dim.assertEquals(Dim(multiWidth, combinedLineHeight), ret1.dim, 0.0)
 
-        println("breakPoint=$breakPoint")
+//        println("breakPoint=$breakPoint")
         ret1 = multi.render(lp, Coord(0.0, breakPoint.nextDown()),
                             reallyRender = true)
 

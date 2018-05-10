@@ -1,24 +1,29 @@
 # Changelog
 
-# 2018-05-08
+Bigger headings mean more stable releases!
+
+###### *DO NOT USE YET* 2.1.0 2018-05-08 "Double Precision"
  - Changed all Floats to Doubles
- - Aded PdfLayoutMgr.getFileIdentifiers() and .setFileIdentifiers()
- - Added handwriting font
+ - Aded PdfLayoutMgr.getFileIdentifiers() and .setFileIdentifiers() to set ID manually for each file.
  - Started saving PDF files so that we can see differences.
  - Changed PageGrouping.appendCell() to take an x-offset as the first parameter (usually set to zero)
  - Removed LineWrapped.lineHeight because it entirely duplicated .dim.height.
  - Renamed Coord.x() .y() to .withX() and .withY() and Dim.width() .height() to .withWidth() and .withHeight() because it's clearer.
  - Made WrappedText a top-level class like WrappedCell.
+ - Added handwriting font to Alice test.
 
 Upgrade Instructions
 ```
-Replace Regex to fix any float literals without a decimal point:
-([0-9]+)f
-$1.0
+YOU MUST MANUALLY ACCEPT EACH CHANGE!
+Colors still use floats and your code may use floats for other reasons!
 
 Replace Regex fix float literals with a decimal point:
 ([0-9]+)[.]([0-9]+)f
 $1.$2
+
+Replace Regex to fix any float literals without a decimal point:
+([0-9]+)f
+$1.0
 
 Replace Words:
 Float
