@@ -33,7 +33,7 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 
 class WrappedCell(override val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
-                  private val rows: List<MultiLineWrapped>,
+                  private val rows: List<LineWrapped>,
                   private val requiredSpaceBelow : Double) : LineWrapped {
 
     override val ascent: Double
@@ -55,7 +55,8 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         Dim(width, height)
     }()
 
-    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums =
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean,
+                        justifyWidth:Double): DimAndPageNums =
             renderCustom(lp, topLeft, dim.height, reallyRender)
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.

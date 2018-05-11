@@ -25,7 +25,6 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.FileOutputStream
 import kotlin.math.nextDown
 import kotlin.test.assertTrue
 
@@ -80,14 +79,18 @@ class MultiLineWrappedTest {
 
 //    @Ignore
 
-    fun verifyLine(line: MultiLineWrapped, lineHeight:Double, maxWidth:Double, text:String) {
+    fun verifyLine(line: LineWrapped, lineHeight:Double, maxWidth:Double, text:String) {
 //        println("line: " + line)
         assertEquals(lineHeight, line.dim.height, floatCloseEnough)
-        assertTrue(line.width < maxWidth)
+        assertTrue(line.dim.width < maxWidth)
         assertEquals(text,
-                     line.items
+                     line.items()
                              .fold(StringBuilder(),
-                                   {acc, item -> acc.append((item as WrappedText).string)})
+                                   {acc, item -> if (item is WrappedText) {
+                                       acc.append(item.string)
+                                   } else {
+                                       acc
+                                   }})
                              .toString())
     }
 
@@ -99,7 +102,7 @@ class MultiLineWrappedTest {
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 60.0
 
-        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
+        val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
 //        println(wrappedLines)
 
         assertEquals(3, wrappedLines.size)
@@ -119,7 +122,7 @@ class MultiLineWrappedTest {
         val txt3 = Text(tStyle1, "world! This is great stuff.")
         val maxWidth = 90.0
 
-        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
+        val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1, txt2, txt3), maxWidth)
 //        println(wrappedLines)
 
         assertEquals(2, wrappedLines.size)
@@ -134,7 +137,7 @@ class MultiLineWrappedTest {
         val txt1 = Text(tStyle1, "Hello there world! This is great stuff.")
         val maxWidth = 300.0
 
-        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+        val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
 
         assertEquals(1, wrappedLines.size)
@@ -150,7 +153,7 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300.0
 
-        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+        val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
 
         assertEquals(3, wrappedLines.size)
@@ -167,7 +170,7 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300.0
 
-        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+        val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
 
         assertEquals(4, wrappedLines.size)
@@ -188,7 +191,7 @@ class MultiLineWrappedTest {
         // So we know the line breaks are due to the \n characters.
         val maxWidth = 300.0
 
-        val wrappedLines: List<MultiLineWrapped> = wrapLines(listOf(txt1), maxWidth)
+        val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1), maxWidth)
 //        println(wrappedLines)
 
         assertEquals(8, wrappedLines.size)
@@ -214,7 +217,7 @@ class MultiLineWrappedTest {
         val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
         assertEquals(214.104, text.maxWidth(), 0.0)
 
-        val wrapped2:List<MultiLineWrapped> = wrapLines(listOf(text), 213.0) //212.63782)
+        val wrapped2:List<LineWrapped> = wrapLines(listOf(text), 213.0) //212.63782)
 //        println("\nwrapped2: $wrapped2")
         assertEquals(2, wrapped2.size)
     }

@@ -23,6 +23,7 @@ package com.planbase.pdf.layoutmanager.contents
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
@@ -71,8 +72,8 @@ data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
 
     fun wrap() : WrappedCell {
 //        println("Wrapping: $this")
-        val fixedLines: List<MultiLineWrapped> = wrapLines(contents,
-                                                           width - cellStyle.boxStyle.leftRightInteriorSp())
+        val fixedLines: List<LineWrapped> = wrapLines(contents,
+                                                      width - cellStyle.boxStyle.leftRightInteriorSp())
 //        var maxWidth = cellStyle.boxStyle.leftRightThickness()
         var height = cellStyle.boxStyle.topBottomInteriorSp()
 

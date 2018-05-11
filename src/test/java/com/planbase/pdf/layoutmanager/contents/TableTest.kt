@@ -25,6 +25,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
+import java.io.FileOutputStream
 import kotlin.math.nextUp
 
 class TableTest {
@@ -195,16 +196,20 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
 
         after = wrappedTable.render(lp, Coord(0.0, breakingY), reallyRender = true)
 
-        val innerTableHeight:Double = innerTable.wrap().dim.height
-        val tableHeightDiff = outerTableHeight - innerTableHeight
+//        val innerTableHeight:Double = innerTable.wrap().dim.height
+//        val tableHeightDiff = outerTableHeight - innerTableHeight
 
-        Dim.assertEquals(Dim(230.0, tableHeightDiff + (innerTableHeight * 2)), after.dim, 0.00000001)
+        // Now that this actually breaks across the page, this calculation is wrong!
+//        Dim.assertEquals(Dim(230.0, tableHeightDiff + (innerTableHeight * 2)), after.dim, 0.00000001)
         assertEquals(1..2, after.pageNums)
+        // Note that when we turn on widow prevention this whole test will be invalid unless we shift the page break
+        // up a few rows.
+        Dim.assertEquals(Dim(230.0, 138.72), after.dim, 0.00000001)
 
         pageMgr.commit()
 
         // We're just going to write to a file.
-//        pageMgr.save(FileOutputStream("testNestedTablesAcrossPageBreak.pdf"))
+        pageMgr.save(FileOutputStream("testNestedTablesAcrossPageBreak.pdf"))
     }
 
     @Test fun testToString() {

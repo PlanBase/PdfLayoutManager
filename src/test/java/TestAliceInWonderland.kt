@@ -178,8 +178,11 @@ class TestAliceInWonderland {
 
         dap = lp.appendCell(0.0, bodyCellStyle,
                             listOf(Text(thought,
-                                        "Oh dear, what nonsense I’m talking!\n\n"),
-                                   Text(bodyText,
+                                        "Oh dear, what nonsense I’m talking!")))
+        assertEquals(IntRange(4, 4), dap.pageNums)
+
+        dap = lp.appendCell(0.0, bodyCellStyle,
+                            listOf(Text(bodyText,
                                         "Just then her head struck against the roof of the hall: in fact she was" +
                                         " now more than nine feet high, and she at once took up the little golden" +
                                         " key and hurried off to the garden door....")))

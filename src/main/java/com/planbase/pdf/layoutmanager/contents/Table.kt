@@ -124,7 +124,8 @@ class Table(val cellWidths:MutableList<Double> = mutableListOf(),
          * Renders item and all child-items with given width and returns the x-y pair of the
          * lower-right-hand corner of the last line (e.g. of text).
          */
-        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums {
+        override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean,
+                            justifyWidth:Double): DimAndPageNums {
             var y = topLeft.y
             var maxWidth = 0.0
             var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE

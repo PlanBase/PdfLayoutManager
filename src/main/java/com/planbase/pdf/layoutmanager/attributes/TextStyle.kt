@@ -83,6 +83,9 @@ data class TextStyle(val font: PDFont,    // Tf
     // default leading.
     val ascent = font.fontDescriptor.ascent * fontSize / 1000.0
 
+    fun withCharWordSpacing(cSpace: Double, wSpace:Double) =
+            TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing + cSpace, wSpace)
+
     fun withWordSpacing(spacing: Double) =
             TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing, spacing)
 

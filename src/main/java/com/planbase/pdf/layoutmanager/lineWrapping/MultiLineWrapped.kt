@@ -30,7 +30,7 @@ import kotlin.math.nextUp
 // TODO: Rename to MultiItemWrappedLine?
 /** A mutable data structure to hold a single wrapped line consisting of multiple items. */
 class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
-    constructor() : this(listOf())
+    constructor() : this(null)
     var width: Double = 0.0
     override var ascent: Double = 0.0
     internal var lineHeight: Double = 0.0
@@ -42,6 +42,8 @@ class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
 
     override val dim: Dim
             get() = Dim(width, lineHeight)
+
+    override fun items():List<LineWrapped> = items
 
     private var descentLeading = lineHeight - ascent
 
@@ -56,9 +58,9 @@ class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
         return this
     }
 
-    fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Double): DimAndPageNums {
+    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean, justifyWidth: Double): DimAndPageNums {
+//        println("this=$this")
 //        println("  MultiLineWrapped.render(${lp.javaClass.simpleName}, $topLeft, reallyRender=$reallyRender, $justifyWidth=justifyWidth)")
-        var x: Double = topLeft.x
 
         // Note that I'm using height.nextUp() so that if there's a rounding error, our whole line gets thrown to
         // the next page, not just the line-fragment with the highest ascent.
@@ -67,18 +69,20 @@ class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
         val y = if (adj == 0.0) { topLeft.y } else { topLeft.y - adj }
 
         var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
+        var x: Double = topLeft.x
 
         if (reallyRender) {
             var tempItems = items
 
+            // Text justification calculation 2/2
             // Do we need to justify text?
             if (justifyWidth > 0.0) {
-                val contentWidth: Double = x - topLeft.x
+                val contentWidth: Double = dim.width
                 // Justified text only looks good if the line is long enough.
                 if (contentWidth > justifyWidth * 0.75) {
                     val numSpaces: Int = items
                             .filter{ it is WrappedText }
-                            .sumBy{ (it as WrappedText).numSpaces() }
+                            .sumBy{ (it as WrappedText).numSpaces }
                     val wordSpacing = (justifyWidth - contentWidth) / numSpaces
                     tempItems = items.map {
                         if (it is WrappedText) {
@@ -90,8 +94,6 @@ class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
                 }
             }
 
-            // Reset x to left-hand side of line.
-            x = topLeft.x
             // Now that we've accounted for anything on the line that could cause a page-break,
             // really render each wrapped item in this line
             //
@@ -125,9 +127,6 @@ class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
         return DimAndPageNums(Dim(x - topLeft.x, (topLeft.y - y) + dim.height), pageNums)
     } // end fun render()
 
-    override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean): DimAndPageNums
-            = render(lp, topLeft, reallyRender, 0.0)
-
     override fun toString(): String {
         return "MultiLineWrapped(width=$width, ascent=$ascent, lineHeight=$lineHeight," +
                " items=\n" +
@@ -158,13 +157,13 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
-fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<MultiLineWrapped> {
+fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrapped> {
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not $maxWidth")
     }
 
     // These are lines consisting of multiple (line-wrapped) items.
-    val wrappedLines: MutableList<MultiLineWrapped> = mutableListOf()
+    val wrappedLines: MutableList<LineWrapped> = mutableListOf()
 
     // This is the current line we're working on.
     var currLine = MultiLineWrapped() // Is this right, putting no source here?
@@ -222,12 +221,15 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<MultiLin
 }
 
 private fun addLineCheckBlank(currLine: MultiLineWrapped,
-                              wrappedLines: MutableList<MultiLineWrapped>) {
+                              wrappedLines: MutableList<LineWrapped>) {
     // If this item is a blank line, take the height from the previous item (if there is one).
     if (currLine.isEmpty() && wrappedLines.isNotEmpty())  {
-        val lastRealItem: LineWrapped = wrappedLines.last().items.last()
-        currLine.ascent = lastRealItem.ascent
-        currLine.lineHeight = lastRealItem.dim.height
+        val lastRealItem: LineWrapped = wrappedLines.last().items().last()
+        wrappedLines.add(BlankLineWrapped(Dim(0.0, lastRealItem.dim.height), lastRealItem.ascent))
+    } else if (currLine.items.size == 1) {
+        // Don't add a MultilineWrapped if we can just add a single wrapped thing.
+        wrappedLines.add(currLine.items[0])
+    } else {
+        wrappedLines.add(currLine)
     }
-    wrappedLines.add(currLine)
 }
