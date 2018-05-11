@@ -112,7 +112,8 @@ class TableRow(private val tablePart: TablePart) {
             for (fixedCell in fixedCells) {
 //                println("    beforeRender height=${fixedCell.dim.height}")
                 val dimAndPageNums: DimAndPageNums = fixedCell.renderCustom(lp, topLeft.withX(x), maxRowHeight,
-                                                                            reallyRender = false)
+                                                                            reallyRender = false,
+                                                                            preventWidows = false)
 //                println("    afterRender height=$height") // Size is wrong here!
                 maxRowHeight = max(maxRowHeight, dimAndPageNums.dim.height)
 //                println("    maxRowHeight=$maxRowHeight")
@@ -125,7 +126,8 @@ class TableRow(private val tablePart: TablePart) {
                 // Now render the cells
                 x = topLeft.x
                 for (fixedCell in fixedCells) {
-                    val width = fixedCell.renderCustom(lp, topLeft.withX(x), maxRowHeight, reallyRender = true).dim.width
+                    val width = fixedCell.renderCustom(lp, topLeft.withX(x), maxRowHeight, reallyRender = true,
+                                                       preventWidows = false).dim.width
                     x += width
                 }
             }

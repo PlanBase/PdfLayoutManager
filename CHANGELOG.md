@@ -12,6 +12,7 @@ Bigger headings mean more stable releases!
  - Made WrappedText a top-level class like WrappedCell.
  - Added handwriting font to Alice test.
  - Slightly improved text justification for full lines of text.
+ - Added widow prevention to cells (only cells not associated with tables).
 
 Upgrade Instructions
 ```

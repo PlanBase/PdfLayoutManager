@@ -32,6 +32,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
 import java.io.FileOutputStream
+import kotlin.test.assertTrue
 
 class WrappedCellTest {
 
@@ -305,6 +306,71 @@ class WrappedCellTest {
     }
 
     // TODO: The above two tests may become obsolete once MultiLineWrappedTest.testPageBreakingDiffAscentDescent() passes!
+
+    //    // A widow is the final line of text in a paragraph all alone at the top of the next page.
+    @Test fun testWidowPrevention() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
+        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
+        val textStyle = TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT)
+        val cellStyle = CellStyle(Align.TOP_LEFT, BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK)))
+
+        // Make a five-line paragraph from copyright-exempt material.
+        val text = "Just then her head struck against the roof of the hall: in fact she was now more than nine" +
+                   " feet high, and she at once took up the little golden key and hurried off to the garden door."
+
+        val cell = Cell(cellStyle, 320.0, listOf(Text(textStyle, text)))
+        val wrappedCell = cell.wrap()
+
+        // Verify that it's 5 lines (if it's not, there's no point in testing more).
+        assertEquals((textStyle.lineHeight * 5.0) + cellStyle.boxStyle.topBottomInteriorSp(),
+                     wrappedCell.dim.height, 0.0)
+
+        // Just for fun, check the width, again to blow up early if something bigger is wrong...
+        assertEquals(320.0, wrappedCell.dim.width)
+
+        // At top of page, the rendered height should be the same as the wrapped height because nothing needs extra
+        // space to cross the page margin.
+        var dimAndPageNums: DimAndPageNums = wrappedCell.render(lp, lp.body.topLeft)
+
+        Dim.assertEquals(wrappedCell.dim, dimAndPageNums.dim, 0.0)
+
+        // Half-a-line above the bottom of the page, we don't want one line to go to the next page, we want two!
+        // Set up the cursor to make this happen:
+        lp.cursorY = lp.yBodyBottom + (textStyle.lineHeight * 4.5)
+
+        // If you look at the resulting PDF, the blue box at the bottom of the first page should have more than one
+        // line of blank blue background at the bottom - this is the desired widow-prevention in action!
+        // It might be polite to adjust the background color, but not today.
+        dimAndPageNums = lp.append(wrappedCell)
+
+        // Really need to use doubles!
+        assertEquals(lp.yBodyBottom - (textStyle.lineHeight * 2.0), lp.cursorY, 0.00000001)
+
+        // Test that our wrappedCell size should be exceeded by more than one line.  This is because not one line,
+        // but two should be pushed to the next page so that the one line isn't a lonely widow.
+        assertTrue(dimAndPageNums.dim.height > (wrappedCell.dim.height + textStyle.lineHeight))
+
+        // On to the next page for one more test...
+        lp.cursorToNewPage()
+
+        // Here, we'll page break so that each page naturally gets at least 2 lines of text so there won't be any
+        // widows.  We'll expect the page-break adjustment to be less than one line of text.
+
+        // 2.5 lines above the bottom of the page, we can put 2 of our 5 lines on the next page just fine.
+        // If you look at the blue box at the bottom of the second page in the resulting PDF, it should have less than
+        // one line of text height of extra blue at the bottom like normal.
+        lp.cursorY = lp.cursorY - (lp.roomBelowCursor() - (textStyle.lineHeight * 3.5))
+        dimAndPageNums = lp.append(wrappedCell)
+
+        // Test that our wrappedCell size should be exceeded by LESS than one line.  This is because there's no danger
+        // of a widow.
+        assertTrue(dimAndPageNums.dim.height < (wrappedCell.dim.height + textStyle.lineHeight))
+
+        pageMgr.commit()
+
+//        pageMgr.save(FileOutputStream("test3.pdf"))
+    }
+
 
     companion object {
         val boxStyle = BoxStyle(Padding(2.0), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))

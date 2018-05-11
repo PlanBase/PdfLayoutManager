@@ -134,7 +134,8 @@ class CellTest {
 
         val startCoord = Coord(0.0, 140.0)
 
-        val after:DimAndPageNums = wrappedCell.render(lp, startCoord)
+        val after:DimAndPageNums = wrappedCell.renderCustom(lp, startCoord, 0.0, reallyRender = true,
+                                                            preventWidows = false)
         Dim.assertEquals(Dim(230.0, 186.23203), after.dim, 0.0001)
 
         pageMgr.commit()

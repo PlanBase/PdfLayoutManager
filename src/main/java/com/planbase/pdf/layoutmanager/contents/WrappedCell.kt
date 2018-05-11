@@ -57,10 +57,11 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 
     override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean,
                         justifyWidth:Double): DimAndPageNums =
-            renderCustom(lp, topLeft, dim.height, reallyRender)
+            renderCustom(lp, topLeft, dim.height, reallyRender, preventWidows = true)
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
-    fun renderCustom(lp: RenderTarget, tempTopLeft: Coord, height: Double, reallyRender:Boolean): DimAndPageNums {
+    fun renderCustom(lp: RenderTarget, tempTopLeft: Coord, height: Double, reallyRender: Boolean,
+                     preventWidows: Boolean): DimAndPageNums {
 //        println("WrappedCell.renderCustom(${lp.javaClass.simpleName}, $tempTopLeft, $height, $reallyRender)")
         var pageNums:IntRange = INVALID_PAGE_RANGE
 
@@ -112,6 +113,79 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         for ((index, row) in rows.withIndex()) {
 //            println("row=$row")
             val rowXOffset = cellStyle.align.leftOffset(wrappedBlockDim.width, row.dim.width)
+
+            // Widow prevention:
+            // If the last line of a paragraph would end up on the next page, push the last TWO lines
+            // onto that page so that neither page is left with a single line widow or orphan.
+            //
+            // Don't do this in a table! Nothing would look weirder than one cell in a row starting on
+            // the next page!
+            // TODO: Did I take care of the case where we are at the top of a page already?
+            if (preventWidows) {
+                // I tried this 3-row rule, but it didn't work and I became less enamored of the idea.  For one thing,
+                // what if there's a heading above this paragraph and we sneak it onto the next page leaving the
+                // paragraph hanging?  No, I think to start that simpler is better.  If Margaret has to fix one of
+                // these, she can.
+                //
+                // If there are only 3 rows, splitting into 2 and 1 still leaves a lonely row.  To avoid that, push
+                // all three to the next page.  Less sure about this rule.
+//                if (rows.size == 3) {
+//                    if (index == 0) {
+//                        val penUltimateRow: MultiLineWrapped = rows[1]
+//                        val lastRow: MultiLineWrapped = rows[2]
+//                        println("=================== 3 FROM END y=$y")
+//                        println("row=$row")
+//                        println("penUltimate=$penUltimateRow")
+//                        println("lastRow=$lastRow")
+//                        y -= lp.pageBreakingTopMargin(y - row.lineHeight, row.lineHeight + penUltimateRow.lineHeight,
+//                                                      lastRow.lineHeight)
+//                        println("newY=$y\n")
+//                    }
+//                } else
+                if ( (index == rows.size - 2) &&
+                     (row.dim.height < lp.body.dim.height) ) {
+                    // I thought we could call lp.pageBreakingTopMargin to see if the two lines would fit on the
+                    // page, but I guess a MultiLineWrapped can have items of different ascent and descent and leading
+                    // such that it could have some effect on page-breaking.  Honestly, I'm not sure why it would.
+                    // But the solution, at least for now, is to instead call render(reallyRender=false).
+
+                    val lastRow: LineWrapped = rows[rows.size - 1]
+
+//                    println("=================== PENULTIMATE y=$y")
+//                    println("row=$row")
+//                    println("lastRow=$lastRow")
+
+                    // Only do this if both rows will fit on one page!
+                    if ( (row.dim.height + lastRow.dim.height) < lp.body.dim.height ) {
+//                        var tempY = y
+//                        var fixable = true
+//                        var dimAndPages = row.render(lp, Coord(0f, tempY), reallyRender = false)
+//                        if (dimAndPages.dim.height > lp.body.dim.height) {
+//                            fixable = false
+//                        }
+//                        tempY -= dimAndPages.dim.height
+//                        dimAndPages = lastRow.render(lp, Coord(0f, tempY), reallyRender = false)
+//                        if (dimAndPages.dim.height > lp.body.dim.height) {
+//                            fixable = false
+//                        }
+//                        if (dimAndPages.pageNums.endInclusive == (pageNums.endInclusive + 1)) {
+//
+//                        }
+//                        println("y=$y")
+//                        println("lp.body=${lp.body}")
+
+                        // Returns zero if the last 2 rows fit on this page, otherwise, returns enough offset to push both
+                        // to the next page.
+                        val finalTwoRowsHeight: Double = row.dim.height + lastRow.dim.height
+//                        println("finalTwoRowsHeight=$finalTwoRowsHeight")
+                        val adj2 = lp.pageBreakingTopMargin(y - finalTwoRowsHeight, finalTwoRowsHeight, 0.0)
+//                        println("adj expected=9.890003 actaul=$adj")
+                        y -= adj2
+
+//                        println("newY expected=37.0 actual=$y\n") // Correct!
+                    } // End if both rows can fit on one page.
+                } // End if this row might need to go to next page to avoid a widow
+            } // End if preventWidows
 
             val dimAndPages = row.render(lp, Coord(rowXOffset + innerTopLeft.x, y), reallyRender,
                                          if ( (index < rows.size - 1) &&
