@@ -2,7 +2,7 @@
 
 Bigger headings mean more stable releases!
 
-###### *DO NOT USE YET* 2.1.0 2018-05-08 "Double Precision"
+### 2.1.0 2018-05-11 "Double Precision"
  - Changed all Floats to Doubles
  - Aded PdfLayoutMgr.getFileIdentifiers() and .setFileIdentifiers() to set ID manually for each file.
  - Started saving PDF files so that we can see differences.
@@ -11,6 +11,7 @@ Bigger headings mean more stable releases!
  - Renamed Coord.x() .y() to .withX() and .withY() and Dim.width() .height() to .withWidth() and .withHeight() because it's clearer.
  - Made WrappedText a top-level class like WrappedCell.
  - Added handwriting font to Alice test.
+ - Slightly improved text justification for full lines of text.
 
 Upgrade Instructions
 ```
@@ -30,11 +31,11 @@ Float
 Double
 ```
 
-# 2.0.10 - 2018-03-29 "Fill-Rect after many pages"
+## 2.0.10 - 2018-03-29 "Fill-Rect after many pages"
  - Fixed bug where after a hundred or more pages, the edge of a fill-rect in a PageGrouping could slip between the
  floating point gaps and cause an exception.
 
-## 2.0.9 - 2018-03-23 "Page for Cursor"
+### 2.0.9 - 2018-03-23 "Page for Cursor"
  - Added PageGrouping.pageForCursor()
  - Fixed bug where an extra page was sometimes added to the document when merely measuring items for fit.
  - renamed DimAndPages to DimAndPageNums.
