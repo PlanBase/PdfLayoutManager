@@ -17,8 +17,8 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.util.Charsets
 import org.junit.Test
-import java.io.FileOutputStream
 import kotlin.math.nextUp
+import kotlin.test.assertEquals
 
 class WrappedListTest {
     val padding = Padding(2.0)
@@ -33,7 +33,7 @@ class WrappedListTest {
                 a6PortraitBody
         )
 
-        val bl = BulletList(BULLET_TEXT_STYLE, padding, Align.TOP_RIGHT, cellStyle, 200.0, 20.0, BULLET_CHAR)
+        val bl = BulletList(200.0, 20.0, cellStyle, Align.TOP_RIGHT, padding, BULLET_TEXT_STYLE, BULLET_CHAR)
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "First Bullet")))
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Second Bullet")))
         bl.addItem(
@@ -64,21 +64,22 @@ class WrappedListTest {
                 listOf(
                         Text(
                                 BULLET_TEXT_STYLE,
-                                "Sixth bullet which has lots of text - enough to wrap at least once. " +
-                                "More text. More text. More text. More text. More text. More text. More text. "
+                                "Sixth bullet which has two lines of text on this page and several gorgeous lines on" +
+                                " the next page so that there's no chance of a widow."
                         )
                 )
         )
 
         val wrappedList = bl.wrap()
         lp.append(wrappedList)
+        assertEquals(-4.616000000000042, lp.cursorY)
 
         val docId = COSString("Bullet Test PDF".toByteArray(Charsets.ISO_8859_1))
         pageMgr.setFileIdentifiers(docId, docId)
 
         pageMgr.commit()
 
-        pageMgr.save(FileOutputStream("testBullets1.pdf"))
+//        pageMgr.save(FileOutputStream("testBullets1.pdf"))
     }
 
     @Test fun sixthBulletNoPgBreak() {
@@ -88,7 +89,7 @@ class WrappedListTest {
                 a6PortraitBody
         )
 
-        val bl = BulletList(BULLET_TEXT_STYLE, padding, Align.TOP_RIGHT, cellStyle, 200.0, 20.0, BULLET_CHAR)
+        val bl = BulletList(200.0, 20.0, cellStyle, Align.TOP_RIGHT, padding, BULLET_TEXT_STYLE, BULLET_CHAR)
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "First Bullet")))
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Second Bullet")))
         bl.addItem(
@@ -119,20 +120,21 @@ class WrappedListTest {
                 listOf(
                         Text(
                                 BULLET_TEXT_STYLE,
-                                "Sixth bullet which has lots of text - enough to wrap at least once."
+                                "Sixth bullet which has 2 lines of text that both fit on this page."
                         )
                 )
         )
 
         val wrappedList = bl.wrap()
         lp.append(wrappedList)
+        assertEquals(39.47155737304672, lp.cursorY)
 
         val docId = COSString("Bullet Test PDF".toByteArray(Charsets.ISO_8859_1))
         pageMgr.setFileIdentifiers(docId, docId)
 
         pageMgr.commit()
 
-        pageMgr.save(FileOutputStream("testBullets2.pdf"))
+//        pageMgr.save(FileOutputStream("testBullets2.pdf"))
     }
 
     @Test fun sixthBullet2LinesAfterPgBreak() {
@@ -142,7 +144,7 @@ class WrappedListTest {
                 a6PortraitBody
         )
 
-        val bl = NumberList(BULLET_TEXT_STYLE, padding, Align.TOP_RIGHT, cellStyle, 200.0, 20.0, 1, ".")
+        val bl = NumberList(200.0, 20.0, cellStyle, Align.TOP_RIGHT, padding, BULLET_TEXT_STYLE, 1, ".")
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "First Bullet")))
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Second Bullet")))
         bl.addItem(
@@ -173,20 +175,21 @@ class WrappedListTest {
                 listOf(
                         Text(
                                 BULLET_TEXT_STYLE,
-                                "Sixth bullet, 2 lines of text - exact amt to end on next pg. "
+                                "Sixth bullet, 2 lines of text - enough to end on next page."
                         )
                 )
         )
 
         val wrappedList = bl.wrap()
         lp.append(wrappedList)
+        assertEquals(9.255999999999972, lp.cursorY)
 
         val docId = COSString("Bullet Test PDF".toByteArray(Charsets.ISO_8859_1))
         pageMgr.setFileIdentifiers(docId, docId)
 
         pageMgr.commit()
 
-        pageMgr.save(FileOutputStream("testBullets3.pdf"))
+//        pageMgr.save(FileOutputStream("testBullets3.pdf"))
     }
 
     @Test fun nestedLists() {
@@ -196,7 +199,7 @@ class WrappedListTest {
                 a6PortraitBody
         )
 
-        val nl = NumberList(BULLET_TEXT_STYLE, padding, Align.TOP_RIGHT, cellStyle, 200.0, 20.0, 1, ".")
+        val nl = NumberList(200.0, 20.0, cellStyle, Align.TOP_RIGHT, padding, BULLET_TEXT_STYLE, 1, ".")
         nl.addItem(listOf(Text(BULLET_TEXT_STYLE, "First Bullet")))
         nl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Second Bullet second second second second second second second second second second second second second second")))
         nl.addItem(
@@ -210,24 +213,26 @@ class WrappedListTest {
         )
         nl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Fourth bullet fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth")))
 
-        val bl = BulletList(BULLET_TEXT_STYLE, padding, Align.TOP_RIGHT, cellStyle, 170.0, 20.0, "-")
+        val bl = BulletList(170.0, 20.0, cellStyle, Align.TOP_RIGHT, padding, BULLET_TEXT_STYLE, "-")
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "One")))
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Two")))
         bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Three")))
-        bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Four four four four four four four four four four four four four four four four four")))
-        bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Five")))
-        nl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Fifth Bullet has a sub-list"),
+        bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Four all fits on page one and line-wraps two full times there.")))
+        bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Five on page two.")))
+
+        nl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Fifth primary bullet has sub-list:"),
                           bl))
 
         val wrappedList = nl.wrap()
         lp.append(wrappedList)
+        assertEquals(23.12799999999993, lp.cursorY)
 
         val docId = COSString("Bullet Test PDF".toByteArray(Charsets.ISO_8859_1))
         pageMgr.setFileIdentifiers(docId, docId)
 
         pageMgr.commit()
 
-        pageMgr.save(FileOutputStream("testBullets4.pdf"))
+//        pageMgr.save(FileOutputStream("testBullets4.pdf"))
     }
 
 //        val baos = ByteArrayOutputStream()

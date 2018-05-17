@@ -6,14 +6,16 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 
-class NumberList(override val initialTextStyle: TextStyle,
-                 override val padTopRight: Padding,
-                 override val vAlign: Align,
-                 override val defaultCellStyle: CellStyle,
-                 override val width: Double,
-                 override val initialWidth: Double,
-                 private val startNum: Int = 1,
-                 private val suffix:String = ""): DisplayList {
+class NumberList(
+        override val width: Double,
+        override val initialWidth: Double,
+        override val defaultCellStyle: CellStyle,
+        override val initialVAlign: Align,
+        override val initialPadTopRight: Padding,
+        override val initialTextStyle: TextStyle,
+        private val startNum: Int = 1,
+        private val suffix: String = ""): DisplayList {
+
     private val innerWidth: Double = width - initialWidth
     private val secretItems: MutableList<Cell> = mutableListOf()
     override val items

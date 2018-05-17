@@ -38,8 +38,8 @@ class WrappedList(private val list: DisplayList) : LineWrapped {
             // so don't do that!  To work around that some day, cell.renderCustom probably has to return the
             // SinglePage the first line of text was rendered to.
             lp.drawStyledText(Coord(dpnatl.topLeft.x - (list.initialTextStyle.stringWidthInDocUnits(initial) +
-                                                        list.padTopRight.right),
-                                    dpnatl.topLeft.y - (list.padTopRight.top + list.initialTextStyle.ascent)),
+                                                        list.initialPadTopRight.right),
+                                    dpnatl.topLeft.y - (list.initialPadTopRight.top + list.initialTextStyle.ascent)),
                               initial, list.initialTextStyle)
 
             // Get ready for next list item

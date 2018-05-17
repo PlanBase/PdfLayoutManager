@@ -12,12 +12,13 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 
 interface DisplayList: LineWrappable {
-    val initialTextStyle: TextStyle
-    val padTopRight: Padding
-    val vAlign: Align
-    val defaultCellStyle: CellStyle
     val width: Double
     val initialWidth: Double
+
+    val defaultCellStyle: CellStyle
+    val initialVAlign: Align
+    val initialPadTopRight: Padding
+    val initialTextStyle: TextStyle
     val items: List<Cell>
 
     fun addItem(contents: List<LineWrappable>)

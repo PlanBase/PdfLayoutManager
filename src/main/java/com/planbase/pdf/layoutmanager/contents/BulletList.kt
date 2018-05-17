@@ -6,13 +6,14 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 
-class BulletList(override val initialTextStyle: TextStyle,
-                 override val padTopRight: Padding,
-                 override val vAlign: Align,
-                 override val defaultCellStyle: CellStyle,
-                 override val width: Double,
-                 override val initialWidth: Double,
-                 private val bullet: String): DisplayList {
+class BulletList(
+        override val width: Double,
+        override val initialWidth: Double,
+        override val defaultCellStyle: CellStyle,
+        override val initialVAlign: Align,
+        override val initialPadTopRight: Padding,
+        override val initialTextStyle: TextStyle,
+        private val bullet: String): DisplayList {
 
     private val innerWidth: Double = width - initialWidth
     private val secretItems: MutableList<Cell> = mutableListOf()
