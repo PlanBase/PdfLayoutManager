@@ -82,6 +82,7 @@ class TestManual2 {
                         LineStyle.NO_LINE, LineStyle.NO_LINE
                 )))
 
+        // Don't make bullets like this.  See WrappedListTest for the right way to do it.
         val bulletTable: Table = Table().addCellWidths(30.0, bodyWidth - 30.0)
                 .partBuilder()
                 .rowBuilder()

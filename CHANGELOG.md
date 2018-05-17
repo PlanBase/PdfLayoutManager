@@ -2,6 +2,13 @@
 
 Bigger headings mean more stable releases!
 
+## 2.1.1 2018-05-11 "Bulleted and Numbered Lists"
+ - Added real lists (bulleted and numbered).
+ Previously there were only tables that you could make lists manually with.
+ But to make page-breaking *and* widow prevention work with lists, they couldn't
+ be done in tables.  Now you should use BulletList and NumberList instead.
+ They are simpler, easier to use, and eliminate widows.
+
 ### 2.1.0 2018-05-11 "Double Precision"
  - Changed all Floats to Doubles
  - Aded PdfLayoutMgr.getFileIdentifiers() and .setFileIdentifiers() to set ID manually for each file.
