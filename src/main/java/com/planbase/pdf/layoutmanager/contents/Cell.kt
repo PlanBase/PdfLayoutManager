@@ -45,29 +45,19 @@ import com.planbase.pdf.layoutmanager.utils.listToStr
 data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 val width: Double,
                 private var contents: List<LineWrappable>,
-                private val requiredSpaceBelow : Double,
-                private val tableRow: TableRow? = null) : LineWrappable {
+                private val requiredSpaceBelow : Double) : LineWrappable {
 
     constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 width: Double,
-                contents: List<LineWrappable>,
-                tableRow: TableRow? = null) : this(cellStyle, width, contents, 0.0, tableRow)
+                contents: List<LineWrappable>) : this(cellStyle, width, contents, 0.0)
 
-    constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
-                width: Double,
-                contents: List<LineWrappable>) : this(cellStyle, width, contents, 0.0, null)
-
-    constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
-                width: Double,
-                contents: List<LineWrappable>,
-                requiredSpaceBelow : Double) : this(cellStyle, width, contents, requiredSpaceBelow, null)
     init {
         if (width < 0) {
             throw IllegalArgumentException("A cell cannot have a negative width")
         }
-        if ( (tableRow != null) && (requiredSpaceBelow != 0.0) ) {
-            throw IllegalArgumentException("Can either be a table cell or have required space below, not both.")
-        }
+//        if ( (tableRow != null) && (requiredSpaceBelow != 0.0) ) {
+//            throw IllegalArgumentException("Can either be a table cell or have required space below, not both.")
+//        }
     }
 
     fun wrap() : WrappedCell {
@@ -99,14 +89,4 @@ data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
     fun toStringTable() =
             "\n.cell($cellStyle, ${listToStr(contents)})"
 
-//        var i = 0
-//        while (i < contents.size && i < 3) {
-//            if (i > 0) {
-//                sB.append(" ")
-//            }
-//            sB.append(contents[i])
-//            i++
-//        }
-//        return sB.append("])").toString()
-//    }
 }

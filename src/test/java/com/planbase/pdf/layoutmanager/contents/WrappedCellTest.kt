@@ -42,7 +42,7 @@ class WrappedCellTest {
         val cellWidth = 200.0
         val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
-                        cellWidth, listOf(hello), null)
+                        cellWidth, listOf(hello))
 //        println(cell)
         val wrappedCell: WrappedCell = cell.wrap()
 //        println(wrappedCell)
@@ -70,7 +70,7 @@ class WrappedCellTest {
         val cellWidth = 300.0
         val hello = Text(textStyle, "Hello\nThere\nWorld!")
         val cell = Cell(CellStyle(Align.BOTTOM_CENTER, boxStyle),
-                        cellWidth, listOf(hello), null)
+                        cellWidth, listOf(hello))
 //        println(cell)
         val wrappedCell: WrappedCell = cell.wrap()
 //        println(wrappedCell)
@@ -100,7 +100,7 @@ class WrappedCellTest {
         val cellWidth = 200.0
         val hello = Text(textStyle, "Hello")
         val cell = Cell(CellStyle(Align.TOP_RIGHT, boxStyle),
-                        cellWidth, listOf(hello), null)
+                        cellWidth, listOf(hello))
 
         val wrappedCell =
                 WrappedCell(Dim(cellWidth,

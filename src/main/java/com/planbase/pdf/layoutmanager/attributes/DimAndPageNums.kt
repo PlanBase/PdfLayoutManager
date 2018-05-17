@@ -25,9 +25,18 @@ import kotlin.math.max
 import kotlin.math.min
 
 /** The dimensions of a rendered item plus the start and end page numbers */
-data class DimAndPageNums(val dim:Dim, val pageNums:IntRange) {
+open class DimAndPageNums(val dim:Dim, val pageNums:IntRange) {
 
     fun maxExtents(nums: IntRange): IntRange = maxExtents(pageNums, nums)
+
+    override fun hashCode(): Int =
+            dim.hashCode() + pageNums.hashCode()
+
+    override fun equals(other: Any?): Boolean =
+            (other != null) &&
+            (other is DimAndPageNums) &&
+            (dim == other.dim) &&
+            (pageNums == other.pageNums)
 
     override fun toString(): String = "DimAndPageNums($dim, $pageNums)"
 

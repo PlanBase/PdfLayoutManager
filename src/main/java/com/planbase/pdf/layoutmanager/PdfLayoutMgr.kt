@@ -29,6 +29,7 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.cos.COSArray
 import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDDocumentInformation
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
@@ -87,6 +88,12 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                    val pageDim: Dim,
                    private var pageReactor:((Int, SinglePage) -> Double)? = null) {
     private val doc = PDDocument()
+
+    init {
+        val docInf = PDDocumentInformation()
+        docInf.producer = "PlanBase PdfLayoutMgr2"
+        doc.documentInformation = docInf
+    }
 
     /**
      * This returns the wrapped PDDocument instance.  This is a highly mutable data structure.

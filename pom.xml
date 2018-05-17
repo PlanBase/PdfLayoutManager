@@ -187,6 +187,9 @@ this directory like the following (you'll have to replace the question marks):
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<configuration>
 					<jvmTarget>1.8</jvmTarget>
+					<args>
+						<arg>-Xenable-jvm-default</arg>
+					</args>
 				</configuration>
 				<version>${kotlin.version}</version>
 

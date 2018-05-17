@@ -74,7 +74,7 @@ class TableRow(private val tablePart: TablePart) {
             throw IllegalStateException("Can't add another cell because there are only ${tablePart.cellWidths.size}" +
                                         " cell widths and already $nextCellIdx cells")
         }
-        cells.add(Cell(cs, tablePart.cellWidths[nextCellIdx++], contents, this))
+        cells.add(Cell(cs, tablePart.cellWidths[nextCellIdx++], contents))
         return this
     }
 

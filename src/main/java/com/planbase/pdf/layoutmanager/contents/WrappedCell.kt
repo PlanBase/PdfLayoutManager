@@ -26,7 +26,6 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums.Companion.INVALID_PAGE_RANGE
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
-import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
@@ -61,7 +60,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 
     // See: CellTest.testWrapTable for issue.  But we can isolate it by testing this method.
     fun renderCustom(lp: RenderTarget, tempTopLeft: Coord, height: Double, reallyRender: Boolean,
-                     preventWidows: Boolean): DimAndPageNums {
+                     preventWidows: Boolean): DimPageNumsAndTopLeft {
 //        println("WrappedCell.renderCustom(${lp.javaClass.simpleName}, $tempTopLeft, $height, $reallyRender)")
         var pageNums:IntRange = INVALID_PAGE_RANGE
 
@@ -109,6 +108,7 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
         val innerTopLeft = cellStyle.align.innerTopLeft(innerDim, wrappedBlockDim, boxStyle.applyTopLeft(topLeft))
 //        println("  innerTopLeft=$innerTopLeft")
 
+        var finalTopLeft = topLeft
         var y = innerTopLeft.y
         for ((index, row) in rows.withIndex()) {
 //            println("row=$row")
@@ -181,6 +181,9 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
                         val adj2 = lp.pageBreakingTopMargin(y - finalTwoRowsHeight, finalTwoRowsHeight, 0.0)
 //                        println("adj expected=9.890003 actaul=$adj")
                         y -= adj2
+                        if (rows.size == 2) {
+                            finalTopLeft = finalTopLeft.minusY(adj2)
+                        }
 
 //                        println("newY expected=37.0 actual=$y\n") // Correct!
                     } // End if both rows can fit on one page.
@@ -198,7 +201,8 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 //            println("dimAndPages.dim.height=${dimAndPages.dim.height}")
             y -= dimAndPages.dim.height // y is always the lowest row in the cell.
             pageNums = dimAndPages.maxExtents(pageNums)
-        }
+        } // end for each row
+
 //        println("  y=$y")
 //        println("  totalHeight=${innerTopLeft.y - y}")
         // TODO: test that we add bottom padding to y
@@ -238,8 +242,11 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             }
         }
 
-        return DimAndPageNums(Dim(rightX - topLeft.x,
-                                (topLeft.y - y) + adj ),
-                              pageNums)
+        return DimPageNumsAndTopLeft(Dim(rightX - topLeft.x,
+                                         (topLeft.y - y) + adj ),
+                                     pageNums,
+                                     finalTopLeft)
     }
+
+    class DimPageNumsAndTopLeft(dim: Dim, pageNums: IntRange, val topLeft: Coord) : DimAndPageNums(dim, pageNums)
 }

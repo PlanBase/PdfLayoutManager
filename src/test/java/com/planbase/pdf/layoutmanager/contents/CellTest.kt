@@ -2,18 +2,16 @@ package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.CMYK_LIGHT_GREEN
-import TestManual2.Companion.CMYK_PALE_PEACH
 import TestManual2.Companion.a6PortraitBody
 import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
 import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT
-import com.planbase.pdf.layoutmanager.attributes.Align.TOP_LEFT_JUSTIFY
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle.Companion.NO_PAD_NO_BORDER
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
@@ -23,16 +21,11 @@ import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
-import junit.framework.TestCase
 import junit.framework.TestCase.assertEquals
-import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_BOLD_ITALIC
-import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.apache.pdfbox.util.Charsets
 import org.junit.Test
 import java.io.FileOutputStream
 
@@ -79,7 +72,7 @@ class CellTest {
                 .partBuilder()
                 .minRowHeight(squareDim)
                 .rowBuilder()
-        val cell = Cell(cellStyle, squareDim, listOf(theText), trb)
+        val cell = Cell(cellStyle, squareDim, listOf(theText))
         trb.cell(cell.cellStyle, listOf(theText))
         assertEquals(squareDim, trb.minRowHeight)
 //        println("trb=" + trb)
