@@ -1,6 +1,6 @@
 # PdfLayoutMgr2
 
-A wrapper for PDFBox to add line-breaking, page-breaking, and tables.
+A wrapper for PDFBox to add line-breaking, page-breaking, widow prevention, and tables.
 Uses a box-model (like HTML, but called a "cell").
 Requires PDFBox which in turn requires Log4J or apache commons Logging.
 
@@ -23,7 +23,7 @@ Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayo
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.1.0</version>
+        <version>2.1.2</version>
     </dependency>
 ```
 

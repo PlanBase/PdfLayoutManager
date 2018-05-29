@@ -2,6 +2,14 @@
 
 Bigger headings mean more stable releases!
 
+## 2.1.2 2018-05-29 "Mitered Cell Borders"
+ - Added mitering for Cell borders.
+   For a cell with four identical border styles, this uses the mitering built into PDF with
+   a "closed path" of lines.
+   For cells with uneven border styles, this butts the ends of each border up next to the edge of the two adjoining borders.
+ - Added RenderTarget.drawLineLoop() to make a closed path.
+ Such a path can only use a single LineStyle for all segments - this is a limitation of the PDF spec.
+
 ## 2.1.1 2018-05-11 "Bulleted and Numbered Lists"
  - Added real lists (bulleted and numbered).
  Previously there were only tables that you could make lists manually with.

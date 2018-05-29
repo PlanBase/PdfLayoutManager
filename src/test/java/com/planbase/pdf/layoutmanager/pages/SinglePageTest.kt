@@ -76,6 +76,37 @@ class SinglePageTest {
 
         pageMgr.save(FileOutputStream("singlePage.pdf"))
     }
+
+    // This works, but it's an all manual test, which is never a good Unit test.
+//    @Test fun testLoop() {
+//        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(A6))
+//        val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
+//        val page:SinglePage = pageMgr.page(0)
+//
+//        val square1X = lp.body.topLeft.x
+//        val square2X = square1X + bigText.maxWidth() + 10
+//        val y = lp.yBodyTop() - squareSide
+//        val yBot = y - squareSide
+//
+//        page.drawLineStrip(listOf(Coord(square1X, y),
+//                                  Coord(square1X + squareSide, y),
+//                                  Coord(square1X + squareSide, yBot),
+//                                  Coord(square1X, yBot),
+//                                  Coord(square1X, y)),
+//                           LineStyle(CMYK_BLACK, 3.0), true)
+//
+//        page.drawLineLoop(listOf(Coord(square2X, y),
+//                                  Coord(square2X + squareSide, y),
+//                                  Coord(square2X + squareSide, yBot),
+//                                  Coord(square2X, yBot)),
+//                           LineStyle(CMYK_VIOLET, 5.0), true)
+//        pageMgr.commit()
+//
+//        val docId = COSString("SinglePage test PDF".toByteArray(Charsets.ISO_8859_1))
+//        pageMgr.setFileIdentifiers(docId, docId)
+//
+//        pageMgr.save(FileOutputStream("lineStripAndLoop.pdf"))
+//    }
 }
 
 fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Double) {
@@ -88,12 +119,11 @@ fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Double) {
     val yMid = yBot + halfSize
 
     // Square drawn counter-clockwise (widdershins) from lowerLeft
-    page.drawLineStrip(listOf(lowerLeft,
+    page.drawLineLoop(listOf(lowerLeft,
                               Coord(xRight, yBot),
                               Coord(xRight, yTop),
-                              Coord(xLeft, yTop),
-                              lowerLeft),
-                       ls, true)
+                              Coord(xLeft, yTop)),
+                      ls, true)
 
     val midTop = Coord(xMid, yTop)
     // Diamond drawn clockwise (deosil) from top

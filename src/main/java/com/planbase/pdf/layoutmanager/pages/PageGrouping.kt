@@ -225,6 +225,30 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return maxHeight + pby2.adj
     }
 
+    override fun drawLineLoop(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
+        if (!valid) {
+            throw IllegalStateException("Logical page accessed after commit")
+        }
+        if (points.size < 3) {
+            throw IllegalArgumentException("LineLoop requires 3+ points, but only found ${points.size}.")
+        }
+
+        val pgNum = pageNumFor(points[0].y)
+//        println("drawLineLoop() page for first point = $pgNum")
+        return if (points.all{pageNumFor(it.y) == pgNum}) {
+//            println(" subsequent pages same.  Drawing loop on that page. points=$points")
+            val pg = appropriatePage(points[0].y, 0.0, 0.0)
+            // Transform all points to the correct y for that page (the page-y as opposed to document-y).
+            pg.pb.drawLineLoop(points.map{ it.withY(appropriatePage(it.y, 0.0, 0.0).y) },
+                               lineStyle, reallyRender)
+        } else {
+//            println(" subsequent pages different.  Drawing a line strip instead.")
+            val fixedPoints = points.toMutableList()
+            fixedPoints.add(points[0])
+            drawLineStrip(fixedPoints, lineStyle, reallyRender)
+        }
+    }
+
     // TODO: this should be the have all the gory details.  drawLine should inherit from the default implementation
     override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
         if (!valid) {

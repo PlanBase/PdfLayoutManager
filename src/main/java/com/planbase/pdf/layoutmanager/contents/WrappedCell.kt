@@ -27,6 +27,7 @@ import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums.Companion.INVALID_PAGE_RANGE
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 
@@ -224,17 +225,35 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 
             // I'm not using multi-line drawing here (now/yet).
             // It's complicated, and if there's page breaking it won't work anyway.
-            if (border.top.thickness > 0) {
-                lp.drawLine(topLeft, topRight, border.top, reallyRender)
-            }
-            if (border.right.thickness > 0) {
-                lp.drawLine(topRight, bottomRight, border.right, reallyRender)
-            }
-            if (border.bottom.thickness > 0) {
-                lp.drawLine(bottomRight, bottomLeft, border.bottom, reallyRender)
-            }
-            if (border.left.thickness > 0) {
-                lp.drawLine(bottomLeft, topLeft, border.left, reallyRender)
+            if ( (pageNums.start == pageNums.endInclusive) && // same page
+                 (border.top.thickness > 0) &&
+                 (border.top == border.right) &&
+                 (border.top == border.bottom) &&
+                 (border.top == border.left)) {
+                lp.drawLineLoop(listOf(topLeft, topLeft.withX(rightX), Coord(rightX, y),
+                                       topLeft.withY(y)),
+                                border.top, true)
+            } else {
+                if (border.top.thickness > 0) {
+                    lp.drawLine(if (border.left.thickness > 0) { topLeft.plusX(border.left.thickness / -2.0) } else { topLeft },
+                                if (border.right.thickness > 0) { topRight.plusX(border.right.thickness / 2.0) } else { topRight },
+                                border.top, reallyRender)
+                }
+                if (border.right.thickness > 0) {
+                    lp.drawLine(if (border.top.thickness > 0) { topRight.minusY(border.top.thickness / -2.0) } else { topRight },
+                                if (border.bottom.thickness > 0) { bottomRight.minusY(border.bottom.thickness / 2.0) } else { bottomRight },
+                                border.right, reallyRender)
+                }
+                if (border.bottom.thickness > 0) {
+                    lp.drawLine(if (border.right.thickness > 0) { bottomRight.plusX(border.right.thickness / 2.0) } else { bottomRight },
+                                if (border.left.thickness > 0) { bottomLeft.plusX(border.left.thickness / 2.0) } else { bottomLeft },
+                                border.bottom, reallyRender)
+                }
+                if (border.left.thickness > 0) {
+                    lp.drawLine(if (border.bottom.thickness > 0) { bottomLeft.minusY(border.bottom.thickness / 2.0) } else { bottomLeft },
+                                if (border.top.thickness > 0) { topLeft.minusY(border.top.thickness / -2.0) } else { topLeft },
+                                border.left, reallyRender)
+                }
             }
         }
 

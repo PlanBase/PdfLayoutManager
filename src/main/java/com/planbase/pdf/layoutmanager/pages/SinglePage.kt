@@ -30,8 +30,8 @@ import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
-import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
@@ -75,13 +75,23 @@ class SinglePage(val pageNum: Int,
         return HeightAndPage(wi.dim.height, pageNum)
     }
 
-    private fun drawLineStrip(points: List<Coord>, ls: LineStyle, z: Double) {
-        items.add(DrawLine(points.map{ it.plusX(xOff) }.toList(), ls, lastOrd++, z))
+    private fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, z: Double) {
+        items.add(DrawLineStrip(points.map{ it.plusX(xOff) }.toList(), lineStyle, lastOrd++, z))
     }
 
     override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
         if (reallyRender) {
             drawLineStrip(points, lineStyle, DEFAULT_Z_INDEX)
+        }
+        return IntRange(pageNum, pageNum)
+    }
+
+    override fun drawLineLoop(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
+        if (points.size < 3) {
+            throw IllegalArgumentException("LineLoop requires 3+ points, but only found ${points.size}.")
+        }
+        if (reallyRender) {
+            items.add(DrawLineLoop(points.map{ it.plusX(xOff) }.toList(), lineStyle, lastOrd++, DEFAULT_Z_INDEX))
         }
         return IntRange(pageNum, pageNum)
     }
@@ -218,12 +228,16 @@ class SinglePage(val pageNum: Int,
     }
 
 
-    private class DrawLine(private val points:List<Coord>,
+    private class DrawLineStrip(private val points:List<Coord>,
                            private val style: LineStyle,
                            ord: Long,
                            z: Double) : PdfItem(ord, z) {
         @Throws(IOException::class)
         override fun commit(stream: PDPageContentStream) {
+            if (points.size > 2) {
+                stream.setLineJoinStyle(0) // 0 is Miter (Pdf spec 8.4.3.4)
+                stream.setMiterLimit(10f) // Less than 11.5 degrees becomes a bevel instead of a miter (8.4.3.5)
+            }
             stream.setStrokingColor(style.color)
             stream.setLineWidth(style.thickness.toFloat())
             var point = points[0]
@@ -233,6 +247,28 @@ class SinglePage(val pageNum: Int,
                 stream.lineTo(point.x.toFloat(), point.y.toFloat())
             }
             stream.stroke()
+        }
+    }
+
+    private class DrawLineLoop(private val points:List<Coord>,
+                               private val style: LineStyle,
+                               ord: Long,
+                               z: Double) : PdfItem(ord, z) {
+        @Throws(IOException::class)
+        override fun commit(stream: PDPageContentStream) {
+            stream.setLineJoinStyle(0) // 0 is Miter (Pdf spec 8.4.3.4)
+            stream.setMiterLimit(10f) // Less than 11.5 degrees becomes a bevel instead of a miter (8.4.3.5)
+
+            stream.setStrokingColor(style.color)
+            stream.setLineWidth(style.thickness.toFloat())
+
+            var point = points[0]
+            stream.moveTo(point.x.toFloat(), point.y.toFloat())
+            for (i in 1..points.lastIndex) {
+                point = points[i]
+                stream.lineTo(point.x.toFloat(), point.y.toFloat())
+            }
+            stream.closeAndStroke()
         }
     }
 
