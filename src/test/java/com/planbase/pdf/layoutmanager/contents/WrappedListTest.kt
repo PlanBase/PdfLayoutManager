@@ -17,6 +17,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.util.Charsets
 import org.junit.Test
+import java.io.FileOutputStream
 import kotlin.math.nextUp
 import kotlin.test.assertEquals
 
@@ -73,6 +74,63 @@ class WrappedListTest {
         val wrappedList = bl.wrap()
         lp.append(wrappedList)
         assertEquals(-4.616000000000042, lp.cursorY)
+
+        val docId = COSString("Bullet Test PDF".toByteArray(Charsets.ISO_8859_1))
+        pageMgr.setFileIdentifiers(docId, docId)
+
+        pageMgr.commit()
+
+//        pageMgr.save(FileOutputStream("testBullets1.pdf"))
+    }
+
+    // Orphan prevention test!
+    @Test fun sixthBullet1LineBeforePgBreak() {
+        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
+        val lp = pageMgr.startPageGrouping(
+                PdfLayoutMgr.Orientation.PORTRAIT,
+                a6PortraitBody
+        )
+
+        val bl = BulletList(200.0, 20.0, cellStyle, Align.TOP_RIGHT, padding, BULLET_TEXT_STYLE, BULLET_CHAR)
+        bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "First Bullet")))
+        bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Second Bullet")))
+        bl.addItem(
+                listOf(
+                        Text(
+                                BULLET_TEXT_STYLE,
+                                "This is a third bullet which has lots of text - enough to wrap at least once"
+                        )
+                )
+        )
+        bl.addItem(listOf(Text(BULLET_TEXT_STYLE, "Fourth bullet")))
+        bl.addItem(
+                listOf(
+                        Text(
+                                BULLET_TEXT_STYLE,
+                                "Fifth bullet which has lots of text - enough to wrap at least once. " +
+                                "Fifth bullet which has lots of text - enough to wrap at least once. " +
+                                "Fifth bullet which has lots of text - enough to wrap at least once. " +
+                                "Fifth bullet which has lots of text - enough to wrap at least once. " +
+                                "Fifth bullet which has lots of text - enough to wrap at least once. " +
+                                "Fifth bullet which has lots of text - enough to wrap at least once. " +
+                                "Fifth bullet which has lots of text - enough to wrap at least once. " +
+                                "Fifth bullet which has lots of text.  Oh yeah. "
+                        )
+                )
+        )
+        bl.addItem(
+                listOf(
+                        Text(
+                                BULLET_TEXT_STYLE,
+                                "Sixth bullet which gets moved to the next page instead of leaving a single orphan" +
+                                " line on the first page.  This should look dandy!"
+                        )
+                )
+        )
+
+        val wrappedList = bl.wrap()
+        lp.append(wrappedList)
+        assertEquals(-22.488000000000056, lp.cursorY)
 
         val docId = COSString("Bullet Test PDF".toByteArray(Charsets.ISO_8859_1))
         pageMgr.setFileIdentifiers(docId, docId)
@@ -182,7 +240,7 @@ class WrappedListTest {
 
         val wrappedList = bl.wrap()
         lp.append(wrappedList)
-        assertEquals(9.255999999999972, lp.cursorY)
+        assertEquals(5.255999999999972, lp.cursorY)
 
         val docId = COSString("Bullet Test PDF".toByteArray(Charsets.ISO_8859_1))
         pageMgr.setFileIdentifiers(docId, docId)

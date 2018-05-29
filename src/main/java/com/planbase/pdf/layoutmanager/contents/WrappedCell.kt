@@ -27,7 +27,6 @@ import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums.Companion.INVALID_PAGE_RANGE
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
-import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 
@@ -65,8 +64,8 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
 //        println("WrappedCell.renderCustom(${lp.javaClass.simpleName}, $tempTopLeft, $height, $reallyRender)")
         var pageNums:IntRange = INVALID_PAGE_RANGE
 
-        val adj:Double
-        val topLeft: Coord
+        var adj:Double
+        var topLeft: Coord
         if (requiredSpaceBelow == 0.0) {
             adj = 0.0
             topLeft = tempTopLeft
@@ -86,6 +85,23 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             // on this page? If not, return the new innerTopLeft.y.
             adj = lp.pageBreakingTopMargin(tempTopLeft.y - dim.height, dim.height, requiredSpaceBelow)
             topLeft = tempTopLeft.minusY(adj)
+        }
+
+        // Orphan prevention phase 1.  I know this doesn't get everything, but have to run with this for now.
+        // Proven to work in at least one case by WrappedCellTest.sixthBullet1LineBeforePgBreak()
+        if ( preventWidows &&
+             (adj == 0.0) &&
+             (rows.size > 1) ) {
+            val row0 = rows[0]
+            val row1 = rows[1]
+            if ( (row0 !is WrappedList) && (row1 !is WrappedList) ) {
+                val firstTwoRowHeight = row0.dim.height + row1.dim.height
+                adj = lp.pageBreakingTopMargin(topLeft.y - firstTwoRowHeight, firstTwoRowHeight)
+//                println("adj=$adj")
+                if (adj != 0.0) {
+                    topLeft = topLeft.minusY(adj)
+                }
+            }
         }
 
 //        println("topLeft=$topLeft")
@@ -151,27 +167,6 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
                     // page, but I guess a MultiLineWrapped can have items of different ascent and descent and leading
                     // such that it could have some effect on page-breaking.  Honestly, I'm not sure why it would.
                     // But the solution, at least for now, is to instead call render(reallyRender=false).
-
-//                    println("=================== PENULTIMATE y=$y")
-//                    println("row=$row")
-//                    println("lastRow=$lastRow")
-
-//                        var tempY = y
-//                        var fixable = true
-//                        var dimAndPages = row.render(lp, Coord(0f, tempY), reallyRender = false)
-//                        if (dimAndPages.dim.height > lp.body.dim.height) {
-//                            fixable = false
-//                        }
-//                        tempY -= dimAndPages.dim.height
-//                        dimAndPages = lastRow.render(lp, Coord(0f, tempY), reallyRender = false)
-//                        if (dimAndPages.dim.height > lp.body.dim.height) {
-//                            fixable = false
-//                        }
-//                        if (dimAndPages.pageNums.endInclusive == (pageNums.endInclusive + 1)) {
-//
-//                        }
-//                        println("y=$y")
-//                        println("lp.body=${lp.body}")
 
                     // Returns zero if the last 2 rows fit on this page, otherwise, returns enough offset to push both
                     // to the next page.

@@ -168,7 +168,8 @@ interface RenderTarget {
      * @param requiredSpaceBelow if there isn't this much space left at the bottom of the page, move chunk to the top
      * of the next page.
      */
-    fun pageBreakingTopMargin(bottomY: Double, height: Double, requiredSpaceBelow: Double): Double
+    // TODO: I keep passing y, 0.0, 0.0 instead of y - height, height, 0.0, so maybe I should make it work that way instead!
+    fun pageBreakingTopMargin(bottomY: Double, height: Double = 0.0, requiredSpaceBelow: Double = 0.0): Double
 
     /**
      * Returns the correct page for the given Y value but MAY ACTUALLY ADD THAT PAGE, so only call if really rendering

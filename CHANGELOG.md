@@ -2,11 +2,17 @@
 
 Bigger headings mean more stable releases!
 
+### 2.1.3 2018-05-29 "Orphan Prevntion phase I"
+ - Prevented orphans in a few situations;
+   the single line of a longer paragraph or bullet at the bottom of the page now sometimes starts on the next page
+   instead.
+
 ## 2.1.2 2018-05-29 "Mitered Cell Borders"
  - Added mitering for Cell borders.
    For a cell with four identical border styles, this uses the mitering built into PDF with
    a "closed path" of lines.
-   For cells with uneven border styles, this butts the ends of each border up next to the edge of the two adjoining borders.
+   For cells with uneven border styles, this butts the ends of each border up next to the edge of the two adjoining
+   borders.
  - Added RenderTarget.drawLineLoop() to make a closed path.
  Such a path can only use a single LineStyle for all segments - this is a limitation of the PDF spec.
 

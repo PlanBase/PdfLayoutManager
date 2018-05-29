@@ -281,21 +281,36 @@ class WrappedCellTest {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
 
-        val wrappedCell: WrappedCell = theyAreSeparatedCell.wrap()
-        Dim.assertEquals(Dim(170.0, 32.7115), wrappedCell.dim, 0.0000001)
+        // Actual quote:
+        //     "Men often hate each other because they fear each other;
+        //      they fear each other because they don't know each other;
+        //      they don't know each other because they can not communicate;
+        //      they can not communicate because they are separated."
+        //            - MLK 1962
+        //
+        val theyAreSeparatedCell2 = Cell(CellStyle(
+                Align.TOP_LEFT,
+                BoxStyle(Padding.NO_PADDING, CMYK_PALE_PEACH,
+                         BorderStyle(LineStyle(CMYK_BLACK, 0.00000001)))),
+                                        170.0,
+                                        listOf(Text(regular7p5,
+                                                    "they fear each other because they don't know each other;" +
+                                                    " they don't know each other because they can not communicate;" +
+                                                    " they can not communicate "),
+                                               Text(italic7p5, "because they are separated.")))
+
+
+        val wrappedCell: WrappedCell = theyAreSeparatedCell2.wrap()
+        Dim.assertEquals(Dim(170.0, 41.0815), wrappedCell.dim, 0.0000001)
 
         // Rendered across the page break, it's bigger.
         // Update 2018-05-08: I think it should be 9.89 bigger, but it's only 9.207 bigger.
         // The difference is 0.683 which is twice 0.3415 which is the difference between the heights
         // of the ascents of the different text parts.
-        val ret2:DimAndPageNums = lp.add(Coord(0.0, 55.26), wrappedCell)
+        val ret2:DimAndPageNums = lp.add(Coord(0.0, 64.63), wrappedCell)
 
-        // Pretty sure this was WRONG
-//        Dim.assertEquals(Dim(170.0, 41.9185), ret2.dim, 0.0000001)
-        Dim.assertEquals(Dim(170.0, 42.6015), ret2.dim, 0.0000001)
+        Dim.assertEquals(Dim(170.0, 51.9715), ret2.dim, 0.0000001)
 
-        // Pretty sure this was WRONG
-//        assertEquals(13.3415, lp.cursorY, 0.00000001)
         assertEquals(12.6585, lp.cursorY, 0.00000001)
 
         pageMgr.commit()
