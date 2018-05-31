@@ -83,9 +83,15 @@ data class TextStyle(val font: PDFont,    // Tf
     // default leading.
     val ascent = font.fontDescriptor.ascent * fontSize / 1000.0
 
+    /** Returns a copy of this immutable TextStyle with a different font. */
+    fun withFont(newFont:PDFont) =
+            TextStyle(newFont, fontSize, textColor, lineHeight, rise, characterSpacing, wordSpacing)
+
+    /** Returns a copy of this immutable TextStyle with the specified character and word spacing. */
     fun withCharWordSpacing(cSpace: Double, wSpace:Double) =
             TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing + cSpace, wSpace)
 
+    /** Returns a copy of this immutable TextStyle with the specified word spacing. */
     fun withWordSpacing(spacing: Double) =
             TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing, spacing)
 

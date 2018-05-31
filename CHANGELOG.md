@@ -2,6 +2,9 @@
 
 Bigger headings mean more stable releases!
 
+## 2.1.5 2018-05-31 "TextStyle.withFont()"
+ - Merely added .withFont() method to return a copy of the immutable TextStyle with a different font.
+
 ### 2.1.4 2018-05-31 "Draw-Image Z-Index"
  - Added Z-Index parameter to RenderTarget.drawImage().
  If we're willing to add some complexity to WrappedCell.render() (we aren't today) then we could do away with
