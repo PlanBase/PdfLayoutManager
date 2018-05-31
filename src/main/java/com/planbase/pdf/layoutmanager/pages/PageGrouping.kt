@@ -150,14 +150,14 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return HeightAndPage(textStyle.lineHeight + pby.adj, pby.pb.pageNum)
     }
 
-    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): HeightAndPage {
+    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, zIdx:Double, reallyRender: Boolean): HeightAndPage {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Calculate what page image should start on
         val pby = appropriatePage(bottomLeft.y, wi.dim.height, 0.0)
         // draw image based on baseline and decrement y appropriately for image.
-        pby.pb.drawImage(bottomLeft.withY(pby.y), wi, reallyRender)
+        pby.pb.drawImage(bottomLeft.withY(pby.y), wi, zIdx, reallyRender)
         return HeightAndPage(wi.dim.height + pby.adj, pby.pb.pageNum)
     }
 

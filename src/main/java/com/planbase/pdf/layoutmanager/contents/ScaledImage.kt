@@ -26,6 +26,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
+import com.planbase.pdf.layoutmanager.pages.RenderTarget.Companion.DEFAULT_Z_INDEX
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import java.awt.image.BufferedImage
@@ -67,7 +68,7 @@ data class ScaledImage(private val bufferedImage: BufferedImage,
 
         override fun render(lp: RenderTarget, topLeft: Coord, reallyRender: Boolean,
                             justifyWidth:Double): DimAndPageNums =
-                lp.drawImage(topLeft.minusY(dim.height), this, reallyRender)
+                lp.drawImage(topLeft.minusY(dim.height), this, DEFAULT_Z_INDEX, reallyRender)
                         .dimAndPagesFromWidth(dim)
     }
 

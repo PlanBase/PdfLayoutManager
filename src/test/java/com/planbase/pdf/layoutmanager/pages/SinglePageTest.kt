@@ -49,7 +49,7 @@ class SinglePageTest {
         var y = lp.yBodyTop() - melonHeight
 
         while (y >= lp.yBodyBottom) {
-            val imgHaP:HeightAndPage = page.drawImage(Coord(melonX, y), bigMelon, true)
+            val imgHaP:HeightAndPage = page.drawImage(Coord(melonX, y), bigMelon)
             assertEquals(melonHeight, imgHaP.height, 0.0)
 
             val txtHaP:HeightAndPage = page.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)

@@ -144,7 +144,7 @@ class PageGroupingTest {
         var y = lp.yBodyTop() - melonHeight
 
         while(y >= lp.yBodyBottom) {
-            val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon, true)
+            val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
             assertEquals(melonHeight, imgHaP.height)
 
             val txtHaP:HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
@@ -167,7 +167,7 @@ class PageGroupingTest {
         // This is the page-break.
         // Images must vertically fit entirely on one page,
         // So they are pushed down as necessary to fit.
-        val imgHaP2: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon, true)
+        val imgHaP2: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
         assertTrue(melonHeight < imgHaP2.height) // When the picture breaks across the page, extra height is added.
 
         // Words must vertically fit entirely on one page,
@@ -199,7 +199,7 @@ class PageGroupingTest {
         y -= listOf(imgHaP2.height, txtHaP2.height, rectY2).max() as Double
 
         while(y >= lp.yBodyBottom - 400) {
-            val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon, true)
+            val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
             assertEquals(melonHeight, imgHaP.height)
 
             val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)

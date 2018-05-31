@@ -30,6 +30,7 @@ import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
+import com.planbase.pdf.layoutmanager.pages.RenderTarget.Companion.DEFAULT_Z_INDEX
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -67,9 +68,9 @@ class SinglePage(val pageNum: Int,
         return dim.height
     }
 
-    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean): HeightAndPage {
+    override fun drawImage(bottomLeft: Coord, wi: WrappedImage, zIdx:Double, reallyRender: Boolean): HeightAndPage {
         if (reallyRender) {
-            items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, DEFAULT_Z_INDEX))
+            items.add(DrawImage(bottomLeft.plusX(xOff), wi, mgr, lastOrd++, zIdx))
         }
         // This does not account for a page break because this class represents a single page.
         return HeightAndPage(wi.dim.height, pageNum)
@@ -166,10 +167,6 @@ class SinglePage(val pageNum: Int,
 
     override fun toString(): String = "SinglePage($pageNum)"
 
-    companion object {
-        const val DEFAULT_Z_INDEX = 0.0
-    }
-
     /**
      * An internal class representing items to be later drawn to the page of a PDF file.
      * The z-index allows items to be drawn
@@ -188,7 +185,8 @@ class SinglePage(val pageNum: Int,
         @Throws(IOException::class)
         abstract fun commit(stream: PDPageContentStream)
 
-        // @Override
+        // This allows us to just render once inside WrappedCell.render.  That calculation is complicated enough
+        // already without doing it twice!  Once to get the exact size, and again after drawing the background.
         override fun compareTo(other: PdfItem): Int {
             // Ascending by Z (draw the lower-order background items first)
             val zDiff = this.z.compareTo(other.z)

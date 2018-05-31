@@ -54,7 +54,7 @@ data class WrappedText(val textStyle: TextStyle,
             // different fonts, or text and other entities, so it only uses wordSpacing for justification.  But here,
             // we should be dealing with a pure line of text in a single font and can play with the character
             // spacing just enough to minimize the rivers caused by massive spaces between words.
-            if (contentWidth > justifyWidth * 0.75) {
+            if (contentWidth > justifyWidth * 0.70) {
                 val widthDiff = justifyWidth - contentWidth
                 // Character spacing should be less than word spacing.  The ratio of 1:2 character to word
                 // seems to look the best to me today, but 2:3 (0.25 and 0.75) looked good as well.

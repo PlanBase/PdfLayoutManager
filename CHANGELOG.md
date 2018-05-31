@@ -2,6 +2,15 @@
 
 Bigger headings mean more stable releases!
 
+### 2.1.4 2018-05-31 "Draw-Image Z-Index"
+ - Added Z-Index parameter to RenderTarget.drawImage().
+ If we're willing to add some complexity to WrappedCell.render() (we aren't today) then we could do away with
+ z-indexing.  For now, use lower numbers for background items and higher for foreground.
+ If you aren't doing complicated layering, don't specify any z-indexes and it should all work out. 
+ - Moved DEFAULT_Z_INDEX from SinglePage to RenderTarget.
+ - Made minimum line-width for justified text 0.7 instead of 0.75 because I think the new algorithm allows it to look
+ ok a little shorter than before, and a single line of unjustified text is pretty ugly.
+
 ### 2.1.3 2018-05-29 "Orphan Prevntion phase I"
  - Prevented orphans in a few situations;
    the single line of a longer paragraph or bullet at the bottom of the page now sometimes starts on the next page

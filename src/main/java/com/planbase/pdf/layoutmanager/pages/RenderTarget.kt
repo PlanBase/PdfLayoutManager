@@ -120,11 +120,12 @@ interface RenderTarget {
      * Puts an image on this RenderTarget
      * @param bottomLeft the Coord of the lower-left-hand corner
      * @param wi the scaled, "wrapped" jpeg/png image
+     * @param zIdx lower values get drawn earlier.
      * @param reallyRender Only render this if true.  Otherwise, just measure and return.
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage, reallyRender: Boolean = true): HeightAndPage
+    fun drawImage(bottomLeft: Coord, wi: WrappedImage, zIdx:Double, reallyRender: Boolean = true): HeightAndPage
 
     /**
      * Puts an image on this RenderTarget
@@ -134,7 +135,7 @@ interface RenderTarget {
      * (may include some extra space above to push items onto the next page).
      */
     @Suppress("unused")
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage): HeightAndPage = drawImage(bottomLeft, wi, true)
+    fun drawImage(bottomLeft: Coord, wi: WrappedImage): HeightAndPage = drawImage(bottomLeft, wi, DEFAULT_Z_INDEX, true)
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
@@ -175,4 +176,8 @@ interface RenderTarget {
      * Returns the correct page for the given Y value but MAY ACTUALLY ADD THAT PAGE, so only call if really rendering
      */
     fun pageNumFor(y:Double):Int
+
+    companion object {
+        const val DEFAULT_Z_INDEX = 0.0
+    }
 }
