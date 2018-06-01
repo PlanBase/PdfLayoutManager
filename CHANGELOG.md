@@ -2,8 +2,8 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.6 2018-06-01 "Release"
- - Just tagging the most stable release since 2.0.10
+## 2.1.7 2018-06-01 "Fix"
+ - 2.1.6 was a mistake, which this undoes.
 
 ### 2.1.5 2018-05-31 "TextStyle.withFont()"
  - Merely added .withFont() method to return a copy of the immutable TextStyle with a different font.
