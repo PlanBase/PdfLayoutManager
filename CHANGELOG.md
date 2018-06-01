@@ -2,7 +2,10 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.5 2018-05-31 "TextStyle.withFont()"
+## 2.1.6 2018-06-01 "PageGrouping.cursorToNewPage().nextDown()"
+ - Tiniest possible patch for occasional floating point rounding errors
+
+### 2.1.5 2018-05-31 "TextStyle.withFont()"
  - Merely added .withFont() method to return a copy of the immutable TextStyle with a different font.
 
 ### 2.1.4 2018-05-31 "Draw-Image Z-Index"
@@ -14,7 +17,7 @@ Bigger headings mean more stable releases!
  - Made minimum line-width for justified text 0.7 instead of 0.75 because I think the new algorithm allows it to look
  ok a little shorter than before, and a single line of unjustified text is pretty ugly.
 
-### 2.1.3 2018-05-29 "Orphan Prevntion phase I"
+##### 2.1.3 2018-05-29 "Orphan Prevntion phase I"
  - Prevented orphans in a few situations;
    the single line of a longer paragraph or bullet at the bottom of the page now sometimes starts on the next page
    instead.

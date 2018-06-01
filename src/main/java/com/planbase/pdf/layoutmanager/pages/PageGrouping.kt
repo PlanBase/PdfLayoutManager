@@ -40,6 +40,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 import java.util.TreeSet
 import kotlin.math.ceil
+import kotlin.math.nextDown
 
 /**
  *
@@ -382,7 +383,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         cursorY -= this.pageBreakingTopMargin(cursorY, body.dim.height, 0.0)
         if (cursorY == prevCursorY) {
             cursorY -= body.dim.height
-//            cursorY = cursorY.nextDown()
+            // Make sure that if there's any rounding error that we still end up on the next page, but by no more
+            // than we absolutely have to - the next float down.
+            // This was always considered, but not done for a while.  Then I found all my client code was doing it,
+            // so putting it here for now.  Shouldn't cause a new page to be created until you actually use that page,
+            // so I think this is correct.
+            cursorY = cursorY.toFloat().nextDown().toDouble()
         }
 
         // Is this a better way?  I mean, if it worked?
