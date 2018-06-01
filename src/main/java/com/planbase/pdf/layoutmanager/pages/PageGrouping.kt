@@ -40,7 +40,6 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 import java.util.TreeSet
 import kotlin.math.ceil
-import kotlin.math.nextDown
 
 /**
  *
@@ -388,7 +387,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             // This was always considered, but not done for a while.  Then I found all my client code was doing it,
             // so putting it here for now.  Shouldn't cause a new page to be created until you actually use that page,
             // so I think this is correct.
-            cursorY = cursorY.toFloat().nextDown().toDouble()
+            // This line never worked and I don't know why not.
+            // For now, clients might want to do this themselves before calling pageForCursor().
+//            cursorY = cursorY.toFloat().nextDown().nextDown().toDouble()
         }
 
         // Is this a better way?  I mean, if it worked?

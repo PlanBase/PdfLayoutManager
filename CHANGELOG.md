@@ -2,8 +2,8 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.6 2018-06-01 "PageGrouping.cursorToNewPage().nextDown()"
- - Tiniest possible patch for occasional floating point rounding errors
+## 2.1.6 2018-06-01 "Release"
+ - Just tagging the most stable release since 2.0.10
 
 ### 2.1.5 2018-05-31 "TextStyle.withFont()"
  - Merely added .withFont() method to return a copy of the immutable TextStyle with a different font.
