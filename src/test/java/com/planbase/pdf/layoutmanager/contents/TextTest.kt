@@ -1,5 +1,6 @@
 package com.planbase.pdf.layoutmanager.contents
 
+import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
@@ -22,6 +23,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
+import kotlin.math.nextDown
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -235,5 +237,26 @@ class TextTest {
         mgr.commit()
 //        val os = FileOutputStream("textBaseline.pdf")
 //        mgr.save(os)
+    }
+
+    @Test fun testExactLineWrapping() {
+        val text = Text(BULLET_TEXT_STYLE, "months showed the possible money and")
+        assertEquals(214.104, text.maxWidth(), 0.0)
+
+        // All should fit
+        var cont = text.lineWrapper().getSomething(214.104)
+        assertEquals(text.text,
+                     (cont.item as WrappedText).string)
+        assertEquals(214.104,
+                     (cont.item as WrappedText).width)
+
+        // Slightly less should line wrap
+        cont = text.lineWrapper().getSomething(214.104.nextDown())
+        assertEquals("months showed the possible money",
+                     (cont.item as WrappedText).string)
+        assertEquals(190.752,
+                     BULLET_TEXT_STYLE.stringWidthInDocUnits("months showed the possible money"))
+        assertEquals(190.752,
+                     (cont.item as WrappedText).width)
     }
 }

@@ -131,6 +131,20 @@ data class TextStyle(val font: PDFont,    // Tf
         return sB.append(")").toString()
     }
 
+//    // This is a duplicate of org.apache.pdfbox.pdmodel.font.PDFont.getStringWidth(text)
+//    // but using double precision for the addition to hopefully avoid more rounding errors.
+//    private fun fontStringWidth(text:String):Double {
+//        val bytes = font.encode(text)
+//        val charCodes = ByteArrayInputStream(bytes)
+//
+//        var width = 0.0
+//        while (charCodes.available() > 0) {
+//            val code:Int = font.readCode(charCodes)
+//            width += font.getWidth(code).toDouble()
+//        }
+//        return width
+//    }
+
     /**
      Assumes ISO_8859_1 encoding
      @param text ISO_8859_1 encoded text
@@ -139,6 +153,7 @@ data class TextStyle(val font: PDFont,    // Tf
     fun stringWidthInDocUnits(text: String): Double  {
         var ret: Double = try {
             font.getStringWidth(text).toDouble() * factor
+//            fontStringWidth(text) * factor
 
         } catch (ioe: IOException) {
             // logger.error("IOException probably means an issue reading font metrics from the underlying" +
