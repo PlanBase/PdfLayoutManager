@@ -27,6 +27,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.organicdesign.indented.StringUtils.iterableToStr
+import org.organicdesign.indented.StringUtils.objToStr
 import java.awt.Transparency
 import java.awt.color.ColorSpace
 import java.awt.image.BufferedImage
@@ -133,25 +135,6 @@ fun buffImgToStr(bi: BufferedImage) =
         } +
         ")"
 
-fun floatToStr(f: Float):String {
-    val str = f.toString()
-    return if (str.endsWith(".0")) {
-        str.substring(0, str.length - 2)
-    } else {
-        str
-    } + "f"
-}
-
-fun objToStr(item:Any):String = when (item) {
-    is String -> "\"" + escapeStr(item) + "\""
-    is Char   -> "'$item'"
-    is Float  -> floatToStr(item)
-    else      -> item.toString()
-}
-
-fun escapeStr(s:String):String =
-        s.replace("\n".toRegex(), "\\n")
-                .replace("\"".toRegex(), "\\\"")
 
 fun collectionToStr(collName: String, ls: Iterable<Any>) =
         ls.fold(StringBuilder(collName).append("("),
@@ -159,14 +142,14 @@ fun collectionToStr(collName: String, ls: Iterable<Any>) =
                     if (sB.length > collName.length + 1) {
                         sB.append(", ")
                     }
-                    sB.append(objToStr(item))
+                    sB.append(objToStr(0, item))
                 })
                 .append(")")
                 .toString()
 
-fun mutableListToStr(ls: List<Any>) = collectionToStr("mutableListOf", ls)
+fun mutableListToStr(indent: Int, ls: List<Any>) = iterableToStr(indent, "mutableListOf", ls)
 
-fun listToStr(ls: List<Any>) = collectionToStr("listOf", ls)
+fun listToStr(indent: Int, ls: List<Any>) = iterableToStr(indent, "listOf", ls)
 
 private val fontStrs =
         mapOf(Pair(PDType1Font.TIMES_ROMAN, "TIMES_ROMAN"),

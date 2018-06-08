@@ -2,11 +2,17 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.7 2018-06-01 "Fix"
+## 2.1.8 2018-06-01 "Fixed: missing space before last word"
+ - In a cell, on a line with multiple items (2 styles of text, an image followed by text, etc.) where
+ the last item was text, and the text was longer than the line length by less than the width of a single space,
+ the space before the last word was removed.
+ A rare issue, but fixed now.
+
+### 2.1.7 2018-06-01 "Fix"
  - 2.1.6 was a mistake, which this undoes.
 
 ### 2.1.5 2018-05-31 "TextStyle.withFont()"
- - Merely added .withFont() method to return a copy of the immutable TextStyle with a different font.
+ - Added .withFont() method to return a copy of the immutable TextStyle with a different font.
 
 ### 2.1.4 2018-05-31 "Draw-Image Z-Index"
  - Added Z-Index parameter to RenderTarget.drawImage().

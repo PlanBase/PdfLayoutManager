@@ -25,11 +25,13 @@ import com.planbase.pdf.layoutmanager.contents.WrappedText
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
+import org.organicdesign.indented.IndentedStringable
+import org.organicdesign.indented.StringUtils.listToStr
 import kotlin.math.nextUp
 
 // TODO: Rename to MultiItemWrappedLine?
 /** A mutable data structure to hold a single wrapped line consisting of multiple items. */
-class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
+class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped, IndentedStringable {
     constructor() : this(null)
     var width: Double = 0.0
     override var ascent: Double = 0.0
@@ -127,16 +129,11 @@ class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped {
         return DimAndPageNums(Dim(x - topLeft.x, (topLeft.y - y) + dim.height), pageNums)
     } // end fun render()
 
-    override fun toString(): String {
-        return "MultiLineWrapped(width=$width, ascent=$ascent, lineHeight=$lineHeight," +
-               " items=\n" +
-               items.fold(StringBuilder("["),
-                          {acc, item ->
-                              if (acc.length > 1) acc.append(",\n ")
-                              acc.append(item)})
-                       .append("])\n")
-                       .toString()
-    }
+    override fun indentedStr(indent:Int): String =
+            "MultiLineWrapped(width=$width, ascent=$ascent, lineHeight=$lineHeight, items=\n" +
+            "${listToStr(indent + "MultiLineWrapped(".length, items)})"
+
+    override fun toString(): String = indentedStr(0)
 }
 
 /**
@@ -158,6 +155,7 @@ For each renderable
         start a new line.
  */
 fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrapped> {
+//    println("================in wrapLines...")
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not $maxWidth")
     }
@@ -166,56 +164,84 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
     val wrappedLines: MutableList<LineWrapped> = mutableListOf()
 
     // This is the current line we're working on.
-    var currLine = MultiLineWrapped() // Is this right, putting no source here?
+    var wrappedLine = MultiLineWrapped() // Is this right, putting no source here?
 
 //    var prevItem:LineWrappable = LineWrappable.ZeroLineWrappable
+    var remainingSpace = maxWidth
     for (item in wrappables) {
-//        println("About to wrap: $item")
+//        println("Wrappable: $item")
         val lineWrapper: LineWrapper = item.lineWrapper()
         while (lineWrapper.hasMore()) {
-            if (currLine.isEmpty()) {
+//            println("  lineWrapper.hasMore()")
+            if (wrappedLine.isEmpty()) {
+                remainingSpace = maxWidth
+//                println("    wrappedLine.isEmpty()")
                 val something : ConTerm = lineWrapper.getSomething(maxWidth)
-//                println("🢂something=" + something)
-                currLine.append(something.item)
+//                println("🢂something=$something")
+                wrappedLine.append(something.item)
+                remainingSpace -= something.item.dim.width
+//                println("      remainingSpace=$remainingSpace")
                 if (something is Terminal) {
 //                    println("=============== TERMINAL")
-//                    println("something:" + something)
-                    addLineCheckBlank(currLine, wrappedLines)
-                    currLine = MultiLineWrapped()
+//                    println("something:$something")
+                    addLineCheckBlank(wrappedLine, wrappedLines)
+                    wrappedLine = MultiLineWrapped()
+                    remainingSpace = maxWidth
                 } else if (lineWrapper.hasMore()) {
+//                    println("  LOOKAHEAD??? lineWrapper.hasMore()")
                     // We have a line of text which is too long and must be broken up.  But if it’s too long by less
                     // than the width of a single space, it truncates the final space from the text fragment, then
                     // looks again and sees that the next word now fits, so adds it to the same line *without the space*
                     // which is wrong.  To fix this, we check if the lineWrapper already gave us all it has for this
                     // line and if so, we store it and start the next line.
-                    addLineCheckBlank(currLine, wrappedLines)
-                    currLine = MultiLineWrapped()
+                    addLineCheckBlank(wrappedLine, wrappedLines)
+                    wrappedLine = MultiLineWrapped()
+                    if ( (something is Continuing) &&
+                         (something.item is WrappedText) ) {
+                        remainingSpace -= (something.item as WrappedText).textStyle.spaceWidth
+                    }
+//                    println("      remainingSpace=$remainingSpace")
                 }
             } else {
-                val ctn: ConTermNone = lineWrapper.getIfFits(maxWidth - currLine.width)
-//                println("🢂ctn=" + ctn)
+//                println("    wrappedLine is not empty")
+                val ctn: ConTermNone = lineWrapper.getIfFits(remainingSpace) //maxWidth - wrappedLine.width)
+//                println("🢂ctn=$ctn")
 
                 when (ctn) {
-                    is Continuing ->
-                        currLine.append(ctn.item)
+                    is Continuing -> {
+//                        println("  appending result to current wrapped line")
+                        wrappedLine.append(ctn.item)
+                        remainingSpace -= ctn.item.dim.width
+                        if (ctn.item is WrappedText) {
+                            remainingSpace -= ctn.item.textStyle.spaceWidth
+                        }
+//                        println("      remainingSpace=$remainingSpace")
+                        if (remainingSpace <= 0) {
+                            addLineCheckBlank(wrappedLine, wrappedLines)
+                            wrappedLine = MultiLineWrapped()
+                            remainingSpace = maxWidth
+                        }
+                    }
                     is Terminal -> {
 //                        println("=============== TERMINAL 222222222")
-//                        println("ctn:" + ctn)
-                        currLine.append(ctn.item)
-                        currLine = MultiLineWrapped()
+//                        println("ctn:$ctn")
+                        wrappedLine.append(ctn.item)
+                        wrappedLine = MultiLineWrapped()
+                        remainingSpace = maxWidth
                     }
                     None -> {
-//                        MultiLineWrappeds.add(currLine)
-                        addLineCheckBlank(currLine, wrappedLines)
-                        currLine = MultiLineWrapped()
+//                        MultiLineWrappeds.add(wrappedLine)
+                        addLineCheckBlank(wrappedLine, wrappedLines)
+                        wrappedLine = MultiLineWrapped()
+                        remainingSpace = maxWidth
                     }}
             }
         } // end while lineWrapper.hasMore()
     } // end for item in wrappables
-//    println("Line before last item: $currLine")
+//    println("Line before last item: $wrappedLine")
 
     // Don't forget to add last item.
-    addLineCheckBlank(currLine, wrappedLines)
+    addLineCheckBlank(wrappedLine, wrappedLines)
 
     return wrappedLines.toList()
 }

@@ -109,7 +109,7 @@ class Table(val cellWidths:MutableList<Double> = mutableListOf(),
     }
 
     override fun toString(): String =
-            "Table(${mutableListToStr(cellWidths)})" +
+            "Table(${mutableListToStr(0, cellWidths)})" +
             parts.fold(StringBuilder(""),
                        {sB, part -> sB.append("\n.partBuilder()")
                                .append(part)

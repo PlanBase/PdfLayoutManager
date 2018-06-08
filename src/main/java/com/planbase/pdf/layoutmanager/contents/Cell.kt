@@ -25,11 +25,10 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BO
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
-import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
 import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.floatToStr
 import com.planbase.pdf.layoutmanager.utils.listToStr
+import org.organicdesign.indented.IndentedStringable
 
 // TODO: Consider making this an abstract class "Box" with subclasses TableCell and Div
 /**
@@ -39,13 +38,11 @@ import com.planbase.pdf.layoutmanager.utils.listToStr
  * @param width the width of this cell (in document units)
  * @param contents the contents of this cell
  * @param requiredSpaceBelow leave this much vertical space at the end of the page below this cell.
- * @param tableRow if null, this cell is a stand-alone box-model (like a div in HTML).  If non-null,
- * this cell behaves as part of the given table row.
  */
 data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 val width: Double,
                 private var contents: List<LineWrappable>,
-                private val requiredSpaceBelow : Double) : LineWrappable {
+                private val requiredSpaceBelow : Double) : LineWrappable, IndentedStringable {
 
     constructor(cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
                 width: Double,
@@ -83,10 +80,13 @@ data class Cell(val cellStyle: CellStyle = TOP_LEFT_BORDERLESS,
 
     override fun lineWrapper() = LineWrapper.preWrappedLineWrapper(this.wrap())
 
-    override fun toString() =
-            "Cell($cellStyle, $width, ${listToStr(contents)})"
+    override fun indentedStr(indent: Int): String =
+            "Cell($cellStyle, $width, contents=\n" +
+            "${listToStr(indent + "Cell(".length, contents)})"
+
+    override fun toString() = indentedStr(0)
 
     fun toStringTable() =
-            "\n.cell($cellStyle, ${listToStr(contents)})"
+            "\n.cell($cellStyle, ${listToStr(0, contents)})"
 
 }

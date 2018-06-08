@@ -6,7 +6,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.escapeStr
+import org.organicdesign.indented.StringUtils.stringify
 
 /**
  * Represents a unit of wrapped text.  MultiLineWrapped can hold multiple WrappedText or other "Wrapped" objects
@@ -80,5 +80,5 @@ data class WrappedText(val textStyle: TextStyle,
         return dap
     }
 
-    override fun toString() = "WrappedText($textStyle, \"${escapeStr(string)}\", $width)"
+    override fun toString() = "WrappedText($textStyle, ${stringify(string)}, $width)"
 }

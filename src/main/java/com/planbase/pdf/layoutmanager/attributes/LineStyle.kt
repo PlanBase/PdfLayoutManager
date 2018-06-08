@@ -21,7 +21,6 @@
 package com.planbase.pdf.layoutmanager.attributes
 
 import com.planbase.pdf.layoutmanager.utils.colorToString
-import com.planbase.pdf.layoutmanager.utils.floatToStr
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**

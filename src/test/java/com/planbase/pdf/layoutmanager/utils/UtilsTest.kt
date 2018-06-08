@@ -38,17 +38,28 @@ class UtilsTest {
     }
 
     @Test fun testCollectionToString() {
-        assertEquals("listOf(1, 2, 3, 4, 5)",
-                     listToStr(listOf(1, 2, 3, 4, 5)))
+        assertEquals("listOf(1,\n" +
+                     "       2,\n" +
+                     "       3,\n" +
+                     "       4,\n" +
+                     "       5)",
+                     listToStr(0, listOf(1, 2, 3, 4, 5)))
 
-        assertEquals("mutableListOf(\"first\", \"second\", \"third\")",
-                     mutableListToStr(mutableListOf("first", "second", "third")))
+        assertEquals("mutableListOf(\"first\",\n" +
+                     "              \"second\",\n" +
+                     "              \"third\")",
+                     mutableListToStr(0, mutableListOf("first", "second", "third")))
 
-        assertEquals("listOf('a', 'b', 'c', 'd')",
-                     listToStr(listOf('a', 'b', 'c', 'd')))
+        assertEquals("listOf('a',\n" +
+                     "       'b',\n" +
+                     "       'c',\n" +
+                     "       'd')",
+                     listToStr(0, listOf('a', 'b', 'c', 'd')))
 
         // rad 2, e, pi
-        assertEquals("listOf(1.41421, 2.71828, 3.14159)",
-                     listToStr(listOf(1.41421, 2.71828, 3.14159)))
+        assertEquals("listOf(1.41421,\n" +
+                     "       2.71828,\n" +
+                     "       3.14159)",
+                     listToStr(0, listOf(1.41421, 2.71828, 3.14159)))
     }
 }

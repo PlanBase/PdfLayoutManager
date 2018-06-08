@@ -28,7 +28,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
-import com.planbase.pdf.layoutmanager.utils.escapeStr
+import org.organicdesign.indented.StringUtils.stringify
 
 /**
  Represents styled text kind of like a #Text node in HTML.
@@ -45,7 +45,7 @@ data class Text(val textStyle: TextStyle,
 
     fun maxWidth(): Double = textStyle.stringWidthInDocUnits(text.trim())
 
-    override fun toString() = "Text($textStyle, \"${escapeStr(text)}\")"
+    override fun toString() = "Text($textStyle, ${stringify(text)})"
 
     override fun lineWrapper(): LineWrapper {
         return TextLineWrapper(this)
@@ -69,6 +69,7 @@ data class Text(val textStyle: TextStyle,
         override fun hasMore(): Boolean = idx < txt.text.length
 
         override fun getSomething(maxWidth: Double): ConTerm {
+//            println("      TextLineWrapper.getSomething($maxWidth)")
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Illegal negative width: $maxWidth")
             }
@@ -78,8 +79,10 @@ data class Text(val textStyle: TextStyle,
         }
 
         override fun getIfFits(remainingWidth: Double): ConTermNone {
+//            println("      TextLineWrapper.getIfFits($remainingWidth)")
             if (remainingWidth <= 0) {
-                return None // TODO: Should we instead? throw IllegalArgumentException("remainingWidth must be > 0")
+//                return None
+                throw IllegalArgumentException("remainingWidth must be > 0")
             }
             val ctri = tryGettingText(remainingWidth, idx, txt)
             val row = ctri.row

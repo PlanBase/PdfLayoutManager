@@ -29,16 +29,22 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.pages.RenderTarget
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
+import org.organicdesign.indented.IndentedStringable
+import org.organicdesign.indented.StringUtils.iterableToStr
 
 class WrappedCell(override val dim: Dim, // measured on the border lines
                   val cellStyle: CellStyle,
-                  private val rows: List<LineWrapped>,
-                  private val requiredSpaceBelow : Double) : LineWrapped {
+                  val rows: List<LineWrapped>,
+                  private val requiredSpaceBelow : Double) : LineWrapped, IndentedStringable {
 
     override val ascent: Double
         get() = dim.height
 
-    override fun toString() = "WrappedCell($dim, $cellStyle, $rows)"
+    override fun indentedStr(indent:Int): String =
+            "WrappedCell($dim, $cellStyle, rows=\n" +
+            "${iterableToStr(indent + "WrappedCell(".length, "listOf", rows)})"
+
+    override fun toString() = indentedStr(0)
 
     private val wrappedBlockDim: Dim = {
         var width = 0.0

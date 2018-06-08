@@ -4,6 +4,9 @@ import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.BoxStyle
+import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
@@ -11,6 +14,7 @@ import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import com.planbase.pdf.layoutmanager.pages.HeightAndPage
@@ -20,7 +24,9 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
 import kotlin.math.nextDown
@@ -258,5 +264,56 @@ class TextTest {
                      BULLET_TEXT_STYLE.stringWidthInDocUnits("months showed the possible money"))
         assertEquals(190.752,
                      (cont.item as WrappedText).width)
+    }
+
+    /*
+    This was a long-standing bug where if there were multiple items on a line (MultiLineWrapped) and the last one was
+    text, and there was room left for one more item on the line, but only by removing the space before that item, it
+    would nuke the last space before the last word.  This showed up in Chapter 3 of Alice which this test is taken
+    from.
+     */
+    @Test fun testSpaceBeforeLastWord() {
+
+        val titleFont: PDFont = TIMES_ROMAN
+
+        val incipit = TextStyle(titleFont, 36.0, CMYK_BLACK)
+        val chapTitleCellStyle = CellStyle(Align.BOTTOM_LEFT, BoxStyle.NO_PAD_NO_BORDER)
+        val heading = TextStyle(titleFont, 16.0, CMYK_BLACK)
+
+//        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
+//        val lp = pageMgr.startPageGrouping(
+//                PdfLayoutMgr.Orientation.PORTRAIT,
+//                a6PortraitBody,
+//                null)
+
+        // Bug: there's no space between "a" and "Long".
+        // Width to show bug: Min: 207.9521 Max: 211.9519
+        // Difference: 3.9998
+        // Width of a space in right-hand font=4.0
+//        println("space=" + heading.stringWidthInDocUnits(" "))
+        val cell = Cell(chapTitleCellStyle, 210.0,
+                        listOf(Text(incipit, "3. "),
+                               Text(heading, "A Caucus-Race and a Long Tale")))
+        println("cell=$cell\n\n")
+
+        val wrappedCell = cell.wrap()
+        println("\n\nwrappedCell=${wrappedCell.indentedStr("wrappedCell=".length)}")
+
+        val wrappedItems: List<LineWrapped> = wrappedCell.rows
+        assertEquals(2, wrappedItems.size) // 2 lines
+
+        // first line has 2 items: tne number and "A Caucus-Race and a"
+        val firstLine:List<LineWrapped> = wrappedItems[0].items()
+        assertEquals(2, firstLine.size)
+        assertEquals("3. ", (firstLine[0] as WrappedText).string)
+        assertEquals("A Caucus-Race and a", (firstLine[1] as WrappedText).string)
+
+        val secondLine:List<LineWrapped> = wrappedItems[1].items()
+        assertEquals(1, secondLine.size)
+        assertEquals("Long Tale", (secondLine[0] as WrappedText).string)
+
+//        lp.add(Coord(0.0, a6PortraitBody.topLeft.y), wrappedCell)
+//        pageMgr.commit()
+//        pageMgr.save(FileOutputStream("spaceBeforeLastWord.pdf"))
     }
 }

@@ -231,8 +231,8 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                      ".partBuilder()\n" +
                      ".rowBuilder()\n" +
                      ".cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))), " +
-                     "listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Some text with a bullet.\"), " +
-                     "Table(mutableListOf(230.0))\n" +
+                     "listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Some text with a bullet.\"),\n" +
+                     "       Table(mutableListOf(230.0))\n" +
                      ".partBuilder()\n" +
                      ".rowBuilder()\n" +
                      ".cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Subtext is an underneath\")))\n" +
