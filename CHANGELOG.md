@@ -2,7 +2,14 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.8 2018-06-01 "Fixed: missing space before last word"
+## 2.1.9 2018-06-08 "Fixed: Free font file descriptors"
+ - PdfLayoutManger now caches all TrueTypeFont objects and tells them to free their file descriptors once the
+ document is closed.
+ This fixes a file descriptor leak.
+ We also de-duplicate so that if you request that the same font be loaded multiple times, we only load it
+ once per PdfLayoutMgr.
+
+### 2.1.8 2018-06-07 "Fixed: missing space before last word"
  - In a cell, on a line with multiple items (2 styles of text, an image followed by text, etc.) where
  the last item was text, and the text was longer than the line length by less than the width of a single space,
  the space before the last word was removed.

@@ -26,6 +26,8 @@ import com.planbase.pdf.layoutmanager.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.layoutmanager.pages.PageGrouping
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.Dim
+import org.apache.fontbox.ttf.TTFParser
+import org.apache.fontbox.ttf.TrueTypeFont
 import org.apache.pdfbox.cos.COSArray
 import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -116,6 +118,10 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     private val uncommittedPageGroupings:MutableList<PageGrouping> = mutableListOf()
 
+    class TrueAndZeroFonts(val trueType:TrueTypeFont, val typeZero:PDType0Font)
+
+    private val openFontFiles: MutableMap<File,TrueAndZeroFonts> = mutableMapOf()
+
     // pages.size() counts the first page as 1, so 0 is the appropriate sentinel value
     private var unCommittedPageIdx:Int = 0
 
@@ -182,11 +188,16 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 
     /**
      * Call this to commit the PDF information to the underlying stream after it is completely built.
+     * This also frees any open font file descriptors (that were opened by PdfLayoutMgr2).
      */
     @Throws(IOException::class)
     fun save(os: OutputStream) {
         doc.save(os)
         doc.close()
+        openFontFiles.values.forEach { ttt0 ->
+            ttt0.trueType.close()
+        }
+        openFontFiles.clear()
     }
 
     /**
@@ -219,11 +230,23 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 //                          body:PageArea): PageGrouping = startPageGrouping(orientation, body, null)
 
     /**
-     * Loads a TrueType font (and embeds it into the document?) from the given file into a
-     * PDType0Font object.
+     * Loads a TrueType font and automcatically embeds (the part you use?) into the document from the given file,
+     * returning a PDType0Font object.  The underlying TrueTypeFont object holds the file descriptor open while you
+     * are working, presumably to embed only the glyphs you need.  PdfLayoutMgr2 will explicitly close the file
+     * descriptor when you call [save].  Calling this method twice on the same PdfLayoutMgr with the same file will
+     * return the same (already open) font.
      */
     @Throws(IOException::class)
-    fun loadTrueTypeFont(fontFile: File): PDType0Font = PDType0Font.load(doc, fontFile)
+    fun loadTrueTypeFont(fontFile: File): PDType0Font {
+        var ttt0:TrueAndZeroFonts? = openFontFiles[fontFile]
+        if (ttt0 == null) {
+            val tt = TTFParser().parse(fontFile)
+            val t0 = PDType0Font.load(doc, tt, true)
+            ttt0 = TrueAndZeroFonts(tt, t0)
+            openFontFiles[fontFile] = ttt0
+        }
+        return ttt0.typeZero
+    }
 
     fun commit() {
         uncommittedPageGroupings.forEach { logicalPageEnd(it) }
