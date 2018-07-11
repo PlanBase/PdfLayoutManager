@@ -100,7 +100,7 @@ data class Text(val textStyle: TextStyle,
 
         internal fun tryGettingText(maxWidth: Double, startIdx: Int, txt: Text): RowIdx {
             if (maxWidth < 0) {
-                throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: " + maxWidth)
+                throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: $maxWidth")
             }
 
             // Already removed all tabs, transformed all line-terminators into "\n", and removed all runs of spaces
@@ -158,7 +158,7 @@ data class Text(val textStyle: TextStyle,
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
 
-//            println("maybe too long substr=[$substr]")
+//            println("maybe too long idx=$idx substr=[$substr]")
 
             idx--
             //        System.out.println("(strWidth=" + strWidth + " > maxWidth=" + maxWidth + ") && (idx=" + idx + " > 0)");
@@ -178,7 +178,11 @@ data class Text(val textStyle: TextStyle,
                     idx--
                 }
                 if (idx < 1) {
-                    break // no spaces - have to put whole thing in cell and let it run over.
+                    // no spaces - have to put whole thing in cell and let it run over.
+                    // Notice that idx == 0 here, which would cause us to report the wrong word-length later,
+                    // so fix it to be the length of the word minus one.
+                    idx = substr.length - 1
+                    break
                 }
                 if (idx == prevIdx) {
                     // Run the previous checks again, but only looking for whitespace this time, not other

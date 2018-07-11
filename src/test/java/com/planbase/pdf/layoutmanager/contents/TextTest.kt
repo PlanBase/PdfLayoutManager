@@ -10,6 +10,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
+import com.planbase.pdf.layoutmanager.contents.Text.Companion.tryGettingText
 import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
@@ -17,6 +18,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
+import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
 import com.planbase.pdf.layoutmanager.pages.HeightAndPage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
@@ -127,6 +129,57 @@ class TextTest {
 
         ri = Text.tryGettingText(50.0, ri.idx, txt)
         assertEquals("false", ri.row.string)
+    }
+
+    /**
+     * This was interesting because it hung in production!  Basically, when a word is too big to fit on any line,
+     * it has to overflow.  But the index for where to start looking for the next word in the Text string was
+     * not updated (it had decremented down to zero checking the long word for a space).  This put
+     * MultiLineWrapped.wrapLines() into a loop, adding the same too-long word to every line of wrapped text.
+     * The fix was to simply fix the index to be the end of the word in that case.  Surprised it took me so long
+     * to test this case, but there you have it.
+     */
+    @Test fun testTextWrappTooLongWord() {
+        val ts = TextStyle(TIMES_ROMAN, 7.6, CMYK_BLACK)
+        val maxWidth = 33.0
+
+        var txt = "foo"
+        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+                            idx=txt.length + 1, foundCr=false),
+                     tryGettingText(maxWidth, 0, Text(ts, txt)))
+
+        txt = "foobar"
+        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+                            idx=txt.length + 1, foundCr=false),
+                     tryGettingText(maxWidth, 0, Text(ts, txt)))
+
+        txt = "breakfast"
+        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+                            idx=txt.length + 1, foundCr=false),
+                     tryGettingText(maxWidth, 0, Text(ts, txt)))
+
+        txt = "breakfasts"
+        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+                            idx=txt.length + 1, foundCr=false),
+                     tryGettingText(maxWidth, 0, Text(ts, txt)))
+
+        txt = "breakfastss"
+        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+                            idx=txt.length + 1, foundCr=false),
+                     tryGettingText(maxWidth, 0, Text(ts, txt)))
+
+        txt = "breakfastzzzzzzzzzz,"
+        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+                            idx=txt.length + 1, foundCr=false),
+                     tryGettingText(maxWidth, 0, Text(ts, "breakfastzzzzzzzzzz, lunch")))
+
+        // Tests the actual bug.
+        val txt1 = Text(ts, "breakfastzzzzzzzzzz, lunch")
+        val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1), maxWidth)
+
+        assertEquals(2, wrappedLines.size)
+        assertEquals(WrappedText(ts, "breakfastzzzzzzzzzz,", 63.498), wrappedLines[0])
+        assertEquals(WrappedText(ts, "lunch", 16.8872), wrappedLines[1])
     }
 
 //    @Test fun testSubstrNoLeadingSpaceUntilRet() {
@@ -294,10 +347,10 @@ class TextTest {
         val cell = Cell(chapTitleCellStyle, 210.0,
                         listOf(Text(incipit, "3. "),
                                Text(heading, "A Caucus-Race and a Long Tale")))
-        println("cell=$cell\n\n")
+//        println("cell=$cell\n\n")
 
         val wrappedCell = cell.wrap()
-        println("\n\nwrappedCell=${wrappedCell.indentedStr("wrappedCell=".length)}")
+//        println("\n\nwrappedCell=${wrappedCell.indentedStr("wrappedCell=".length)}")
 
         val wrappedItems: List<LineWrapped> = wrappedCell.rows
         assertEquals(2, wrappedItems.size) // 2 lines

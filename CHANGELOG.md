@@ -2,7 +2,15 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.9 2018-06-08 "Fixed: Free font file descriptors"
+## 2.1.10 2018-07-11 "Fixed: infinite loop on too-long text"
+ - When a word is too big to fit on any line it has to overflow, but we weren't returning the correct word-length
+ (idx) in Text.tryGettingText().
+ This made it return the same too-long word every time it was asked for more text
+ which put MultiLineWrapped.wrapLines() into a loop.
+ This issue is now fixed.
+ - Bumped Kotlin to 1.2.51
+
+### 2.1.9 2018-06-08 "Fixed: Free font file descriptors"
  - PdfLayoutManger now caches all TrueTypeFont objects and tells them to free their file descriptors once the
  document is closed.
  This fixes a file descriptor leak.
