@@ -44,7 +44,7 @@ import java.util.TreeSet
  * Caches the contents of a specific, single page for later drawing.  Inner classes are what's added
  * to the cache and what controls the drawing.  You generally want to use [PageGrouping] when
  * you want automatic page-breaking.  SinglePage is for when you want to force something onto a
- * specific page only.
+ * specific page only.  All drawing is done relative to the bottom-left of the body being at (0, 0).
  * @param body the offset and size of the body area.
  */
 class SinglePage(val pageNum: Int,
@@ -124,7 +124,7 @@ class SinglePage(val pageNum: Int,
         // We subtract xOff here because it will get added back on when render() calls back to SinglePage.
         // Better to design this to leave the value alone since addition/subtraction of floats/doubles
         // introduces inaccuracies.
-        val dap: DimAndPageNums = block.render(this, topLeft.plusX(- xOff))
+        val dap: DimAndPageNums = block.render(this, topLeft)
         cursorY = topLeft.y - dap.dim.height
         return dap
     }
@@ -136,7 +136,7 @@ class SinglePage(val pageNum: Int,
      * @param block the LineWrapped item to display
      */
     fun append(block: LineWrapped): DimAndPageNums =
-            add(Coord(xOff, cursorY), block)
+            add(Coord(0.0, cursorY), block)
 
     /**
      * Cell goes at bodyTopLeft.x and cursorY.  Cell width is bodyDim.width.
@@ -145,7 +145,7 @@ class SinglePage(val pageNum: Int,
      * @param contents the contents of the cell
      */
     fun appendCell(cellStyle: CellStyle, contents:List<LineWrappable>): DimAndPageNums =
-            add(Coord(xOff, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
+            add(Coord(0.0, cursorY), Cell(cellStyle, body.dim.width, contents).wrap())
 
     /**
      * Returns the top margin necessary to push this item onto a new page if it won't fit on this one.

@@ -2,7 +2,15 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.10 2018-07-11 "Fixed: infinite loop on too-long text"
+## 2.1.11 2018-10-05 "Fixed: SinglePage.add() takes X coordinate from edge of page (should take from edge of body)"
+ - When a word is too big to fit on any line it has to overflow, but we weren't returning the correct word-length
+ (idx) in Text.tryGettingText().
+ This made it return the same too-long word every time it was asked for more text
+ which put MultiLineWrapped.wrapLines() into a loop.
+ This issue is now fixed.
+ - Bumped Kotlin to 1.2.51
+
+### 2.1.10 2018-07-11 "Fixed: infinite loop on too-long text"
  - When a word is too big to fit on any line it has to overflow, but we weren't returning the correct word-length
  (idx) in Text.tryGettingText().
  This made it return the same too-long word every time it was asked for more text

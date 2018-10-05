@@ -65,7 +65,7 @@ fun colorToString(color:PDColor?) =
             }
         }
 
-private fun pdColorEquator(a:PDColor, b:PDColor):Boolean =
+fun pdColorEquator(a:PDColor, b:PDColor):Boolean =
         if (a === b) { true }
         else (a.colorSpace == b.colorSpace) &&
              (a.patternName == b.patternName) &&

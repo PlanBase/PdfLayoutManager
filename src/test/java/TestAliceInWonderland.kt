@@ -276,7 +276,7 @@ class TestAliceInWonderland {
         }
         table = rowBuilder.buildRow().buildPart()
 
-        dap = sp.add(sp.body.topLeft.minusY(dap.dim.height), table.wrap())
+        dap = sp.add(Coord(0.0, sp.body.topLeft.y - dap.dim.height), table.wrap())
         assertEquals(IntRange(-1, -1), dap.pageNums)
         pageMgr.insertPageAt(sp, 1)
 

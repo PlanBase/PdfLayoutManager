@@ -23,7 +23,7 @@ Sample Code: [TestManualllyPdfLayoutMgr.java](src/test/java/TestManualllyPdfLayo
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.1.10</version>
+        <version>2.1.11</version>
     </dependency>
 ```
 
@@ -40,6 +40,7 @@ This corresponds to one definition of a "point" and a common screen resolution f
 * The point (0,0) is the lower-left-hand corner of the page (in portrait orientation, in landscape it may be below the bottom of the page).
 Positive Y is up.  Positive X is right.
 * Rectangles and Images are positioned by their lower-left corners.
+* Single Page works in relation to the lower-left corner of the *body* of the page, not of the page itself.
 
 #### Baseline
 * The baseline is what the characters in most scripts "sit" on.
