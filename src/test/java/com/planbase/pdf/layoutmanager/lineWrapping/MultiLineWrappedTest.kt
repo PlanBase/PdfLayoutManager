@@ -207,6 +207,31 @@ class MultiLineWrappedTest {
         verifyLine(wrappedLines[7], tStyle1.lineHeight, maxWidth, "")
     }
 
+    @Test fun testTooLongWordWrapping() {
+        // This tests a too-long line that breaks on a hyphen (not a white-space).
+        // It used to adjust the index wrong and always return index=0 and return the first half of the line.
+        val times8pt = TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK)
+        val maxWidth = 100.0
+        val lineWrapper: LineWrapper =
+                Text(times8pt,
+                     "www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
+                        .lineWrapper()
+        assertTrue(lineWrapper.hasMore())
+
+        val something : ConTerm = lineWrapper.getSomething(maxWidth)
+        assertTrue(something is Continuing)
+        assertTrue(something.item is WrappedText)
+        assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-", 101.096)),
+                     something)
+        assertTrue(lineWrapper.hasMore())
+
+        val something2 : ConTerm = lineWrapper.getSomething(maxWidth)
+        assertTrue(something2 is Continuing)
+        assertTrue(something2.item is WrappedText)
+        assertEquals(Continuing(WrappedText(times8pt, "eng.site-ym.com/resource/", 84.872)),
+                     something2)
+    }
+
     @Test(expected = IllegalArgumentException::class)
     fun testRenderablesToLinesEx() {
         wrapLines(listOf(), -1.0)

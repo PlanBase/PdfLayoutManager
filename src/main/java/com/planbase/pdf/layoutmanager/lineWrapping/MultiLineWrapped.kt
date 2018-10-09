@@ -156,6 +156,7 @@ For each renderable
  */
 fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrapped> {
 //    println("================in wrapLines...")
+//    println("wrapLines($wrappables, $maxWidth)")
     if (maxWidth < 0) {
         throw IllegalArgumentException("maxWidth must be >= 0, not $maxWidth")
     }
@@ -166,7 +167,7 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
     // This is the current line we're working on.
     var wrappedLine = MultiLineWrapped() // Is this right, putting no source here?
 
-//    var prevItem:LineWrappable = LineWrappable.ZeroLineWrappable
+    // var prevItem:LineWrappable = LineWrappable.ZeroLineWrappable
     var remainingSpace = maxWidth
     for (item in wrappables) {
 //        println("Wrappable: $item")
@@ -180,7 +181,7 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
 //                println("🢂something=$something")
                 wrappedLine.append(something.item)
                 remainingSpace -= something.item.dim.width
-//                println("      remainingSpace=$remainingSpace")
+//                println("      remainingSpace1=$remainingSpace")
                 if (something is Terminal) {
 //                    println("=============== TERMINAL")
 //                    println("something:$something")
@@ -200,7 +201,7 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
                          (something.item is WrappedText) ) {
                         remainingSpace -= (something.item as WrappedText).textStyle.spaceWidth
                     }
-//                    println("      remainingSpace=$remainingSpace")
+//                    println("      remainingSpace2=$remainingSpace")
                 }
             } else {
 //                println("    wrappedLine is not empty")
@@ -215,7 +216,7 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
                         if (ctn.item is WrappedText) {
                             remainingSpace -= ctn.item.textStyle.spaceWidth
                         }
-//                        println("      remainingSpace=$remainingSpace")
+//                        println("      remainingSpace3=$remainingSpace")
                         if (remainingSpace <= 0) {
                             addLineCheckBlank(wrappedLine, wrappedLines)
                             wrappedLine = MultiLineWrapped()
@@ -230,7 +231,8 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
                         remainingSpace = maxWidth
                     }
                     None -> {
-//                        MultiLineWrappeds.add(wrappedLine)
+//                        println("=============== NONE 222222222")
+                        // MultiLineWrappeds.add(wrappedLine)
                         addLineCheckBlank(wrappedLine, wrappedLines)
                         wrappedLine = MultiLineWrapped()
                         remainingSpace = maxWidth

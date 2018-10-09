@@ -386,6 +386,14 @@ class WrappedCellTest {
 //        pageMgr.save(FileOutputStream("test3.pdf"))
     }
 
+    @Test fun testTooLongWordCellWrapping() {
+        // This just tests that we don't go into an infinite loop (it used to).
+        val cell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle.NO_PAD_NO_BORDER),
+                        100.0,
+                        listOf(Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK, 9.0),
+                                    "www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")))
+        cell.wrap()
+    }
 
     companion object {
         val boxStyle = BoxStyle(Padding(2.0), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))

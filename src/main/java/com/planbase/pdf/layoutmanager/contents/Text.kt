@@ -74,6 +74,7 @@ data class Text(val textStyle: TextStyle,
                 throw IllegalArgumentException("Illegal negative width: $maxWidth")
             }
             val rowIdx = tryGettingText(maxWidth, idx, txt)
+//            println("rowIdx=$rowIdx")
             idx = rowIdx.idx
             return rowIdx.toContTerm()
         }
@@ -165,7 +166,7 @@ data class Text(val textStyle: TextStyle,
             // Too long.  Find longest string that is short enough.
             while (strWidth > maxWidth && idx > 0) {
                 //            System.out.println("find longest string that is short enough");
-//                println("strWidth: $strWidth maxWidth: $maxWidth idx: $idx substr=[$substr]")
+//                println("  strWidth: $strWidth maxWidth: $maxWidth idx: $idx substr=[$substr]")
                 val prevIdx = idx
 
                 // Find previous whitespace run
@@ -196,6 +197,7 @@ data class Text(val textStyle: TextStyle,
                         idx--
                     }
                     if (idx < 1) {
+                        idx = substr.length - 1
                         break // no spaces - have to put whole thing in cell and let it run over.
                     }
 //                    println("strWidth: $strWidth maxWidth: $maxWidth idx: $idx")
@@ -207,7 +209,7 @@ data class Text(val textStyle: TextStyle,
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
 
-//            println("substr=[$substr]")
+//            println("substr=[$substr] idx=$idx")
 
             idx++
             val eolIdx = substr.indexOf(char= CR)
@@ -229,7 +231,8 @@ data class Text(val textStyle: TextStyle,
                 idx
             }
 
-            return RowIdx(WrappedText(txt.textStyle, substr, strWidth), startIdx + adjIdx,
+            return RowIdx(WrappedText(txt.textStyle, substr, strWidth),
+                          startIdx + adjIdx,
                           if (substr == text) {
                               foundCr
                           } else {

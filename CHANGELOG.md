@@ -2,7 +2,11 @@
 
 Bigger headings mean more stable releases!
 
-## 2.1.11 2018-10-05 "Fixed: SinglePage.add() takes X coordinate from edge of page (should take from edge of body)"
+## 2.1.12 2018-10-09 "Fixed: hyphenated word longer than a whole line goes into infinite loop."
+ - Silly error - had forgotten to update an index when breaking out of a loop.
+ Added tests to ensure this stays fixed.  We published two 200-page books with this code before finding this bug.
+
+### 2.1.11 2018-10-05 "Fixed: SinglePage.add() takes X coordinate from edge of page (should take from edge of body)"
  - When a word is too big to fit on any line it has to overflow, but we weren't returning the correct word-length
  (idx) in Text.tryGettingText().
  This made it return the same too-long word every time it was asked for more text

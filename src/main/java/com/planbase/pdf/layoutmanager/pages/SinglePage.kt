@@ -115,15 +115,12 @@ class SinglePage(val pageNum: Int,
      * work than adding an entire chapter to a cell and calling Cell.render(), but it allows each top level item
      * to return a page range.  These pages can later be used to create a table of contents or an index.
      *
-     * @param topLeft the coordinate to add the item at.  Might want to make a convenience version of this method
-     * that internally updates a cursor so you never have to specify this.
+     * @param topLeft the coordinate to add the item at.  Use [append] instead if you just want it to go at the next
+     *        y-coordinate.
      * @param block the LineWrapped item to display
      */
     fun add(topLeft: Coord, block: LineWrapped): DimAndPageNums {
         this.pageBreakingTopMargin(topLeft.y - body.dim.height, body.dim.height, 0.0)
-        // We subtract xOff here because it will get added back on when render() calls back to SinglePage.
-        // Better to design this to leave the value alone since addition/subtraction of floats/doubles
-        // introduces inaccuracies.
         val dap: DimAndPageNums = block.render(this, topLeft)
         cursorY = topLeft.y - dap.dim.height
         return dap
