@@ -386,13 +386,46 @@ class WrappedCellTest {
 //        pageMgr.save(FileOutputStream("test3.pdf"))
     }
 
+    // This originally went into an infinite loop.  Now it should force line breaks on appropriate breaking characters.
     @Test fun testTooLongWordCellWrapping() {
-        // This just tests that we don't go into an infinite loop (it used to).
+
+        val ts = TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK, 9.0)
         val cell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle.NO_PAD_NO_BORDER),
                         100.0,
-                        listOf(Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK, 9.0),
-                                    "www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")))
-        cell.wrap()
+                        listOf(Text(ts,
+                                    "www.c.ymcdn.com/sites/value-eng.site-ym.com/" +
+                                    "resource/resmgr/Standards_Documents/vmstd.pdf")))
+        val wrapped = cell.wrap()
+        assertEquals(4, wrapped.rows.size)
+        val row0 = wrapped.rows[0]
+        assertEquals(1, row0.items().size)
+        val row0item0 = row0.items()[0] as WrappedText
+        assertEquals(ts, row0item0.textStyle)
+        assertEquals("www.c.ymcdn.com/sites/value-", row0item0.string)
+        assertEquals(101.096, row0item0.width, 0.0000005)
+
+        val row1 = wrapped.rows[1]
+        assertEquals(1, row1.items().size)
+        val row1item0 = row1.items()[0] as WrappedText
+        assertEquals(ts, row1item0.textStyle)
+        assertEquals("eng.site-ym.com/resource/", row1item0.string)
+        assertEquals(84.872, row1item0.width, 0.0000005)
+
+        val row2 = wrapped.rows[2]
+        assertEquals(1, row2.items().size)
+        val row2item0 = row2.items()[0] as WrappedText
+        assertEquals(ts, row2item0.textStyle)
+        assertEquals("resmgr/Standards_Documents/", row2item0.string)
+        assertEquals(98.656, row2item0.width, 0.0000005)
+
+        val row3 = wrapped.rows[3]
+        assertEquals(1, row3.items().size)
+        val row3item0 = row3.items()[0] as WrappedText
+        assertEquals(ts, row3item0.textStyle)
+        assertEquals("vmstd.pdf", row3item0.string)
+        assertEquals(32.224, row3item0.width, 0.0000005)
+
+        Dim.assertEquals(Dim(100.0, 36.0), wrapped.dim, 0.0000005)
     }
 
     companion object {
