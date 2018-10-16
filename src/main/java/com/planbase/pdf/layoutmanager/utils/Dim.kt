@@ -21,6 +21,7 @@
 package com.planbase.pdf.layoutmanager.utils
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle
+import java.lang.AssertionError
 import java.lang.Math.abs
 
 /**
@@ -94,9 +95,9 @@ data class Dim(val width: Double, val height: Double) {
         fun assertEquals(xya: Dim, xyb: Dim, latitude: Double) {
             if ((abs(xya.height - xyb.height) > latitude) ||
                 (abs(xya.width - xyb.width) > latitude)) {
-                throw Error("\n" +
-                            "Expected: $xya\n" +
-                            "Actual:   $xyb")
+                throw AssertionError("\n" +
+                                     "Expected: $xya\n" +
+                                     "Actual:   $xyb")
             }
         }
     }

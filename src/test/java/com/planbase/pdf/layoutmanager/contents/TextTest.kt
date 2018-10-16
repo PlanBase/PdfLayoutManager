@@ -28,6 +28,7 @@ import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ITALIC
 import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test
@@ -144,32 +145,32 @@ class TextTest {
         val maxWidth = 33.0
 
         var txt = "foo"
-        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+        assertEquals(RowIdx(WrappedText(ts, txt),
                             idx=txt.length + 1, foundCr=false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "foobar"
-        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+        assertEquals(RowIdx(WrappedText(ts, txt),
                             idx=txt.length + 1, foundCr=false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfast"
-        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+        assertEquals(RowIdx(WrappedText(ts, txt),
                             idx=txt.length + 1, foundCr=false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfasts"
-        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+        assertEquals(RowIdx(WrappedText(ts, txt),
                             idx=txt.length + 1, foundCr=false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfastss"
-        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+        assertEquals(RowIdx(WrappedText(ts, txt),
                             idx=txt.length + 1, foundCr=false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfastzzzzzzzzzz,"
-        assertEquals(RowIdx(WrappedText(ts, txt, ts.stringWidthInDocUnits(txt)),
+        assertEquals(RowIdx(WrappedText(ts, txt),
                             idx=txt.length + 1, foundCr=false),
                      tryGettingText(maxWidth, 0, Text(ts, "breakfastzzzzzzzzzz, lunch")))
 
@@ -178,8 +179,8 @@ class TextTest {
         val wrappedLines: List<LineWrapped> = wrapLines(listOf(txt1), maxWidth)
 
         assertEquals(2, wrappedLines.size)
-        assertEquals(WrappedText(ts, "breakfastzzzzzzzzzz,", 63.498), wrappedLines[0])
-        assertEquals(WrappedText(ts, "lunch", 16.8872), wrappedLines[1])
+        assertEquals(WrappedText(ts, "breakfastzzzzzzzzzz,"), wrappedLines[0])
+        assertEquals(WrappedText(ts, "lunch"), wrappedLines[1])
     }
 
 //    @Test fun testSubstrNoLeadingSpaceUntilRet() {
@@ -205,7 +206,7 @@ class TextTest {
 //    }
 
     @Test fun testRenderator() {
-        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8.333334, CMYK_BLACK)
+        val tStyle = TextStyle(TIMES_ITALIC, 8.333334, CMYK_BLACK)
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
@@ -230,7 +231,7 @@ class TextTest {
     }
 
     @Test fun testRenderator2() {
-        val tStyle = TextStyle(PDType1Font.TIMES_ITALIC, 8.333334, CMYK_BLACK)
+        val tStyle = TextStyle(TIMES_ITALIC, 8.333334, CMYK_BLACK)
         val txt = Text(tStyle, "This is a long enough line of text.")
         val rend = txt.lineWrapper()
         assertTrue(rend.hasMore())
@@ -271,7 +272,7 @@ class TextTest {
     }
 
     @Test fun testBaseline() {
-        val tStyle1 = TextStyle(PDType1Font.TIMES_ROMAN, 100.0, CMYK_BLACK)
+        val tStyle1 = TextStyle(TIMES_ROMAN, 100.0, CMYK_BLACK)
         val txt1 = Text(tStyle1, "Hi 'dNlgjpqy,!$")
         val thinLine = LineStyle(RGB_BLACK, 0.125)
 
@@ -369,4 +370,82 @@ class TextTest {
 //        pageMgr.commit()
 //        pageMgr.save(FileOutputStream("spaceBeforeLastWord.pdf"))
     }
+
+    @Test
+    fun testMultiLineEndsWithComma() {
+        val maxWidth = 138.980
+        val txt=Text(TextStyle(TIMES_ITALIC, 12.0, CMYK_BLACK), "They must go by the carrier- ")
+        val wrapper = txt.lineWrapper()
+        val conTerm1: ConTerm = wrapper.getSomething(maxWidth)
+
+        // This should always be true
+        assertTrue(conTerm1 is Continuing)
+        assertTrue(conTerm1.item is WrappedText)
+        assertTrue(conTerm1.item.dim.width <= maxWidth)
+
+        assertEquals("They must go by the carrier-", // Should this have a space at the end of it?
+                     (conTerm1.item as WrappedText).string)
+        assertEquals(136.98, conTerm1.item.dim.width, 0.0005)
+    }
+
+    /**
+     * This has to work in order for [WrappedCellTest.testFirstGuessWayTooSmall] to work
+     */
+    @Test fun testFirstGuessTooShort() {
+        val maxWidth = 190.0
+        val txt=Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK),
+                     "lll,,,lll,,,lll/lll,,/lll,,-englsite-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
+        val wrapper = txt.lineWrapper()
+        val conTerm1: ConTerm = wrapper.getSomething(maxWidth)
+
+        // This should always be true
+        assertTrue(conTerm1 is Continuing)
+        assertTrue(conTerm1.item is WrappedText)
+        assertTrue(conTerm1.item.dim.width <= maxWidth)
+
+        // This probably won't change, but could be subject to rounding errors or font differences or something.
+        assertEquals("lll,,,lll,,,lll/lll,,/lll,,-englsite-ym.com/resource/resmgr/",
+                     (conTerm1.item as WrappedText).string)
+        assertEquals(170.008, conTerm1.item.dim.width, 0.0005)
+
+        val conTerm2: ConTerm = wrapper.getSomething(maxWidth)
+
+        // This should always be true
+        assertTrue(conTerm2 is Continuing)
+        assertTrue(conTerm2.item is WrappedText)
+        assertTrue(conTerm2.item.dim.width <= maxWidth)
+
+        // This may be subject to rounding errors or different line-breaking characters
+        assertEquals("Standards_Documents/vmstd.pdf",
+                     (conTerm2.item as WrappedText).string)
+        assertEquals(106.44, conTerm2.item.dim.width, 0.0005)
+
+    }
+
+    /**
+     * This has to work in order for [WrappedCellTest.testFirstGuessWayTooSmall] to work
+     */
+    @Test fun testFirstGuessTooLong() {
+        val maxWidth = 190.0
+        val txt=Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK),
+                     "WWW@@@WWW@@@WWW/WWW@@/WWW@@-engWsite-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
+        val wrapper = txt.lineWrapper()
+        val conTerm1: ConTerm = wrapper.getSomething(maxWidth)
+        println("conTerm1=$conTerm1")
+
+        // This should always be true
+        assertTrue(conTerm1 is Continuing)
+        assertTrue(conTerm1.item is WrappedText)
+        assertTrue(conTerm1.item.dim.width <= maxWidth)
+
+        val conTerm2: ConTerm = wrapper.getSomething(maxWidth)
+        println("conTerm2=$conTerm2")
+
+        // This should always be true
+        assertTrue(conTerm2 is Continuing)
+        assertTrue(conTerm2.item is WrappedText)
+        assertTrue(conTerm2.item.dim.width <= maxWidth)
+
+    }
+
 }

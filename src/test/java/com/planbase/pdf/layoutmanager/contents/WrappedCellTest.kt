@@ -11,11 +11,13 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.layoutmanager.attributes.Align
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle
+import com.planbase.pdf.layoutmanager.attributes.BorderStyle.Companion.NO_BORDERS
 import com.planbase.pdf.layoutmanager.attributes.BoxStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
 import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.Padding
+import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
@@ -114,8 +116,7 @@ class WrappedCellTest {
                                        mlw.append(
                                                WrappedText(
                                                        textStyle,
-                                                       hello.text,
-                                                       hello.maxWidth()
+                                                       hello.text
                                                )
                                        )
                                        mlw
@@ -426,6 +427,44 @@ class WrappedCellTest {
         assertEquals(32.224, row3item0.width, 0.0000005)
 
         Dim.assertEquals(Dim(100.0, 36.0), wrapped.dim, 0.0000005)
+    }
+
+    /**
+     * This relies on [TextTest.testFirstGuessTooLong] and [TextTest.testFirstGuessTooShort] working correctly.
+     */
+    @Test fun testFirstGuessWayTooSmall() {
+        // This
+        val mjPageSize = Dim(309.6, 453.6)
+        val leftMargin = 60.618181828 // 49.818181828 // For 5x7 = 40 + 9.818181828
+        val bodyDim = Dim(189.69, 342.49)
+        val footBase = ((mjPageSize.height - bodyDim.height) / 2.0) - 8.0 //   footerTopY - 9.49 // 17.0 // footer text baseline
+        val footerTopY = footBase + 9.49 // 46.39 // 26.49
+        val topLeft = Coord(leftMargin, bodyDim.height + footerTopY)
+        val body = PageArea(topLeft, bodyDim)
+        val bodyBottom = footerTopY + 0.1
+        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, mjPageSize, null)
+        val item=Cell(CellStyle(Align.TOP_LEFT_JUSTIFY, BoxStyle(Padding(3.5, 0.0, 3.0, 0.0), null, NO_BORDERS)), bodyDim.width, contents=
+        listOf(Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK), "WWW@@@WWW@@@WWW/WWW@@/WWW@@-engWsite-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")))
+        // This only goes over by the width of a single space maybe.
+//        val item=Cell(CellStyle(Align.TOP_LEFT_JUSTIFY, BoxStyle(Padding(3.5, 0.0, 3.0, 0.0), null, NO_BORDERS)), bodyDim.width, contents=
+//        listOf(Text(TextStyle(TIMES_ROMAN,
+//                              7.44513713875045679557729272346477955579757690429687499999999999,
+//                              CMYK_BLACK),
+//                    ". Value Methodology Standard. March 2015. www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")))
+//        println("it=${item.wrap()}")
+//        println("===========================================================================")
+
+        val lp = pageMgr.startPageGrouping(PORTRAIT, body)
+        lp.drawLineLoop(listOf(topLeft.withX(0.0),
+                               topLeft.withX(bodyDim.width),
+                               Coord(bodyDim.width, bodyBottom),
+                               Coord(0.0, bodyBottom)),
+                        LineStyle(CMYK_BLACK, 0.01))
+        lp.append(item.wrap())
+        pageMgr.commit()
+        pageMgr.save(FileOutputStream("tooLongLink.pdf"))
+
+
     }
 
     companion object {

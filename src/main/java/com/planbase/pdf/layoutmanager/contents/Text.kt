@@ -100,6 +100,8 @@ data class Text(val textStyle: TextStyle,
         private const val CR: Char = '\n'
 
         internal fun tryGettingText(maxWidth: Double, startIdx: Int, txt: Text): RowIdx {
+            println("=======================\n" +
+                    "tryGettingText(maxWidth=$maxWidth, startIdx=$startIdx, txt=$txt)")
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: $maxWidth")
             }
@@ -121,108 +123,146 @@ data class Text(val textStyle: TextStyle,
                     }
 
             val text:String = row.substring(startIdx, crIdx)
-//            println("text:" + text)
-
-            val charWidthGuess:Int = txt.avgCharsForWidth(maxWidth)
+//            println("text=[$text]")
 
             val textLen = text.length
-            //        System.out.println("text=[" + text + "] len=" + textLen);
+            println("text=[$text] len=$textLen")
             // Knowing the average width of a character lets us guess and generally be near
             // the word where the line break will occur.  Since the font reports a narrow average,
             // (possibly due to the predominance of spaces in text) we widen it a little for a
             // better first guess.
-            var idx = charWidthGuess
+            var idx = txt.avgCharsForWidth(maxWidth)
             if (idx > textLen) {
                 idx = textLen
             }
             var substr = text.substring(0, idx)
             var strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+            println("firstGuess substr=[$substr] idx=$idx len=$strWidth")
 
-//            println("Starting guess substr=[$substr]")
+            // We assume that most lines *do* fit understanding that if most lines don't, this will be a little
+            // slower.  But then it will look terrible, so you shouldn't be doing that anyway.
+            //
+            // The basic algorithm is very simple.
+            //
+            //  - Start with a guess at the right length (above).
+            //  - Find the minimum width that fits.  (Could remember if we find a breaking character)
+            //  - Find the previous breaking character
+            //     - Found:
+            //        - Consume any white space immediately before that character
+            //        - Return result
+            //     - Not Found:
+            //        - Search until we find one (or end of string) and return that.
 
-            //        System.out.println("(strWidth=" + strWidth + " < maxWidth=" + maxWidth + ") && (idx=" + idx + " < textLen=" + textLen + ")");
-            // If too short - find shortest string that is too long.
-            // int idx = idx;
-            // int maxTooShortIdx = -1;
-            while (strWidth < maxWidth && idx < textLen) {
-                //                System.out.println("find shortest string that is too long");
-                // Consume any whitespace.
-                while (idx < textLen && Character.isWhitespace(text[idx])) {
-                    idx++
-                }
-                // Find last non-whitespace character
-                while (idx < textLen && !Character.isWhitespace(text[idx])) {
-                    idx++
-                }
-                // Test new width
+            //  - Find the minimum width that fits.  Could use binary search with linear interpolation for next guess.
+            // But first guess is probably close enough that we're only going to go through this loop 2-3 times
+            // unless the string is "ll,,ll" (all skinny chars) or "WW@@WW" (all wide chars).
+            var longestIdxThatFits: Int? = null
+            while (strWidth <= maxWidth && idx < textLen) {
+                println("Finding longest that fits substr=[$substr] idx=$idx len=$strWidth")
+                longestIdxThatFits = idx
+                idx = longestIdxThatFits + 1
                 substr = text.substring(0, idx)
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
 
-//            println("maybe too long idx=$idx substr=[$substr]")
-
-            idx--
-            //        System.out.println("(strWidth=" + strWidth + " > maxWidth=" + maxWidth + ") && (idx=" + idx + " > 0)");
-            // Too long.  Find longest string that is short enough.
-            while (strWidth > maxWidth && idx > 0) {
-                //            System.out.println("find longest string that is short enough");
-//                println("  strWidth: $strWidth maxWidth: $maxWidth idx: $idx substr=[$substr]")
-                val prevIdx = idx
-
-                // Find previous whitespace run
-                while (idx > -1 && !isLineBreakable(text[idx])) {
-//                    println("Not line-breakable: ${text[idx]}")
-                    idx--
+            if (longestIdxThatFits == null) {
+                //  Here, we're beyond the max width, so go back to maxWidth.
+                while (strWidth > maxWidth && idx > 0) {
+                    println("Backing up to maxwidth...")
+                    longestIdxThatFits = idx - 1
+                    idx = longestIdxThatFits
+                    substr = text.substring(0, idx)
+                    strWidth = txt.textStyle.stringWidthInDocUnits(substr)
                 }
+            } else if (Character.isWhitespace(text[idx - 1])) {
+                println("Character after longest that fits is whitespace")
+                idx = longestIdxThatFits
+                substr = text.substring(0, idx)
+                println("Returning substr=[$substr] idx=$idx")
+                return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
+                              startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                              if (substr == text) {
+                                  foundCr
+                              } else {
+                                  false
+                              })
+            } else {
+                println("Setting idx=$idx to longestIdxThatFits=$longestIdxThatFits")
+                idx = longestIdxThatFits
+            }
+            println("Longest that fits: substr=[$substr] idx=$idx len=$strWidth")
+
+            if (idx >= textLen) {
+                println("Returning whole string.")
+                return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
+                              startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                              if (substr == text) {
+                                  foundCr
+                              } else {
+                                  false
+                              })
+            }
+
+            while (idx > 0 && !isLineBreakable(text[idx - 1])) {
+                println("text[idx]=${text[idx - 1]}")
+                idx--
+            }
+
+            if (idx <= 0) {
+                println("There is nothing line-breakable that fits.  Find shortest line-breakable that runs over...")
+                idx = longestIdxThatFits!!
+                while (idx < textLen && !isLineBreakable(text[idx])) {
+                    println("Longer text[idx]=${text[idx]}")
+                    idx++
+                }
+
+                substr = text.substring(0, idx)
+                return RowIdx(WrappedText(txt.textStyle, substr.trimEnd()), // strWidth),
+                              startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                              if (substr == text) {
+                                  foundCr
+                              } else {
+                                  false
+                              })
+            }
+
+            substr = text.substring(0, idx)
+            strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+            println("Ends with line-breakable: substr=[$substr] idx=$idx len=$strWidth")
+
+            if (idx > -1) {
+                println("Found a line-breakable.")
+                // Found a line-breakable.
+                //        - Consume any white space immediately before that character
+                //        - Return result
                 // Find last non-whitespace character before whitespace run.
-                while (idx > -1 && Character.isWhitespace(text[idx])) {
+                if (idx > textLen) {
+                    println("Backing up from end of string...")
+                    idx = textLen - 1
+                }
+                while (idx > 0 && Character.isWhitespace(text[idx - 1])) {
+                    println("text2[idx]=[${text[idx - 1]}]")
                     idx--
                 }
-                if (idx < 1) {
-                    // no spaces - have to put whole thing in cell and let it run over.
-                    // Notice that idx == 0 here, which would cause us to report the wrong word-length later,
-                    // so fix it to be the length of the word minus one.
-                    idx = substr.length - 1
-                    break
-                }
-                if (idx == prevIdx) {
-                    // Run the previous checks again, but only looking for whitespace this time, not other
-                    // breaking characters.  This ensures that this loop terminates when the line break happens
-                    // in the middle of the "/" in this string: "This is true /"
-                    while (idx > -1 && !Character.isWhitespace(text[idx])) {
-                        idx--
-                    }
-                    // Find last non-whitespace character before whitespace run.
-                    while (idx > -1 && Character.isWhitespace(text[idx])) {
-                        idx--
-                    }
-                    if (idx < 1) {
-                        idx = substr.length - 1
-                        break // no spaces - have to put whole thing in cell and let it run over.
-                    }
-//                    println("strWidth: $strWidth maxWidth: $maxWidth idx: $idx")
-//                    throw IllegalStateException("Oops!")
-                }
-
-                // Test new width
-                substr = text.substring(0, idx + 1)
+                substr = text.substring(0, idx)
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+                println("Backed up to here: substr=[$substr] idx=$idx len=$strWidth")
+            } else {
+                println("Did not find a line-breakable.")
+                // Did not find a line-breakable.
+                //        - Search until we find one (or end of string) and return that.
+                // Find last non-breakable character
+                while ( (idx < textLen) &&
+                        !isLineBreakable(text[idx]) ) {
+                    println("text3[idx]=${text[idx]}")
+                    idx++
+                }
             }
 
-//            println("substr=[$substr] idx=$idx")
+            substr = text.substring(0, idx)
+//            strWidth = txt.textStyle.stringWidthInDocUnits(substr)
 
-            idx++
-            val eolIdx = substr.indexOf(char= CR)
-            if (eolIdx > -1) {
-                substr = substr.substring(0, eolIdx)
-                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-                if (strWidth > maxWidth) {
-                    throw IllegalStateException("strWidth=$strWidth > maxWidth=$maxWidth")
-                }
-                return RowIdx(WrappedText(txt.textStyle, substr, strWidth), idx + startIdx + 1, true)
-            }
-            // Need to test trailing whitespace.
-//            println("idx=$idx substr=\"$substr\"")
+            println("substr=[$substr] idx=$idx")
 
             val adjIdx = if ( (idx >= textLen) ||
                               Character.isWhitespace(text[idx]) ) {
@@ -231,13 +271,112 @@ data class Text(val textStyle: TextStyle,
                 idx
             }
 
-            return RowIdx(WrappedText(txt.textStyle, substr, strWidth),
+            return RowIdx(WrappedText(txt.textStyle, substr.trimEnd()), // strWidth),
                           startIdx + adjIdx,
                           if (substr == text) {
                               foundCr
                           } else {
                               false
                           })
+
+////            println("Starting guess substr=[$substr] idx=$idx")
+//
+//            // TODO: This is better than the original, but not fully correct.
+//            // If starting guess is too short, find shortest string that is too long.
+//            while (strWidth < maxWidth && idx < textLen) {
+////                println("  Guess is too short...")
+//                //                System.out.println("find shortest string that is too long");
+//                // Consume any breakable characters.
+//                while ( (idx < textLen) &&
+//                        isLineBreakable(text[idx]) ) {
+//                    idx++
+//                }
+//                // Find last non-breakable character
+//                while ( (idx < textLen) &&
+//                        !isLineBreakable(text[idx]) ) {
+//                    idx++
+//                }
+//                // Test new width
+//                substr = text.substring(0, idx)
+//                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+////                println("    substr=[$substr] idx=$idx len=$strWidth")
+//            }
+//
+////            println("maybe too long idx=$idx substr=[$substr]")
+//
+//            idx--
+//
+//            var count = 0
+//
+//            // Too long.
+//
+//            // Too long.  Find longest string that is short enough.
+//            while (strWidth > maxWidth && idx > 0) {
+//                println("Too long.  Find longest string that is short enough.")
+//                println("  strWidth: $strWidth maxWidth: $maxWidth idx: $idx substr=[$substr]")
+//                val prevIdx = idx
+//                count++
+//
+//                // Find previous breakable character
+//                while (idx > -1 && !isLineBreakable(text[idx])) {
+//                    println("Not line-breakable: ${text[idx]}")
+//                    idx--
+//                }
+//                // Find last non-whitespace character before whitespace run.
+//                while (idx > -1 && Character.isWhitespace(text[idx])) {
+//                    idx--
+//                }
+////                if (idx < 1) {
+////                    // no spaces - have to put whole thing in cell and let it run over.
+////                    // Notice that idx == 0 here, which would cause us to report the wrong word-length later,
+////                    // so fix it to be the length of the word minus one.
+////                    idx = substr.length - 1
+////                    break
+////                }
+////                if (idx == prevIdx) {
+////                    // Run the previous checks again, but only looking for whitespace this time, not other
+////                    // breaking characters.  This ensures that this loop terminates when the line break happens
+////                    // in the middle of the "/" in this string: "This is true /"
+////                    while (idx > -1 && !isLineBreakable(text[idx])) {
+////                        idx--
+////                    }
+////                    // Find last non-whitespace character before whitespace run.
+////                    while (idx > -1 && Character.isWhitespace(text[idx])) {
+////                        idx--
+////                    }
+////                    if (idx < 1) {
+////                        idx = substr.length - 1
+////                        break // no spaces - have to put whole thing in cell and let it run over.
+////                    }
+//////                    println("strWidth: $strWidth maxWidth: $maxWidth idx: $idx")
+////                    // throw IllegalStateException("Oops!")
+////                }
+//
+//                // Test new width
+//                substr = text.substring(0, idx + 1)
+//                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+//
+//                if (count > 5) {
+//                    println("Breaking out of probably infinite loop.")
+//                    break
+//                }
+//            }
+
+
+//            idx++
+            // TODO: I think this is impossible.  We checked for CR above...
+//            val eolIdx = substr.indexOf(char= CR)
+//            if (eolIdx > -1) {
+//                substr = substr.substring(0, eolIdx)
+//                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+//                if (strWidth > maxWidth) {
+//                    throw IllegalStateException("strWidth=$strWidth > maxWidth=$maxWidth")
+//                }
+//                return RowIdx(WrappedText(txt.textStyle, substr, strWidth), idx + startIdx + 1, true)
+//            }
+            // Need to test trailing whitespace.
+//            println("idx=$idx substr=\"$substr\"")
+
         }
 
         // Once we have more experience, might want to enhance using data here:
