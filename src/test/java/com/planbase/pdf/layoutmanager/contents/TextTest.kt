@@ -16,6 +16,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
 import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
 import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
+import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
@@ -30,8 +31,11 @@ import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ITALIC
 import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
+import org.junit.Assert
 import org.junit.Test
+import java.io.File
 import kotlin.math.nextDown
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -376,16 +380,16 @@ class TextTest {
         val maxWidth = 138.980
         val txt=Text(TextStyle(TIMES_ITALIC, 12.0, CMYK_BLACK), "They must go by the carrier- ")
         val wrapper = txt.lineWrapper()
-        val conTerm1: ConTerm = wrapper.getSomething(maxWidth)
+        val conTerm: ConTerm = wrapper.getSomething(maxWidth)
 
         // This should always be true
-        assertTrue(conTerm1 is Continuing)
-        assertTrue(conTerm1.item is WrappedText)
-        assertTrue(conTerm1.item.dim.width <= maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
 
         assertEquals("They must go by the carrier-", // Should this have a space at the end of it?
-                     (conTerm1.item as WrappedText).string)
-        assertEquals(136.98, conTerm1.item.dim.width, 0.0005)
+                     (conTerm.item as WrappedText).string)
+        assertEquals(136.98, conTerm.item.dim.width, 0.0005)
     }
 
     /**
@@ -396,30 +400,29 @@ class TextTest {
         val txt=Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK),
                      "lll,,,lll,,,lll/lll,,/lll,,-englsite-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
         val wrapper = txt.lineWrapper()
-        val conTerm1: ConTerm = wrapper.getSomething(maxWidth)
+        var conTerm: ConTerm = wrapper.getSomething(maxWidth)
 
         // This should always be true
-        assertTrue(conTerm1 is Continuing)
-        assertTrue(conTerm1.item is WrappedText)
-        assertTrue(conTerm1.item.dim.width <= maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
 
         // This probably won't change, but could be subject to rounding errors or font differences or something.
         assertEquals("lll,,,lll,,,lll/lll,,/lll,,-englsite-ym.com/resource/resmgr/",
-                     (conTerm1.item as WrappedText).string)
-        assertEquals(170.008, conTerm1.item.dim.width, 0.0005)
+                     (conTerm.item as WrappedText).string)
+        assertEquals(170.008, conTerm.item.dim.width, 0.0005)
 
-        val conTerm2: ConTerm = wrapper.getSomething(maxWidth)
+        conTerm = wrapper.getSomething(maxWidth)
 
         // This should always be true
-        assertTrue(conTerm2 is Continuing)
-        assertTrue(conTerm2.item is WrappedText)
-        assertTrue(conTerm2.item.dim.width <= maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
 
         // This may be subject to rounding errors or different line-breaking characters
         assertEquals("Standards_Documents/vmstd.pdf",
-                     (conTerm2.item as WrappedText).string)
-        assertEquals(106.44, conTerm2.item.dim.width, 0.0005)
-
+                     (conTerm.item as WrappedText).string)
+        assertEquals(106.44, conTerm.item.dim.width, 0.0005)
     }
 
     /**
@@ -430,22 +433,138 @@ class TextTest {
         val txt=Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK),
                      "WWW@@@WWW@@@WWW/WWW@@/WWW@@-engWsite-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
         val wrapper = txt.lineWrapper()
-        val conTerm1: ConTerm = wrapper.getSomething(maxWidth)
-        println("conTerm1=$conTerm1")
+        var conTerm: ConTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
 
         // This should always be true
-        assertTrue(conTerm1 is Continuing)
-        assertTrue(conTerm1.item is WrappedText)
-        assertTrue(conTerm1.item.dim.width <= maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
 
-        val conTerm2: ConTerm = wrapper.getSomething(maxWidth)
-        println("conTerm2=$conTerm2")
+        // TODO: Check actual text like test above!
+
+        conTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
 
         // This should always be true
-        assertTrue(conTerm2 is Continuing)
-        assertTrue(conTerm2.item is WrappedText)
-        assertTrue(conTerm2.item.dim.width <= maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+    }
 
+    /**
+     * This has to work in order for
+     * [com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrappedTest.testTooLongWordWrapping]
+     * to be a valid test.
+     */
+    @Test fun testTooLongWordWrapping() {
+        // This tests a too-long line that breaks on a hyphen (not a white-space).
+        // It used to adjust the index wrong and always return index=0 and return the first half of the line.
+        val maxWidth = 100.0
+        val txt = Text(TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK),
+                       "www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
+
+        val wrapper = txt.lineWrapper()
+        var conTerm: ConTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("www.c.ymcdn.com/sites/",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(81.104, conTerm.item.dim.width, 0.0005)
+
+        conTerm = wrapper.getSomething(maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("value-eng.site-ym.com/",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(75.544, conTerm.item.dim.width, 0.0005)
+
+        conTerm = wrapper.getSomething(maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("resource/resmgr/",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(53.76, conTerm.item.dim.width, 0.0005)
+
+        conTerm = wrapper.getSomething(maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("Standards_Documents/",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(74.216, conTerm.item.dim.width, 0.0005)
+
+        conTerm = wrapper.getSomething(maxWidth)
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("vmstd.pdf",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(32.224, conTerm.item.dim.width, 0.0005)
+    }
+
+    @Test fun testTooLongWordWrapping2() {
+        // This tests a too-long line that breaks on a hyphen (not a white-space).
+        // It used to adjust the index wrong and always return index=0 and return the first half of the line.
+        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(300.0, 450.0), null)
+        val font = pageMgr.loadTrueTypeFont(File("/home/gpeterso/Documents/planbase/goalQpc/mjl_bookData/fonts/NovaresePro-Book.ttf"))
+        val times8pt = TextStyle(font, 8.0, CMYK_BLACK)
+//        val times8pt = TextStyle(TIMES_ROMAN, 8.3207190645, CMYK_BLACK)
+//        val times8pt = TextStyle(TIMES_ROMAN, 8.34, CMYK_BLACK)
+        val maxWidth = 180.0
+        val lineWrapper: LineWrapper = Text(times8pt,
+                                            "www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
+                .lineWrapper()
+
+        assertTrue(lineWrapper.hasMore())
+
+        var something : ConTerm = lineWrapper.getSomething(maxWidth)
+        println("something=$something")
+        assertTrue(something is Continuing)
+        assertTrue(something.item is WrappedText)
+        Assert.assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-ym.com/")),
+                            something)
+        Assert.assertEquals(162.928, something.item.dim.width, 0.0005)
+        assertTrue(lineWrapper.hasMore())
+
+        something = lineWrapper.getSomething(maxWidth)
+        println("something=$something")
+        assertTrue(something is Continuing)
+        assertTrue(something.item is WrappedText)
+        Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf")),
+                            something)
+        Assert.assertEquals(171.432, something.item.dim.width, 0.0005)
+        assertFalse(lineWrapper.hasMore())
+    }
+
+    @Test fun testTooLongWordWrapping3() {
+        // This tests a too-long line that breaks on a hyphen (not a white-space).
+        // It used to adjust the index wrong and always return index=0 and return the first half of the line.
+        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(300.0, 450.0), null)
+        val font = pageMgr.loadTrueTypeFont(File("/home/gpeterso/Documents/planbase/goalQpc/mjl_bookData/fonts/NovaresePro-Book.ttf"))
+        val times8pt = TextStyle(font, 8.0, CMYK_BLACK)
+//        val times8pt = TextStyle(TIMES_ROMAN, 8.3207190645, CMYK_BLACK)
+//        val times8pt = TextStyle(TIMES_ROMAN, 8.34, CMYK_BLACK)
+        val maxWidth = 180.0
+        val lineWrapper: LineWrapper = Text(times8pt,
+                                            "resource/resmgr/Standards_Documents/vmstd.pdf")
+                .lineWrapper()
+
+        assertTrue(lineWrapper.hasMore())
+
+        val something : ConTerm = lineWrapper.getSomething(maxWidth)
+        println("something=$something")
+        assertTrue(something is Continuing)
+        assertTrue(something.item is WrappedText)
+        Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf")),
+                            something)
+        Assert.assertEquals(171.432, something.item.dim.width, 0.0005)
+        assertFalse(lineWrapper.hasMore())
     }
 
 }

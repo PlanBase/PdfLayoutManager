@@ -173,6 +173,7 @@ data class Text(val textStyle: TextStyle,
                     idx = longestIdxThatFits
                     substr = text.substring(0, idx)
                     strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+                    println("    substr=[$substr] idx=$idx len=$strWidth")
                 }
             } else if (Character.isWhitespace(text[idx - 1])) {
                 println("Character after longest that fits is whitespace")
@@ -187,13 +188,24 @@ data class Text(val textStyle: TextStyle,
                                   false
                               })
             } else {
+                if (idx >= textLen) {
+                    println("Returning whole string 1.")
+                    return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
+                                  startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                                  if (substr == text) {
+                                      foundCr
+                                  } else {
+                                      false
+                                  })
+                }
                 println("Setting idx=$idx to longestIdxThatFits=$longestIdxThatFits")
                 idx = longestIdxThatFits
             }
             println("Longest that fits: substr=[$substr] idx=$idx len=$strWidth")
 
+            // How do we get to have a whole string here yet idx == textLen - 1?
             if (idx >= textLen) {
-                println("Returning whole string.")
+                println("Returning whole string 2.")
                 return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
                               startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
                               if (substr == text) {

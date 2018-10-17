@@ -25,7 +25,6 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
 import kotlin.math.nextDown
 import kotlin.test.assertTrue
 
@@ -208,6 +207,9 @@ class MultiLineWrappedTest {
         verifyLine(wrappedLines[7], tStyle1.lineHeight, maxWidth, "")
     }
 
+    /**
+     * Relies on [com.planbase.pdf.layoutmanager.contents.TextTest.testTooLongWordWrapping] working.
+     */
     @Test fun testTooLongWordWrapping() {
         // This tests a too-long line that breaks on a hyphen (not a white-space).
         // It used to adjust the index wrong and always return index=0 and return the first half of the line.
@@ -219,48 +221,18 @@ class MultiLineWrappedTest {
                         .lineWrapper()
         assertTrue(lineWrapper.hasMore())
 
-        val something : ConTerm = lineWrapper.getSomething(maxWidth)
+        var something : ConTerm = lineWrapper.getSomething(maxWidth)
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
         assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-")),
                      something)
         assertTrue(lineWrapper.hasMore())
 
-        val something2 : ConTerm = lineWrapper.getSomething(maxWidth)
-        assertTrue(something2 is Continuing)
-        assertTrue(something2.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "eng.site-ym.com/resource/")),
-                     something2)
-    }
-
-    // TODO: This is a new test - it's failing, but I don't know whether it's good enough to trust it.
-    @Test fun testTooLongWordWrapping2() {
-        // This tests a too-long line that breaks on a hyphen (not a white-space).
-        // It used to adjust the index wrong and always return index=0 and return the first half of the line.
-        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(300.0, 450.0), null)
-        val font = pageMgr.loadTrueTypeFont(File("/home/gpeterso/Documents/planbase/goalQpc/mjl_bookData/fonts/NovaresePro-Book.ttf"))
-        val times8pt = TextStyle(font, 8.0, CMYK_BLACK)
-        val maxWidth = 180.0
-        val lineWrapper: LineWrapper =
-                Text(times8pt,
-                     "www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
-                        .lineWrapper()
-        assertTrue(lineWrapper.hasMore())
-
-        val something : ConTerm = lineWrapper.getSomething(maxWidth)
-        println("something=$something")
+        something = lineWrapper.getSomething(maxWidth)
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-ym.com/")),
+        assertEquals(Continuing(WrappedText(times8pt, "eng.site-ym.com/resource/")),
                      something)
-        assertTrue(lineWrapper.hasMore())
-
-        val something2 : ConTerm = lineWrapper.getSomething(maxWidth)
-        println("something2=$something2")
-        assertTrue(something2 is Continuing)
-        assertTrue(something2.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf")),
-                     something2)
     }
 
     @Test(expected = IllegalArgumentException::class)
