@@ -48,6 +48,10 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class PageGroupingTest {
+    /**
+     * If this is failing on the text boxes on the right, check that
+     * [com.planbase.pdf.layoutmanager.contents.TextTest.quickBrownFox] is working first.
+     */
     @Test
     @Throws(IOException::class)
     fun testBasics() {

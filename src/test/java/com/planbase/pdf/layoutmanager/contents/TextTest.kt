@@ -567,4 +567,65 @@ class TextTest {
         assertFalse(lineWrapper.hasMore())
     }
 
+    /**
+     * Note that this needs to work before [com.planbase.pdf.layoutmanager.pages.SinglePageTest] or
+     * [com.planbase.pdf.layoutmanager.pages.PageGroupingTest] can work.
+     */
+    @Test fun quickBrownFox() {
+        val maxWidth = 65.0
+        val txt = Text(TextStyle(TIMES_ROMAN, 15.0, RGB_BLACK),
+                       "The quick brown fox jumps over the lazy dog")
+
+        val wrapper = txt.lineWrapper()
+        var conTerm: ConTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("The quick",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(60.405, conTerm.item.dim.width, 0.0005)
+        assertTrue(wrapper.hasMore())
+
+        conTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("brown fox",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(62.07, conTerm.item.dim.width, 0.0005)
+        assertTrue(wrapper.hasMore())
+
+        conTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("jumps",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(36.675, conTerm.item.dim.width, 0.0005)
+        assertTrue(wrapper.hasMore())
+
+        conTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("over the",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(48.735, conTerm.item.dim.width, 0.0005)
+        assertTrue(wrapper.hasMore())
+
+        conTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("lazy dog",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(51.240, conTerm.item.dim.width, 0.0005)
+        assertFalse(wrapper.hasMore())
+    }
+
 }

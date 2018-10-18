@@ -33,6 +33,10 @@ import org.junit.Test
 import java.io.FileOutputStream
 
 class SinglePageTest {
+    /**
+     * If this is failing on the text boxes on the right, check that
+     * [com.planbase.pdf.layoutmanager.contents.TextTest.quickBrownFox] is working first.
+     */
     @Test fun testBasics() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)

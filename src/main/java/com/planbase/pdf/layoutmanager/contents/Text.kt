@@ -189,6 +189,31 @@ data class Text(val textStyle: TextStyle,
                     strWidth = txt.textStyle.stringWidthInDocUnits(substr)
                     println("    substr=[$substr] idx=$idx len=$strWidth")
                 }
+                if (idx >= textLen) {
+                    println("Returning whole string 0.")
+                    return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
+                                  startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                                  if (substr == text) {
+                                      foundCr
+                                  } else {
+                                      false
+                                  })
+                } else if (Character.isWhitespace(text[idx])) {
+                    while (idx > 0 && Character.isWhitespace(text[idx - 1])) {
+                        println("text0[idx]=${text[idx - 1]}")
+                        idx--
+                    }
+                    substr = text.substring(0, idx)
+//                    strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+                    println("Backed up to here 0: substr=[$substr] idx=$idx len=$strWidth")
+                    return RowIdx(WrappedText(txt.textStyle, substr),
+                                  startIdx + idx + 1,
+                                  if (substr == text) {
+                                      foundCr
+                                  } else {
+                                      false
+                                  })
+                }
             } else if (Character.isWhitespace(text[idx - 1])) {
                 println("Character after longest that fits is whitespace")
                 idx = longestIdxThatFits
