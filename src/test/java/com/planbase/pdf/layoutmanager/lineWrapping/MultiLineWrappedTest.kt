@@ -26,6 +26,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.math.nextDown
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class MultiLineWrappedTest {
@@ -214,7 +215,7 @@ class MultiLineWrappedTest {
         // This tests a too-long line that breaks on a hyphen (not a white-space).
         // It used to adjust the index wrong and always return index=0 and return the first half of the line.
         val times8pt = TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK)
-        val maxWidth = 100.0
+        val maxWidth = 130.0
         val lineWrapper: LineWrapper =
                 Text(times8pt,
                      "www.c.ymcdn.com/sites/value-eng.site-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
@@ -224,15 +225,27 @@ class MultiLineWrappedTest {
         var something : ConTerm = lineWrapper.getSomething(maxWidth)
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-")),
+        assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-")),
                      something)
+        assertTrue(something.item.dim.width <= maxWidth)
         assertTrue(lineWrapper.hasMore())
 
         something = lineWrapper.getSomething(maxWidth)
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "eng.site-ym.com/resource/")),
+        assertEquals(Continuing(WrappedText(times8pt, "ym.com/resource/resmgr/")),
                      something)
+        assertTrue(something.item.dim.width <= maxWidth)
+        assertTrue(lineWrapper.hasMore())
+
+        something = lineWrapper.getSomething(maxWidth)
+        assertTrue(something is Continuing)
+        assertTrue(something.item is WrappedText)
+        assertEquals(Continuing(WrappedText(times8pt, "Standards_Documents/vmstd.pdf")),
+                     something)
+        assertTrue(something.item.dim.width <= maxWidth)
+        assertFalse(lineWrapper.hasMore())
+
     }
 
     @Test(expected = IllegalArgumentException::class)
