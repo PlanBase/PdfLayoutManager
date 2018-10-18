@@ -392,7 +392,7 @@ class WrappedCellTest {
 
         val ts = TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK, 9.0)
         val cell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle.NO_PAD_NO_BORDER),
-                        100.0,
+                        102.0,
                         listOf(Text(ts,
                                     "www.c.ymcdn.com/sites/value-eng.site-ym.com/" +
                                     "resource/resmgr/Standards_Documents/vmstd.pdf")))
@@ -426,7 +426,7 @@ class WrappedCellTest {
         assertEquals("vmstd.pdf", row3item0.string)
         assertEquals(32.224, row3item0.width, 0.0000005)
 
-        Dim.assertEquals(Dim(100.0, 36.0), wrapped.dim, 0.0000005)
+        Dim.assertEquals(Dim(102.0, 36.0), wrapped.dim, 0.0000005)
     }
 
     /**

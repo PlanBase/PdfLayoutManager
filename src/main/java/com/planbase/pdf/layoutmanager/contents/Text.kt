@@ -99,6 +99,20 @@ data class Text(val textStyle: TextStyle,
     companion object {
         private const val CR: Char = '\n'
 
+        /**
+         * Given a maximum width, a string, and the starting index into that string,
+         * return the next line-wrapping chunk that fits.  Will break at whitespace or
+         * any of the [breakableChars].
+         *
+         * This will always return any trailing whitespeace on the last chunk of the string, but never
+         * on the other chunks.  This is because the non-final chunks are at the end of a line, but the final one
+         * could have something to the right of it on the same line.
+         *
+         * @param maxWidth the maximum width (chunk must be <= this width)
+         * @param startIdx the index into the text string to start processing
+         * @param txt the text string to process.
+         * @return the longest chunk that fits.
+         */
         internal fun tryGettingText(maxWidth: Double, startIdx: Int, txt: Text): RowIdx {
             println("=======================\n" +
                     "tryGettingText(maxWidth=$maxWidth, startIdx=$startIdx, txt=$txt)")
@@ -290,105 +304,6 @@ data class Text(val textStyle: TextStyle,
                           } else {
                               false
                           })
-
-////            println("Starting guess substr=[$substr] idx=$idx")
-//
-//            // TODO: This is better than the original, but not fully correct.
-//            // If starting guess is too short, find shortest string that is too long.
-//            while (strWidth < maxWidth && idx < textLen) {
-////                println("  Guess is too short...")
-//                //                System.out.println("find shortest string that is too long");
-//                // Consume any breakable characters.
-//                while ( (idx < textLen) &&
-//                        isLineBreakable(text[idx]) ) {
-//                    idx++
-//                }
-//                // Find last non-breakable character
-//                while ( (idx < textLen) &&
-//                        !isLineBreakable(text[idx]) ) {
-//                    idx++
-//                }
-//                // Test new width
-//                substr = text.substring(0, idx)
-//                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-////                println("    substr=[$substr] idx=$idx len=$strWidth")
-//            }
-//
-////            println("maybe too long idx=$idx substr=[$substr]")
-//
-//            idx--
-//
-//            var count = 0
-//
-//            // Too long.
-//
-//            // Too long.  Find longest string that is short enough.
-//            while (strWidth > maxWidth && idx > 0) {
-//                println("Too long.  Find longest string that is short enough.")
-//                println("  strWidth: $strWidth maxWidth: $maxWidth idx: $idx substr=[$substr]")
-//                val prevIdx = idx
-//                count++
-//
-//                // Find previous breakable character
-//                while (idx > -1 && !isLineBreakable(text[idx])) {
-//                    println("Not line-breakable: ${text[idx]}")
-//                    idx--
-//                }
-//                // Find last non-whitespace character before whitespace run.
-//                while (idx > -1 && Character.isWhitespace(text[idx])) {
-//                    idx--
-//                }
-////                if (idx < 1) {
-////                    // no spaces - have to put whole thing in cell and let it run over.
-////                    // Notice that idx == 0 here, which would cause us to report the wrong word-length later,
-////                    // so fix it to be the length of the word minus one.
-////                    idx = substr.length - 1
-////                    break
-////                }
-////                if (idx == prevIdx) {
-////                    // Run the previous checks again, but only looking for whitespace this time, not other
-////                    // breaking characters.  This ensures that this loop terminates when the line break happens
-////                    // in the middle of the "/" in this string: "This is true /"
-////                    while (idx > -1 && !isLineBreakable(text[idx])) {
-////                        idx--
-////                    }
-////                    // Find last non-whitespace character before whitespace run.
-////                    while (idx > -1 && Character.isWhitespace(text[idx])) {
-////                        idx--
-////                    }
-////                    if (idx < 1) {
-////                        idx = substr.length - 1
-////                        break // no spaces - have to put whole thing in cell and let it run over.
-////                    }
-//////                    println("strWidth: $strWidth maxWidth: $maxWidth idx: $idx")
-////                    // throw IllegalStateException("Oops!")
-////                }
-//
-//                // Test new width
-//                substr = text.substring(0, idx + 1)
-//                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-//
-//                if (count > 5) {
-//                    println("Breaking out of probably infinite loop.")
-//                    break
-//                }
-//            }
-
-
-//            idx++
-            // TODO: I think this is impossible.  We checked for CR above...
-//            val eolIdx = substr.indexOf(char= CR)
-//            if (eolIdx > -1) {
-//                substr = substr.substring(0, eolIdx)
-//                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-//                if (strWidth > maxWidth) {
-//                    throw IllegalStateException("strWidth=$strWidth > maxWidth=$maxWidth")
-//                }
-//                return RowIdx(WrappedText(txt.textStyle, substr, strWidth), idx + startIdx + 1, true)
-//            }
-            // Need to test trailing whitespace.
-//            println("idx=$idx substr=\"$substr\"")
-
         }
 
         // Once we have more experience, might want to enhance using data here:
