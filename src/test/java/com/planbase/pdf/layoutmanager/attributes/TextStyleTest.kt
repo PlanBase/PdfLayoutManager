@@ -48,8 +48,8 @@ class TextStyleTest {
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         assertEquals(125.19531, TextStyle(liberationFont, 100.0, CMYK_BLACK).lineHeight, 0.00001)
 
-//        assertEquals(TextStyle(HELVETICA, 100.0, CMYK_BLACK, TextStyle.defaultLineHeight(HELVETICA, 100.0)),
-//                     TextStyle(liberationFont, 100.0, CMYK_BLACK).withFont(HELVETICA))
+        assertEquals(TextStyle(HELVETICA, 100.0, CMYK_BLACK, TextStyle.defaultLineHeight(HELVETICA, 100.0)),
+                     TextStyle(liberationFont, 100.0, CMYK_BLACK).withFontAndLineHeight(HELVETICA))
 
         // TODO: Test character spacing and word spacing!
 

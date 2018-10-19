@@ -2,6 +2,12 @@
 
 Bigger headings mean more stable releases!
 
+## 2.2.0 2018-10-19 "Improved Text Wrapping"
+ - Rewrote Text.Companion.tryGettingText()
+ - Renamed TextStyle.withFont() to .withFontAndLineHeight() because it now takes the default line height of the new
+   font.
+ - TODO: Upgrade PDFBox!
+
 ## 2.1.12 2018-10-09 "Fixed: hyphenated word longer than a whole line goes into infinite loop."
  - Silly error - had forgotten to update an index when breaking out of a loop.
  Added tests to ensure this stays fixed.  We published two 200-page books with this code before finding this bug.
