@@ -153,6 +153,13 @@ data class TextStyle(val font: PDFont,    // Tf
      @return the width of this text rendered in this font.
      */
     fun stringWidthInDocUnits(text: String): Double  {
+        // I looked at the impact of caching the results of this function in a hash map, but we really very rarely
+        // call it twice with the same value - maybe 5% of the time, and then only call it 1-10 times for similar
+        // strings (in the process of breaking a line).  If I want to shave somem time off, I could consider
+        // a binary search instead of walking one character at a time.  The fact is, the guess from the average
+        // character width tends to be pretty darn good.  Anyway, if you have doubts, uncomment the println below
+        // and run a full set of tests.
+//        println("stringWidthInDocUnits(${stringify(text)})")
         var ret: Double = try {
             font.getStringWidth(text).toDouble() * factor
 //            fontStringWidth(text) * factor
