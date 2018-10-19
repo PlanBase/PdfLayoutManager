@@ -6,7 +6,8 @@ Bigger headings mean more stable releases!
  - Rewrote Text.Companion.tryGettingText()
  - Renamed TextStyle.withFont() to .withFontAndLineHeight() because it now takes the default line height of the new
    font.
- - TODO: Upgrade PDFBox!
+ - Upgraded PDFBox dependency to 2.0.12 (You should too, due to
+ [CVE-2018-11797](https://nvd.nist.gov/vuln/detail/CVE-2018-11797))
 
 ## 2.1.12 2018-10-09 "Fixed: hyphenated word longer than a whole line goes into infinite loop."
  - Silly error - had forgotten to update an index when breaking out of a loop.
