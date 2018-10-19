@@ -36,6 +36,10 @@ import javax.imageio.ImageIO
 
 class TestManualllyPdfLayoutMgr {
 
+    /**
+     * Note that [com.planbase.pdf.layoutmanager.contents.TextTest.ohSayCanYouSee] needs to work for the line breaking
+     * of the Star Spangled Banner to come out right.
+     */
     @Test fun testPdf() {
         // Nothing happens without a PdfLayoutMgr.
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))

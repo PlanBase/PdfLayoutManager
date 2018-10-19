@@ -178,6 +178,7 @@ data class Text(val textStyle: TextStyle,
                 substr = text.substring(0, idx)
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
+            println(" Maybe too long substr=[$substr] idx=$idx len=$strWidth")
 
             if (longestIdxThatFits == null) {
                 //  Here, we're beyond the max width, so go back to maxWidth.
@@ -227,7 +228,8 @@ data class Text(val textStyle: TextStyle,
                                   false
                               })
             } else {
-                if (idx >= textLen) {
+                println("Have longestIdxThatFits and last char is not whitespace.")
+                if ( (idx >= textLen) && (strWidth <= maxWidth) ) {
                     println("Returning whole string 1.")
                     return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
                                   startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
@@ -239,6 +241,8 @@ data class Text(val textStyle: TextStyle,
                 }
                 println("Setting idx=$idx to longestIdxThatFits=$longestIdxThatFits")
                 idx = longestIdxThatFits
+                substr = text.substring(0, idx)
+                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
             println("Longest that fits: substr=[$substr] idx=$idx len=$strWidth")
 

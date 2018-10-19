@@ -28,9 +28,7 @@ import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDFont
-import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ITALIC
-import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
+import org.apache.pdfbox.pdmodel.font.PDType1Font.*
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert
@@ -42,7 +40,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class TextTest {
-    val tStyle = TextStyle(PDType1Font.HELVETICA, 9.375, CMYK_BLACK)
+    val tStyle = TextStyle(HELVETICA, 9.375, CMYK_BLACK)
 
     @Test fun testText() {
         val txt = Text(tStyle, "This is a long enough line of text.")
@@ -628,4 +626,44 @@ class TextTest {
         assertFalse(wrapper.hasMore())
     }
 
+    /**
+     * Note that this needs to work before page 3 of [TestManualllyPdfLayoutMgr.testPdf] can work.
+     */
+    @Test fun ohSayCanYouSee() {
+        val maxWidth = 185.0
+        val txt = Text(TextStyle(HELVETICA, 9.5, RGB_BLACK),
+                       "O say can you see by the dawn's early light,\n" +
+                       "What so proudly we hailed...\n")
+
+        val wrapper = txt.lineWrapper()
+        var conTerm: ConTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("O say can you see by the dawn's early",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(162.336, conTerm.item.dim.width, 0.0005)
+        assertTrue(wrapper.hasMore())
+
+        conTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Terminal)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("light,",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(20.064, conTerm.item.dim.width, 0.0005)
+        assertTrue(wrapper.hasMore())
+
+        conTerm = wrapper.getSomething(maxWidth)
+        println("conTerm=$conTerm")
+        assertTrue(conTerm is Terminal)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("What so proudly we hailed...",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(119.3295, conTerm.item.dim.width, 0.0005)
+        assertFalse(wrapper.hasMore())
+    }
 }
