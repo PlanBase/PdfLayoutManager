@@ -2,6 +2,7 @@ package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManualllyPdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.Align
@@ -40,7 +41,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class TextTest {
-    val tStyle = TextStyle(HELVETICA, 9.375, CMYK_BLACK)
+    private val tStyle = TextStyle(HELVETICA, 9.375, CMYK_BLACK)
 
     @Test fun testText() {
         val txt = Text(tStyle, "This is a long enough line of text.")
@@ -142,7 +143,7 @@ class TextTest {
      * The fix was to simply fix the index to be the end of the word in that case.  Surprised it took me so long
      * to test this case, but there you have it.
      */
-    @Test fun testTextWrappTooLongWord() {
+    @Test fun testTextWrapTooLongWord() {
         val ts = TextStyle(TIMES_ROMAN, 7.6, CMYK_BLACK)
         val maxWidth = 33.0
 
@@ -432,7 +433,7 @@ class TextTest {
                      "WWW@@@WWW@@@WWW/WWW@@/WWW@@-engWsite-ym.com/resource/resmgr/Standards_Documents/vmstd.pdf")
         val wrapper = txt.lineWrapper()
         var conTerm: ConTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
 
         // This should always be true
         assertTrue(conTerm is Continuing)
@@ -442,7 +443,7 @@ class TextTest {
         // TODO: Check actual text like test above!
 
         conTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
 
         // This should always be true
         assertTrue(conTerm is Continuing)
@@ -464,7 +465,7 @@ class TextTest {
 
         val wrapper = txt.lineWrapper()
         var conTerm: ConTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
 
         assertTrue(conTerm is Continuing)
         assertTrue(conTerm.item is WrappedText)
@@ -522,7 +523,7 @@ class TextTest {
         assertTrue(lineWrapper.hasMore())
 
         var something : ConTerm = lineWrapper.getSomething(maxWidth)
-        println("something=$something")
+//        println("something=$something")
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
         Assert.assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-ym.com/")),
@@ -531,7 +532,7 @@ class TextTest {
         assertTrue(lineWrapper.hasMore())
 
         something = lineWrapper.getSomething(maxWidth)
-        println("something=$something")
+//        println("something=$something")
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
         Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf")),
@@ -556,7 +557,7 @@ class TextTest {
         assertTrue(lineWrapper.hasMore())
 
         val something : ConTerm = lineWrapper.getSomething(maxWidth)
-        println("something=$something")
+//        println("something=$something")
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
         Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf")),
@@ -576,7 +577,7 @@ class TextTest {
 
         val wrapper = txt.lineWrapper()
         var conTerm: ConTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Continuing)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)
@@ -586,7 +587,7 @@ class TextTest {
         assertTrue(wrapper.hasMore())
 
         conTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Continuing)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)
@@ -596,7 +597,7 @@ class TextTest {
         assertTrue(wrapper.hasMore())
 
         conTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Continuing)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)
@@ -606,7 +607,7 @@ class TextTest {
         assertTrue(wrapper.hasMore())
 
         conTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Continuing)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)
@@ -616,7 +617,7 @@ class TextTest {
         assertTrue(wrapper.hasMore())
 
         conTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Continuing)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)
@@ -637,7 +638,7 @@ class TextTest {
 
         val wrapper = txt.lineWrapper()
         var conTerm: ConTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Continuing)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)
@@ -647,7 +648,7 @@ class TextTest {
         assertTrue(wrapper.hasMore())
 
         conTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Terminal)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)
@@ -657,7 +658,7 @@ class TextTest {
         assertTrue(wrapper.hasMore())
 
         conTerm = wrapper.getSomething(maxWidth)
-        println("conTerm=$conTerm")
+//        println("conTerm=$conTerm")
         assertTrue(conTerm is Terminal)
         assertTrue(conTerm.item is WrappedText)
         assertTrue(conTerm.item.dim.width <= maxWidth)

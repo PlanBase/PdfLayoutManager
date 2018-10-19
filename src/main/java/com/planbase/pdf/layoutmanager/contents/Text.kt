@@ -114,8 +114,8 @@ data class Text(val textStyle: TextStyle,
          * @return the longest chunk that fits.
          */
         internal fun tryGettingText(maxWidth: Double, startIdx: Int, txt: Text): RowIdx {
-            println("=======================\n" +
-                    "tryGettingText(maxWidth=$maxWidth, startIdx=$startIdx, txt=$txt)")
+//            println("=======================\n" +
+//                    "tryGettingText(maxWidth=$maxWidth, startIdx=$startIdx, txt=$txt)")
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: $maxWidth")
             }
@@ -140,7 +140,7 @@ data class Text(val textStyle: TextStyle,
 //            println("text=[$text]")
 
             val textLen = text.length
-            println("text=[$text] len=$textLen")
+//            println("text=[$text] len=$textLen")
             // Knowing the average width of a character lets us guess and generally be near
             // the word where the line break will occur.  Since the font reports a narrow average,
             // (possibly due to the predominance of spaces in text) we widen it a little for a
@@ -151,7 +151,7 @@ data class Text(val textStyle: TextStyle,
             }
             var substr = text.substring(0, idx)
             var strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-            println("firstGuess substr=[$substr] idx=$idx len=$strWidth")
+//            println("firstGuess substr=[$substr] idx=$idx len=$strWidth")
 
             // We assume that most lines *do* fit understanding that if most lines don't, this will be a little
             // slower.  But then it will look terrible, so you shouldn't be doing that anyway.
@@ -172,28 +172,28 @@ data class Text(val textStyle: TextStyle,
             // unless the string is "ll,,ll" (all skinny chars) or "WW@@WW" (all wide chars).
             var longestIdxThatFits: Int? = null
             while (strWidth <= maxWidth && idx < textLen) {
-                println("Finding longest that fits substr=[$substr] idx=$idx len=$strWidth")
+//                println("Finding longest that fits substr=[$substr] idx=$idx len=$strWidth")
                 longestIdxThatFits = idx
                 idx = longestIdxThatFits + 1
                 substr = text.substring(0, idx)
                 strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
-            println(" Maybe too long substr=[$substr] idx=$idx len=$strWidth")
+//            println(" Maybe too long substr=[$substr] idx=$idx len=$strWidth")
 
             if (longestIdxThatFits == null) {
                 //  Here, we're beyond the max width, so go back to maxWidth.
                 while (strWidth > maxWidth && idx > 0) {
-                    println("Backing up to maxwidth...")
+//                    println("Backing up to maxwidth...")
                     longestIdxThatFits = idx - 1
                     idx = longestIdxThatFits
                     substr = text.substring(0, idx)
                     strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-                    println("    substr=[$substr] idx=$idx len=$strWidth")
+//                    println("    substr=[$substr] idx=$idx len=$strWidth")
                 }
                 if (idx >= textLen) {
-                    println("Returning whole string 0.")
+//                    println("Returning whole string 0.")
                     return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
-                                  startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                                  startIdx + idx + 1,
                                   if (substr == text) {
                                       foundCr
                                   } else {
@@ -201,12 +201,12 @@ data class Text(val textStyle: TextStyle,
                                   })
                 } else if (Character.isWhitespace(text[idx])) {
                     while (idx > 0 && Character.isWhitespace(text[idx - 1])) {
-                        println("text0[idx]=${text[idx - 1]}")
+//                        println("text0[idx]=${text[idx - 1]}")
                         idx--
                     }
                     substr = text.substring(0, idx)
 //                    strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-                    println("Backed up to here 0: substr=[$substr] idx=$idx len=$strWidth")
+//                    println("Backed up to here 0: substr=[$substr] idx=$idx len=$strWidth")
                     return RowIdx(WrappedText(txt.textStyle, substr),
                                   startIdx + idx + 1,
                                   if (substr == text) {
@@ -216,41 +216,41 @@ data class Text(val textStyle: TextStyle,
                                   })
                 }
             } else if (Character.isWhitespace(text[idx - 1])) {
-                println("Character after longest that fits is whitespace")
+//                println("Character after longest that fits is whitespace")
                 idx = longestIdxThatFits
                 substr = text.substring(0, idx)
-                println("Returning substr=[$substr] idx=$idx")
+//                println("Returning substr=[$substr] idx=$idx")
                 return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
-                              startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                              startIdx + idx + 1,
                               if (substr == text) {
                                   foundCr
                               } else {
                                   false
                               })
             } else {
-                println("Have longestIdxThatFits and last char is not whitespace.")
+//                println("Have longestIdxThatFits and last char is not whitespace.")
                 if ( (idx >= textLen) && (strWidth <= maxWidth) ) {
-                    println("Returning whole string 1.")
+//                    println("Returning whole string 1.")
                     return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
-                                  startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                                  startIdx + idx + 1,
                                   if (substr == text) {
                                       foundCr
                                   } else {
                                       false
                                   })
                 }
-                println("Setting idx=$idx to longestIdxThatFits=$longestIdxThatFits")
+//                println("Setting idx=$idx to longestIdxThatFits=$longestIdxThatFits")
                 idx = longestIdxThatFits
                 substr = text.substring(0, idx)
-                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
             }
-            println("Longest that fits: substr=[$substr] idx=$idx len=$strWidth")
+//            strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+//            println("Longest that fits: substr=[$substr] idx=$idx len=$strWidth")
 
             // How do we get to have a whole string here yet idx == textLen - 1?
             if (idx >= textLen) {
-                println("Returning whole string 2.")
+//                println("Returning whole string 2.")
                 return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
-                              startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                              startIdx + idx + 1,
                               if (substr == text) {
                                   foundCr
                               } else {
@@ -259,21 +259,21 @@ data class Text(val textStyle: TextStyle,
             }
 
             while (idx > 0 && !isLineBreakable(text[idx - 1])) {
-                println("text[idx]=${text[idx - 1]}")
+//                println("text[idx]=${text[idx - 1]}")
                 idx--
             }
 
             if (idx <= 0) {
-                println("There is nothing line-breakable that fits.  Find shortest line-breakable that runs over...")
+//                println("There is nothing line-breakable that fits.  Find shortest line-breakable that runs over...")
                 idx = longestIdxThatFits!!
                 while (idx < textLen && !isLineBreakable(text[idx])) {
-                    println("Longer text[idx]=${text[idx]}")
+//                    println("Longer text[idx]=${text[idx]}")
                     idx++
                 }
 
                 substr = text.substring(0, idx)
                 return RowIdx(WrappedText(txt.textStyle, substr.trimEnd()), // strWidth),
-                              startIdx + idx + 1,  // TODO: Why do I have to add +1 here???
+                              startIdx + idx + 1,
                               if (substr == text) {
                                   foundCr
                               } else {
@@ -281,35 +281,35 @@ data class Text(val textStyle: TextStyle,
                               })
             }
 
-            substr = text.substring(0, idx)
-            strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-            println("Ends with line-breakable: substr=[$substr] idx=$idx len=$strWidth")
+//            substr = text.substring(0, idx)
+//            strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+//            println("Ends with line-breakable: substr=[$substr] idx=$idx len=$strWidth")
 
             if (idx > -1) {
-                println("Found a line-breakable.")
+//                println("Found a line-breakable.")
                 // Found a line-breakable.
                 //        - Consume any white space immediately before that character
                 //        - Return result
                 // Find last non-whitespace character before whitespace run.
                 if (idx > textLen) {
-                    println("Backing up from end of string...")
+//                    println("Backing up from end of string...")
                     idx = textLen - 1
                 }
                 while (idx > 0 && Character.isWhitespace(text[idx - 1])) {
-                    println("text2[idx]=[${text[idx - 1]}]")
+//                    println("text2[idx]=[${text[idx - 1]}]")
                     idx--
                 }
-                substr = text.substring(0, idx)
-                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-                println("Backed up to here: substr=[$substr] idx=$idx len=$strWidth")
+//                substr = text.substring(0, idx)
+//                strWidth = txt.textStyle.stringWidthInDocUnits(substr)
+//                println("Backed up to here: substr=[$substr] idx=$idx len=$strWidth")
             } else {
-                println("Did not find a line-breakable.")
+//                println("Did not find a line-breakable.")
                 // Did not find a line-breakable.
                 //        - Search until we find one (or end of string) and return that.
                 // Find last non-breakable character
                 while ( (idx < textLen) &&
                         !isLineBreakable(text[idx]) ) {
-                    println("text3[idx]=${text[idx]}")
+//                    println("text3[idx]=${text[idx]}")
                     idx++
                 }
             }
@@ -317,13 +317,13 @@ data class Text(val textStyle: TextStyle,
             substr = text.substring(0, idx)
 //            strWidth = txt.textStyle.stringWidthInDocUnits(substr)
 
-            println("substr=[$substr] idx=$idx")
+//            println("substr=[$substr] idx=$idx")
 
             val adjIdx = if ( (idx >= textLen) ||
                               Character.isWhitespace(text[idx]) ) {
                 idx + 1
             } else {
-                idx
+                idx // TODO: Why is this the only place we don't add +1?
             }
 
             return RowIdx(WrappedText(txt.textStyle, substr.trimEnd()), // strWidth),
