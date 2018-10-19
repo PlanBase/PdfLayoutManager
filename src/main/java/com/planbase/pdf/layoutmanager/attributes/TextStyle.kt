@@ -85,9 +85,14 @@ data class TextStyle(val font: PDFont,    // Tf
     // default leading.
     val ascent = font.fontDescriptor.ascent * fontSize / 1000.0
 
-    /** Returns a copy of this immutable TextStyle with a different font. */
-    fun withFont(newFont:PDFont) =
-            TextStyle(newFont, fontSize, textColor, lineHeight, rise, characterSpacing, wordSpacing)
+//    /**
+//     * PROBABLY A BAD IDEA because TextStyles take their line height from their font.  Should we take the line
+//     * height also from the new font here?  Or stick with the original line height?  Or require that a line height
+//     * be supplied?  I'm waiting until this is really needed before adding it back.
+//     * Returns a copy of this immutable TextStyle with a different font.
+//     */
+//    fun withFont(newFont:PDFont) =
+//            TextStyle(newFont, fontSize, textColor, lineHeight, rise, characterSpacing, wordSpacing)
 
     /** Returns a copy of this immutable TextStyle with the specified character and word spacing. */
     fun withCharWordSpacing(cSpace: Double, wSpace:Double) =

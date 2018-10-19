@@ -18,7 +18,7 @@ import java.io.FileOutputStream
 import kotlin.test.Test
 
 class TextStyleTest {
-    val quickBrownFox = "The quick brown fox jumps over the lazy dog"
+    private val quickBrownFox = "The quick brown fox jumps over the lazy dog"
 
     @Test fun basics() {
 
@@ -47,6 +47,9 @@ class TextStyleTest {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         assertEquals(125.19531, TextStyle(liberationFont, 100.0, CMYK_BLACK).lineHeight, 0.00001)
+
+//        assertEquals(TextStyle(HELVETICA, 100.0, CMYK_BLACK, TextStyle.defaultLineHeight(HELVETICA, 100.0)),
+//                     TextStyle(liberationFont, 100.0, CMYK_BLACK).withFont(HELVETICA))
 
         // TODO: Test character spacing and word spacing!
 
