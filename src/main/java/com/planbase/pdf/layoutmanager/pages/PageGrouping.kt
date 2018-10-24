@@ -106,6 +106,8 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 
     val yBodyBottom: Double = body.topLeft.y - body.dim.height
 
+    var cursorY: Double = body.topLeft.y
+
     private var valid = true
 
     fun invalidate() { valid = false }
@@ -370,8 +372,6 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         cursorY = topLeft.y - dap.dim.height
         return dap
     }
-
-    var cursorY: Double = body.topLeft.y
 
     /**
      * Moves cursor to the bottom of the body of the current page so that whatever you draw will get popped to the
