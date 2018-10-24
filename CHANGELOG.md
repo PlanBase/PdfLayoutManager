@@ -2,6 +2,9 @@
 
 Bigger headings mean more stable releases!
 
+## 2.2.1 2018-10-19 "Improved Text Wrapping"
+ - Changed wordspacing/charSpacing ratio from 3/1 to 2/1 to minimize rivers while still looking peaceful.
+
 ## 2.2.0 2018-10-19 "Improved Text Wrapping"
  - Rewrote Text.Companion.tryGettingText()
  - Renamed TextStyle.withFont() to .withFontAndLineHeight() because it now takes the default line height of the new

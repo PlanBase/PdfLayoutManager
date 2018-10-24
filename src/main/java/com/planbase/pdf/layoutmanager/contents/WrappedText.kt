@@ -60,12 +60,12 @@ data class WrappedText(val textStyle: TextStyle,
                 // seems to look the best to me today, but 2:3 (0.25 and 0.75) looked good as well.
                 // I also tried adding more character spacing as the lines got shorter, but the consistent
                 // approach was less noticeable to my eye.
-//                val charSpacing = (widthDiff * 0.333333333) / string.length
-//                val wordSpacing = (widthDiff * 0.666666667) / numSpaces
+                val charSpacing = (widthDiff * 0.333333333) / string.length
+                val wordSpacing = (widthDiff * 0.666666667) / numSpaces
 
                 // Second thought, we want this to look as similar to what we're used to as possible.
-                val charSpacing = (widthDiff * 0.25) / string.length
-                val wordSpacing = (widthDiff * 0.75) / numSpaces
+//                val charSpacing = (widthDiff * 0.25) / string.length
+//                val wordSpacing = (widthDiff * 0.75) / numSpaces
                 tempTextStyle = textStyle.withCharWordSpacing(charSpacing, wordSpacing)
 //                val wordSpacing = widthDiff / numSpaces
 //                tempTextStyle = textStyle.withWordSpacing(wordSpacing)
