@@ -1,8 +1,8 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.BULLET_TEXT_STYLE
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import TestManualllyPdfLayoutMgr
+import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.Align
@@ -29,6 +29,7 @@ import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDFont
+import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font.*
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
@@ -667,4 +668,118 @@ class TextTest {
         assertEquals(119.3295, conTerm.item.dim.width, 0.0005)
         assertFalse(wrapper.hasMore())
     }
+
+    @Test fun testTwoItemsOnOneLinePreservesSpaceBetween() {
+        // Bigger than necessary (text is 66-75 units wide)
+        var maxWidth = 300.0
+
+        // Here, wrap "Hello" without a trailing space, to prove that it's roughly 67 units wide
+        // so that we can see that adding a trailing space increases the width.
+        val helloNoSpace = Text(TextStyle(PDType1Font.TIMES_ROMAN, 30.0, CMYK_BLACK), "Hello")
+        val helloNoSpaceWrapper = helloNoSpace.lineWrapper()
+        val conNoSpaceTerm: ConTerm = helloNoSpaceWrapper.getSomething(maxWidth)
+//        println("conNoSpaceTerm=$conNoSpaceTerm")
+        assertTrue(conNoSpaceTerm is Continuing)
+        assertTrue(conNoSpaceTerm.item is WrappedText)
+        assertTrue(conNoSpaceTerm.item.dim.width <= maxWidth)
+        assertEquals("Hello",
+                     (conNoSpaceTerm.item as WrappedText).string)
+        assertEquals(66.66, conNoSpaceTerm.item.dim.width, 0.0005)
+        assertFalse(helloNoSpaceWrapper.hasMore())
+
+        // Same as above, but with a trailing space.
+        val helloSpace = Text(TextStyle(PDType1Font.TIMES_ROMAN, 30.0, CMYK_BLACK), "Hello ")
+        var helloWrapper = helloSpace.lineWrapper()
+        var conTerm: ConTerm = helloWrapper.getSomething(maxWidth)
+//        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("Hello ",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(74.16, conTerm.item.dim.width, 0.0005)
+        // In a sense, this is the essence of this test right here:
+        assertTrue(conTerm.item.dim.width > conNoSpaceTerm.item.dim.width)
+        assertFalse(helloWrapper.hasMore())
+
+        // Now we have the exact widths:
+        // "Hello"  = 66.66
+        // "Hello " = 74.16
+        // So we know it counts the space in the width.  Let's set maxWidth to just a little bigger than 74.16
+        // and see if it still works (it breaks as of 2018-11-02).
+//        println("========================================== ABOUT TO BREAK ==========================================")
+        maxWidth = 74.161
+        helloWrapper = helloSpace.lineWrapper()
+        conTerm = helloWrapper.getSomething(maxWidth)
+//        println("conTerm=$conTerm")
+        assertTrue(conTerm is Continuing)
+        assertTrue(conTerm.item is WrappedText)
+        assertTrue(conTerm.item.dim.width <= maxWidth)
+        assertEquals("Hello ",
+                     (conTerm.item as WrappedText).string)
+        assertEquals(74.16, conTerm.item.dim.width, 0.0005)
+        // In a sense, this is the essence of this test right here:
+        assertTrue(conTerm.item.dim.width > conNoSpaceTerm.item.dim.width)
+        assertFalse(helloWrapper.hasMore())
+    }
+
+    @Test
+    fun testLastWordEndsCommaSpace() {
+        val timesItalic12 = TextStyle(TIMES_ITALIC, 12.0, CMYK_BLACK)
+        val byCarrierNoSpace = "They must go by the carrier,"
+        val byCarrierWithSpace = "They must go by the carrier, "
+        assertEquals(135.984, timesItalic12.stringWidthInDocUnits(byCarrierNoSpace))
+        assertEquals(138.984, timesItalic12.stringWidthInDocUnits(byCarrierWithSpace))
+        // "They must go by the carrier," all fits within the first line.
+        // But the bug produced a missing space before the last word "by thecarrier,"
+        // Because it somehow walked back from "... the carrier," which fit down to "... the"
+        // Then tried again to put "carrier, " on the next line, but it still fit on the current line.
+        val rowIdx: RowIdx = tryGettingText(137.64581738281248, 0, Text(timesItalic12, byCarrierWithSpace))
+//        println("rowIdx=$rowIdx")
+
+        assertEquals(byCarrierNoSpace, rowIdx.row.string)
+        assertEquals(135.984, rowIdx.row.width)
+        assertEquals(29, rowIdx.idx)
+        assertFalse(rowIdx.foundCr)
+    }
+
+    // This is the use case for testLastWordEndsCommaSpace() above.  It's not a *test*, but it's useful to understand
+    // the context.
+//    @Test
+//    fun testBreakBeforeLastWordThatEndsWithAComma() {
+//        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
+//
+//        val bodyCellStyle = CellStyle(Align.TOP_LEFT_JUSTIFY, BoxStyle(Padding(10.0, 0.0, 0.0, 0.0), null,
+//                                                                       BorderStyle.NO_BORDERS))
+//        val bodyText = TextStyle(PDType1Font.TIMES_ROMAN, 12.0, CMYK_BLACK)
+//        val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12.0, CMYK_BLACK)
+//
+//        val lp = pageMgr.startPageGrouping(
+//                PdfLayoutMgr.Orientation.PORTRAIT,
+//                a6PortraitBody,
+//                { pageNum:Int, pb: SinglePage ->
+//                    val isLeft = pageNum % 2 == 1
+//                    val leftMargin:Double = if (isLeft) 37.0 else 45.0
+//                    pb.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20.0), "$pageNum.",
+//                                      TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK), true)
+//                    leftMargin })
+//
+//        // The first line should read, "would manage it. They must go by the carrier,"
+//        // But the bug produced a missing space before the last word "by thecarrier,"
+//        val dap: DimAndPageNums =
+//                lp.appendCell(0.0, bodyCellStyle,
+//                              listOf(Text(bodyText, "would manage it. "),
+//                                     Text(thought, "They must go by the carrier, "),
+//                                     Text(bodyText, "she thought; ")))
+//
+//        println("dap=$dap")
+//
+//
+//        pageMgr.commit()
+//
+//        // We're just going to write to a file.
+//        pageMgr.save(FileOutputStream("spaceBeforeLastWordCommaSpace.pdf"))
+//    }
+
+
 }

@@ -116,6 +116,7 @@ data class Text(val textStyle: TextStyle,
         internal fun tryGettingText(maxWidth: Double, startIdx: Int, txt: Text): RowIdx {
 //            println("=======================\n" +
 //                    "tryGettingText(maxWidth=$maxWidth, startIdx=$startIdx, txt=$txt)")
+//            Exception().printStackTrace()
             if (maxWidth < 0) {
                 throw IllegalArgumentException("Can't meaningfully wrap text with a negative width: $maxWidth")
             }
@@ -217,16 +218,27 @@ data class Text(val textStyle: TextStyle,
                 }
             } else if (Character.isWhitespace(text[idx - 1])) {
 //                println("Character after longest that fits is whitespace")
-                idx = longestIdxThatFits
-                substr = text.substring(0, idx)
-//                println("Returning substr=[$substr] idx=$idx")
-                return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
-                              startIdx + idx + 1,
-                              if (substr == text) {
-                                  foundCr
-                              } else {
-                                  false
-                              })
+
+                if (strWidth <= maxWidth) {
+                    // If we can use up the whole string, return it - whitespace or not.
+//                    println("Returning text=[$text] idx=$textLen")
+                    return RowIdx(WrappedText(txt.textStyle, text),
+                                  startIdx + text.length,
+                                  foundCr)
+                } else {
+                    // Here we're returning the longest that fits and chopping off the whitespace.
+                    // Not sure the chop is really necessary, since we must in some cases check and chop it later too.
+                    idx = longestIdxThatFits
+                    substr = text.substring(0, idx)
+//                    println("Returning substr=[$substr] idx=$idx")
+                    return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
+                                  startIdx + idx + 1,
+                                  if (substr == text) {
+                                      foundCr
+                                  } else {
+                                      false
+                                  })
+                }
             } else {
 //                println("Have longestIdxThatFits and last char is not whitespace.")
                 if ( (idx >= textLen) && (strWidth <= maxWidth) ) {
@@ -316,7 +328,6 @@ data class Text(val textStyle: TextStyle,
 
             substr = text.substring(0, idx)
 //            strWidth = txt.textStyle.stringWidthInDocUnits(substr)
-
 //            println("substr=[$substr] idx=$idx")
 
             val adjIdx = if ( (idx >= textLen) ||
