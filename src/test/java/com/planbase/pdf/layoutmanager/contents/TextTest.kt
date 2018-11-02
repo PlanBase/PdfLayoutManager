@@ -34,6 +34,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font.*
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import kotlin.math.nextDown
@@ -508,11 +509,12 @@ class TextTest {
         assertEquals(32.224, conTerm.item.dim.width, 0.0005)
     }
 
+    @Ignore // I'm skipping this because the font is only installed on my machine.
     @Test fun testTooLongWordWrapping2() {
         // This tests a too-long line that breaks on a hyphen (not a white-space).
         // It used to adjust the index wrong and always return index=0 and return the first half of the line.
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(300.0, 450.0), null)
-        val font = pageMgr.loadTrueTypeFont(File("/home/gpeterso/Documents/planbase/goalQpc/mjl_bookData/fonts/NovaresePro-Book.ttf"))
+        val font = pageMgr.loadTrueTypeFont(File("NovaresePro-Book.ttf"))
         val times8pt = TextStyle(font, 8.0, CMYK_BLACK)
 //        val times8pt = TextStyle(TIMES_ROMAN, 8.3207190645, CMYK_BLACK)
 //        val times8pt = TextStyle(TIMES_ROMAN, 8.34, CMYK_BLACK)
@@ -542,11 +544,12 @@ class TextTest {
         assertFalse(lineWrapper.hasMore())
     }
 
+    @Ignore // I'm skipping this because the font is only installed on my machine.
     @Test fun testTooLongWordWrapping3() {
         // This tests a too-long line that breaks on a hyphen (not a white-space).
         // It used to adjust the index wrong and always return index=0 and return the first half of the line.
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(300.0, 450.0), null)
-        val font = pageMgr.loadTrueTypeFont(File("/home/gpeterso/Documents/planbase/goalQpc/mjl_bookData/fonts/NovaresePro-Book.ttf"))
+        val font = pageMgr.loadTrueTypeFont(File("NovaresePro-Book.ttf"))
         val times8pt = TextStyle(font, 8.0, CMYK_BLACK)
 //        val times8pt = TextStyle(TIMES_ROMAN, 8.3207190645, CMYK_BLACK)
 //        val times8pt = TextStyle(TIMES_ROMAN, 8.34, CMYK_BLACK)
