@@ -25,6 +25,11 @@ data class WrappedText(val textStyle: TextStyle,
 
     override val ascent: Double = textStyle.ascent
 
+    fun withoutTrailingSpace(): WrappedText =
+            when {
+                Character.isWhitespace(string.last()) -> WrappedText(textStyle, string.trimEnd())
+                else -> this
+            }
 
     /** Returns the number of literal space characters in this WrappedText */
     val numSpaces: Int by lazy { string.count { it == ' ' } }

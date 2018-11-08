@@ -154,7 +154,7 @@ For each renderable
         Add it to finishedLines
         start a new line.
  */
-fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrapped> {
+fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double): List<LineWrapped> {
 //    println("================in wrapLines...")
 //    println("wrapLines($wrappables, $maxWidth)")
     if (maxWidth < 0) {
@@ -168,26 +168,26 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
     var wrappedLine = MultiLineWrapped() // Is this right, putting no source here?
 
     // var prevItem:LineWrappable = LineWrappable.ZeroLineWrappable
-    var remainingSpace = maxWidth
+    var unusedWidth = maxWidth
     for (item in wrappables) {
 //        println("Wrappable: $item")
         val lineWrapper: LineWrapper = item.lineWrapper()
         while (lineWrapper.hasMore()) {
 //            println("  lineWrapper.hasMore()")
             if (wrappedLine.isEmpty()) {
-                remainingSpace = maxWidth
+                unusedWidth = maxWidth
 //                println("    wrappedLine.isEmpty()")
                 val something : ConTerm = lineWrapper.getSomething(maxWidth)
 //                println("🢂something=$something")
                 wrappedLine.append(something.item)
-                remainingSpace -= something.item.dim.width
-//                println("      remainingSpace1=$remainingSpace")
+                unusedWidth -= something.item.dim.width
+//                println("      unusedWidth1=$unusedWidth")
                 if (something is Terminal) {
 //                    println("=============== TERMINAL")
 //                    println("something:$something")
                     addLineCheckBlank(wrappedLine, wrappedLines)
                     wrappedLine = MultiLineWrapped()
-                    remainingSpace = maxWidth
+                    unusedWidth = maxWidth
                 } else if (lineWrapper.hasMore()) {
 //                    println("  LOOKAHEAD??? lineWrapper.hasMore()")
                     // We have a line of text which is too long and must be broken up.  But if it’s too long by less
@@ -199,28 +199,28 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
                     wrappedLine = MultiLineWrapped()
                     if ( (something is Continuing) &&
                          (something.item is WrappedText) ) {
-                        remainingSpace -= (something.item as WrappedText).textStyle.spaceWidth
+                        unusedWidth -= (something.item as WrappedText).textStyle.spaceWidth
                     }
-//                    println("      remainingSpace2=$remainingSpace")
+//                    println("      unusedWidth2=$unusedWidth")
                 }
             } else {
 //                println("    wrappedLine is not empty")
-                val ctn: ConTermNone = lineWrapper.getIfFits(remainingSpace) //maxWidth - wrappedLine.width)
+                val ctn: ConTermNone = lineWrapper.getIfFits(unusedWidth) //maxWidth - wrappedLine.width)
 //                println("🢂ctn=$ctn")
 
                 when (ctn) {
                     is Continuing -> {
 //                        println("  appending result to current wrapped line")
                         wrappedLine.append(ctn.item)
-                        remainingSpace -= ctn.item.dim.width
+                        unusedWidth -= ctn.item.dim.width
                         if (ctn.item is WrappedText) {
-                            remainingSpace -= ctn.item.textStyle.spaceWidth
+                            unusedWidth -= ctn.item.textStyle.spaceWidth
                         }
-//                        println("      remainingSpace3=$remainingSpace")
-                        if (remainingSpace <= 0) {
+//                        println("      unusedWidth3=$unusedWidth")
+                        if (unusedWidth <= 0) {
                             addLineCheckBlank(wrappedLine, wrappedLines)
                             wrappedLine = MultiLineWrapped()
-                            remainingSpace = maxWidth
+                            unusedWidth = maxWidth
                         }
                     }
                     is Terminal -> {
@@ -228,14 +228,14 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double) : List<LineWrap
 //                        println("ctn:$ctn")
                         wrappedLine.append(ctn.item)
                         wrappedLine = MultiLineWrapped()
-                        remainingSpace = maxWidth
+                        unusedWidth = maxWidth
                     }
                     None -> {
 //                        println("=============== NONE 222222222")
                         // MultiLineWrappeds.add(wrappedLine)
                         addLineCheckBlank(wrappedLine, wrappedLines)
                         wrappedLine = MultiLineWrapped()
-                        remainingSpace = maxWidth
+                        unusedWidth = maxWidth
                     }}
             }
         } // end while lineWrapper.hasMore()
@@ -256,8 +256,23 @@ private fun addLineCheckBlank(currLine: MultiLineWrapped,
         wrappedLines.add(BlankLineWrapped(Dim(0.0, lastRealItem.dim.height), lastRealItem.ascent))
     } else if (currLine.items.size == 1) {
         // Don't add a MultilineWrapped if we can just add a single wrapped thing.
-        wrappedLines.add(currLine.items[0])
+        // Trim space from final item on completed line.
+        val lastItem = currLine.items[0]
+        wrappedLines.add(when (lastItem) {
+            is WrappedText -> lastItem.withoutTrailingSpace()
+            else -> lastItem
+        })
     } else {
+        // Add multiple items.
+        if (currLine.items.size > 1) {
+            // Trim space from final item on completed line.
+            val lastIdx = currLine.items.lastIndex
+            val lastItem = currLine.items[lastIdx]
+            if (lastItem is WrappedText) {
+                currLine.items.removeAt(lastIdx)
+                currLine.items.add(lastItem.withoutTrailingSpace())
+            }
+        }
         wrappedLines.add(currLine)
     }
 }

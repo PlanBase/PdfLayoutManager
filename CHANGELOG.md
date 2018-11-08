@@ -3,7 +3,12 @@
 Bigger headings mean more stable releases!
 
 
-## 2.2.2 2018-11-02 "Fixed space-before-last-word issue"
+## 2.2.3 2018-11-07 "Fixed space-after-last-word issue"
+ - Fixed a bug in Multi-line-wrapped that reaturned a trailing space at the end of a line.
+ The line-break measurer needs to return a space at the end of a Text item because it can't know if there's something else on the line after this text.
+ Only the multi-line-wrapper knows what item actually ends the line, so it has to check the final thing for trailing spaces and remove them.
+
+### 2.2.2 2018-11-02 "Fixed space-before-last-word issue"
  - Fixed a bug in the line-break measurer that it wasn't returning a trailing space in a corner case.
 
 ### 2.2.1 2018-10-19 "Improved Text Wrapping"
