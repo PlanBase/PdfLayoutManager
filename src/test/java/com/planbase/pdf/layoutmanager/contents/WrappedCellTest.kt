@@ -2,10 +2,10 @@ package com.planbase.pdf.layoutmanager.contents
 
 import TestManual2.Companion.CMYK_PALE_PEACH
 import TestManual2.Companion.a6PortraitBody
-import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
-import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
-import TestManualllyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManuallyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
+import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
+import TestManuallyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
+import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
@@ -431,7 +431,8 @@ class WrappedCellTest {
     }
 
     /**
-     * This relies on [TextTest.testFirstGuessTooLong] and [TextTest.testFirstGuessTooShort] working correctly.
+     * This relies on [TextLineWrapperTest.testFirstGuessTooLong] and [TextLineWrapperTest.testFirstGuessTooShort]
+     * working correctly.
      */
     @Test fun testFirstGuessWayTooSmall() {
         // This
@@ -464,8 +465,6 @@ class WrappedCellTest {
         lp.append(item.wrap())
         pageMgr.commit()
         pageMgr.save(FileOutputStream("tooLongLink.pdf"))
-
-
     }
 
     companion object {

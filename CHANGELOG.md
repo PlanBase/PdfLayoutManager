@@ -10,6 +10,7 @@ Bigger headings mean more stable releases!
  multiple items are broken into lines.
  - Added/improved tests.
  - Upgraded Kotlin to 1.3.10
+ - Moved a bunch of code around (I think it's all internal)
 
 ## 2.2.3 2018-11-07 "Fixed space-after-last-word issue"
  - Fixed a bug in Multi-line-wrapped that reaturned a trailing space at the end of a line.

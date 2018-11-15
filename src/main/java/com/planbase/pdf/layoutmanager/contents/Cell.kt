@@ -25,7 +25,7 @@ import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BO
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
-import com.planbase.pdf.layoutmanager.lineWrapping.wrapLines
+import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped.Companion.wrapLines
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.listToStr
 import org.organicdesign.indented.IndentedStringable

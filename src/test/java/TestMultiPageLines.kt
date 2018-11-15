@@ -1,4 +1,4 @@
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.LineStyle

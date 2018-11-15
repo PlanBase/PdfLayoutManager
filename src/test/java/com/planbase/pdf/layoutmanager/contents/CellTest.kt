@@ -3,9 +3,9 @@ package com.planbase.pdf.layoutmanager.contents
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.CMYK_LIGHT_GREEN
 import TestManual2.Companion.a6PortraitBody
-import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
-import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManuallyPdfLayoutMgr.Companion.RGB_DARK_GRAY
+import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
+import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT

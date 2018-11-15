@@ -1,12 +1,12 @@
 package com.planbase.pdf.layoutmanager.contents
 
-import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE
-import TestManualllyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
-import TestManualllyPdfLayoutMgr.Companion.RGB_DARK_GRAY
-import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
-import TestManualllyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
-import TestManualllyPdfLayoutMgr.Companion.letterPortraitBody
+import TestManuallyPdfLayoutMgr.Companion.RGB_BLUE
+import TestManuallyPdfLayoutMgr.Companion.RGB_BLUE_GREEN
+import TestManuallyPdfLayoutMgr.Companion.RGB_DARK_GRAY
+import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
+import TestManuallyPdfLayoutMgr.Companion.RGB_YELLOW_BRIGHT
+import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManuallyPdfLayoutMgr.Companion.letterPortraitBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.attributes.Align

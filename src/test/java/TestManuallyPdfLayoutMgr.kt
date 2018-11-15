@@ -2,24 +2,17 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.layoutmanager.attributes.*
 import com.planbase.pdf.layoutmanager.attributes.Align.*
-import com.planbase.pdf.layoutmanager.attributes.BorderStyle
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
 import com.planbase.pdf.layoutmanager.attributes.LineStyle.Companion.NO_LINE
-import com.planbase.pdf.layoutmanager.attributes.Padding
-import com.planbase.pdf.layoutmanager.attributes.PageArea
-import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.Text
+import com.planbase.pdf.layoutmanager.utils.Coord
+import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import com.planbase.pdf.layoutmanager.utils.RGB_WHITE
-import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.Coord
 import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -34,10 +27,11 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.imageio.ImageIO
 
-class TestManualllyPdfLayoutMgr {
+class TestManuallyPdfLayoutMgr {
 
     /**
-     * Note that [com.planbase.pdf.layoutmanager.contents.TextTest.ohSayCanYouSee] needs to work for the line breaking
+     * Note that [com.planbase.pdf.layoutmanager.contents.TextLineWrapperTest.ohSayCanYouSee]
+     * needs to work for the line breaking
      * of the Star Spangled Banner to come out right.
      */
     @Test fun testPdf() {

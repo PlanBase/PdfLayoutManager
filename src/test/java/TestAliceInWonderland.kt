@@ -190,7 +190,8 @@ class TestAliceInWonderland {
 
         lp.cursorToNewPage()
 
-        // TODO: Here there's no space between "a" and "Long".  I thought that bug was fixed!
+        // Check the output that there's no space between "a" and "Long"!
+        // Other tests should fail if that's the case, so fix them first.
         dap = lp.appendCell(0.0, chapTitleCellStyle,
                             listOf(Text(incipit, "3. "),
                                    Text(heading, "A Caucus-Race and a Long Tale")))

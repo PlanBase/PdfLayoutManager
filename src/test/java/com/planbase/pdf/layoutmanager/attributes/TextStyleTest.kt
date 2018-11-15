@@ -1,6 +1,6 @@
 package com.planbase.pdf.layoutmanager.attributes
 
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
 import com.planbase.pdf.layoutmanager.pages.SinglePage

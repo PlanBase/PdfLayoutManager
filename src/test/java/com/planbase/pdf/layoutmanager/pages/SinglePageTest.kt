@@ -1,8 +1,8 @@
 package com.planbase.pdf.layoutmanager.pages
 
-import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_BLUE
-import TestManualllyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_BLUE
+import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
+import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.Align
@@ -35,7 +35,7 @@ import java.io.FileOutputStream
 class SinglePageTest {
     /**
      * If this is failing on the text boxes on the right, check that
-     * [com.planbase.pdf.layoutmanager.contents.TextTest.quickBrownFox] is working first.
+     * [com.planbase.pdf.layoutmanager.contents.TextLineWrapperTest.quickBrownFox] is working first.
      */
     @Test fun testBasics() {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))

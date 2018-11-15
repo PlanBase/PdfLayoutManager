@@ -1,24 +1,16 @@
 package com.planbase.pdf.layoutmanager.pages
 
-import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.a6PortraitBody
-import TestManualllyPdfLayoutMgr.Companion.letterLandscapeBody
-import TestManualllyPdfLayoutMgr.Companion.letterPortraitBody
+import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
+import TestManuallyPdfLayoutMgr.Companion.letterPortraitBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BorderStyle
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.CellStyle
 import com.planbase.pdf.layoutmanager.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
 import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.PageArea
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Text
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
@@ -50,7 +42,7 @@ import kotlin.test.assertTrue
 class PageGroupingTest {
     /**
      * If this is failing on the text boxes on the right, check that
-     * [com.planbase.pdf.layoutmanager.contents.TextTest.quickBrownFox] is working first.
+     * [com.planbase.pdf.layoutmanager.contents.TextLineWrapperTest.quickBrownFox] is working first.
      */
     @Test
     @Throws(IOException::class)
