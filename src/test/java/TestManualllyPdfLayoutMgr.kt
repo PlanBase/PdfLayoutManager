@@ -86,7 +86,7 @@ class TestManualllyPdfLayoutMgr {
         // alignment.
         var tB = Table()
         tB.addCellWidths(listOf(120.0, 120.0, 120.0))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
                 .partBuilder()
                 .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2.0),
                                                              RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
@@ -141,7 +141,7 @@ class TestManualllyPdfLayoutMgr {
         // right of the first.
         tB = Table()
         tB.addCellWidths(listOf(100.0, 100.0, 100.0))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
                                                    BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("January", "February", "March").buildRow()
@@ -195,7 +195,7 @@ class TestManualllyPdfLayoutMgr {
         // the way cells extend vertically (but not horizontally) to fit the text you put in them.
         tB = Table()
         tB.addCellWidths(listOf(100.0, 100.0, 100.0))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
                                                    BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("Uno", "Dos", "Tres").buildRow()
@@ -230,7 +230,7 @@ class TestManualllyPdfLayoutMgr {
         lp = pageMgr.startPageGrouping(PORTRAIT, letterPortraitBody)
         tB = Table()
         tB.addCellWidths(listOf(120.0, 120.0, 120.0))
-                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, 10.0))
+                .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
                 .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
                                                    BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
                 .rowBuilder().addTextCells("First", "Second", "Third").buildRow()

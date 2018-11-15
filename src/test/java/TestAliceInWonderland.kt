@@ -56,12 +56,12 @@ class TestAliceInWonderland {
         val handwritingFontFile = File("target/test-classes/MrDeHaviland-Regular.ttf")
         val handwritingFont: PDType0Font = pageMgr.loadTrueTypeFont(handwritingFontFile)
 
-        val incipit = TextStyle(titleFont, 36.0, CMYK_BLACK, 30.0)
+        val incipit = TextStyle(titleFont, 36.0, CMYK_BLACK, "incipit", 30.0)
         val chapTitleCellStyle = CellStyle(BOTTOM_LEFT, BoxStyle(Padding(50.0, 0.0, 10.0, 0.0), null, NO_BORDERS))
         val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(10.0, 0.0, 0.0, 0.0), null, NO_BORDERS))
-        val heading = TextStyle(titleFont, 16.0, CMYK_BLACK, 16.0, 0.0, 0.2, 0.0)
+        val heading = TextStyle(titleFont, 16.0, CMYK_BLACK, "heading", 16.0, 0.0, 0.2, 0.0)
         val bodyText = TextStyle(PDType1Font.TIMES_ROMAN, 12.0, CMYK_BLACK)
-        val handwriting = TextStyle(handwritingFont, 17.0, CMYK_BLACK, 20.0, wordSpacing = 4.0)
+        val handwriting = TextStyle(handwritingFont, 17.0, CMYK_BLACK, "handwriting", 20.0, wordSpacing = 4.0)
         val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12.0, CMYK_BLACK)
 
         val lp = pageMgr.startPageGrouping(

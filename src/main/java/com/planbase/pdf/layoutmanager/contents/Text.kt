@@ -21,13 +21,8 @@
 package com.planbase.pdf.layoutmanager.contents
 
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.lineWrapping.ConTerm
-import com.planbase.pdf.layoutmanager.lineWrapping.ConTermNone
-import com.planbase.pdf.layoutmanager.lineWrapping.Continuing
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
-import com.planbase.pdf.layoutmanager.lineWrapping.None
-import com.planbase.pdf.layoutmanager.lineWrapping.Terminal
 import org.organicdesign.indented.StringUtils.stringify
 
 /**
@@ -47,58 +42,12 @@ data class Text(val textStyle: TextStyle,
 
     override fun toString() = "Text($textStyle, ${stringify(text)})"
 
-    override fun lineWrapper(): LineWrapper {
-        return TextLineWrapper(this)
-    }
-
-    internal data class RowIdx(val row: WrappedText,
-                               val idx: Int,
-                               val foundCr: Boolean) {
-
-        fun toContTerm() : ConTerm =
-                if (foundCr) {
-                    Terminal(row)
-                } else {
-                    Continuing(row)
-                }
-    }
-
-    class TextLineWrapper(private val txt: Text) : LineWrapper {
-        private var idx = 0
-
-        override fun hasMore(): Boolean = idx < txt.text.length
-
-        override fun getSomething(maxWidth: Double): ConTerm {
-//            println("      TextLineWrapper.getSomething($maxWidth)")
-            if (maxWidth < 0) {
-                throw IllegalArgumentException("Illegal negative width: $maxWidth")
-            }
-            val rowIdx = tryGettingText(maxWidth, idx, txt)
-//            println("rowIdx=$rowIdx")
-            idx = rowIdx.idx
-            return rowIdx.toContTerm()
-        }
-
-        override fun getIfFits(remainingWidth: Double): ConTermNone {
-//            println("      TextLineWrapper.getIfFits($remainingWidth)")
-            if (remainingWidth <= 0) {
-//                return None
-                throw IllegalArgumentException("remainingWidth must be > 0")
-            }
-            val ctri = tryGettingText(remainingWidth, idx, txt)
-            val row = ctri.row
-            return if (row.dim.width <= remainingWidth) {
-                idx = ctri.idx
-                ctri.toContTerm() as ConTermNone
-            } else {
-                None
-            }
-        }
-    }
+    override fun lineWrapper(): LineWrapper = TextLineWrapper(this)
 
     companion object {
         private const val CR: Char = '\n'
 
+        // TODO: Consider moving this to TextLineWrapper.
         /**
          * Given a maximum width, a string, and the starting index into that string,
          * return the next line-wrapping chunk that fits.  Will break at whitespace or
@@ -195,11 +144,12 @@ data class Text(val textStyle: TextStyle,
 //                    println("Returning whole string 0.")
                     return RowIdx(WrappedText(txt.textStyle, substr), // strWidth),
                                   startIdx + idx + 1,
-                                  if (substr == text) {
+                                  foundCr = if (substr == text) {
                                       foundCr
                                   } else {
                                       false
-                                  })
+                                  },
+                                  hasMore = false)
                 } else if (Character.isWhitespace(text[idx])) {
                     while (idx > 0 && Character.isWhitespace(text[idx - 1])) {
 //                        println("text0[idx]=${text[idx - 1]}")
@@ -214,7 +164,8 @@ data class Text(val textStyle: TextStyle,
                                       foundCr
                                   } else {
                                       false
-                                  })
+                                  },
+                                  testHasMore(substr, text))
                 }
             } else if (Character.isWhitespace(text[idx - 1])) {
 //                println("Character after longest that fits is whitespace")
@@ -224,7 +175,8 @@ data class Text(val textStyle: TextStyle,
 //                    println("Returning text=[$text] idx=$textLen")
                     return RowIdx(WrappedText(txt.textStyle, text),
                                   startIdx + text.length,
-                                  foundCr)
+                                  foundCr,
+                                  hasMore = false)
                 } else {
                     // Here we're returning the longest that fits and chopping off the whitespace.
                     // Not sure the chop is really necessary, since we must in some cases check and chop it later too.
@@ -237,7 +189,8 @@ data class Text(val textStyle: TextStyle,
                                       foundCr
                                   } else {
                                       false
-                                  })
+                                  },
+                                  testHasMore(substr, text))
                 }
             } else {
 //                println("Have longestIdxThatFits and last char is not whitespace.")
@@ -249,7 +202,8 @@ data class Text(val textStyle: TextStyle,
                                       foundCr
                                   } else {
                                       false
-                                  })
+                                  },
+                                  testHasMore(substr, text))
                 }
 //                println("Setting idx=$idx to longestIdxThatFits=$longestIdxThatFits")
                 idx = longestIdxThatFits
@@ -267,7 +221,8 @@ data class Text(val textStyle: TextStyle,
                                   foundCr
                               } else {
                                   false
-                              })
+                              },
+                              testHasMore(substr, text))
             }
 
             while (idx > 0 && !isLineBreakable(text[idx - 1])) {
@@ -290,7 +245,8 @@ data class Text(val textStyle: TextStyle,
                                   foundCr
                               } else {
                                   false
-                              })
+                              },
+                              testHasMore(substr, text))
             }
 
 //            substr = text.substring(0, idx)
@@ -343,7 +299,8 @@ data class Text(val textStyle: TextStyle,
                               foundCr
                           } else {
                               false
-                          })
+                          },
+                          testHasMore(substr, text))
         }
 
         // Once we have more experience, might want to enhance using data here:
@@ -375,5 +332,10 @@ data class Text(val textStyle: TextStyle,
         // Non-breaking spaces are ignored here.
         fun cleanStr(s:String):String = s.replace(Regex("\t"), "")
                 .replace(Regex("[ ]*(\r\n|[\r\n\u0085\u2028\u2029])"), "\n")
+
+        internal fun testHasMore(subStr: String, text: String): Boolean =
+                (subStr != text) &&
+                (subStr.length < text.length) &&
+                text.substring(subStr.length).isNotBlank()
     }
 }

@@ -27,7 +27,7 @@ data class WrappedText(val textStyle: TextStyle,
 
     fun withoutTrailingSpace(): WrappedText =
             when {
-                Character.isWhitespace(string.last()) -> WrappedText(textStyle, string.trimEnd())
+                string.isNotEmpty() && Character.isWhitespace(string.last()) -> WrappedText(textStyle, string.trimEnd())
                 else -> this
             }
 

@@ -27,8 +27,11 @@ package com.planbase.pdf.layoutmanager.lineWrapping
  None means that nothing is left or nothing will fit in the given remaining width on this line.
  */
 sealed class ConTermNone
-/* The wrapped line fragment does not end with a hard line break. */
-data class Continuing(override val item: LineWrapped): ConTermNone(), ConTerm {
+/**
+ * The wrapped line fragment does not end with a hard line break.
+ * @param hasMore whether there is more text to go on the next line or not.
+ */
+data class Continuing(override val item: LineWrapped, val hasMore: Boolean): ConTermNone(), ConTerm {
     override fun toString() = "Cont($item)"
 }
 /* The wrapped line fragment ends with a hard line break "\n" */

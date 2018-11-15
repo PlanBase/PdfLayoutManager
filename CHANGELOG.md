@@ -3,6 +3,14 @@
 Bigger headings mean more stable releases!
 
 
+### 2.3.0 2018-11-15 "Fixed extra blank line issue"
+ - Added optional "name" parameter to TextStyle and CellStyle for briefer debugging.
+ Leave blank for full details, or specify the text to show instead (probably the variable name you use in your code).
+ - Fixed extra blank line issue.  Made some small but fundamental changes to the way
+ multiple items are broken into lines.
+ - Added/improved tests.
+ - Upgraded Kotlin to 1.3.10
+
 ## 2.2.3 2018-11-07 "Fixed space-after-last-word issue"
  - Fixed a bug in Multi-line-wrapped that reaturned a trailing space at the end of a line.
  The line-break measurer needs to return a space at the end of a Text item because it can't know if there's something else on the line after this text.

@@ -100,7 +100,8 @@ class CellTest {
 //        pageMgr.save(os)
     }
 
-    // Note: very similar to TableTest.testNestedTablesAcrossPageBreak()
+    // Note: very similar to TableTest.testNestedTablesAcrossPageBreak() but this is more specific and failed
+    // in a useful way 2018-11-15.
     @Test fun testNestedCellsAcrossPageBreak() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
 
@@ -123,6 +124,12 @@ class CellTest {
                               ))
 
         val wrappedCell: WrappedCell = bulletCell.wrap()
+        // TODO: Replace magic numbers with calculations like this:
+//        val bullTxtLineHeight = BULLET_TEXT_STYLE.lineHeight
+//        println("bullTxtLineHeight=$bullTxtLineHeight")
+//        println("bullTxtLineHeight * 3.0 =${bullTxtLineHeight * 3.0}")
+//        println("bullTxtLineHeight * 7.0 =${bullTxtLineHeight * 7.0}")
+//        println("wrappedCell=\n$wrappedCell")
         Dim.assertEquals(Dim(230.0, 124.948), wrappedCell.dim, 0.0000000001)
 
         val startCoord = Coord(0.0, 140.0)

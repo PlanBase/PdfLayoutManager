@@ -225,7 +225,7 @@ class MultiLineWrappedTest {
         var something : ConTerm = lineWrapper.getSomething(maxWidth)
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-")),
+        assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-"), hasMore = true),
                      something)
         assertTrue(something.item.dim.width <= maxWidth)
         assertTrue(lineWrapper.hasMore())
@@ -233,7 +233,7 @@ class MultiLineWrappedTest {
         something = lineWrapper.getSomething(maxWidth)
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "ym.com/resource/resmgr/")),
+        assertEquals(Continuing(WrappedText(times8pt, "ym.com/resource/resmgr/"), hasMore = true),
                      something)
         assertTrue(something.item.dim.width <= maxWidth)
         assertTrue(lineWrapper.hasMore())
@@ -241,7 +241,7 @@ class MultiLineWrappedTest {
         something = lineWrapper.getSomething(maxWidth)
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        assertEquals(Continuing(WrappedText(times8pt, "Standards_Documents/vmstd.pdf")),
+        assertEquals(Continuing(WrappedText(times8pt, "Standards_Documents/vmstd.pdf"), hasMore = false),
                      something)
         assertTrue(something.item.dim.width <= maxWidth)
         assertFalse(lineWrapper.hasMore())
@@ -292,13 +292,13 @@ class MultiLineWrappedTest {
     // "Big Descent" text ended up top-aligned - wrong!  Also the height with the page break should be approximately
     // double the total height (2 * 55.709 = 111.418), but it's returning an even 80.0.
     @Test fun testPageBreakingDiffAscentDescent() {
-        val topHeavy = TextStyle(PDType1Font.TIMES_ROMAN, 30.0, CMYK_BLACK)
+        val topHeavy = TextStyle(PDType1Font.TIMES_ROMAN, 30.0, CMYK_BLACK, "topHeavy")
 
         // Verify our font metrics to ensure a careful and accurate test.
         TestCase.assertEquals(20.49, topHeavy.ascent)
         TestCase.assertEquals(33.48, topHeavy.lineHeight)
 
-        val bottomHeavy = TextStyle(PDType1Font.TIMES_ITALIC, 7.0, CMYK_BLACK, 40.0) // ascent=4.781   lineHeight=12
+        val bottomHeavy = TextStyle(PDType1Font.TIMES_ITALIC, 7.0, CMYK_BLACK, "bottomHeavy", 40.0) // ascent=4.781   lineHeight=12
 
         TestCase.assertEquals(4.781, bottomHeavy.ascent)
         TestCase.assertEquals(40.0, bottomHeavy.lineHeight)

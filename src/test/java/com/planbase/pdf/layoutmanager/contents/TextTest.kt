@@ -7,8 +7,8 @@ import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.attributes.*
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.cleanStr
+import com.planbase.pdf.layoutmanager.contents.Text.Companion.testHasMore
 import com.planbase.pdf.layoutmanager.contents.Text.Companion.tryGettingText
-import com.planbase.pdf.layoutmanager.contents.Text.RowIdx
 import com.planbase.pdf.layoutmanager.lineWrapping.*
 import com.planbase.pdf.layoutmanager.pages.HeightAndPage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
@@ -140,32 +140,32 @@ class TextTest {
 
         var txt = "foo"
         assertEquals(RowIdx(WrappedText(ts, txt),
-                            idx=txt.length + 1, foundCr=false),
+                            idx = txt.length + 1, foundCr = false, hasMore = false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "foobar"
         assertEquals(RowIdx(WrappedText(ts, txt),
-                            idx=txt.length + 1, foundCr=false),
+                            idx = txt.length + 1, foundCr = false, hasMore = false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfast"
         assertEquals(RowIdx(WrappedText(ts, txt),
-                            idx=txt.length + 1, foundCr=false),
+                            idx = txt.length + 1, foundCr = false, hasMore = false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfasts"
         assertEquals(RowIdx(WrappedText(ts, txt),
-                            idx=txt.length + 1, foundCr=false),
+                            idx = txt.length + 1, foundCr = false, hasMore = false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfastss"
         assertEquals(RowIdx(WrappedText(ts, txt),
-                            idx=txt.length + 1, foundCr=false),
+                            idx = txt.length + 1, foundCr = false, hasMore = false),
                      tryGettingText(maxWidth, 0, Text(ts, txt)))
 
         txt = "breakfastzzzzzzzzzz,"
         assertEquals(RowIdx(WrappedText(ts, txt),
-                            idx=txt.length + 1, foundCr=false),
+                            idx = txt.length + 1, foundCr = false, hasMore = true),
                      tryGettingText(maxWidth, 0, Text(ts, "breakfastzzzzzzzzzz, lunch")))
 
         // Tests the actual bug.
@@ -221,7 +221,7 @@ class TextTest {
             None -> null
         }
         assertNotNull(row3)
-        assertEquals(14.816668, row3!!.dim.width, 0.000001)
+        assertEquals(14.816668, row3.dim.width, 0.000001)
     }
 
     @Test fun testRenderator2() {
@@ -246,7 +246,7 @@ class TextTest {
             None -> null
         }
         assertNotNull(row3)
-        assertEquals(14.816668, row3!!.dim.width, 0.000001)
+        assertEquals(14.816668, row3.dim.width, 0.000001)
         assertEquals(tStyle.lineHeight, row3.dim.height)
     }
 
@@ -314,7 +314,10 @@ class TextTest {
                      (cont.item as WrappedText).width)
     }
 
-    /*
+    // TODO: This should be in MultiLineWrapped Tests.
+    // TODO: Search and replace instances of Cell.wrap() in most tests with wrapLines()
+    /**
+    Relies on [WrappedTextTest.testSpaceBeforeLastWord2]
     This was a long-standing bug where if there were multiple items on a line (MultiLineWrapped) and the last one was
     text, and there was room left for one more item on the line, but only by removing the space before that item, it
     would nuke the last space before the last word.  This showed up in Chapter 3 of Alice which this test is taken
@@ -325,34 +328,28 @@ class TextTest {
         val titleFont: PDFont = TIMES_ROMAN
 
         val incipit = TextStyle(titleFont, 36.0, CMYK_BLACK)
-        val chapTitleCellStyle = CellStyle(Align.BOTTOM_LEFT, BoxStyle.NO_PAD_NO_BORDER)
         val heading = TextStyle(titleFont, 16.0, CMYK_BLACK)
-
-//        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
-//        val lp = pageMgr.startPageGrouping(
-//                PdfLayoutMgr.Orientation.PORTRAIT,
-//                a6PortraitBody,
-//                null)
 
         // Bug: there's no space between "a" and "Long".
         // Width to show bug: Min: 207.9521 Max: 211.9519
         // Difference: 3.9998
         // Width of a space in right-hand font=4.0
 //        println("space=" + heading.stringWidthInDocUnits(" "))
-        val cell = Cell(chapTitleCellStyle, 210.0,
-                        listOf(Text(incipit, "3. "),
-                               Text(heading, "A Caucus-Race and a Long Tale")))
-//        println("cell=$cell\n\n")
+        val wrappedItems: List<LineWrapped> = wrapLines(listOf(Text(incipit, "3. "),
+                                                               Text(heading, "A Caucus-Race and a Long Tale")), 210.0)
 
-        val wrappedCell = cell.wrap()
-//        println("\n\nwrappedCell=${wrappedCell.indentedStr("wrappedCell=".length)}")
-
-        val wrappedItems: List<LineWrapped> = wrappedCell.rows
+//        println("wrappedItems=$wrappedItems")
         assertEquals(2, wrappedItems.size) // 2 lines
 
         // first line has 2 items: tne number and "A Caucus-Race and a"
         val firstLine:List<LineWrapped> = wrappedItems[0].items()
+//        println("firstLine=$firstLine")
+
+        // If this fails with 3 lines here, it's probably due to a missing space between "a" and "Long".
+        // That's the bug this is designed to prevent regression of.  They fit without the space, but you can't just
+        // drop the space.  See if WrappedTextTest.testSpaceBeforeLastWord2() fails too.
         assertEquals(2, firstLine.size)
+
         assertEquals("3. ", (firstLine[0] as WrappedText).string)
         assertEquals("A Caucus-Race and a", (firstLine[1] as WrappedText).string)
 
@@ -518,7 +515,7 @@ class TextTest {
 //        println("something=$something")
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        Assert.assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-ym.com/")),
+        Assert.assertEquals(Continuing(WrappedText(times8pt, "www.c.ymcdn.com/sites/value-eng.site-ym.com/"), true),
                             something)
         Assert.assertEquals(162.928, something.item.dim.width, 0.0005)
         assertTrue(lineWrapper.hasMore())
@@ -527,7 +524,7 @@ class TextTest {
 //        println("something=$something")
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf")),
+        Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf"), false),
                             something)
         Assert.assertEquals(171.432, something.item.dim.width, 0.0005)
         assertFalse(lineWrapper.hasMore())
@@ -553,7 +550,7 @@ class TextTest {
 //        println("something=$something")
         assertTrue(something is Continuing)
         assertTrue(something.item is WrappedText)
-        Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf")),
+        Assert.assertEquals(Continuing(WrappedText(times8pt, "resource/resmgr/Standards_Documents/vmstd.pdf"), false),
                             something)
         Assert.assertEquals(171.432, something.item.dim.width, 0.0005)
         assertFalse(lineWrapper.hasMore())
@@ -773,5 +770,9 @@ class TextTest {
 //        pageMgr.save(FileOutputStream("spaceBeforeLastWordCommaSpace.pdf"))
 //    }
 
-
+    @Test fun testTestHasMore() {
+        assertFalse(testHasMore("Hello", "Hello"))
+        assertTrue(testHasMore("Hello", "Hello Z"))
+        assertFalse(testHasMore("Hello", "Hello    "))
+    }
 }

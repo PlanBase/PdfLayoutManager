@@ -79,13 +79,13 @@ interface LineWrapper {
 
             override fun getSomething(maxWidth: Double): ConTerm {
                 hasMore = false
-                return Continuing(item)
+                return Continuing(item, false)
             }
 
             override fun getIfFits(remainingWidth: Double): ConTermNone =
                     if (hasMore && (item.dim.width <= remainingWidth)) {
                         hasMore = false
-                        Continuing(item)
+                        Continuing(item, false)
                     } else {
                         None
                     }

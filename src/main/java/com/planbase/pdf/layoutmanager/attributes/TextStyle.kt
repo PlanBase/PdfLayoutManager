@@ -26,8 +26,8 @@ import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
 
-/*
- Represents the attributes of some text.
+/**
+ Represents the attributes of some text: font, font-size, and color.
              __
             /           ----    __----__
             |           ^     ,'  ."".  `,
@@ -43,6 +43,7 @@ lineHeight <            V    \   \_  _/   /
  @param font "Tf" in the PDF spec, the font
  @param fontSize "Tfs" in the PDF spec, the font size in document units
  @param textColor the color
+ @param name the name of this text style (specify for compact debugging output of toString()).
  @param lineHeight "TL" in the PDF spec, is the distance from baseline of one row of text to baseline of the next in
  document units.  By default this is the height of the bounding box for the font (translated into document units).
  PDF spec calls this "leading."
@@ -54,27 +55,20 @@ lineHeight <            V    \   \_  _/   /
  @param wordSpacing "Tw" in the PDF spec, is like characterSpacing, but only affects the ASCII SPACE character
  (0x20 or 32 decimal) and is in document units (PdfLayoutMgr emulates this instead of falling through to PDFBox).
  */
-/** Specifies font, font-size, and color. */
-data class TextStyle(val font: PDFont,    // Tf
-                     val fontSize: Double, // Tfs
-                     val textColor: PDColor,
-                     val lineHeight: Double = defaultLineHeight(font, fontSize),
-                     val rise: Double = 0.0,
-                     val characterSpacing: Double = 0.0,
-                     val wordSpacing: Double = 0.0) {
-    constructor(font: PDFont,
-                fontSize: Double,
-                textColor: PDColor,
-                lineHeight: Double) : this(font, fontSize, textColor, lineHeight, 0.0, 0.0, 0.0)
-
-    constructor(font: PDFont,
-                fontSize: Double,
-                textColor: PDColor) : this(font, fontSize, textColor, defaultLineHeight(font, fontSize))
+data class TextStyle
+@JvmOverloads constructor(val font: PDFont,    // Tf
+                          val fontSize: Double, // Tfs
+                          val textColor: PDColor,
+                          val name: String? = null,
+                          val lineHeight: Double = defaultLineHeight(font, fontSize),
+                          val rise: Double = 0.0,
+                          val characterSpacing: Double = 0.0,
+                          val wordSpacing: Double = 0.0) {
 
     /** Average character width (for this font, or maybe guessed) as a positive number in document units */
     val avgCharWidth: Double = avgCharWidth(font, fontSize, characterSpacing)
 
-    val spaceWidth:Double by lazy { stringWidthInDocUnits(" ") }
+//    val spaceWidth:Double by lazy { stringWidthInDocUnits(" ") }
 
     // Somewhere it says that font units are 1000 times page units, but my tests with
     // PDType1Font.HELVETICA and PDType1Font.HELVETICA_BOLD from size 5-200 show that 960x is
@@ -99,11 +93,15 @@ data class TextStyle(val font: PDFont,    // Tf
 
     /** Returns a copy of this immutable TextStyle with the specified character and word spacing. */
     fun withCharWordSpacing(cSpace: Double, wSpace:Double) =
-            TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing + cSpace, wSpace)
+            TextStyle(font, fontSize, textColor,
+                      if (name == null) { null } else { "$name+cSpace=$cSpace+wSpace=$wSpace"},
+                      lineHeight, rise, cSpace, wSpace)
 
     /** Returns a copy of this immutable TextStyle with the specified word spacing. */
-    fun withWordSpacing(spacing: Double) =
-            TextStyle(font, fontSize, textColor, lineHeight, rise, characterSpacing, spacing)
+    fun withWordSpacing(wSpace: Double) =
+            TextStyle(font, fontSize, textColor,
+                      if (name == null) { null } else { "$name+wSpace=$wSpace"},
+                      lineHeight, rise, characterSpacing, wSpace)
 
 // Below taken from Section 9.3 page 243 of PDF 32000-1:2008
 //
@@ -126,20 +124,23 @@ data class TextStyle(val font: PDFont,    // Tf
 // Tk
 // knockout
 
-    override fun toString():String {
-        val sB = StringBuilder("TextStyle(").append(fontToStr(font)).append(", ")
-                         .append(fontSize).append(", ${colorToString(textColor)}")
-        if (defaultLineHeight(font, fontSize) != lineHeight) {
-            sB.append(", $lineHeight")
-        }
-        // We don't have separate constructors for all of these, so show all or none.
-        if ( (rise != 0.0) ||
-             (characterSpacing != 0.0) ||
-             (wordSpacing != 0.0) ) {
-            sB.append(", $rise, $characterSpacing, $wordSpacing")
-        }
-        return sB.append(")").toString()
-    }
+    override fun toString():String =
+            if (name != null) {
+                name
+            } else {
+                val sB = StringBuilder("TextStyle(").append(fontToStr(font)).append(", ")
+                        .append(fontSize).append(", ${colorToString(textColor)}")
+                if (defaultLineHeight(font, fontSize) != lineHeight) {
+                    sB.append(", $lineHeight")
+                }
+                // We don't have separate constructors for all of these, so show all or none.
+                if ( (rise != 0.0) ||
+                     (characterSpacing != 0.0) ||
+                     (wordSpacing != 0.0) ) {
+                    sB.append(", $rise, $characterSpacing, $wordSpacing")
+                }
+                sB.append(")").toString()
+            }
 
 //    // This is a duplicate of org.apache.pdfbox.pdmodel.font.PDFont.getStringWidth(text)
 //    // but using double precision for the addition to hopefully avoid more rounding errors.

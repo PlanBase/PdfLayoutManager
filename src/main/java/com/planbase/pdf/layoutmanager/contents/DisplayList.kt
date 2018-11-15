@@ -11,6 +11,9 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapper
 import com.planbase.pdf.layoutmanager.lineWrapping.None
 
+/**
+ * Represents a bulleted or numbered list (for display).  Not the List data structure (although it contains one).
+ */
 interface DisplayList: LineWrappable {
     val width: Double
     val initialWidth: Double
@@ -34,13 +37,13 @@ interface DisplayList: LineWrappable {
 
         override fun getSomething(maxWidth: Double): ConTerm {
             hasMore = false
-            return Continuing(wrap())
+            return Continuing(wrap(), false)
         }
 
         override fun getIfFits(remainingWidth: Double): ConTermNone =
                 if (hasMore && (width <= remainingWidth)) {
                     hasMore = false
-                    Continuing(wrap())
+                    Continuing(wrap(), false)
                 } else {
                     None
                 }

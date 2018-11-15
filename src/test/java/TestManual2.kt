@@ -15,17 +15,8 @@
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DEFAULT_MARGIN
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.attributes.Align
+import com.planbase.pdf.layoutmanager.attributes.*
 import com.planbase.pdf.layoutmanager.attributes.Align.*
-import com.planbase.pdf.layoutmanager.attributes.BorderStyle
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.attributes.Padding
-import com.planbase.pdf.layoutmanager.attributes.PageArea
-import com.planbase.pdf.layoutmanager.attributes.TextStyle
-import com.planbase.pdf.layoutmanager.contents.BulletList
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.ScaledImage
 import com.planbase.pdf.layoutmanager.contents.Table
@@ -215,8 +206,8 @@ class TestManual2 {
                                                             BorderStyle(
                                                                     LineStyle.NO_LINE, LineStyle.NO_LINE,
                                                                     LineStyle.NO_LINE, LineStyle(CMYK_QUEEN_PINK))))
-        internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12.0, CMYK_BLACK)
+        internal val BULLET_TEXT_STYLE = TextStyle(PDType1Font.HELVETICA, 12.0, CMYK_BLACK, "BULLET_TEXT_STYLE")
 
-        internal val HEADING_TEXT_STYLE = TextStyle(PDType1Font.TIMES_BOLD, 16.0, CMYK_COOL_GRAY)
+        internal val HEADING_TEXT_STYLE = TextStyle(PDType1Font.TIMES_BOLD, 16.0, CMYK_COOL_GRAY, "HEADING_TEXT_STYLE")
     }
 }

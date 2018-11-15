@@ -26,8 +26,8 @@ class TextStyleTest {
         assertEquals(115.6, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK).lineHeight, 0.0)
 
         // Should take whatever height we give it!
-        assertEquals(50.0, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 50.0).lineHeight, 0.0)
-        assertEquals(200.0, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 200.0).lineHeight, 0.0)
+        assertEquals(50.0, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, null, 50.0).lineHeight, 0.0)
+        assertEquals(200.0, TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, null, 200.0).lineHeight, 0.0)
 
         // Natural heights of other fonts
         assertEquals(119.0, TextStyle(PDType1Font.HELVETICA_BOLD, 100.0, CMYK_BLACK).lineHeight, 0.0)
@@ -48,7 +48,7 @@ class TextStyleTest {
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         assertEquals(125.19531, TextStyle(liberationFont, 100.0, CMYK_BLACK).lineHeight, 0.00001)
 
-        assertEquals(TextStyle(HELVETICA, 100.0, CMYK_BLACK, TextStyle.defaultLineHeight(HELVETICA, 100.0)),
+        assertEquals(TextStyle(HELVETICA, 100.0, CMYK_BLACK, null, TextStyle.defaultLineHeight(HELVETICA, 100.0)),
                      TextStyle(liberationFont, 100.0, CMYK_BLACK).withFontAndLineHeight(HELVETICA))
 
         // TODO: Test character spacing and word spacing!
@@ -59,11 +59,11 @@ class TextStyleTest {
         assertEquals(basicWidth, helvetica100.stringWidthInDocUnits("Hello World"), 0.0)
 
         assertEquals(basicWidth + 10.0,
-                     TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 100.0, 0.0, 0.0, 10.0)
+                     TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, null, 100.0, 0.0, 0.0, 10.0)
                              .stringWidthInDocUnits("Hello World"), 0.0)
 
         assertEquals(basicWidth + ("Hello World".length * 1.0),
-                     TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, 100.0, 0.0, 1.0, 0.0)
+                     TextStyle(PDType1Font.HELVETICA, 100.0, CMYK_BLACK, null, 100.0, 0.0, 1.0, 0.0)
                              .stringWidthInDocUnits("Hello World"), 0.0)
 
         val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
@@ -75,26 +75,26 @@ class TextStyleTest {
         page.drawStyledText(lp.body.topLeft.minusY(leading), quickBrownFox, times20)
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 2), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, 1.0, 0.0))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 1.0, 0.0))
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 3), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, -1.0, 0.0))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, -1.0, 0.0))
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 4), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, 0.0, 2.0))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 0.0, 2.0))
 
         page.drawStyledText(lp.body.topLeft.minusY(leading * 5), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, 20.0, 0.0, 0.0, -2.0))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 0.0, -2.0))
 
         val helloOff = lp.body.topLeft.minusY(leading * 6)
         page.drawStyledText(helloOff, "Hello", times20)
         page.drawStyledText(helloOff.plusX(times20.stringWidthInDocUnits("Hello")), "subscript",
-                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, 11.0, -4.0, 0.0, 0.0))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, null, 11.0, -4.0, 0.0, 0.0))
 
         val stuffOff = helloOff.plusX(times20.stringWidthInDocUnits("hellosubscript"))
         page.drawStyledText(stuffOff, "Stuff", times20)
         page.drawStyledText(stuffOff.plusX(times20.stringWidthInDocUnits("Stuff") + 1.0), "superscript",
-                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, 11.0, 10.0, 0.0, 0.0))
+                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, null, 11.0, 10.0, 0.0, 0.0))
 
         pageMgr.commit()
         val os = FileOutputStream("textStyleTest.pdf")
@@ -121,8 +121,22 @@ class TextStyleTest {
         assertEquals("TextStyle(HELVETICA, 11.125, CMYK_WHITE)",
                      TextStyle(HELVETICA, 11.125, CMYK_WHITE).toString())
         assertEquals("TextStyle(HELVETICA, 11.125, CMYK_WHITE, 13.5)",
-                     TextStyle(HELVETICA, 11.125, CMYK_WHITE, 13.5).toString())
+                     TextStyle(HELVETICA, 11.125, CMYK_WHITE, null, 13.5).toString())
         assertEquals("TextStyle(HELVETICA, 11.125, CMYK_BLACK, 13.5, 0.25, -0.75, 1.0)",
-                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, 13.5, 0.25, -0.75, 1.0).toString())
+                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, null, 13.5, 0.25, -0.75, 1.0).toString())
+        assertEquals("hello",
+                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, "hello", 13.5, 0.25, -0.75, 1.0).toString())
+        assertEquals("hello+cSpace=0.11+wSpace=0.22",
+                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, "hello", 13.5, 0.25, -0.75, 1.0)
+                             .withCharWordSpacing(0.11, 0.22).toString())
+        assertEquals("TextStyle(HELVETICA, 11.125, CMYK_BLACK, 13.5, 0.25, 0.11, 0.22)",
+                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, null, 13.5, 0.25, -0.75, 1.0)
+                             .withCharWordSpacing(0.11, 0.22).toString())
+        assertEquals("hello+wSpace=0.33",
+                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, "hello", 13.5, 0.25, -0.75, 1.0)
+                             .withWordSpacing(0.33).toString())
+        assertEquals("TextStyle(HELVETICA, 11.125, CMYK_BLACK, 13.5, 0.25, -0.75, 0.33)",
+                     TextStyle(HELVETICA, 11.125, CMYK_BLACK, null, 13.5, 0.25, -0.75, 1.0)
+                             .withWordSpacing(0.33).toString())
     }
 }

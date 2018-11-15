@@ -136,6 +136,7 @@ class MultiLineWrapped(tempItems: Iterable<LineWrapped>?) : LineWrapped, Indente
     override fun toString(): String = indentedStr(0)
 }
 
+// TODO: Put this in a companion object and make it @JvmStatic
 /**
  Given a maximum width, turns a list of renderables into a list of fixed-item WrappedMultiLineWrappeds.
  This allows each line to contain multiple Renderables.  They are baseline-aligned.
@@ -188,19 +189,28 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double): List<LineWrapp
                     addLineCheckBlank(wrappedLine, wrappedLines)
                     wrappedLine = MultiLineWrapped()
                     unusedWidth = maxWidth
+                } else if ( (something is Continuing) &&
+                            (something.hasMore) ) {
+//                    println("  Continuing and has more.  Adding line so far and starting a new one.")
+                    // If we got as much as we could and there's more left, then it has to go on the next line.
+                    addLineCheckBlank(wrappedLine, wrappedLines)
+                    wrappedLine = MultiLineWrapped()
+                    unusedWidth = maxWidth
                 } else if (lineWrapper.hasMore()) {
+                    throw Exception("This shouldn't happen any more.  1")
 //                    println("  LOOKAHEAD??? lineWrapper.hasMore()")
                     // We have a line of text which is too long and must be broken up.  But if it’s too long by less
                     // than the width of a single space, it truncates the final space from the text fragment, then
                     // looks again and sees that the next word now fits, so adds it to the same line *without the space*
                     // which is wrong.  To fix this, we check if the lineWrapper already gave us all it has for this
                     // line and if so, we store it and start the next line.
-                    addLineCheckBlank(wrappedLine, wrappedLines)
-                    wrappedLine = MultiLineWrapped()
-                    if ( (something is Continuing) &&
-                         (something.item is WrappedText) ) {
-                        unusedWidth -= (something.item as WrappedText).textStyle.spaceWidth
-                    }
+//                    addLineCheckBlank(wrappedLine, wrappedLines)
+//                    wrappedLine = MultiLineWrapped()
+//                    // This should never happen any more and should be deleted.
+//                    if ( (something is Continuing) &&
+//                         (something.item is WrappedText) ) {
+//                        unusedWidth -= (something.item as WrappedText).textStyle.spaceWidth
+//                    }
 //                    println("      unusedWidth2=$unusedWidth")
                 }
             } else {
@@ -212,15 +222,21 @@ fun wrapLines(wrappables: List<LineWrappable>, maxWidth: Double): List<LineWrapp
                     is Continuing -> {
 //                        println("  appending result to current wrapped line")
                         wrappedLine.append(ctn.item)
-                        unusedWidth -= ctn.item.dim.width
-                        if (ctn.item is WrappedText) {
-                            unusedWidth -= ctn.item.textStyle.spaceWidth
-                        }
-//                        println("      unusedWidth3=$unusedWidth")
-                        if (unusedWidth <= 0) {
+                        if (ctn.hasMore) {
+//                            println("      ctn.hasMore but it has to go on the next line.")
                             addLineCheckBlank(wrappedLine, wrappedLines)
                             wrappedLine = MultiLineWrapped()
                             unusedWidth = maxWidth
+                        } else {
+//                            println("      ctn doesn't have more, so something else might fit on this line.")
+                            unusedWidth -= ctn.item.dim.width
+                        }
+//                        println("      unusedWidth3=$unusedWidth")
+                        if (unusedWidth <= 0) {
+                            throw Exception("This shouldn't happen any more.  2")
+//                            addLineCheckBlank(wrappedLine, wrappedLines)
+//                            wrappedLine = MultiLineWrapped()
+//                            unusedWidth = maxWidth
                         }
                     }
                     is Terminal -> {
@@ -253,6 +269,7 @@ private fun addLineCheckBlank(currLine: MultiLineWrapped,
     // If this item is a blank line, take the height from the previous item (if there is one).
     if (currLine.isEmpty() && wrappedLines.isNotEmpty())  {
         val lastRealItem: LineWrapped = wrappedLines.last().items().last()
+//        println("================================ adding a spacer ===========================")
         wrappedLines.add(BlankLineWrapped(Dim(0.0, lastRealItem.dim.height), lastRealItem.ascent))
     } else if (currLine.items.size == 1) {
         // Don't add a MultilineWrapped if we can just add a single wrapped thing.

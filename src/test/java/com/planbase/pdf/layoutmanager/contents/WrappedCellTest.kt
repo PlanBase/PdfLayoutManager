@@ -189,9 +189,10 @@ class WrappedCellTest {
 //        pageMgr.save(os)
     }
 
-
-    val regular7p5 = TextStyle(TIMES_ROMAN, 7.5, CMYK_BLACK) // ascent=5.1225  lineHeight=8.37
-    val italic7p5 = TextStyle(PDType1Font.TIMES_BOLD_ITALIC, 7.0, CMYK_BLACK, 12.0) // ascent=4.781   lineHeight=12
+    // ascent=5.1225  lineHeight=8.37
+    val regular7p5 = TextStyle(TIMES_ROMAN, 7.5, CMYK_BLACK, "regular7p5")
+    // ascent=4.781   lineHeight=12
+    val italic7p5 = TextStyle(PDType1Font.TIMES_BOLD_ITALIC, 7.0, CMYK_BLACK, "italic7p5", 12.0)
 
     // The "shorter" (smaller line-height) font has the bigger ascent.  Ascent difference = 0.3415.
     // Text is aligned to the baseline, so the ascent diff of the first font is added to the line-height of the
@@ -390,7 +391,7 @@ class WrappedCellTest {
     // This originally went into an infinite loop.  Now it should force line breaks on appropriate breaking characters.
     @Test fun testTooLongWordCellWrapping() {
 
-        val ts = TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK, 9.0)
+        val ts = TextStyle(TIMES_ROMAN, 8.0, CMYK_BLACK, "ts", 9.0)
         val cell = Cell(CellStyle(Align.TOP_LEFT, BoxStyle.NO_PAD_NO_BORDER),
                         102.0,
                         listOf(Text(ts,
