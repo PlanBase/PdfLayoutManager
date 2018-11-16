@@ -49,29 +49,25 @@ import java.util.HashMap
 /**
  * Manages a PDF document.  You need one of these to do almost anything useful.
  *
- * ## Usage (the unit test is a much better example)
+ * ## Usage (Example taken from TestBasics.kt)
  * ```kotlin
- * // Create a new manager
- * PdfLayoutMgr pageMgr = PdfLayoutMgr.newRgbPageMgr();
+ * // Make a manager with the given color model and starting page size.
+ * val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(LETTER))
  *
- * PageGrouping lp = pageMgr.startPageGrouping();
- * // defaults to Landscape orientation
- * // call various lp.tableBuilder() or lp.put...() methods here.
- * // They will page-break and create extra physical pages as needed.
- * // ...
- * lp.commit();
+ * // Declare a text style to use.
+ * val bodyText = TextStyle(TIMES_ITALIC, 36.0, CMYK_BLACK)
  *
- * lp = pageMgr.startPageGrouping(PORTRAIT);
- * // These pages will be in Portrait orientation
- * // call various lp methods to put things on the next page grouping
- * // ...
- * lp.commit();
+ * // Start a bunch of pages (add more text to use more than one)
+ * val lp = pageMgr.startPageGrouping(PORTRAIT, letterPortraitBody)
  *
- * // The file to write to
- * OutputStream os = new FileOutputStream("test.pdf");
+ * // Stick some text on the page(s)
+ * lp.appendCell(0.0, CellStyle(Align.TOP_LEFT_JUSTIFY, BoxStyle.NO_PAD_NO_BORDER),
+ *               listOf(Text(bodyText, "\"Darkness within darkness: the gateway to all" +
+ *                                     " understanding.\" — Lao Tzu")))
  *
- * // Commit all pages to output stream.
- * pageMgr.save(os);
+ * // Commit all your work and write it to a file
+ * pageMgr.commit()
+ * pageMgr.save(FileOutputStream("helloWorld.pdf"))
  * ```
  *
  * # Note:

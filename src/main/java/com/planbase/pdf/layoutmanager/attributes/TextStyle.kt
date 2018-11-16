@@ -84,9 +84,21 @@ data class TextStyle
      * This is just a convenience method.  If you want to specify a new line height, make a new, immutable TextStyle
      * manually.
      */
-    fun withFontAndLineHeight(newFont:PDFont) =
+    fun withFontNewLineHeight(newFont:PDFont) =
             TextStyle(newFont, fontSize, textColor,
                       // Will calculate the new lineHeight from the new font.
+                      rise = rise,
+                      characterSpacing = characterSpacing,
+                      wordSpacing = wordSpacing)
+
+    /**
+     * Returns a copy of this immutable TextStyle with a different font, keeping the old line height.
+     * This is just a convenience method.  If you want to change other attributes, make a new, immutable TextStyle
+     * manually.
+     */
+    fun withFontOldLineHeight(newFont:PDFont) =
+            TextStyle(newFont, fontSize, textColor,
+                      lineHeight = lineHeight,
                       rise = rise,
                       characterSpacing = characterSpacing,
                       wordSpacing = wordSpacing)
@@ -192,7 +204,7 @@ data class TextStyle
 
     companion object {
 
-        fun avgCharWidth(f : PDFont, sz: Double, csp: Double) : Double {
+        fun avgCharWidth(f : PDFont, sz: Double, csp: Double): Double {
             var avgFontWidth = 500.0
             try {
                 avgFontWidth = f.averageFontWidth.toDouble()
@@ -205,7 +217,7 @@ data class TextStyle
             return (avgFontWidth * sz) + csp
         }
 
-        fun defaultLineHeight(font: PDFont, fontSize: Double) =
+        fun defaultLineHeight(font: PDFont, fontSize: Double): Double =
                 font.fontDescriptor.fontBoundingBox.height * fontSize / 1000.0
     }
 }

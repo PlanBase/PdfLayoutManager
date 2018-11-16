@@ -3,6 +3,7 @@ package com.planbase.pdf.layoutmanager.attributes
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.*
+import com.planbase.pdf.layoutmanager.attributes.TextStyle.Companion.defaultLineHeight
 import com.planbase.pdf.layoutmanager.pages.SinglePage
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.CMYK_WHITE
@@ -10,12 +11,13 @@ import com.planbase.pdf.layoutmanager.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA
+import org.apache.pdfbox.pdmodel.font.PDType1Font.*
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Assert.assertEquals
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.test.Test
+import kotlin.test.assertNotEquals
 
 class TextStyleTest {
     private val quickBrownFox = "The quick brown fox jumps over the lazy dog"
@@ -47,9 +49,6 @@ class TextStyleTest {
         val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
         val liberationFont: PDType0Font = pageMgr.loadTrueTypeFont(fontFile)
         assertEquals(125.19531, TextStyle(liberationFont, 100.0, CMYK_BLACK).lineHeight, 0.00001)
-
-        assertEquals(TextStyle(HELVETICA, 100.0, CMYK_BLACK, null, TextStyle.defaultLineHeight(HELVETICA, 100.0)),
-                     TextStyle(liberationFont, 100.0, CMYK_BLACK).withFontAndLineHeight(HELVETICA))
 
         // TODO: Test character spacing and word spacing!
 
@@ -115,6 +114,39 @@ class TextStyleTest {
 //
 //        val ts = TextStyle(PDType1Font.HELVETICA_BOLD, 10.0, CMYK_BLACK)
 //        println("ts=$ts")
+    }
+
+    @Test fun testLineHeightAdjustment() {
+//        listOf(HELVETICA, HELVETICA_BOLD, HELVETICA_OBLIQUE, HELVETICA_OBLIQUE,
+//               TIMES_ROMAN, TIMES_BOLD, TIMES_ITALIC, TIMES_BOLD_ITALIC,
+//               COURIER, COURIER_BOLD, COURIER_OBLIQUE, COURIER_BOLD_OBLIQUE)
+//                .sortedBy { defaultLineHeight(it, 1.0) }
+//                .forEach { println("$it=${defaultLineHeight(it, 1.0)}") }
+//
+////PDType1Font Courier-Bold=       1.051
+////PDType1Font Courier-BoldOblique=1.051
+////PDType1Font Courier=            1.055
+////PDType1Font Courier-Oblique=    1.055
+////PDType1Font Times-Italic=       1.1
+////PDType1Font Times-Roman=        1.116
+////PDType1Font Times-BoldItalic=   1.139
+////PDType1Font Times-Bold=         1.153
+////PDType1Font Helvetica=          1.156
+////PDType1Font Helvetica-Oblique=  1.156
+////PDType1Font Helvetica-Oblique=  1.156
+////PDType1Font Helvetica-Bold=     1.19
+
+        // Most different font-heights for built-in fonts are COURIER_BOLD and HELVETICA_BOLD
+
+        assertNotEquals(defaultLineHeight(COURIER_BOLD, 100.0), defaultLineHeight(HELVETICA_BOLD, 100.0))
+        assertEquals(105.1, defaultLineHeight(COURIER_BOLD, 100.0), 0.005)
+        assertEquals(119.0, defaultLineHeight(HELVETICA_BOLD, 100.0), 0.005)
+
+        assertEquals(TextStyle(HELVETICA_BOLD, 100.0, CMYK_BLACK),
+                     TextStyle(COURIER_BOLD, 100.0, CMYK_BLACK).withFontNewLineHeight(HELVETICA_BOLD))
+
+        assertEquals(TextStyle(HELVETICA_BOLD, 100.0, CMYK_BLACK, null, defaultLineHeight(COURIER_BOLD, 100.0)),
+                     TextStyle(COURIER_BOLD, 100.0, CMYK_BLACK).withFontOldLineHeight(HELVETICA_BOLD))
     }
 
     @Test fun testToString() {

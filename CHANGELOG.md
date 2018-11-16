@@ -2,6 +2,10 @@
 
 Bigger headings mean more stable releases!
 
+## 2.3.1 2018-11-15 "withFont and New/Old LineHeight"
+ - Replaced TextStyle.withFontAndLineHeight() with .withFontNewLineHeight() which lets the new font set the line height (like the old method)
+ and withFontOldLineHeight() which takes the line height from the old font so that bold/italic text doesn't
+ mess up the height of the entire line.
 
 ### 2.3.0 2018-11-15 "Fixed extra blank line issue"
  - Added optional "name" parameter to TextStyle and CellStyle for briefer debugging.
