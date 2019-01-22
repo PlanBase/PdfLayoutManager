@@ -139,23 +139,23 @@ class PageGroupingTest {
         val tableX1 = cellX1 + squareSide + 10
         var y = lp.yBodyTop() - melonHeight
 
-        while(y >= lp.yBodyBottom) {
+        while (y >= lp.yBodyBottom) {
             val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
-            assertEquals(melonHeight, imgHaP.height)
+            assertEquals(melonHeight, imgHaP.height, 0.0)
 
-            val txtHaP:HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-            assertEquals(bigText.textStyle.lineHeight, txtHaP.height)
+            val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+            assertEquals(bigText.textStyle.lineHeight, txtHaP.height, 0.0)
 
-            val rectY = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
-            assertEquals(squareSide, rectY)
+            val rectY: Double = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
+            assertEquals(squareSide, rectY, 0.0)
 
             diamondRect(lp, Coord(lineX1, y), squareSide)
 
-            val cellDimAndPageNums: DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfCell.dim, cellDimAndPageNums.dim, 0.0)
+            val cellDaP: DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.0)
 
-            val tableDimAndPageNums: DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-            Dim.assertEquals(qbfTable.dim, tableDimAndPageNums.dim, 0.0)
+            val tableDaP: DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.0)
 
             y -= melonHeight
         }
@@ -189,30 +189,28 @@ class PageGroupingTest {
 //        println("qbfTable.dim=${qbfTable.dim} tableDim2=${tableDim2}")
 
         assertTrue(qbfTable.dim.height < tableDaP2.dim.height)
-        assertEquals(qbfCell.dim.height, qbfTable.dim.height)
+        assertEquals(qbfCell.dim.height, qbfTable.dim.height + 1.0)
         assertEquals(cellDaP2.dim.height, tableDaP2.dim.height)
 
         y -= listOf(imgHaP2.height, txtHaP2.height, rectY2).max() as Double
 
-        while(y >= lp.yBodyBottom - 400) {
+        while (y >= lp.yBodyBottom - 400) {
             val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
-            assertEquals(melonHeight, imgHaP.height)
+            assertEquals(melonHeight, imgHaP.height, 0.0)
 
             val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
-            assertEquals(bigText.textStyle.lineHeight, txtHaP.height)
+            assertEquals(bigText.textStyle.lineHeight, txtHaP.height, 0.0)
 
             val rectY: Double = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
-            assertEquals(squareSide, rectY)
+            assertEquals(squareSide, rectY, 0.0)
 
             diamondRect(lp, Coord(lineX1, y), squareSide)
 //            lp.drawLine(Coord(lineX1, y), Coord(lineX2, y), LineStyle(RGB_BLACK, 1.0))
-
-            val cellDaP:DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
-            assertEquals(qbfCell.dim, cellDaP.dim)
-
+            val cellDaP: DimAndPageNums = qbfCell.render(lp, Coord(cellX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfCell.dim, cellDaP.dim, 0.0)
 //            val tableDim = qbfTable.render(lp, Coord(tableX1, y))
-            val tableDaP:DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
-            assertEquals(qbfTable.dim, tableDaP.dim)
+            val tableDaP: DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
+            Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.0)
 
             y -= listOf(imgHaP.height, txtHaP.height, rectY).max() as Double
         }

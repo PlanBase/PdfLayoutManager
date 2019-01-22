@@ -228,6 +228,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return maxHeight + pby2.adj
     }
 
+    /**
+     * NOTE: lineJoinStyle and fillColor not implemented across page breaks!
+     */
     override fun drawLineLoop(
             points: List<Coord>,
             lineStyle: LineStyle,
@@ -250,6 +253,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             pg.pb.drawLineLoop(points.map{ it.withY(appropriatePage(it.y, 0.0, 0.0).y) },
                                lineStyle, lineJoinStyle, fillColor, reallyRender)
         } else {
+            // TODO: Here, we should break the shape into 2 (or more) at the page break using a zero-width line
+            // TODO: Then draw separate shapes on each page using the lineLoop.
+            // Solve for where each line is greater-than vs. equal the y-value of the page break.  Then join
+            // adjacent greater-than segments at the equals points to a zero-width line and draw them on the first page.
+            // Then join adjacent less-than segments at the equals points to a zero-width line and draw them on the next
+            // page, repeating until the entire shape is drawn.
 //            println(" subsequent pages different.  Drawing a line strip instead.")
             val fixedPoints = points.toMutableList()
             fixedPoints.add(points[0])
@@ -257,6 +266,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         }
     }
 
+    /**
+     * Note: lineJoinStyle not implemented across page breaks.
+     */
     // TODO: this should be the have all the gory details.  drawLine should inherit from the default implementation
     override fun drawLineStrip(
             points: List<Coord>,
