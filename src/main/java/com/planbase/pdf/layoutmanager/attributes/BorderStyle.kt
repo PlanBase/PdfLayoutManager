@@ -20,7 +20,10 @@
 
 package com.planbase.pdf.layoutmanager.attributes
 
+import com.planbase.pdf.layoutmanager.utils.LineJoinStyle
+import com.planbase.pdf.layoutmanager.utils.LineJoinStyle.MITER
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
+import java.lang.StringBuilder
 
 /**
  * Holds the LineStyles for the top, right, bottom, and left borders of a PdfItem.  For an equal
@@ -41,14 +44,27 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
                        val right: LineStyle = LineStyle.NO_LINE,
                        val bottom: LineStyle = LineStyle.NO_LINE,
-                       val left: LineStyle = LineStyle.NO_LINE) {
+                       val left: LineStyle = LineStyle.NO_LINE,
+                       val lineJoinStyle: LineJoinStyle = MITER) {
+
+    /** Creates a BorderStyle with [MITER]ed corners */
+    constructor(top: LineStyle, right: LineStyle,
+                bottom: LineStyle, left: LineStyle) : this(top, right, bottom, left, MITER)
 
     /**
-     * Returns an equal border on all sides
-     * @param ls the line style
+     * Returns equal top and bottom borders and equal right and left borders and [MITER]ed corners
+     * @param topBottom the line style for top and bottom lines
+     * @param rightLeft the line style for right and left lines.
      * @return a new immutable border object
      */
-    constructor(ls: LineStyle) : this(ls, ls, ls, ls)
+    constructor(topBottom: LineStyle, rightLeft: LineStyle) : this(topBottom, rightLeft, topBottom, rightLeft, MITER)
+
+    /**
+     * Returns an equal border on all sides with [MITER]ed corners
+     * @param allSides the line style
+     * @return a new immutable border object
+     */
+    constructor(allSides: LineStyle) : this(allSides, allSides, allSides, allSides, MITER)
 
 //    /**
 //     * Returns an equal border on all sides
@@ -65,26 +81,42 @@ data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
      */
     constructor(c: PDColor) : this (LineStyle(c))
 
-    fun top(ls: LineStyle) = BorderStyle(ls, right, bottom, left)
-    fun right(ls: LineStyle) = BorderStyle(top, ls, bottom, left)
-    fun bottom(ls: LineStyle) = BorderStyle(top, right, ls, left)
-    fun left(ls: LineStyle) = BorderStyle(top, right, bottom, ls)
-    fun allSame() = top == right &&
-                    right == bottom &&
-                    bottom == left
+    fun withTop(ls: LineStyle) = BorderStyle(ls, right, bottom, left, lineJoinStyle)
+    fun withRight(ls: LineStyle) = BorderStyle(top, ls, bottom, left, lineJoinStyle)
+    fun withBottom(ls: LineStyle) = BorderStyle(top, right, ls, left, lineJoinStyle)
+    fun withLeft(ls: LineStyle) = BorderStyle(top, right, bottom, ls, lineJoinStyle)
+
+    fun allSame(): Boolean = top == right &&
+                             right == bottom &&
+                             bottom == left
+
+    fun hasAllBorders(): Boolean =
+            top.thickness > 0.0 &&
+            right.thickness > 0.0 &&
+            bottom.thickness > 0.0 &&
+            left.thickness > 0.0
 
     fun topBottomThickness(): Double = top.thickness + bottom.thickness
 
     fun leftRightThickness(): Double = left.thickness + right.thickness
 
-    override fun toString() =
-            if (this == NO_BORDERS) {
-                "NO_BORDERS"
-            } else if ((top == right) && (top == bottom) && (top == left)) {
-                "BorderStyle($top)"
-            } else {
-                "BorderStyle($top, $right, $bottom, $left)"
-            }
+    override fun toString(): String {
+
+        if (this == NO_BORDERS) {
+            return "NO_BORDERS"
+        }
+        val sB = StringBuilder("BorderStyle(")
+
+        if (allSame()) {
+            sB.append("$top")
+        } else {
+            sB.append("$top, $right, $bottom, $left")
+        }
+        if (lineJoinStyle != MITER) {
+            sB.append(", $lineJoinStyle")
+        }
+        return sB.append(")").toString()
+    }
 
     companion object {
         @JvmField

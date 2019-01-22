@@ -517,21 +517,21 @@ class TestManuallyPdfLayoutMgr {
         val bottomLeft = Coord(pMargin, -lp.yBodyTop())
 
         // top lne
-        lp.drawLine(topLeft, topRight, lineStyle, true)
+        lp.drawLine(topLeft, topRight, lineStyle)
         // right line
-        lp.drawLine(topRight, bottomRight, lineStyle, true)
+        lp.drawLine(topRight, bottomRight, lineStyle)
         // bottom line
-        lp.drawLine(bottomRight, bottomLeft, lineStyle, true)
+        lp.drawLine(bottomRight, bottomLeft, lineStyle)
         // left line
-        lp.drawLine(bottomLeft, topLeft, lineStyle, true)
+        lp.drawLine(bottomLeft, topLeft, lineStyle)
 
         // 3-page-long X
-        lp.drawLine(topLeft, bottomRight, lineStyle, true)
+        lp.drawLine(topLeft, bottomRight, lineStyle)
         // Note reversed params
-        lp.drawLine(bottomLeft, topRight, lineStyle, true)
+        lp.drawLine(bottomLeft, topRight, lineStyle)
 
         // middle line
-        lp.drawLine(Coord(pMargin, 0.0), Coord(pageRMargin, 0.0), lineStyle, true)
+        lp.drawLine(Coord(pMargin, 0.0), Coord(pageRMargin, 0.0), lineStyle)
         pageMgr.commit()
 
         // All done - write it out!

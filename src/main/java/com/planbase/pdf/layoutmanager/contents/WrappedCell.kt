@@ -228,32 +228,30 @@ class WrappedCell(override val dim: Dim, // measured on the border lines
             // It's complicated, and if there's page breaking it won't work anyway.
             if ( (pageNums.start == pageNums.endInclusive) && // same page
                  (border.top.thickness > 0) &&
-                 (border.top == border.right) &&
-                 (border.top == border.bottom) &&
-                 (border.top == border.left)) {
+                 border.allSame()) {
                 lp.drawLineLoop(listOf(topLeft, topLeft.withX(rightX), Coord(rightX, y),
                                        topLeft.withY(y)),
-                                border.top, true)
+                                border.top, border.lineJoinStyle, null, true)
             } else {
                 if (border.top.thickness > 0) {
                     lp.drawLine(if (border.left.thickness > 0) { topLeft.plusX(border.left.thickness / -2.0) } else { topLeft },
                                 if (border.right.thickness > 0) { topRight.plusX(border.right.thickness / 2.0) } else { topRight },
-                                border.top, reallyRender)
+                                border.top, border.lineJoinStyle, reallyRender)
                 }
                 if (border.right.thickness > 0) {
                     lp.drawLine(if (border.top.thickness > 0) { topRight.minusY(border.top.thickness / -2.0) } else { topRight },
                                 if (border.bottom.thickness > 0) { bottomRight.minusY(border.bottom.thickness / 2.0) } else { bottomRight },
-                                border.right, reallyRender)
+                                border.right, border.lineJoinStyle, reallyRender)
                 }
                 if (border.bottom.thickness > 0) {
                     lp.drawLine(if (border.right.thickness > 0) { bottomRight.plusX(border.right.thickness / 2.0) } else { bottomRight },
                                 if (border.left.thickness > 0) { bottomLeft.plusX(border.left.thickness / 2.0) } else { bottomLeft },
-                                border.bottom, reallyRender)
+                                border.bottom, border.lineJoinStyle, reallyRender)
                 }
                 if (border.left.thickness > 0) {
                     lp.drawLine(if (border.bottom.thickness > 0) { bottomLeft.minusY(border.bottom.thickness / 2.0) } else { bottomLeft },
                                 if (border.top.thickness > 0) { topLeft.minusY(border.top.thickness / -2.0) } else { topLeft },
-                                border.left, reallyRender)
+                                border.left, border.lineJoinStyle, reallyRender)
                 }
             }
         }

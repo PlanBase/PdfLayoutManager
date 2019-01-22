@@ -60,7 +60,7 @@ class TestManual2 {
                     val leftMargin:Double = if (isLeft) 37.0 else 45.0
                     //            System.out.println("pageNum " + pageNum);
                     pb.drawLine(Coord(leftMargin, 30.0), Coord(leftMargin + bodyWidth, 30.0),
-                                LineStyle(CMYK_THISTLE), true)
+                                LineStyle(CMYK_THISTLE))
                     pb.drawStyledText(Coord(leftMargin, 20.0), "Page # " + pageNum,
                                       TextStyle(PDType1Font.HELVETICA, 9.0, CMYK_BLACK), true)
                     leftMargin })

@@ -2,6 +2,15 @@
 
 Bigger headings mean more stable releases!
 
+## 2.3.2 2019-01-22 "Rounded/Beveled Corners"
+ - New LineJoinStyle enum determines whether subsequent lines meet with MITERed, ROUNDed, or BEVELed corners.
+   This gives access to the functionality described in PDF 32000-1:2008 section 8.4.3.4: "Line Join Style."
+ - RenderTarget.drawLine(), .drawLineStrip(), and .drawLineLoop() now take a lineJoinStyle parameter.
+ - RenderTarget.drawLineLoop() now also takes a nullable backgroundColor parameter.  It will fill the shape with the background color if supplied.
+ - RenderTarget has helper functions so that you don't need to supply the new parameters if you don't want to.
+ If you call the old functions with a final parameter reallyRender=true you can just remove that parameter
+ to use the new helper functions.  Otherwise, you'll have to pass the new parameters as well.
+
 ## 2.3.1 2018-11-15 "withFont and New/Old LineHeight"
  - Replaced TextStyle.withFontAndLineHeight() with .withFontNewLineHeight() which lets the new font set the line height (like the old method)
  and withFontOldLineHeight() which takes the line height from the old font so that bold/italic text doesn't

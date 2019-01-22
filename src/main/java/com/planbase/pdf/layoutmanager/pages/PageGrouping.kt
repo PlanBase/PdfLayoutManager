@@ -35,6 +35,7 @@ import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrapped
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
+import com.planbase.pdf.layoutmanager.utils.LineJoinStyle
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.io.IOException
@@ -227,7 +228,12 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         return maxHeight + pby2.adj
     }
 
-    override fun drawLineLoop(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
+    override fun drawLineLoop(
+            points: List<Coord>,
+            lineStyle: LineStyle,
+            lineJoinStyle: LineJoinStyle,
+            fillColor: PDColor?,
+            reallyRender: Boolean): IntRange {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -242,17 +248,21 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
             val pg = appropriatePage(points[0].y, 0.0, 0.0)
             // Transform all points to the correct y for that page (the page-y as opposed to document-y).
             pg.pb.drawLineLoop(points.map{ it.withY(appropriatePage(it.y, 0.0, 0.0).y) },
-                               lineStyle, reallyRender)
+                               lineStyle, lineJoinStyle, fillColor, reallyRender)
         } else {
 //            println(" subsequent pages different.  Drawing a line strip instead.")
             val fixedPoints = points.toMutableList()
             fixedPoints.add(points[0])
-            drawLineStrip(fixedPoints, lineStyle, reallyRender)
+            drawLineStrip(fixedPoints, lineStyle, lineJoinStyle, reallyRender)
         }
     }
 
     // TODO: this should be the have all the gory details.  drawLine should inherit from the default implementation
-    override fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
+    override fun drawLineStrip(
+            points: List<Coord>,
+            lineStyle: LineStyle,
+            lineJoinStyle: LineJoinStyle,
+            reallyRender: Boolean): IntRange {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -262,14 +272,19 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
         var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
         for (i in 1..points.lastIndex) {
             val end = points[i]
-            val currRange:IntRange = drawLine(start, end, lineStyle, reallyRender)
+            val currRange:IntRange = drawLine(start, end, lineStyle, lineJoinStyle, reallyRender)
             pageNums = maxExtents(pageNums, currRange)
             start = end
         }
         return pageNums
     }
 
-    override fun drawLine(start: Coord, end: Coord, lineStyle: LineStyle, reallyRender: Boolean): IntRange {
+    override fun drawLine(
+            start: Coord,
+            end: Coord,
+            lineStyle: LineStyle,
+            lineJoinStyle: LineJoinStyle,
+            reallyRender: Boolean): IntRange {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
@@ -282,9 +297,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
 //        println("pby1=$pby1, pby2=$pby2")
         if (pby1 == pby2) {
             if (flip) {
-                pby1.pb.drawLine(end.withY(pby1.y), start.withY(pby2.y), lineStyle, reallyRender)
+                pby1.pb.drawLine(end.withY(pby1.y), start.withY(pby2.y), lineStyle, lineJoinStyle, reallyRender)
             } else {
-                pby1.pb.drawLine(start.withY(pby1.y), end.withY(pby2.y), lineStyle, reallyRender)
+                pby1.pb.drawLine(start.withY(pby1.y), end.withY(pby2.y), lineStyle, lineJoinStyle, reallyRender)
             }
         } else {
             val totalPages = pby2.pb.pageNum - pby1.pb.pageNum + 1
@@ -339,9 +354,9 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
                 // In that case, the last endpoint of the previous line must equal the starting point of this line.
                 // So if we detected that we had to flip the line to break it across pages, flip it back here!
                 if (flip) {
-                    currPage.drawLine(Coord(xb, yb), Coord(xa, ya), lineStyle, reallyRender)
+                    currPage.drawLine(Coord(xb, yb), Coord(xa, ya), lineStyle, lineJoinStyle, reallyRender)
                 } else {
-                    currPage.drawLine(Coord(xa, ya), Coord(xb, yb), lineStyle, reallyRender)
+                    currPage.drawLine(Coord(xa, ya), Coord(xb, yb), lineStyle, lineJoinStyle, reallyRender)
                 }
 
                 // pageNum is one-based while get is zero-based, so passing get the current

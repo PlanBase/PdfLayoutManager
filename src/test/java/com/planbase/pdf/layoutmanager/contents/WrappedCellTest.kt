@@ -9,31 +9,23 @@ import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BorderStyle
+import com.planbase.pdf.layoutmanager.attributes.*
 import com.planbase.pdf.layoutmanager.attributes.BorderStyle.Companion.NO_BORDERS
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.attributes.Padding
-import com.planbase.pdf.layoutmanager.attributes.PageArea
-import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.MultiLineWrapped
 import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
 import com.planbase.pdf.layoutmanager.utils.Coord
 import com.planbase.pdf.layoutmanager.utils.Dim
 import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
 import junit.framework.TestCase
-import junit.framework.TestCase.assertEquals
 import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
-import org.junit.Test
 import java.io.FileOutputStream
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class WrappedCellTest {
@@ -269,7 +261,7 @@ class WrappedCellTest {
         // Rendered away from the page break, the dimensions are unchanged.
         val ret1:DimAndPageNums = lp.add(Coord(0.0, 183.26), wrappedCell)
         Dim.assertEquals(Dim(170.0, 32.7115), ret1.dim, 0.0000001)
-        assertEquals(150.5485, lp.cursorY, 0.000001)
+        TestCase.assertEquals(150.5485, lp.cursorY, 0.000001)
 
         pageMgr.commit()
 
@@ -313,7 +305,7 @@ class WrappedCellTest {
 
         Dim.assertEquals(Dim(170.0, 51.9715), ret2.dim, 0.0000001)
 
-        assertEquals(12.6585, lp.cursorY, 0.00000001)
+        TestCase.assertEquals(12.6585, lp.cursorY, 0.00000001)
 
         pageMgr.commit()
 
@@ -339,8 +331,8 @@ class WrappedCellTest {
         val wrappedCell = cell.wrap()
 
         // Verify that it's 5 lines (if it's not, there's no point in testing more).
-        assertEquals((textStyle.lineHeight * 5.0) + cellStyle.boxStyle.topBottomInteriorSp(),
-                     wrappedCell.dim.height, 0.0)
+        TestCase.assertEquals((textStyle.lineHeight * 5.0) + cellStyle.boxStyle.topBottomInteriorSp(),
+                              wrappedCell.dim.height, 0.0)
 
         // Just for fun, check the width, again to blow up early if something bigger is wrong...
         assertEquals(320.0, wrappedCell.dim.width)
@@ -361,7 +353,7 @@ class WrappedCellTest {
         dimAndPageNums = lp.append(wrappedCell)
 
         // Really need to use doubles!
-        assertEquals(lp.yBodyBottom - (textStyle.lineHeight * 2.0), lp.cursorY, 0.00000001)
+        TestCase.assertEquals(lp.yBodyBottom - (textStyle.lineHeight * 2.0), lp.cursorY, 0.00000001)
 
         // Test that our wrappedCell size should be exceeded by more than one line.  This is because not one line,
         // but two should be pushed to the next page so that the one line isn't a lonely widow.
@@ -404,28 +396,28 @@ class WrappedCellTest {
         val row0item0 = row0.items()[0] as WrappedText
         assertEquals(ts, row0item0.textStyle)
         assertEquals("www.c.ymcdn.com/sites/value-", row0item0.string)
-        assertEquals(101.096, row0item0.width, 0.0000005)
+        TestCase.assertEquals(101.096, row0item0.width, 0.0000005)
 
         val row1 = wrapped.rows[1]
         assertEquals(1, row1.items().size)
         val row1item0 = row1.items()[0] as WrappedText
         assertEquals(ts, row1item0.textStyle)
         assertEquals("eng.site-ym.com/resource/", row1item0.string)
-        assertEquals(84.872, row1item0.width, 0.0000005)
+        TestCase.assertEquals(84.872, row1item0.width, 0.0000005)
 
         val row2 = wrapped.rows[2]
         assertEquals(1, row2.items().size)
         val row2item0 = row2.items()[0] as WrappedText
         assertEquals(ts, row2item0.textStyle)
         assertEquals("resmgr/Standards_Documents/", row2item0.string)
-        assertEquals(98.656, row2item0.width, 0.0000005)
+        TestCase.assertEquals(98.656, row2item0.width, 0.0000005)
 
         val row3 = wrapped.rows[3]
         assertEquals(1, row3.items().size)
         val row3item0 = row3.items()[0] as WrappedText
         assertEquals(ts, row3item0.textStyle)
         assertEquals("vmstd.pdf", row3item0.string)
-        assertEquals(32.224, row3item0.width, 0.0000005)
+        TestCase.assertEquals(32.224, row3item0.width, 0.0000005)
 
         Dim.assertEquals(Dim(102.0, 36.0), wrapped.dim, 0.0000005)
     }
@@ -466,6 +458,30 @@ class WrappedCellTest {
         pageMgr.commit()
         pageMgr.save(FileOutputStream("tooLongLink.pdf"))
     }
+
+//    @Test fun testRoundedJoins() {
+//        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.LETTER))
+//        val lp = pageMgr.startPageGrouping(LANDSCAPE, letterLandscapeBody)
+//        val cellWidth = 100.0
+//        val violet20 = LineStyle(CMYK_VIOLET, 20.0)
+//        val rounded = BoxStyle(Padding.NO_PADDING, CMYK_THISTLE,
+//                               BorderStyle(violet20,violet20,violet20,violet20,LineJoinStyle.ROUND))
+//        val hello = Text(textStyle, "Hello")
+//
+//        val cell = Cell(CellStyle(Align.BOTTOM_CENTER, rounded),
+//                        cellWidth, listOf(hello))
+//        println(cell)
+//        val wrappedCell: WrappedCell = cell.wrap()
+//        println(wrappedCell)
+//
+//        val upperLeft = Coord(100.0, 500.0)
+//
+//        wrappedCell.render(lp, upperLeft)
+//        pageMgr.commit()
+//
+//        val os = FileOutputStream("roundedJoins.pdf")
+//        pageMgr.save(os)
+//    }
 
     companion object {
         val boxStyle = BoxStyle(Padding(2.0), RGB_LIGHT_GREEN, BorderStyle(RGB_BLACK))

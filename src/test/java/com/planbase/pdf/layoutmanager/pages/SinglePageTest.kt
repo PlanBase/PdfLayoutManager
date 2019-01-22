@@ -5,14 +5,7 @@ import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr
 import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.layoutmanager.attributes.Align
-import com.planbase.pdf.layoutmanager.attributes.BorderStyle
-import com.planbase.pdf.layoutmanager.attributes.BoxStyle
-import com.planbase.pdf.layoutmanager.attributes.CellStyle
-import com.planbase.pdf.layoutmanager.attributes.DimAndPageNums
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.attributes.Padding
-import com.planbase.pdf.layoutmanager.attributes.TextStyle
+import com.planbase.pdf.layoutmanager.attributes.*
 import com.planbase.pdf.layoutmanager.contents.Cell
 import com.planbase.pdf.layoutmanager.contents.Table
 import com.planbase.pdf.layoutmanager.contents.Text
@@ -81,29 +74,27 @@ class SinglePageTest {
         pageMgr.save(FileOutputStream("singlePage.pdf"))
     }
 
-    // This works, but it's an all manual test, which is never a good Unit test.
+//    // This works, but it's an all manual test, which is never a good Unit test.
 //    @Test fun testLoop() {
 //        val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(A6))
-//        val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
+//        val lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.PORTRAIT, a6PortraitBody)
 //        val page:SinglePage = pageMgr.page(0)
 //
-//        val square1X = lp.body.topLeft.x
-//        val square2X = square1X + bigText.maxWidth() + 10
-//        val y = lp.yBodyTop() - squareSide
-//        val yBot = y - squareSide
+//        val squareWidth = 10
 //
-//        page.drawLineStrip(listOf(Coord(square1X, y),
-//                                  Coord(square1X + squareSide, y),
-//                                  Coord(square1X + squareSide, yBot),
-//                                  Coord(square1X, yBot),
-//                                  Coord(square1X, y)),
-//                           LineStyle(CMYK_BLACK, 3.0), true)
+//        val square1X = 0.0
+//        val square2X = square1X + 20.0
+//        val y = lp.yBodyTop()
+//        val yBot = y - squareWidth
 //
 //        page.drawLineLoop(listOf(Coord(square2X, y),
-//                                  Coord(square2X + squareSide, y),
-//                                  Coord(square2X + squareSide, yBot),
-//                                  Coord(square2X, yBot)),
-//                           LineStyle(CMYK_VIOLET, 5.0), true)
+//                                 Coord(square2X + squareWidth, y),
+//                                 Coord(square2X + squareWidth, yBot),
+//                                 Coord(square2X, yBot)),
+//                          LineStyle(CMYK_VIOLET, 20.0),
+//                          LineJoinStyle.ROUND,
+//                          CMYK_THISTLE,
+//                          true)
 //        pageMgr.commit()
 //
 //        val docId = COSString("SinglePage test PDF".toByteArray(Charsets.ISO_8859_1))
@@ -127,7 +118,7 @@ fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Double) {
                               Coord(xRight, yBot),
                               Coord(xRight, yTop),
                               Coord(xLeft, yTop)),
-                      ls, true)
+                      ls)
 
     val midTop = Coord(xMid, yTop)
     // Diamond drawn clockwise (deosil) from top
@@ -136,7 +127,7 @@ fun diamondRect(page:RenderTarget, lowerLeft: Coord, size:Double) {
                               Coord(xMid, yBot),
                               Coord(xLeft, yMid),
                               midTop),
-                       ls, true)
+                       ls)
 }
 
 const val squareSide = 70.0
