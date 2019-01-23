@@ -49,7 +49,7 @@ class TableRow(private val tablePart: TablePart) {
 //    }
 
     fun align(a: Align) : TableRow {
-        cellStyle = cellStyle.align(a)
+        cellStyle = cellStyle.withAlign(a)
         return this
     }
 

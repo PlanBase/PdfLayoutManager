@@ -6,6 +6,9 @@ import com.planbase.pdf.layoutmanager.attributes.Padding
 import com.planbase.pdf.layoutmanager.attributes.TextStyle
 import com.planbase.pdf.layoutmanager.lineWrapping.LineWrappable
 
+/**
+ * Represents a bulleted list (for display).  Compare with [NumberList].
+ */
 class BulletList(
         override val width: Double,
         override val initialWidth: Double,

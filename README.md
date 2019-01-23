@@ -144,7 +144,7 @@ contact [PlanBase Inc.](https://planbase.com) to purchase a commercial license.
 
 Requires Maven 3, (and Java 8?) or greater.  Jar file ends up in the `target/` sub-folder.
 
-API documentation used to be built with `mvn javadoc:javadoc` and is then found at `target/site/apidocs/index.html`
+API documentation used to be built with `mvn dokka:javadoc` and is then found at `target/dokkaJavadoc/index.html`
 
 Several PDFs like `test.pdf` show up in the root folder of this project when you run `mvn test`.
 

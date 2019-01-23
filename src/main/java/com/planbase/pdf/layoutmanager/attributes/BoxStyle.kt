@@ -6,8 +6,8 @@ import com.planbase.pdf.layoutmanager.utils.colorToString
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 
 /**
- Represents the border, padding, background color, and maybe someday margin.  Every aspect of this is immutable
- because it can be specified when various items are created and doesn't need to change, even after line-wrapping.
+ * Represents the border, padding, background color, and maybe someday margin.  Every aspect of this is immutable
+ * because it can be specified when various items are created and doesn't need to change, even after line-wrapping.
  */
 data class BoxStyle(val padding: Padding = Padding.NO_PADDING,
                     val bgColor: PDColor?,
@@ -43,6 +43,9 @@ data class BoxStyle(val padding: Padding = Padding.NO_PADDING,
             }
 
     companion object {
+        /**
+         * A BoxStyle with [Padding.NO_PADDING], no background color and [BorderStyle.NO_BORDERS]
+         */
         @JvmField
         val NO_PAD_NO_BORDER = BoxStyle(Padding.NO_PADDING, null, BorderStyle.NO_BORDERS)
     }

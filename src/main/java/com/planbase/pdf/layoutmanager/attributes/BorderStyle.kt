@@ -26,19 +26,17 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import java.lang.StringBuilder
 
 /**
- * Holds the LineStyles for the top, right, bottom, and left borders of a PdfItem.  For an equal
- * border on all sides, use:
- * <pre>`BorderStyle b = new BorderStyle(color, width);`</pre>
- * For an unequal border, use named parameters in Kotlin.
+ * Holds the LineStyles for the top, right, bottom, and left borders of a PdfItem.
  * This class works just like styles in CSS in terms of specifying one style, then
  * overwriting it with another.  This example sets all borders except to black and the default width,
  * then removes the top border:
- * <pre>`BorderStyle topBorderStyle = BorderStyle(LineStyle(PDColor.BLACK))
- * .top(LineStyle(PDColor.RED, 2.0));`</pre>
+ *
+ *     BorderStyle topBorderStyle = BorderStyle(LineStyle(PDColor.BLACK))
+ *             .top(LineStyle(PDColor.RED, 2.0));
+ *
  * If neighboring cells in a cell-row have the same border, only one will be printed.  If different,
  * the left-border of the right cell will override.  You have to manage your own top borders
  * manually.
- *
  */
 // Like CSS it's listed Top, Right, Bottom, left
 data class BorderStyle(val top: LineStyle = LineStyle.NO_LINE,
