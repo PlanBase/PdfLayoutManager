@@ -80,7 +80,8 @@ interface RenderTarget {
     /**
      * Draws lines from the first point to the last.  Convenience function for [drawLineStrip]
      */
-    fun drawLineStrip(points: List<Coord>, lineStyle: LineStyle): IntRange =
+    fun drawLineStrip(points: List<Coord>,
+                      lineStyle: LineStyle): IntRange =
             drawLineStrip(points, lineStyle, MITER, true)
 
     /**
@@ -101,7 +102,8 @@ interface RenderTarget {
                      reallyRender: Boolean): IntRange
 
     /** Draws a closed path.  Convenience function for [drawLineLoop]. */
-    fun drawLineLoop(points: List<Coord>, lineStyle: LineStyle): IntRange =
+    fun drawLineLoop(points: List<Coord>,
+                     lineStyle: LineStyle): IntRange =
             drawLineLoop(points, lineStyle, MITER, null, true)
 
     /**
@@ -126,7 +128,9 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle): HeightAndPage =
+    fun drawStyledText(baselineLeft: Coord,
+                       text: String,
+                       textStyle: TextStyle): HeightAndPage =
             drawStyledText(baselineLeft, text, textStyle, true)
 
     /**
@@ -138,7 +142,10 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage, zIdx:Double, reallyRender: Boolean = true): HeightAndPage
+    fun drawImage(bottomLeft: Coord,
+                  wi: WrappedImage,
+                  zIdx:Double,
+                  reallyRender: Boolean = true): HeightAndPage
 
     /**
      * Puts an image on this RenderTarget
@@ -148,7 +155,9 @@ interface RenderTarget {
      * (may include some extra space above to push items onto the next page).
      */
     @Suppress("unused")
-    fun drawImage(bottomLeft: Coord, wi: WrappedImage): HeightAndPage = drawImage(bottomLeft, wi, DEFAULT_Z_INDEX, true)
+    fun drawImage(bottomLeft: Coord,
+                  wi: WrappedImage): HeightAndPage =
+            drawImage(bottomLeft, wi, DEFAULT_Z_INDEX, true)
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
@@ -160,7 +169,10 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor, reallyRender: Boolean = true): Double
+    fun fillRect(bottomLeft: Coord,
+                 dim: Dim,
+                 c: PDColor,
+                 reallyRender: Boolean = true): Double
 
     /**
      * Puts a colored rectangle on this RenderTarget.  There is no outline or border (that's drawn
@@ -172,7 +184,10 @@ interface RenderTarget {
      * (may include some extra space above to push items onto the next page).
      */
     @Suppress("unused")
-    fun fillRect(bottomLeft: Coord, dim: Dim, c: PDColor): Double = fillRect(bottomLeft, dim, c, true)
+    fun fillRect(bottomLeft: Coord,
+                 dim: Dim,
+                 c: PDColor): Double =
+            fillRect(bottomLeft, dim, c, true)
 
     /**
      * Returns the top margin necessary to push this item onto a new page if it won't fit on this one.
@@ -183,7 +198,9 @@ interface RenderTarget {
      * of the next page.
      */
     // TODO: I keep passing y, 0.0, 0.0 instead of y - height, height, 0.0, so maybe I should make it work that way instead!
-    fun pageBreakingTopMargin(bottomY: Double, height: Double = 0.0, requiredSpaceBelow: Double = 0.0): Double
+    fun pageBreakingTopMargin(bottomY: Double,
+                              height: Double = 0.0,
+                              requiredSpaceBelow: Double = 0.0): Double
 
     /**
      * Returns the correct page for the given Y value but MAY ACTUALLY ADD THAT PAGE, so only call if really rendering

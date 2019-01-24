@@ -2,6 +2,11 @@
 
 Bigger headings mean more stable releases!
 
+## 2.3.3 2019-01-23 "CellStyle.withAlign()"
+ - Renamed CellStyle.align() to CellStyle.withAlign()
+ - Added Padding constructor(topBottom: Double, rightLeft: Double) just like CSS.
+ - Deleted unused CellBuilder class.
+
 ## 2.3.2 2019-01-22 "Rounded/Beveled Corners"
  - New LineJoinStyle enum determines whether subsequent lines meet with MITERed, ROUNDed, or BEVELed corners.
    This gives access to the functionality described in PDF 32000-1:2008 section 8.4.3.4: "Line Join Style."

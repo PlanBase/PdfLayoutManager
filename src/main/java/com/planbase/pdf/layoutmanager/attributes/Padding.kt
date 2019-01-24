@@ -34,6 +34,9 @@ data class Padding(val top: Double,
     /** Sets all padding values equally  */
     constructor(a: Double) : this(a, a, a, a)
 
+    /** Sets top=bottom and right=left */
+    constructor(topBottom: Double, rightLeft: Double) : this(topBottom, rightLeft, topBottom, rightLeft)
+
 //    fun topLeftPadDim(): Dim = Dim(left, top)
 //
 //    fun botRightPadDim(): Dim = Dim(right, bottom)
