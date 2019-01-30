@@ -2,6 +2,12 @@
 
 Bigger headings mean more stable releases!
 
+## 2.4.0 2019-01-30 "lm2"
+ - Changed package from com.planbase.pdf.layoutmanager to com.planbase.pdf.lm2.
+ This makes it easy to use LayoutManager 1 and 2 in the same project which should make upgrades easier
+ for projects that make multiple independent PDFs since you can upgrade one at a time.
+ - Upgraded PdfBox from 2.0.12 to 2.0.13
+
 ## 2.3.3 2019-01-23 "CellStyle.withAlign()"
  - Renamed CellStyle.align() to CellStyle.withAlign()
  - Added Padding constructor(topBottom: Double, rightLeft: Double) just like CSS.

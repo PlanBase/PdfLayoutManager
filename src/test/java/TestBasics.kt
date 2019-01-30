@@ -12,14 +12,14 @@
  // See the License for the specific language governing permissions and
  // limitations under the License.
 
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Companion.DOC_UNITS_PER_INCH
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.layoutmanager.attributes.*
-import com.planbase.pdf.layoutmanager.contents.Text
-import com.planbase.pdf.layoutmanager.utils.CMYK_BLACK
-import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.Dim
+import com.planbase.pdf.lm2.PdfLayoutMgr
+import com.planbase.pdf.lm2.PdfLayoutMgr.Companion.DOC_UNITS_PER_INCH
+import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.lm2.attributes.*
+import com.planbase.pdf.lm2.contents.Text
+import com.planbase.pdf.lm2.utils.CMYK_BLACK
+import com.planbase.pdf.lm2.utils.Coord
+import com.planbase.pdf.lm2.utils.Dim
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
 import org.apache.pdfbox.pdmodel.font.PDType1Font.*
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK

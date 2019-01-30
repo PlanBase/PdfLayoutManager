@@ -1,10 +1,10 @@
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr
-import com.planbase.pdf.layoutmanager.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.layoutmanager.attributes.LineStyle
-import com.planbase.pdf.layoutmanager.utils.Coord
-import com.planbase.pdf.layoutmanager.utils.Dim
-import com.planbase.pdf.layoutmanager.utils.RGB_BLACK
+import com.planbase.pdf.lm2.PdfLayoutMgr
+import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.lm2.attributes.LineStyle
+import com.planbase.pdf.lm2.utils.Coord
+import com.planbase.pdf.lm2.utils.Dim
+import com.planbase.pdf.lm2.utils.RGB_BLACK
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.junit.Test

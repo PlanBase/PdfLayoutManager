@@ -27,7 +27,7 @@ Results will be found in `target/dokkaJavadoc/index.html`
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.3.3</version>
+        <version>2.4.0</version>
     </dependency>
 ```
 
@@ -58,7 +58,7 @@ You can remove this by manually setting the lineHeight independently of the size
 * Line-wrapping is done based on the baseline.
 
 #### Upper-Left
-Once line-wrapped, everything in PdfLayoutMgr is *rendered* from the upper-left corner: [LineWrapped](src/main/java/com/planbase/pdf/layoutmanager/lineWrapping/LineWrapped.kt).
+Once line-wrapped, everything in PdfLayoutMgr is *rendered* from the upper-left corner: [LineWrapped](src/main/java/com/planbase/pdf/lm2/lineWrapping/LineWrapped.kt).
 
 ##### Why not all upper-left?
 To match the [PDF spec](http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf) (and PDFBox).
@@ -112,7 +112,7 @@ Afrikaans (af), Albanian (sq), Basque (eu), Catalan (ca), Danish (da), Dutch (nl
 
 If the contents are all little things, we could just show as many little letters or images as completely fit, then no more (truncate the list of contents).  Showing none could make truncation work for big objects too, but this is conceptually very different from the very reason for the existence of PdfLayoutManager.
 
-Maybe some day we will provide some sample code so you can do truncation yourself.  [TextStyle](src/main/java/com/planbase/pdf/layoutmanager/attributes/TextStyle.kt) has lineHeight() and stringWidthInDocUnits() that you may find useful for writing your own compatible cropping algorithm.  If you do that (and it works well), consider contributing it back to PdfLayoutMgr2 (at least to this doc) so that others can benefit!
+Maybe some day we will provide some sample code so you can do truncation yourself.  [TextStyle](src/main/java/com/planbase/pdf/lm2/attributes/TextStyle.kt) has lineHeight() and stringWidthInDocUnits() that you may find useful for writing your own compatible cropping algorithm.  If you do that (and it works well), consider contributing it back to PdfLayoutMgr2 (at least to this doc) so that others can benefit!
 
 #### Q: Why doesn't PdfLayoutManager line-wrap my insanely long single-word test string properly?
 **A:** For text wrapping to work, the text needs occasional whitespace.  In HTML, strings without whitespace do not wrap at all!  In PdfLayoutManager, a long enough string will wrap at some point wider than the cell.
