@@ -3,12 +3,8 @@ package com.planbase.pdf.lm2.contents
 import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.a6PortraitBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.attributes.Align
-import com.planbase.pdf.lm2.attributes.BorderStyle
-import com.planbase.pdf.lm2.attributes.BoxStyle
-import com.planbase.pdf.lm2.attributes.CellStyle
-import com.planbase.pdf.lm2.attributes.LineStyle
-import com.planbase.pdf.lm2.attributes.Padding
+import com.planbase.pdf.lm2.attributes.*
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.utils.BULLET_CHAR
 import com.planbase.pdf.lm2.utils.CMYK_BLACK
 import com.planbase.pdf.lm2.utils.Dim
@@ -29,7 +25,7 @@ class WrappedListTest {
     @Test fun sixthBullet2LinesBeforePgBreak() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(
-                PdfLayoutMgr.Orientation.PORTRAIT,
+                PORTRAIT,
                 a6PortraitBody
         )
 
@@ -86,7 +82,7 @@ class WrappedListTest {
     @Test fun sixthBullet1LineBeforePgBreak() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(
-                PdfLayoutMgr.Orientation.PORTRAIT,
+                PORTRAIT,
                 a6PortraitBody
         )
 
@@ -142,7 +138,7 @@ class WrappedListTest {
     @Test fun sixthBulletNoPgBreak() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(
-                PdfLayoutMgr.Orientation.PORTRAIT,
+                PORTRAIT,
                 a6PortraitBody
         )
 
@@ -197,7 +193,7 @@ class WrappedListTest {
     @Test fun sixthBullet2LinesAfterPgBreak() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(
-                PdfLayoutMgr.Orientation.PORTRAIT,
+                PORTRAIT,
                 a6PortraitBody
         )
 
@@ -252,7 +248,7 @@ class WrappedListTest {
     @Test fun nestedLists() {
         val pageMgr = PdfLayoutMgr(PDDeviceCMYK.INSTANCE, Dim(PDRectangle.A6))
         val lp = pageMgr.startPageGrouping(
-                PdfLayoutMgr.Orientation.PORTRAIT,
+                PORTRAIT,
                 a6PortraitBody
         )
 

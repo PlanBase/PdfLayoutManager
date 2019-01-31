@@ -1,6 +1,6 @@
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.attributes.LineStyle
 import com.planbase.pdf.lm2.utils.Coord
 import com.planbase.pdf.lm2.utils.Dim

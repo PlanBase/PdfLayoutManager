@@ -5,7 +5,7 @@ import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_BLUE
 import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.lm2.attributes.Orientation.LANDSCAPE
 import com.planbase.pdf.lm2.attributes.*
 import com.planbase.pdf.lm2.contents.Cell
 import com.planbase.pdf.lm2.contents.Table

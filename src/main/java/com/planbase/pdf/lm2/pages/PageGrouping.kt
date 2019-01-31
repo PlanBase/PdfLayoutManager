@@ -21,14 +21,9 @@
 package com.planbase.pdf.lm2.pages
 
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
-import com.planbase.pdf.lm2.attributes.CellStyle
-import com.planbase.pdf.lm2.attributes.DimAndPageNums
+import com.planbase.pdf.lm2.attributes.*
 import com.planbase.pdf.lm2.attributes.DimAndPageNums.Companion.maxExtents
-import com.planbase.pdf.lm2.attributes.LineStyle
-import com.planbase.pdf.lm2.attributes.PageArea
-import com.planbase.pdf.lm2.attributes.TextStyle
+import com.planbase.pdf.lm2.attributes.Orientation.PORTRAIT
 import com.planbase.pdf.lm2.contents.Cell
 import com.planbase.pdf.lm2.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.lm2.lineWrapping.LineWrappable

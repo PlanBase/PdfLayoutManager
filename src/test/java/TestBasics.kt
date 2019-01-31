@@ -14,7 +14,7 @@
 
 import com.planbase.pdf.lm2.PdfLayoutMgr
 import com.planbase.pdf.lm2.PdfLayoutMgr.Companion.DOC_UNITS_PER_INCH
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.attributes.*
 import com.planbase.pdf.lm2.contents.Text
 import com.planbase.pdf.lm2.utils.CMYK_BLACK

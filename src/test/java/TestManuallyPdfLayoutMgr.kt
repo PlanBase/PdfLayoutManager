@@ -1,10 +1,9 @@
 import com.planbase.pdf.lm2.PdfLayoutMgr
 import com.planbase.pdf.lm2.PdfLayoutMgr.Companion.DEFAULT_MARGIN
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
 import com.planbase.pdf.lm2.attributes.*
 import com.planbase.pdf.lm2.attributes.Align.*
 import com.planbase.pdf.lm2.attributes.LineStyle.Companion.NO_LINE
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.contents.Cell
 import com.planbase.pdf.lm2.contents.ScaledImage
 import com.planbase.pdf.lm2.contents.Table
@@ -300,7 +299,7 @@ class TestManuallyPdfLayoutMgr {
         // More landscape pages
         val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7.0, RGB_BLACK)
         val pageHeadCellStyle = CellStyle(TOP_CENTER, BoxStyle.NO_PAD_NO_BORDER)
-        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE,
+        lp = pageMgr.startPageGrouping(LANDSCAPE,
                                        letterLandscapeBody,
                                        { pageNum, pb->
                                            val cell = Cell(pageHeadCellStyle, tableWidth,
@@ -496,7 +495,7 @@ class TestManuallyPdfLayoutMgr {
 
         val lineStyle = LineStyle(RGB_BLACK, 1.0)
 
-        lp = pageMgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE,
+        lp = pageMgr.startPageGrouping(LANDSCAPE,
                                        letterLandscapeBody,
                                        { pageNum, pb->
                                            val cell = Cell(pageHeadCellStyle, tableWidth,

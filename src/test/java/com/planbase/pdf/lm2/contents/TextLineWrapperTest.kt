@@ -5,6 +5,7 @@ import TestManuallyPdfLayoutMgr
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
 import com.planbase.pdf.lm2.attributes.LineStyle
+import com.planbase.pdf.lm2.attributes.Orientation
 import com.planbase.pdf.lm2.attributes.TextStyle
 import com.planbase.pdf.lm2.contents.TextLineWrapper.Companion.testHasMore
 import com.planbase.pdf.lm2.contents.TextLineWrapper.Companion.tryGettingText
@@ -265,7 +266,7 @@ class TextLineWrapperTest {
 
         // This is for the baseline!
         val mgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.LETTER))
-        mgr.startPageGrouping(PdfLayoutMgr.Orientation.LANDSCAPE, letterLandscapeBody)
+        mgr.startPageGrouping(Orientation.LANDSCAPE, letterLandscapeBody)
         mgr.ensurePageIdx(0, letterLandscapeBody)
         val lp = mgr.page(0)
         val margin = 40.0
@@ -689,7 +690,7 @@ class TextLineWrapperTest {
 //        val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12.0, CMYK_BLACK)
 //
 //        val lp = pageMgr.startPageGrouping(
-//                PdfLayoutMgr.Orientation.PORTRAIT,
+//                Orientation.PORTRAIT,
 //                a6PortraitBody,
 //                { pageNum:Int, pb: SinglePage ->
 //                    val isLeft = pageNum % 2 == 1

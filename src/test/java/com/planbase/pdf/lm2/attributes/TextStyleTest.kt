@@ -2,7 +2,7 @@ package com.planbase.pdf.lm2.attributes
 
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.*
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.attributes.TextStyle.Companion.defaultLineHeight
 import com.planbase.pdf.lm2.pages.SinglePage
 import com.planbase.pdf.lm2.utils.CMYK_BLACK

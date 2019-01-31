@@ -2,11 +2,23 @@
 
 Bigger headings mean more stable releases!
 
-## 2.4.0 2019-01-30 "lm2"
+## 2.4.0 2019-01-31 "lm2"
  - Changed package from com.planbase.pdf.layoutmanager to com.planbase.pdf.lm2.
  This makes it easy to use LayoutManager 1 and 2 in the same project which should make upgrades easier
  for projects that make multiple independent PDFs since you can upgrade one at a time.
+ - Made PdfLayoutMgr.Orientation a stand-alone enum in the `attributes` package.
  - Upgraded PdfBox from 2.0.12 to 2.0.13 and all dependencies and plugins to their latest versions.
+
+```bash
+# To upgrade, search and replace in files the first term with the second.
+
+com.planbase.pdf.layoutmanager
+com.planbase.pdf.lm2
+
+lm2.PdfLayoutMgr.Orientation
+lm2.attributes.Orientation
+```
+
 
 ## 2.3.3 2019-01-23 "CellStyle.withAlign()"
  - Renamed CellStyle.align() to CellStyle.withAlign()

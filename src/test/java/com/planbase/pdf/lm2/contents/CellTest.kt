@@ -7,8 +7,7 @@ import TestManuallyPdfLayoutMgr.Companion.RGB_DARK_GRAY
 import TestManuallyPdfLayoutMgr.Companion.RGB_LIGHT_GREEN
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.attributes.Align.TOP_LEFT
 import com.planbase.pdf.lm2.attributes.BorderStyle
 import com.planbase.pdf.lm2.attributes.BoxStyle

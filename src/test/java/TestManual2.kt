@@ -14,7 +14,7 @@
 
 import com.planbase.pdf.lm2.PdfLayoutMgr
 import com.planbase.pdf.lm2.PdfLayoutMgr.Companion.DEFAULT_MARGIN
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.attributes.*
 import com.planbase.pdf.lm2.attributes.Align.*
 import com.planbase.pdf.lm2.contents.Cell

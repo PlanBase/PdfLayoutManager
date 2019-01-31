@@ -14,15 +14,11 @@
 
 import TestManual2.Companion.a6PortraitBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.lm2.attributes.*
+import com.planbase.pdf.lm2.attributes.Orientation.*
 import com.planbase.pdf.lm2.attributes.Align.BOTTOM_LEFT
 import com.planbase.pdf.lm2.attributes.Align.TOP_LEFT_JUSTIFY
 import com.planbase.pdf.lm2.attributes.BorderStyle.Companion.NO_BORDERS
-import com.planbase.pdf.lm2.attributes.BoxStyle
-import com.planbase.pdf.lm2.attributes.CellStyle
-import com.planbase.pdf.lm2.attributes.DimAndPageNums
-import com.planbase.pdf.lm2.attributes.Padding
-import com.planbase.pdf.lm2.attributes.TextStyle
 import com.planbase.pdf.lm2.contents.Table
 import com.planbase.pdf.lm2.contents.Text
 import com.planbase.pdf.lm2.pages.SinglePage

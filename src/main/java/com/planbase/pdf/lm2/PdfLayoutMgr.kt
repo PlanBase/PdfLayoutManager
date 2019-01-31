@@ -20,7 +20,8 @@
 
 package com.planbase.pdf.lm2
 
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
+import com.planbase.pdf.lm2.attributes.Orientation
+import com.planbase.pdf.lm2.attributes.Orientation.LANDSCAPE
 import com.planbase.pdf.lm2.attributes.PageArea
 import com.planbase.pdf.lm2.contents.ScaledImage.WrappedImage
 import com.planbase.pdf.lm2.pages.PageGrouping
@@ -122,11 +123,6 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     private var unCommittedPageIdx:Int = 0
 
     fun unCommittedPageIdx():Int = unCommittedPageIdx
-
-    enum class Orientation {
-        PORTRAIT,
-        LANDSCAPE
-    }
 
     internal fun ensureCached(sj: WrappedImage): PDImageXObject {
         val bufferedImage = sj.bufferedImage

@@ -5,8 +5,8 @@ import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import TestManuallyPdfLayoutMgr.Companion.letterPortraitBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
 import com.planbase.pdf.lm2.PdfLayoutMgr.Companion.DEFAULT_MARGIN
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.lm2.attributes.Orientation.LANDSCAPE
+import com.planbase.pdf.lm2.attributes.Orientation.PORTRAIT
 import com.planbase.pdf.lm2.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
 import com.planbase.pdf.lm2.attributes.DimAndPageNums
 import com.planbase.pdf.lm2.attributes.PageArea

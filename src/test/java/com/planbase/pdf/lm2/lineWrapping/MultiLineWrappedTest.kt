@@ -5,8 +5,8 @@ import TestManual2.Companion.BULLET_TEXT_STYLE
 import TestManual2.Companion.a6PortraitBody
 import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.LANDSCAPE
-import com.planbase.pdf.lm2.PdfLayoutMgr.Orientation.PORTRAIT
+import com.planbase.pdf.lm2.attributes.Orientation.LANDSCAPE
+import com.planbase.pdf.lm2.attributes.Orientation.PORTRAIT
 import com.planbase.pdf.lm2.attributes.DimAndPageNums
 import com.planbase.pdf.lm2.attributes.LineStyle
 import com.planbase.pdf.lm2.attributes.TextStyle
