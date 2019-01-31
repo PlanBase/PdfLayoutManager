@@ -7,7 +7,7 @@ Bigger headings mean more stable releases!
  This makes it easy to use LayoutManager 1 and 2 in the same project which should make upgrades easier
  for projects that make multiple independent PDFs since you can upgrade one at a time.
  - Made PdfLayoutMgr.Orientation a stand-alone enum in the `attributes` package.
- - Changed order of parameters to RenderTarget.drawStyledText() so that TextStyle comes before the Text (just like Text())
+ - Changed order of parameters to RenderTarget.drawStyledText() so that TextStyle comes before the text String (just like Text())
  - Upgraded PdfBox from 2.0.12 to 2.0.13 and all dependencies and plugins to their latest versions.
 
 ```bash
