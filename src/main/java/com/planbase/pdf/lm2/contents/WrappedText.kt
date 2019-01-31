@@ -78,7 +78,7 @@ data class WrappedText(val textStyle: TextStyle,
         }
 
         val dap:DimAndPageNums =
-                lp.drawStyledText(topLeft.minusY(ascent), string, tempTextStyle, reallyRender)
+                lp.drawStyledText(topLeft.minusY(ascent), tempTextStyle, string, reallyRender)
                         .dimAndPagesFromWidth(dim)
 
         //            println("      => ascent=$ascent dim.height=${dim.height} dap.height=${dap.dim.height} ")

@@ -66,8 +66,8 @@ class TestAliceInWonderland {
                 { pageNum:Int, pb: SinglePage ->
                     val isLeft = pageNum % 2 == 1
                     val leftMargin:Double = if (isLeft) 37.0 else 45.0
-                    pb.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20.0), "$pageNum.",
-                                      TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK), true)
+                    pb.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20.0), TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK),
+                                      "$pageNum.", true)
                     leftMargin })
 
 //        pageMgr.logicalPageEnd(lp)

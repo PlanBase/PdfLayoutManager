@@ -137,14 +137,14 @@ class PageGrouping(private val mgr: PdfLayoutMgr,
     //                        : mgr.pageDim().width();
     //    }
 
-    override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): HeightAndPage {
+    override fun drawStyledText(baselineLeft: Coord, textStyle: TextStyle, text: String, reallyRender: Boolean): HeightAndPage {
         if (!valid) {
             throw IllegalStateException("Logical page accessed after commit")
         }
         // Text rendering calculation spot 3/3
         val belowBaseline = textStyle.lineHeight - textStyle.ascent
         val pby = appropriatePage(baselineLeft.y - belowBaseline, textStyle.lineHeight, 0.0)
-        pby.pb.drawStyledText(baselineLeft.withY(pby.y + belowBaseline), text, textStyle, reallyRender)
+        pby.pb.drawStyledText(baselineLeft.withY(pby.y + belowBaseline), textStyle, text, reallyRender)
         return HeightAndPage(textStyle.lineHeight + pby.adj, pby.pb.pageNum)
     }
 

@@ -80,6 +80,7 @@ interface RenderTarget {
     /**
      * Draws lines from the first point to the last.  Convenience function for [drawLineStrip]
      */
+    @JvmDefault
     fun drawLineStrip(points: List<Coord>,
                       lineStyle: LineStyle): IntRange =
             drawLineStrip(points, lineStyle, MITER, true)
@@ -102,6 +103,7 @@ interface RenderTarget {
                      reallyRender: Boolean): IntRange
 
     /** Draws a closed path.  Convenience function for [drawLineLoop]. */
+    @JvmDefault
     fun drawLineLoop(points: List<Coord>,
                      lineStyle: LineStyle): IntRange =
             drawLineLoop(points, lineStyle, MITER, null, true)
@@ -116,8 +118,8 @@ interface RenderTarget {
      * (may include some extra space above to push items onto the next page).
      */
     fun drawStyledText(baselineLeft: Coord,
-                       text: String,
                        textStyle: TextStyle,
+                       text: String,
                        reallyRender: Boolean = true): HeightAndPage
 
     /**
@@ -128,10 +130,11 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
+    @JvmDefault
     fun drawStyledText(baselineLeft: Coord,
-                       text: String,
-                       textStyle: TextStyle): HeightAndPage =
-            drawStyledText(baselineLeft, text, textStyle, true)
+                       textStyle: TextStyle,
+                       text: String): HeightAndPage =
+            drawStyledText(baselineLeft, textStyle, text, true)
 
     /**
      * Puts an image on this RenderTarget

@@ -40,7 +40,7 @@ class WrappedList(private val list: DisplayList) : LineWrapped {
             lp.drawStyledText(Coord(dpnatl.topLeft.x - (list.initialTextStyle.stringWidthInDocUnits(initial) +
                                                         list.initialPadTopRight.right),
                                     dpnatl.topLeft.y - (list.initialPadTopRight.top + list.initialTextStyle.ascent)),
-                              initial, list.initialTextStyle)
+                              list.initialTextStyle, initial)
 
             // Get ready for next list item
             y -= dpnatl.dim.height

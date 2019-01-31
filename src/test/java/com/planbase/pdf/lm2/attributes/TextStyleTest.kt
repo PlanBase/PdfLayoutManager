@@ -71,29 +71,29 @@ class TextStyleTest {
 
         val times20 = TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK)
         val leading = times20.lineHeight
-        page.drawStyledText(lp.body.topLeft.minusY(leading), quickBrownFox, times20)
+        page.drawStyledText(lp.body.topLeft.minusY(leading), times20, quickBrownFox)
 
-        page.drawStyledText(lp.body.topLeft.minusY(leading * 2), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 1.0, 0.0))
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 2), TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 1.0, 0.0),
+                            quickBrownFox)
 
-        page.drawStyledText(lp.body.topLeft.minusY(leading * 3), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, -1.0, 0.0))
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 3), TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, -1.0, 0.0),
+                            quickBrownFox)
 
-        page.drawStyledText(lp.body.topLeft.minusY(leading * 4), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 0.0, 2.0))
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 4), TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 0.0, 2.0),
+                            quickBrownFox)
 
-        page.drawStyledText(lp.body.topLeft.minusY(leading * 5), quickBrownFox,
-                            TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 0.0, -2.0))
+        page.drawStyledText(lp.body.topLeft.minusY(leading * 5), TextStyle(PDType1Font.TIMES_ROMAN, 20.0, CMYK_BLACK, null, 20.0, 0.0, 0.0, -2.0),
+                            quickBrownFox)
 
         val helloOff = lp.body.topLeft.minusY(leading * 6)
-        page.drawStyledText(helloOff, "Hello", times20)
-        page.drawStyledText(helloOff.plusX(times20.stringWidthInDocUnits("Hello")), "subscript",
-                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, null, 11.0, -4.0, 0.0, 0.0))
+        page.drawStyledText(helloOff, times20, "Hello")
+        page.drawStyledText(helloOff.plusX(times20.stringWidthInDocUnits("Hello")), TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, null, 11.0, -4.0, 0.0, 0.0),
+                            "subscript")
 
         val stuffOff = helloOff.plusX(times20.stringWidthInDocUnits("hellosubscript"))
-        page.drawStyledText(stuffOff, "Stuff", times20)
-        page.drawStyledText(stuffOff.plusX(times20.stringWidthInDocUnits("Stuff") + 1.0), "superscript",
-                            TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, null, 11.0, 10.0, 0.0, 0.0))
+        page.drawStyledText(stuffOff, times20, "Stuff")
+        page.drawStyledText(stuffOff.plusX(times20.stringWidthInDocUnits("Stuff") + 1.0), TextStyle(PDType1Font.TIMES_ROMAN, 11.0, CMYK_BLACK, null, 11.0, 10.0, 0.0, 0.0),
+                            "superscript")
 
         pageMgr.commit()
         val os = FileOutputStream("textStyleTest.pdf")

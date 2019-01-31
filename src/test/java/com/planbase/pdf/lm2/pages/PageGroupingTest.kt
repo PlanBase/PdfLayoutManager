@@ -143,7 +143,7 @@ class PageGroupingTest {
             val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
             assertEquals(melonHeight, imgHaP.height, 0.0)
 
-            val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+            val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.textStyle, bigText.text, true)
             assertEquals(bigText.textStyle.lineHeight, txtHaP.height, 0.0)
 
             val rectY: Double = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
@@ -168,7 +168,7 @@ class PageGroupingTest {
 
         // Words must vertically fit entirely on one page,
         // So they are pushed down as necessary to fit.
-        val txtHaP2: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+        val txtHaP2: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.textStyle, bigText.text, true)
         assertTrue(bigText.textStyle.lineHeight < txtHaP2.height)
 
         // Rectangles span multiple pages, so their height should be unchanged.
@@ -198,7 +198,7 @@ class PageGroupingTest {
             val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
             assertEquals(melonHeight, imgHaP.height, 0.0)
 
-            val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+            val txtHaP: HeightAndPage = lp.drawStyledText(Coord(textX, y), bigText.textStyle, bigText.text, true)
             assertEquals(bigText.textStyle.lineHeight, txtHaP.height, 0.0)
 
             val rectY: Double = lp.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)

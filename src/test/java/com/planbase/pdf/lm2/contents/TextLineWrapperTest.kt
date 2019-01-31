@@ -279,7 +279,7 @@ class TextLineWrapperTest {
         lp.drawLine(Coord(margin, yTop), Coord(pageRightMargin, yTop), thinLine)
         lp.drawLine(Coord(margin, yBaseline), Coord(pageRightMargin, yBaseline), thinLine)
         lp.drawLine(Coord(margin, yBottom), Coord(pageRightMargin, yBottom), thinLine)
-        val heightAndPage: HeightAndPage = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent), txt1.text, tStyle1)
+        val heightAndPage: HeightAndPage = lp.drawStyledText(upperLeft.minusY(tStyle1.ascent), tStyle1, txt1.text)
         assertEquals(tStyle1.lineHeight, heightAndPage.height)
 
         mgr.commit()

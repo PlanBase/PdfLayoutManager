@@ -109,7 +109,7 @@ class SinglePage(val pageNum: Int,
         items.add(Text(baselineLeft.plusX(xOff), text, s, lastOrd++, z))
     }
 
-    override fun drawStyledText(baselineLeft: Coord, text: String, textStyle: TextStyle, reallyRender: Boolean): HeightAndPage {
+    override fun drawStyledText(baselineLeft: Coord, textStyle: TextStyle, text: String, reallyRender: Boolean): HeightAndPage {
         if (reallyRender) {
             drawStyledText(baselineLeft, text, textStyle, DEFAULT_Z_INDEX)
         }

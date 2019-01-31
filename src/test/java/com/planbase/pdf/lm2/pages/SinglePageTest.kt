@@ -51,7 +51,7 @@ class SinglePageTest {
             val imgHaP: HeightAndPage = pg.drawImage(Coord(melonX, y), bigMelon)
             assertEquals(melonHeight, imgHaP.height, 0.0)
 
-            val txtHaP: HeightAndPage = pg.drawStyledText(Coord(textX, y), bigText.text, bigText.textStyle, true)
+            val txtHaP: HeightAndPage = pg.drawStyledText(Coord(textX, y), bigText.textStyle, bigText.text, true)
             assertEquals(bigText.textStyle.lineHeight, txtHaP.height, 0.0)
 
             val rectY: Double = pg.fillRect(Coord(squareX, y), squareDim, RGB_BLACK, true)
