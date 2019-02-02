@@ -7,14 +7,20 @@ Bigger headings mean more stable releases!
  This makes it easy to use LayoutManager 1 and 2 in the same project which should make upgrades easier
  for projects that make multiple independent PDFs since you can upgrade one at a time.
  - Made PdfLayoutMgr.Orientation a stand-alone enum in the `attributes` package.
- - Renamed Table.partBuilder(), TablePart.buildPart(), TablePart.rowBuilder(), TableRow.buildRow() to
- .startPart(), .endPart(), .startRow(), .endRow() because it's easier to understand when the methods
- are all chained together.
- Also now throw an exception if two parts or two rows are started before the first is ended.
+ - Deleted TablePart as it was never used and just seemed an unnecessary complication.
+ - Renamed Table.rowBuilder(), TableRow.buildRow() to .startRow() and .endRow()
+ because it's easier to understand when the methods are all chained together.
+ - Now throw exceptions if
+    - two rows are started before the first is ended
+    - a table is wrapped with an unfinished row (you must call .endRow()).
  - Changed order of parameters to RenderTarget.drawStyledText() so that TextStyle comes before the text String (just like Text())
  - Added JvmOverloads annotation to Table constructor to make it more convenient to use from Java.
  - Added Padding.withTop(), .withRight(), .withBottom(), and .withLeft() to create an immutable duplicate padding
  with one dimension changed.
+ - Renamed Padding.topBottomPadding() and .leftRightPadding() to .topPlusBottom() and .leftPlusRight().
+ Those methods show as unused, so they may be gotten rid of.
+ - Deleted linewrapping.MultiLineWrapper.kt.
+ It illustrated how line wrapping was intended to work, but it was never actually used.
  - Upgraded PdfBox from 2.0.12 to 2.0.13 and all dependencies and plugins to their latest versions.
 
 ```bash

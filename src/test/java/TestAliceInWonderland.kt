@@ -266,14 +266,13 @@ class TestAliceInWonderland {
         assertEquals(IntRange(-1, -1), dap.pageNums)
 
         var table = Table(mutableListOf(200.0, 25.0))
-        var rowBuilder = table.startPart()
-                .startRow()
+        var rowBuilder = table.startRow()
 
         tableOfContents.forEach {
             item -> rowBuilder = rowBuilder.cell(bodyCellStyle, listOf(Text(bodyText, item.title)))
                 .cell(bodyCellStyle, listOf(Text(bodyText, "" + item.p))).endRow().startRow()
         }
-        table = rowBuilder.endRow().endPart()
+        table = rowBuilder.endRow()
 
         dap = sp.add(Coord(0.0, sp.body.topLeft.y - dap.dim.height), table.wrap())
         assertEquals(IntRange(-1, -1), dap.pageNums)

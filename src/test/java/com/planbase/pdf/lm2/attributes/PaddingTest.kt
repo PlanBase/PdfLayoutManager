@@ -4,8 +4,8 @@ import com.planbase.pdf.lm2.attributes.Padding.Companion.DEFAULT_TEXT_PADDING
 import com.planbase.pdf.lm2.attributes.Padding.Companion.NO_PADDING
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Test
 import org.organicdesign.testUtils.EqualsContract.equalsDistinctHashCode
+import kotlin.test.Test
 
 class PaddingTest {
     @Test
@@ -30,7 +30,7 @@ class PaddingTest {
     @Test
     fun equalHashTest() {
         // Test first item different
-        equalsDistinctHashCode(Padding(1.0), Padding(1.0, 1.0, 1.0, 1.0), Padding(1.0),
+        equalsDistinctHashCode(Padding(1.0), Padding(1.0, 1.0), Padding(1.0),
                                Padding(2.0, 1.0, 1.0, 1.0))
 
         // Test transposed middle items are different (but have same hashcode)
@@ -42,5 +42,20 @@ class PaddingTest {
         // but are not equal.  Prove it (also tests last item is different):
         equalsDistinctHashCode(Padding(1.0), Padding(1.0, 1.0, 1.0, 1.0), Padding(1.0),
                                Padding(1.0, 1.0, 1.0, 1.0001))
+    }
+
+    @Test fun withModifiersTest() {
+        val pad = NO_PADDING
+        assertEquals(Padding(0.0, 0.0, 0.0, 0.0), pad)
+        assertEquals(Padding(1.0, 0.0, 0.0, 0.0), pad.withTop(1.0))
+        assertEquals(Padding(0.0, 3.0, 0.0, 0.0), pad.withRight(3.0))
+        assertEquals(Padding(0.0, 0.0, 5.0, 0.0), pad.withBottom(5.0))
+        assertEquals(Padding(0.0, 0.0, 0.0, 7.0), pad.withLeft(7.0))
+
+        assertEquals(Padding(7.0, 5.0, 3.0, 1.0),
+                     pad.withTop(7.0)
+                             .withRight(5.0)
+                             .withBottom(3.0)
+                             .withLeft(1.0))
     }
 }

@@ -59,9 +59,9 @@ data class Padding(val top: Double,
 
     fun applyTopLeft(orig: Coord): Coord = Coord(orig.x + left, orig.y - top)
 
-    fun topBottomPadding() = top + bottom
+    fun topPlusBottom() = top + bottom
 
-    fun leftRightPadding() = left + right
+    fun leftPlusRight() = left + right
 
     override fun toString() =
             if (this == NO_PADDING) {

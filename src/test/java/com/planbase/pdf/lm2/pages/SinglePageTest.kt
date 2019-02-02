@@ -145,10 +145,8 @@ val qbfCell = Cell(paleGreenLeft, squareSide,
 
 val qbfTable: Table.WrappedTable =
         Table(mutableListOf(squareSide, squareSide))
-                .startPart()
                 .startRow()
                 .cell(paleBlueLeft, listOf(Text(times15, "The quick brown fox jumps over the lazy dog")))
                 .cell(paleBlueLeft, listOf(Text(times15, "Etaoin shrdlu cmfwyp")))
                 .endRow()
-                .endPart()
                 .wrap()

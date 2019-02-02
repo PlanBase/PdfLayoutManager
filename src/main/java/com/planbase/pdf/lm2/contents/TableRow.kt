@@ -38,12 +38,12 @@ import kotlin.math.max
  */
 class TableRow
 @JvmOverloads
-constructor(private val tablePart: TablePart,
+constructor(private val table: Table,
             private val rowClosedCallback: (() -> Unit)? = null) {
-    var textStyle: TextStyle? = tablePart.textStyle
-    private var cellStyle: CellStyle = tablePart.cellStyle
-    private val cells: MutableList<Cell> = ArrayList(tablePart.cellWidths.size)
-    var minRowHeight = tablePart.minRowHeight
+    var textStyle: TextStyle? = table.textStyle
+    private var cellStyle: CellStyle = table.cellStyle
+    private val cells: MutableList<Cell> = ArrayList(table.cellWidths.size)
+    var minRowHeight = table.minRowHeight
     private var nextCellIdx = 0
 
 //    fun textStyle(x: TextStyle): TableRow {
@@ -73,25 +73,25 @@ constructor(private val tablePart: TablePart,
 
     fun cell(cs: CellStyle = cellStyle,
              contents: List<LineWrappable>): TableRow {
-        if (tablePart.cellWidths.size < (nextCellIdx + 1)) {
-            throw IllegalStateException("Can't add another cell because there are only ${tablePart.cellWidths.size}" +
+        if (table.cellWidths.size < (nextCellIdx + 1)) {
+            throw IllegalStateException("Can't add another cell because there are only ${table.cellWidths.size}" +
                                         " cell widths and already $nextCellIdx cells")
         }
-        cells.add(Cell(cs, tablePart.cellWidths[nextCellIdx++], contents))
+        cells.add(Cell(cs, table.cellWidths[nextCellIdx++], contents))
         return this
     }
 
-    fun endRow(): TablePart {
+    fun endRow(): Table {
         // Do we want to fill out the row with blank cells?
 //        if (cells.contains(null)) {
 //            throw IllegalStateException("Cannot build row when some TableRowCellBuilders have been" +
 //                                        " created but the cells not built and added back to the row.")
 //        }
-        val part = tablePart.addRow(this)
+        val table = table.addRow(this)
         if (rowClosedCallback != null) {
             rowClosedCallback.invoke()
         }
-        return part
+        return table
     }
 
     fun finalRowHeight(): Double {
@@ -103,6 +103,8 @@ constructor(private val tablePart: TablePart,
     }
 
     class WrappedTableRow(row: TableRow) {
+        val dim = Dim(row.table.cellWidths.sum(),
+                      row.finalRowHeight())
         private val minRowHeight: Double = row.minRowHeight
         private val fixedCells:List<WrappedCell> =
                 row.cells.map { c -> c.wrap() }

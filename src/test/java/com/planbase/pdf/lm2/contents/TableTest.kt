@@ -31,11 +31,9 @@ import kotlin.math.nextUp
 class TableTest {
     @Test fun testSingleCell() {
         val table:Table = Table(mutableListOf(twoHundred))
-                .startPart()
                 .startRow()
                 .cell(cellStyle, listOf(hello))
                 .endRow()
-                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -58,11 +56,9 @@ class TableTest {
 
     @Test fun testSingleCellWrapped() {
         val table:Table = Table(mutableListOf(helloHelloWidth))
-                .startPart()
                 .startRow()
                 .cell(cellStyle, listOf(helloHello))
                 .endRow()
-                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -84,12 +80,10 @@ class TableTest {
 
     @Test fun testTwoCells() {
         val table:Table = Table(mutableListOf(twoHundred, twoHundred))
-                .startPart()
                 .startRow()
                 .cell(cellStyle, listOf(hello))
                 .cell(cellStyle, listOf(hello))
                 .endRow()
-                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -110,12 +104,10 @@ class TableTest {
 
     @Test fun testTwoCellsWrapped() {
         val table:Table = Table(mutableListOf(helloHelloWidth, helloHelloWidth))
-                .startPart()
                 .startRow()
                 .cell(cellStyle, listOf(helloHello))
                 .cell(cellStyle, listOf(helloHello))
                 .endRow()
-                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -160,7 +152,6 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
         val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.0.nextUp().nextUp()))
 
         val innerTable = Table().addCellWidths(230.0)
-                .startPart()
                 .startRow()
                 .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER),
                       listOf(Text(BULLET_TEXT_STYLE,
@@ -168,10 +159,8 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                                   "Subtext is an under and often distinct theme in a piece of writing or convers. " +
                                   "Subtext is an under and often distinct theme in a piece of writing or convers. ")))
                 .endRow()
-                .endPart()
 
         val bulletTable: Table = Table().addCellWidths(230.0)
-                .startPart()
                 .startRow()
                 .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, testBorderStyle)),
                       listOf(Text(BULLET_TEXT_STYLE,
@@ -181,7 +170,6 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                                   "Some text with a bullet. "),
                              innerTable))
                 .endRow()
-                .endPart()
 
         val wrappedTable: Table.WrappedTable = bulletTable.wrap()
         Dim.assertEquals(Dim(230.0, 124.848), wrappedTable.dim, 0.0)
@@ -214,32 +202,24 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
 
     @Test fun testToString() {
         val bulletTable: Table = Table(mutableListOf(230.0))
-                .startPart()
                 .startRow()
                 .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))),
                       listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), "Some text with a bullet."),
                              Table(mutableListOf(230.0))
-                                     .startPart()
                                      .startRow()
                                      .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), "Subtext is an underneath")))
                                      .endRow()
-                                     .endPart()
                       ))
                 .endRow()
-                .endPart()
         assertEquals("Table(mutableListOf(230.0))\n" +
-                     ".startPart()\n" +
                      ".startRow()\n" +
                      ".cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))), " +
                      "listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Some text with a bullet.\"),\n" +
                      "       Table(mutableListOf(230.0))\n" +
-                     ".startPart()\n" +
                      ".startRow()\n" +
                      ".cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Subtext is an underneath\")))\n" +
-                     ".endRow()\n" +
-                     ".endPart()))\n" +
-                     ".endRow()\n" +
-                     ".endPart()",
+                     ".endRow()))\n" +
+                     ".endRow()",
                      bulletTable.toString())
     }
 }

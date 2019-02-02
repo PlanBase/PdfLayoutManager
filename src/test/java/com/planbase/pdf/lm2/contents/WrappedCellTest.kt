@@ -161,10 +161,9 @@ class WrappedCellTest {
         val tB = Table()
                 .addCellWidths(listOf(120.0))
                 .textStyle(textStyle)
-                .startPart()
                 .cellStyle(cellStyle)
                 .startRow().addTextCells("First").endRow()
-                .endPart()
+
         val wrappedTable = tB.wrap()
 
         TestCase.assertEquals(textStyle.lineHeight + cellStyle.boxStyle.topBottomInteriorSp(),

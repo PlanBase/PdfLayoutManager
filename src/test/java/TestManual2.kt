@@ -75,7 +75,6 @@ class TestManual2 {
 
         // Don't make bullets like this.  See WrappedListTest for the right way to do it.
         val bulletTable: Table = Table().addCellWidths(30.0, bodyWidth - 30.0)
-                .startPart()
                 .startRow()
                 .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, BULLET_CHAR)))
                 .cell(bulletTextCellStyle, listOf(Text(BULLET_TEXT_STYLE, "This is some text that has a bullet")))
@@ -84,7 +83,6 @@ class TestManual2 {
                 .cell(BULLET_CELL_STYLE, listOf(Text(BULLET_TEXT_STYLE, "2.")))
                 .cell(bulletTextCellStyle, listOf(Text(BULLET_TEXT_STYLE, "Text that has a number")))
                 .endRow()
-                .endPart()
 
         val bodyCellStyle = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(2.0), CMYK_PALE_PEACH, BorderStyle(CMYK_QUEEN_PINK)))
         val bodyCellContinuation = CellStyle(TOP_LEFT_JUSTIFY, BoxStyle(Padding(2.0, 2.0, 8.0, 2.0), CMYK_PALE_PEACH,

@@ -66,16 +66,27 @@ class Table
 constructor(val cellWidths: MutableList<Double> = mutableListOf(),
             var cellStyle: CellStyle = CellStyle.TOP_LEFT_BORDERLESS,
             var textStyle: TextStyle? = null,
-            private val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
+            private val rows: MutableList<TableRow> = mutableListOf()) : LineWrappable {
+    var minRowHeight = 0.0
 
-    private var openPart = false
+    fun minRowHeight(h: Double): Table {
+        minRowHeight = h
+        return this
+    }
+
+    private var openRow = false
 
     override fun lineWrapper() =
-            LineWrapper.preWrappedLineWrapper(WrappedTable(this.parts.map { TablePart.WrappedTablePart(it) }))
+            LineWrapper.preWrappedLineWrapper(WrappedTable(this.rows.map { TableRow.WrappedTableRow(it) }))
 
-    fun wrap(): WrappedTable = WrappedTable(this.parts.map { TablePart.WrappedTablePart(it) })
+    fun wrap(): WrappedTable {
+        if (openRow) {
+            throw IllegalStateException("Must end TableRow before wrapping table!")
+        }
+        return WrappedTable(this.rows.map { TableRow.WrappedTableRow(it) })
+    }
 
-    /** Sets default widths for all table parts.  */
+    /** Sets default widths for all table rows.  */
     fun addCellWidths(x: Iterable<Double>): Table {
         cellWidths.addAll(x)
         return this
@@ -103,29 +114,29 @@ constructor(val cellWidths: MutableList<Double> = mutableListOf(),
         return this
     }
 
-    fun addPart(tp: TablePart): Table {
-        parts.add(tp)
+    fun addRow(trb: TableRow): Table {
+        rows.add(trb)
         return this
     }
 
-    fun startPart(): TablePart {
-        if (openPart) {
-            throw IllegalStateException("Must end first TablePart before starting a new one!")
+    fun startRow(): TableRow {
+        if (openRow) {
+            throw IllegalStateException("Must end current TableRow before starting a new one!")
         }
-        openPart = true
-        return TablePart(this, { openPart = false })
+        openRow = true
+        return TableRow(this, { openRow = false })
     }
 
     override fun toString(): String =
             "Table(${mutableListToStr(0, cellWidths)})" +
-            parts.fold(StringBuilder(""),
-                       {sB, part -> sB.append("\n.startPart()")
-                               .append(part)
-                               .append("\n.endPart()")})
+            rows.fold(StringBuilder(""),
+                       {sB, row -> sB.append("\n.startRow()")
+                               .append(row)
+                               .append("\n.endRow()")})
                     .toString()
 
-    data class WrappedTable(private val parts:List<TablePart.WrappedTablePart>) : LineWrapped {
-        override val dim: Dim = Dim.sum(parts.map { part -> part.dim })
+    data class WrappedTable(private val rows:List<TableRow.WrappedTableRow>) : LineWrapped {
+        override val dim: Dim = Dim.sum(rows.map { row -> row.dim })
         override val ascent: Double = dim.height
 
         /*
@@ -137,8 +148,8 @@ constructor(val cellWidths: MutableList<Double> = mutableListOf(),
             var y = topLeft.y
             var maxWidth = 0.0
             var pageNums:IntRange = DimAndPageNums.INVALID_PAGE_RANGE
-            for (part in parts) {
-                val dimAndPageNums: DimAndPageNums = part.render(lp, topLeft.withY(y), reallyRender)
+            for (row in rows) {
+                val dimAndPageNums: DimAndPageNums = row.render(lp, topLeft.withY(y), reallyRender)
                 maxWidth = max(maxWidth, dimAndPageNums.dim.width)
                 y -= dimAndPageNums.dim.height
                 pageNums = dimAndPageNums.maxExtents(pageNums)
@@ -146,6 +157,6 @@ constructor(val cellWidths: MutableList<Double> = mutableListOf(),
             return DimAndPageNums(Dim(maxWidth, topLeft.y - y), pageNums)
         }
 
-        override fun toString(): String = "WrappedTable($parts)"
+        override fun toString(): String = "WrappedTable($rows)"
     }
 }
