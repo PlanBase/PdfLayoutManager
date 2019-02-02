@@ -33,31 +33,31 @@ class TableRowTest {
         tB.addCellWidths(listOf(100.0, 100.0, 100.0))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0,
                                      RGB_YELLOW_BRIGHT))
-                .partBuilder().cellStyle(CellStyle(Align.BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-                .buildPart()
-                .partBuilder().cellStyle(CellStyle(Align.MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
+                .startPart().cellStyle(CellStyle(Align.BOTTOM_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                .startRow().addTextCells("First", "Second", "Third").endRow()
+                .endPart()
+                .startPart().cellStyle(CellStyle(Align.MIDDLE_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
                 .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
-                .rowBuilder()
+                .startRow()
                 .align(Align.BOTTOM_RIGHT).addTextCells("Line 1")
                 .align(Align.BOTTOM_CENTER).addTextCells("Line 1\n" +
                                                          "Line two")
                 .align(Align.BOTTOM_LEFT).addTextCells("Line 1\n" +
                                                        "Line two\n" +
                                                        "[Line three is long enough to wrap]")
-                .buildRow()
-//                .rowBuilder().cellBuilder().align(Align.MIDDLE_RIGHT).addStrs("Line 1\n" +
+                .endRow()
+//                .startRow().cellBuilder().align(Align.MIDDLE_RIGHT).addStrs("Line 1\n" +
 //        "Line two").buildCell()
 //                .cellBuilder().align(Align.MIDDLE_CENTER).addStrs("").buildCell()
-//                .cellBuilder().align(Align.MIDDLE_LEFT).addStrs("Line 1").buildCell().buildRow()
-//                .rowBuilder().cellBuilder().align(Align.TOP_RIGHT).addStrs("L1").buildCell()
+//                .cellBuilder().align(Align.MIDDLE_LEFT).addStrs("Line 1").buildCell().endRow()
+//                .startRow().cellBuilder().align(Align.TOP_RIGHT).addStrs("L1").buildCell()
 //                .cellBuilder().align(Align.TOP_CENTER).addStrs("Line 1\n" +
 //    "Line two").buildCell()
-//                .cellBuilder().align(Align.TOP_LEFT).addStrs("Line 1").buildCell().buildRow()
-                .buildPart()
+//                .cellBuilder().align(Align.TOP_LEFT).addStrs("Line 1").buildCell().endRow()
+                .endPart()
                 .wrap().render(lp, upperLeft)
 
         pageMgr.commit()
@@ -95,15 +95,15 @@ class TableRowTest {
         lp = pageMgr.startPageGrouping(PORTRAIT, letterPortraitBody)
 
         val tB = Table(colWidths.toMutableList(), headingCell, heading)
-        tB.partBuilder()
-                .rowBuilder()
+        tB.startPart()
+                .startRow()
                 .cell(headingCell,
                       listOf(Text(heading, "Transliterated Russian (with un-transliterated Chinese below)")))
                 .cell(headingCellR, listOf(Text(heading, "US English")))
                 .cell(headingCellR, listOf(Text(heading, "Finnish")))
                 .cell(headingCellR, listOf(Text(heading, "German")))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
         tB.wrap().render(lp, lp.body.topLeft)
         pageMgr.commit()
 

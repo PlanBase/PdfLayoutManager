@@ -49,6 +49,14 @@ data class Padding(val top: Double,
 //            Dim(outer.width + (left + right),
 //                  outer.height + (top + bottom))
 
+    fun withTop(newTop: Double) = Padding(newTop, right, bottom, left)
+
+    fun withRight(newRight: Double) = Padding(top, newRight, bottom, left)
+
+    fun withBottom(newBottom: Double) = Padding(top, right, newBottom, left)
+
+    fun withLeft(newLeft: Double) = Padding(top, right, bottom, newLeft)
+
     fun applyTopLeft(orig: Coord): Coord = Coord(orig.x + left, orig.y - top)
 
     fun topBottomPadding() = top + bottom

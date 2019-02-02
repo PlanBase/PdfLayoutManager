@@ -80,18 +80,18 @@ class TestManuallyPdfLayoutMgr {
         var tB = Table()
         tB.addCellWidths(listOf(120.0, 120.0, 120.0))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
-                .partBuilder()
+                .startPart()
                 .cellStyle(CellStyle(BOTTOM_CENTER, BoxStyle(Padding(2.0),
                                                              RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-                .buildPart()
-                .partBuilder()
+                .startRow().addTextCells("First", "Second", "Third").endRow()
+                .endPart()
+                .startPart()
                 .cellStyle(CellStyle(MIDDLE_CENTER, BoxStyle(Padding(2.0),
                                                              RGB_LIGHT_GREEN,
                                                              BorderStyle(RGB_DARK_GRAY))))
                 .minRowHeight(120.0)
                 .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
-                .rowBuilder()
+                .startRow()
                 .align(TOP_LEFT).addTextCells("Line 1\n" +
                                               "Line two\n" +
                                               "Line three")
@@ -101,8 +101,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(TOP_RIGHT).addTextCells("Line 1\n" +
                                                "Line two\n" +
                                                "Line three")
-                .buildRow()
-                .rowBuilder()
+                .endRow()
+                .startRow()
                 .align(MIDDLE_LEFT).addTextCells("Line 1\n" +
                                                  "Line two\n" +
                                                  "Line three")
@@ -112,8 +112,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(MIDDLE_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
                                                   "Line three")
-                .buildRow()
-                .rowBuilder()
+                .endRow()
+                .startRow()
                 .align(BOTTOM_LEFT).addTextCells("Line 1\n" +
                                                  "Line two\n" +
                                                  "Line three")
@@ -123,8 +123,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(BOTTOM_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
                                                   "Line three")
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
         val xya: DimAndPageNums = tB.wrap()
                 .render(lp, lp.body.topLeft)
 
@@ -135,16 +135,16 @@ class TestManuallyPdfLayoutMgr {
         tB = Table()
         tB.addCellWidths(listOf(100.0, 100.0, 100.0))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
-                .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("January", "February", "March").buildRow()
-                .buildPart()
-                .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
+                .startPart().cellStyle(CellStyle(BOTTOM_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                .startRow().addTextCells("January", "February", "March").endRow()
+                .endPart()
+                .startPart().cellStyle(CellStyle(MIDDLE_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
                 .minRowHeight(100.0)
                 .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
-                .rowBuilder()
+                .startRow()
                 .align(BOTTOM_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
                                                   "Line three")
@@ -154,8 +154,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(BOTTOM_LEFT).addTextCells("Line 1\n" +
                                                  "Line two\n" +
                                                  "Line three")
-                .buildRow()
-                .rowBuilder()
+                .endRow()
+                .startRow()
                 .align(MIDDLE_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
                                                   "Line three")
@@ -165,8 +165,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(MIDDLE_LEFT).addTextCells("Line 1\n" +
                                                  "Line two\n" +
                                                  "Line three")
-                .buildRow()
-                .rowBuilder()
+                .endRow()
+                .startRow()
                 .align(TOP_RIGHT).addTextCells("Line 1\n" +
                                                "Line two\n" +
                                                "Line three")
@@ -176,8 +176,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(TOP_LEFT).addTextCells("Line 1\n" +
                                               "Line two\n" +
                                               "Line three")
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
         val xyb: DimAndPageNums = tB.wrap()
                 .render(lp, lp.body.topLeft.plusX(xya.dim.width + 10))
 
@@ -189,31 +189,31 @@ class TestManuallyPdfLayoutMgr {
         tB = Table()
         tB.addCellWidths(listOf(100.0, 100.0, 100.0))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
-                .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("Uno", "Dos", "Tres").buildRow()
-                .buildPart()
-                .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
+                .startPart().cellStyle(CellStyle(BOTTOM_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                .startRow().addTextCells("Uno", "Dos", "Tres").endRow()
+                .endPart()
+                .startPart().cellStyle(CellStyle(MIDDLE_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
                 .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
-                .rowBuilder().align(BOTTOM_RIGHT).addTextCells("Line 1")
+                .startRow().align(BOTTOM_RIGHT).addTextCells("Line 1")
                 .align(BOTTOM_CENTER).addTextCells("Line 1\n" +
                                                    "Line two")
                 .align(BOTTOM_LEFT)
                 .addTextCells("Line 1\n" +
                               "Line two\n" +
                               "[Line three is long enough to wrap]")
-                .buildRow()
-                .rowBuilder().align(MIDDLE_RIGHT).addTextCells("Line 1\n" +
-                                                               "Line two")
+                .endRow()
+                .startRow().align(MIDDLE_RIGHT).addTextCells("Line 1\n" +
+                                                             "Line two")
                 .align(MIDDLE_CENTER).addTextCells("")
-                .align(MIDDLE_LEFT).addTextCells("Line 1").buildRow()
-                .rowBuilder().align(TOP_RIGHT).addTextCells("L1")
+                .align(MIDDLE_LEFT).addTextCells("Line 1").endRow()
+                .startRow().align(TOP_RIGHT).addTextCells("L1")
                 .align(TOP_CENTER).addTextCells("Line 1\n" +
                                                 "Line two")
-                .align(TOP_LEFT).addTextCells("Line 1").buildRow()
-                .buildPart()
+                .align(TOP_LEFT).addTextCells("Line 1").endRow()
+                .endPart()
                 .wrap()
                 .render(lp, Coord(lp.body.topLeft.x + xya.dim.width + 10, lp.yBodyTop() - xyb.dim.height - 10))
 
@@ -224,16 +224,16 @@ class TestManuallyPdfLayoutMgr {
         tB = Table()
         tB.addCellWidths(listOf(120.0, 120.0, 120.0))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0, RGB_YELLOW_BRIGHT, null, 10.0))
-                .partBuilder().cellStyle(CellStyle(BOTTOM_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("First", "Second", "Third").buildRow()
-                .buildPart()
-                .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
+                .startPart().cellStyle(CellStyle(BOTTOM_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                .startRow().addTextCells("First", "Second", "Third").endRow()
+                .endPart()
+                .startPart().cellStyle(CellStyle(MIDDLE_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_LIGHT_GREEN,
                                                             BorderStyle(RGB_DARK_GRAY))))
                 .minRowHeight(120.0)
                 .textStyle(TextStyle(PDType1Font.COURIER, 12.0, RGB_BLACK))
-                .rowBuilder()
+                .startRow()
                 .align(TOP_LEFT).addTextCells("Line 1\n" +
                                               "Line two\n" +
                                               "Line three")
@@ -243,8 +243,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(TOP_RIGHT).addTextCells("Line 1\n" +
                                                "Line two\n" +
                                                "Line three")
-                .buildRow()
-                .rowBuilder()
+                .endRow()
+                .startRow()
                 .align(MIDDLE_LEFT).addTextCells("Line 1\n" +
                                                  "Line two\n" +
                                                  "Line three")
@@ -254,8 +254,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(MIDDLE_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
                                                   "Line three")
-                .buildRow()
-                .rowBuilder()
+                .endRow()
+                .startRow()
                 .align(BOTTOM_LEFT).addTextCells("Line 1\n" +
                                                  "Line two\n" +
                                                  "Line three")
@@ -265,8 +265,8 @@ class TestManuallyPdfLayoutMgr {
                 .align(BOTTOM_RIGHT).addTextCells("Line 1\n" +
                                                   "Line two\n" +
                                                   "Line three")
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
         val xyc: DimAndPageNums = tB
                 .wrap()
                 .render(lp, lp.body.topLeft.withX(0.0))
@@ -285,10 +285,10 @@ class TestManuallyPdfLayoutMgr {
         tB.addCellWidths(listOf(100.0))
                 .textStyle(TextStyle(PDType1Font.COURIER_BOLD_OBLIQUE, 12.0,
                                      RGB_YELLOW_BRIGHT))
-                .partBuilder().cellStyle(CellStyle(MIDDLE_CENTER,
-                                                   BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
-                .rowBuilder().addTextCells("Lower-Right").buildRow()
-                .buildPart()
+                .startPart().cellStyle(CellStyle(MIDDLE_CENTER,
+                                                 BoxStyle(Padding(2.0), RGB_BLUE_GREEN, BorderStyle(RGB_BLACK))))
+                .startRow().addTextCells("Lower-Right").endRow()
+                .endPart()
         // Where's the lower-right-hand corner?  Put a cell there.
         tB.wrap()
                 .render(lp, Coord(lp.body.dim.width - 100,
@@ -318,16 +318,16 @@ class TestManuallyPdfLayoutMgr {
         val melonPic = ImageIO.read(f)
 
         tB = Table(colWidths.toMutableList(), headingCell, heading)
-        tB.partBuilder()
-                .rowBuilder()
+        tB.startPart()
+                .startRow()
                 .cell(headingCell, listOf(Text(heading, "Stuff")))
                 .cell(headingCellR, listOf(Text(heading, "US English")))
                 .cell(headingCellR, listOf(Text(heading, "Finnish")))
                 .cell(headingCellR, listOf(Text(heading, "German")))
-                .buildRow()
-                .buildPart()
-                .partBuilder()
-                .rowBuilder()
+                .endRow()
+                .endPart()
+                .startPart()
+                .startRow()
                 .cell(regularCell,
                       listOf(Text(regular,
                                   "This used to have Russian and Chinese text. " +
@@ -481,14 +481,14 @@ class TestManuallyPdfLayoutMgr {
                                   "Sind des Glückes Unterpfand;\n" +
                                   "Blüh' im Glanze dieses Glückes, \n" +
                                   "  Blühe, deutsches Vaterland!")))
-                .buildRow()
-                .rowBuilder()
+                .endRow()
+                .startRow()
                 .cell(regularCell, listOf(Text(regular, "Another row of cells")))
                 .cell(regularCell, listOf(Text(regular, "On the second page")))
                 .cell(regularCell, listOf(Text(regular, "Just like any other page")))
                 .cell(regularCell, listOf(Text(regular, "That's it!")))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
         tB.wrap()
                 .render(lp, lp.body.topLeft)
         pageMgr.commit()

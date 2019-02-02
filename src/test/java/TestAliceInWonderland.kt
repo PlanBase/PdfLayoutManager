@@ -60,14 +60,16 @@ class TestAliceInWonderland {
         val handwriting = TextStyle(handwritingFont, 17.0, CMYK_BLACK, "handwriting", 20.0, wordSpacing = 4.0)
         val thought = TextStyle(PDType1Font.TIMES_ITALIC, 12.0, CMYK_BLACK)
 
+        // lp is for Logical Page.
         val lp = pageMgr.startPageGrouping(
                 PORTRAIT,
                 a6PortraitBody,
-                { pageNum:Int, pb: SinglePage ->
+                { pageNum:Int, page: SinglePage ->
                     val isLeft = pageNum % 2 == 1
                     val leftMargin:Double = if (isLeft) 37.0 else 45.0
-                    pb.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20.0), TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK),
-                                      "$pageNum.", true)
+                    page.drawStyledText(Coord(leftMargin + (a6PortraitBody.dim.width / 2), 20.0),
+                                        TextStyle(PDType1Font.TIMES_ROMAN, 8.0, CMYK_BLACK),
+                                        "$pageNum.", true)
                     leftMargin })
 
 //        pageMgr.logicalPageEnd(lp)
@@ -264,14 +266,14 @@ class TestAliceInWonderland {
         assertEquals(IntRange(-1, -1), dap.pageNums)
 
         var table = Table(mutableListOf(200.0, 25.0))
-        var rowBuilder = table.partBuilder()
-                .rowBuilder()
+        var rowBuilder = table.startPart()
+                .startRow()
 
         tableOfContents.forEach {
             item -> rowBuilder = rowBuilder.cell(bodyCellStyle, listOf(Text(bodyText, item.title)))
-                .cell(bodyCellStyle, listOf(Text(bodyText, "" + item.p))).buildRow().rowBuilder()
+                .cell(bodyCellStyle, listOf(Text(bodyText, "" + item.p))).endRow().startRow()
         }
-        table = rowBuilder.buildRow().buildPart()
+        table = rowBuilder.endRow().endPart()
 
         dap = sp.add(Coord(0.0, sp.body.topLeft.y - dap.dim.height), table.wrap())
         assertEquals(IntRange(-1, -1), dap.pageNums)

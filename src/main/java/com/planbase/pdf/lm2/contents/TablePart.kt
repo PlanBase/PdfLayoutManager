@@ -33,12 +33,16 @@ import kotlin.math.max
  * A set of styles to be the default for a table header or footer, or whatever other kind of group of table rows you
  * dream up.
  */
-class TablePart(private val table: Table) {
+class TablePart
+@JvmOverloads
+constructor(private val table: Table,
+            private val partClosedCallback: (() -> Unit)? = null) {
     val cellWidths:List<Double> = table.cellWidths.toList()
     var cellStyle: CellStyle = table.cellStyle
     var textStyle: TextStyle? = table.textStyle
     var minRowHeight = 0.0
     private val rows = ArrayList<TableRow>(1)
+    private var openRow = false
 
     fun finalXyDim() = Dim(cellWidths.sum(),
                            rows.map{ r -> r.finalRowHeight()}.sum())
@@ -60,14 +64,26 @@ class TablePart(private val table: Table) {
         return this
     }
 
-    fun rowBuilder() = TableRow(this)
+    fun startRow(): TableRow {
+        if (openRow) {
+            throw IllegalStateException("Must end first TableRow before starting a new one!")
+        }
+        openRow = true
+        return TableRow(this, { openRow = false })
+    }
 
     fun addRow(trb: TableRow): TablePart {
         rows.add(trb)
         return this
     }
 
-    fun buildPart(): Table = table.addPart(this)
+    fun endPart(): Table {
+        val table = table.addPart(this)
+        if (partClosedCallback != null) {
+            partClosedCallback.invoke()
+        }
+        return table
+    }
 
 //    fun calcDimensions(): Dim {
 //        var maxDim = Dim.ZERO
@@ -105,9 +121,9 @@ class TablePart(private val table: Table) {
     override fun toString(): String =
 //            "TablePart(${listToStr(cellWidths)}, ${floatToStr(minRowHeight)}, ${mutableListToStr(rows)})"
             rows.fold(StringBuilder(""),
-                       {sB, row -> sB.append("\n.rowBuilder()")
+                       {sB, row -> sB.append("\n.startRow()")
                                .append(row)
-                               .append("\n.buildRow()")})
+                               .append("\n.endRow()")})
                     .toString()
 
     //    public static Builder builder(TableBuilder t) { return new Builder(t); }

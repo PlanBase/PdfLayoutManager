@@ -61,10 +61,14 @@ colWidth1 = tableMaxWidth * colProportion1
  * can resize and scroll a browser window, and not a piece of paper, this is fundamentally different.
  * Still familiarity with HTML may make this class easier to use.
  */
-class Table(val cellWidths:MutableList<Double> = mutableListOf(),
+class Table
+@JvmOverloads
+constructor(val cellWidths: MutableList<Double> = mutableListOf(),
             var cellStyle: CellStyle = CellStyle.TOP_LEFT_BORDERLESS,
             var textStyle: TextStyle? = null,
             private val parts:MutableList<TablePart> = mutableListOf()) : LineWrappable {
+
+    private var openPart = false
 
     override fun lineWrapper() =
             LineWrapper.preWrappedLineWrapper(WrappedTable(this.parts.map { TablePart.WrappedTablePart(it) }))
@@ -104,16 +108,20 @@ class Table(val cellWidths:MutableList<Double> = mutableListOf(),
         return this
     }
 
-    fun partBuilder(): TablePart {
-        return TablePart(this)
+    fun startPart(): TablePart {
+        if (openPart) {
+            throw IllegalStateException("Must end first TablePart before starting a new one!")
+        }
+        openPart = true
+        return TablePart(this, { openPart = false })
     }
 
     override fun toString(): String =
             "Table(${mutableListToStr(0, cellWidths)})" +
             parts.fold(StringBuilder(""),
-                       {sB, part -> sB.append("\n.partBuilder()")
+                       {sB, part -> sB.append("\n.startPart()")
                                .append(part)
-                               .append("\n.buildPart()")})
+                               .append("\n.endPart()")})
                     .toString()
 
     data class WrappedTable(private val parts:List<TablePart.WrappedTablePart>) : LineWrapped {

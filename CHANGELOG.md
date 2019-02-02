@@ -7,7 +7,14 @@ Bigger headings mean more stable releases!
  This makes it easy to use LayoutManager 1 and 2 in the same project which should make upgrades easier
  for projects that make multiple independent PDFs since you can upgrade one at a time.
  - Made PdfLayoutMgr.Orientation a stand-alone enum in the `attributes` package.
+ - Renamed Table.partBuilder(), TablePart.buildPart(), TablePart.rowBuilder(), TableRow.buildRow() to
+ .startPart(), .endPart(), .startRow(), .endRow() because it's easier to understand when the methods
+ are all chained together.
+ Also now throw an exception if two parts or two rows are started before the first is ended.
  - Changed order of parameters to RenderTarget.drawStyledText() so that TextStyle comes before the text String (just like Text())
+ - Added JvmOverloads annotation to Table constructor to make it more convenient to use from Java.
+ - Added Padding.withTop(), .withRight(), .withBottom(), and .withLeft() to create an immutable duplicate padding
+ with one dimension changed.
  - Upgraded PdfBox from 2.0.12 to 2.0.13 and all dependencies and plugins to their latest versions.
 
 ```bash

@@ -68,9 +68,9 @@ class CellTest {
 
         val tB = Table()
         val trb: TableRow = tB.addCellWidths(listOf(squareDim))
-                .partBuilder()
+                .startPart()
                 .minRowHeight(squareDim)
-                .rowBuilder()
+                .startRow()
         val cell = Cell(cellStyle, squareDim, listOf(theText))
         trb.cell(cell.cellStyle, listOf(theText))
         assertEquals(squareDim, trb.minRowHeight)
@@ -82,7 +82,7 @@ class CellTest {
                      wrappedCell.dim.height)
 
 
-        val table: Table = trb.buildRow().buildPart()
+        val table: Table = trb.endRow().endPart()
 
 //        println("lp=$lp")
 //        println("lp.yBodyTop()=${lp.yBodyTop()}")

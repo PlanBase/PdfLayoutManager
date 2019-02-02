@@ -31,11 +31,11 @@ import kotlin.math.nextUp
 class TableTest {
     @Test fun testSingleCell() {
         val table:Table = Table(mutableListOf(twoHundred))
-                .partBuilder()
-                .rowBuilder()
+                .startPart()
+                .startRow()
                 .cell(cellStyle, listOf(hello))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -58,11 +58,11 @@ class TableTest {
 
     @Test fun testSingleCellWrapped() {
         val table:Table = Table(mutableListOf(helloHelloWidth))
-                .partBuilder()
-                .rowBuilder()
+                .startPart()
+                .startRow()
                 .cell(cellStyle, listOf(helloHello))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -84,12 +84,12 @@ class TableTest {
 
     @Test fun testTwoCells() {
         val table:Table = Table(mutableListOf(twoHundred, twoHundred))
-                .partBuilder()
-                .rowBuilder()
+                .startPart()
+                .startRow()
                 .cell(cellStyle, listOf(hello))
                 .cell(cellStyle, listOf(hello))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -110,12 +110,12 @@ class TableTest {
 
     @Test fun testTwoCellsWrapped() {
         val table:Table = Table(mutableListOf(helloHelloWidth, helloHelloWidth))
-                .partBuilder()
-                .rowBuilder()
+                .startPart()
+                .startRow()
                 .cell(cellStyle, listOf(helloHello))
                 .cell(cellStyle, listOf(helloHello))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
 
         val wrappedTable:Table.WrappedTable = table.wrap()
 
@@ -160,19 +160,19 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
         val testBorderStyle = BorderStyle(LineStyle(CMYK_BLACK, 0.0.nextUp().nextUp()))
 
         val innerTable = Table().addCellWidths(230.0)
-                .partBuilder()
-                .rowBuilder()
+                .startPart()
+                .startRow()
                 .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER),
                       listOf(Text(BULLET_TEXT_STYLE,
                                   "Subtext is an under and often distinct theme in a piece of writing or convers. " +
                                   "Subtext is an under and often distinct theme in a piece of writing or convers. " +
                                   "Subtext is an under and often distinct theme in a piece of writing or convers. ")))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
 
         val bulletTable: Table = Table().addCellWidths(230.0)
-                .partBuilder()
-                .rowBuilder()
+                .startPart()
+                .startRow()
                 .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, testBorderStyle)),
                       listOf(Text(BULLET_TEXT_STYLE,
                                   "Some text with a bullet. " +
@@ -180,8 +180,8 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
                                   "Some text with a bullet. " +
                                   "Some text with a bullet. "),
                              innerTable))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
 
         val wrappedTable: Table.WrappedTable = bulletTable.wrap()
         Dim.assertEquals(Dim(230.0, 124.848), wrappedTable.dim, 0.0)
@@ -214,32 +214,32 @@ Note: very similar to CellTest.testNestedCellsAcrossPageBreak()
 
     @Test fun testToString() {
         val bulletTable: Table = Table(mutableListOf(230.0))
-                .partBuilder()
-                .rowBuilder()
+                .startPart()
+                .startRow()
                 .cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))),
                       listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), "Some text with a bullet."),
                              Table(mutableListOf(230.0))
-                                     .partBuilder()
-                                     .rowBuilder()
+                                     .startPart()
+                                     .startRow()
                                      .cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), "Subtext is an underneath")))
-                                     .buildRow()
-                                     .buildPart()
+                                     .endRow()
+                                     .endPart()
                       ))
-                .buildRow()
-                .buildPart()
+                .endRow()
+                .endPart()
         assertEquals("Table(mutableListOf(230.0))\n" +
-                     ".partBuilder()\n" +
-                     ".rowBuilder()\n" +
+                     ".startPart()\n" +
+                     ".startRow()\n" +
                      ".cell(CellStyle(TOP_LEFT, BoxStyle(NO_PADDING, null, BorderStyle(LineStyle(CMYK_BLACK, 0.1)))), " +
                      "listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Some text with a bullet.\"),\n" +
                      "       Table(mutableListOf(230.0))\n" +
-                     ".partBuilder()\n" +
-                     ".rowBuilder()\n" +
+                     ".startPart()\n" +
+                     ".startRow()\n" +
                      ".cell(CellStyle(TOP_LEFT, NO_PAD_NO_BORDER), listOf(Text(TextStyle(HELVETICA, 12.0, CMYK_BLACK), \"Subtext is an underneath\")))\n" +
-                     ".buildRow()\n" +
-                     ".buildPart()))\n" +
-                     ".buildRow()\n" +
-                     ".buildPart()",
+                     ".endRow()\n" +
+                     ".endPart()))\n" +
+                     ".endRow()\n" +
+                     ".endPart()",
                      bulletTable.toString())
     }
 }

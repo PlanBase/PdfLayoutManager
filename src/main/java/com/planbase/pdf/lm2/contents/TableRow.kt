@@ -36,7 +36,10 @@ import kotlin.math.max
  * allows you to make a cell builder for a cell at a given column, add cells in subsequent columns,
  * then complete (buildCell()) the cell and have it find its proper (now previous) column.
  */
-class TableRow(private val tablePart: TablePart) {
+class TableRow
+@JvmOverloads
+constructor(private val tablePart: TablePart,
+            private val rowClosedCallback: (() -> Unit)? = null) {
     var textStyle: TextStyle? = tablePart.textStyle
     private var cellStyle: CellStyle = tablePart.cellStyle
     private val cells: MutableList<Cell> = ArrayList(tablePart.cellWidths.size)
@@ -78,13 +81,17 @@ class TableRow(private val tablePart: TablePart) {
         return this
     }
 
-    fun buildRow(): TablePart {
+    fun endRow(): TablePart {
         // Do we want to fill out the row with blank cells?
 //        if (cells.contains(null)) {
 //            throw IllegalStateException("Cannot build row when some TableRowCellBuilders have been" +
 //                                        " created but the cells not built and added back to the row.")
 //        }
-        return tablePart.addRow(this)
+        val part = tablePart.addRow(this)
+        if (rowClosedCallback != null) {
+            rowClosedCallback.invoke()
+        }
+        return part
     }
 
     fun finalRowHeight(): Double {
