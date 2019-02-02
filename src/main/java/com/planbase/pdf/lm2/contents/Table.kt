@@ -63,7 +63,7 @@ colWidth1 = tableMaxWidth * colProportion1
  */
 class Table
 @JvmOverloads
-constructor(val cellWidths: MutableList<Double> = mutableListOf(),
+constructor(var cellWidths: MutableList<Double> = mutableListOf(),
             var cellStyle: CellStyle = CellStyle.TOP_LEFT_BORDERLESS,
             var textStyle: TextStyle? = null,
             private val rows: MutableList<TableRow> = mutableListOf()) : LineWrappable {
