@@ -74,6 +74,7 @@ interface LineWrapped {
      * page so they don't end up in the margin or off the page.
      */
     // TODO: Is this necessary or helpful?
+    @JvmDefault
     fun render(lp: RenderTarget, topLeft: Coord, reallyRender:Boolean): DimAndPageNums =
             render(lp, topLeft, reallyRender, 0.0)
 
@@ -88,6 +89,7 @@ interface LineWrapped {
      * page so they don't end up in the margin or off the page.
      */
     // TODO: Is this necessary or helpful?
+    @JvmDefault
     fun render(lp: RenderTarget, topLeft: Coord): DimAndPageNums = render(lp, topLeft, true)
 
 //    companion object {
@@ -114,6 +116,7 @@ interface LineWrapped {
      * For a composite line, returns the items on the line.  For a single-item line, just returns a single-item list
      * containing `this`.
      */
+    @JvmDefault
     fun items():List<LineWrapped> = listOf(this)
 }
 

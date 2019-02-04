@@ -17,8 +17,8 @@ Bigger headings mean more stable releases!
  - Added JvmOverloads annotation to Table constructor to make it more convenient to use from Java.
  - Added Padding.withTop(), .withRight(), .withBottom(), and .withLeft() to create an immutable duplicate padding
  with one dimension changed.
- - Renamed Padding.topBottomPadding() and .leftRightPadding() to .topPlusBottom() and .leftPlusRight().
- Those methods show as unused, so they may be gotten rid of.
+ - Added JvmDefaults annotations to RenderTarget and LineWrapped methods.
+ - Removed Padding.topBottomPadding(), .leftRightPadding(), .subtractFrom(), and .applyTopLeft() because they are not used.
  - Deleted linewrapping.MultiLineWrapper.kt.
  It illustrated how line wrapping was intended to work, but it was never actually used.
  - Upgraded PdfBox from 2.0.12 to 2.0.13 and all dependencies and plugins to their latest versions.

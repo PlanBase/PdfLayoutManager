@@ -103,12 +103,11 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     @Suppress("unused") // Required part of public API
     fun getPDDocButBeCareful(): PDDocument = doc
 
-    // You can have many DrawJpegs backed by only a few images - it is a flyweight, and this
-    // hash map keeps track of the few underlying images, even as instances of DrawJpeg
+    // You can have many PDImageXObject backed by only a few images - it is a flyweight, and this
+    // hash map keeps track of the few underlying images, even as instances of PDImageXObject
     // represent all the places where these images are used.
-    // CRITICAL: This means that the the set of jpgs must be thrown out and created anew for each
-    // document!  Thus, a private final field on the PdfLayoutMgr instead of DrawJpeg, and DrawJpeg
-    // must be an inner class (or this would have to be package scoped).
+    // CRITICAL: This means that the the set of PDImageXObject must be thrown out and created anew for each
+    // document!
     private val imageCache = HashMap<BufferedImage, PDImageXObject>()
 
     private val pages:MutableList<SinglePage> = mutableListOf()
@@ -222,7 +221,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
 //                          body:PageArea): PageGrouping = startPageGrouping(orientation, body, null)
 
     /**
-     * Loads a TrueType font and automcatically embeds (the part you use?) into the document from the given file,
+     * Loads a TrueType font and automatically embeds (the part you use?) into the document from the given file,
      * returning a PDType0Font object.  The underlying TrueTypeFont object holds the file descriptor open while you
      * are working, presumably to embed only the glyphs you need.  PdfLayoutMgr2 will explicitly close the file
      * descriptor when you call [save].  Calling this method twice on the same PdfLayoutMgr with the same file will
@@ -316,10 +315,8 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
         if (this === other) {
             return true
         }
-        if (other == null) {
-            return false
-        }
-        if (other !is PdfLayoutMgr) {
+        if ( (other == null) ||
+             (other !is PdfLayoutMgr) ) {
             return false
         }
         // Details...

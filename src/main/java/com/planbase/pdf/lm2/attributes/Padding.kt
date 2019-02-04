@@ -20,9 +20,6 @@
 
 package com.planbase.pdf.lm2.attributes
 
-import com.planbase.pdf.lm2.utils.Coord
-import com.planbase.pdf.lm2.utils.Dim
-
 /**
  * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
  */
@@ -41,9 +38,9 @@ data class Padding(val top: Double,
 //
 //    fun botRightPadDim(): Dim = Dim(right, bottom)
 
-    fun subtractFrom(outer: Dim): Dim =
-            Dim(outer.width - (left + right),
-                  outer.height - (top + bottom))
+//    fun subtractFrom(outer: Dim): Dim =
+//            Dim(outer.width - (left + right),
+//                  outer.height - (top + bottom))
 
 //    fun addTo(outer: Dim): Dim =
 //            Dim(outer.width + (left + right),
@@ -57,11 +54,11 @@ data class Padding(val top: Double,
 
     fun withLeft(newLeft: Double) = Padding(top, right, bottom, newLeft)
 
-    fun applyTopLeft(orig: Coord): Coord = Coord(orig.x + left, orig.y - top)
-
-    fun topPlusBottom() = top + bottom
-
-    fun leftPlusRight() = left + right
+//    fun applyTopLeft(orig: Coord): Coord = Coord(orig.x + left, orig.y - top)
+//
+//    fun topPlusBottom() = top + bottom
+//
+//    fun leftPlusRight() = left + right
 
     override fun toString() =
             if (this == NO_PADDING) {

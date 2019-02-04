@@ -48,6 +48,7 @@ interface RenderTarget {
      * @param reallyRender Only render this if true (default).  Otherwise, just measure and return.
      * @return the updated RenderTarget (may be changed to return the lowest y-value instead)
      */
+    @JvmDefault
     fun drawLine(start: Coord,
                  end: Coord,
                  lineStyle: LineStyle,
@@ -56,6 +57,7 @@ interface RenderTarget {
         drawLineStrip(listOf(start, end), lineStyle, lineJoinStyle, reallyRender)
 
     /** Draws a line from (x1, y1) to (x2, y2).  Convenience function for [drawLine] */
+    @JvmDefault
     fun drawLine(start: Coord,
                  end: Coord,
                  lineStyle: LineStyle): IntRange
@@ -157,7 +159,7 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    @Suppress("unused")
+    @JvmDefault
     fun drawImage(bottomLeft: Coord,
                   wi: WrappedImage): HeightAndPage =
             drawImage(bottomLeft, wi, DEFAULT_Z_INDEX, true)
@@ -186,7 +188,7 @@ interface RenderTarget {
      * @return the effective height after page breaking
      * (may include some extra space above to push items onto the next page).
      */
-    @Suppress("unused")
+    @JvmDefault
     fun fillRect(bottomLeft: Coord,
                  dim: Dim,
                  c: PDColor): Double =
