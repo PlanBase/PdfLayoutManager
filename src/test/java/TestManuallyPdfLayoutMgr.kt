@@ -8,11 +8,13 @@ import com.planbase.pdf.lm2.contents.Cell
 import com.planbase.pdf.lm2.contents.ScaledImage
 import com.planbase.pdf.lm2.contents.Table
 import com.planbase.pdf.lm2.contents.Text
+import com.planbase.pdf.lm2.pages.SinglePage
 import com.planbase.pdf.lm2.utils.Coord
 import com.planbase.pdf.lm2.utils.Dim
 import com.planbase.pdf.lm2.utils.RGB_BLACK
 import com.planbase.pdf.lm2.utils.RGB_WHITE
 import junit.framework.TestCase.assertEquals
+import org.apache.pdfbox.cos.COSArray
 import org.apache.pdfbox.cos.COSString
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.LETTER
@@ -21,10 +23,11 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.apache.pdfbox.util.Charsets
-import org.junit.Test
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.IllegalArgumentException
 import javax.imageio.ImageIO
+import kotlin.test.Test
 
 class TestManuallyPdfLayoutMgr {
 
@@ -125,6 +128,7 @@ class TestManuallyPdfLayoutMgr {
                 .render(lp, lp.body.topLeft)
 
         assertEquals(Dim(360.0, 375.0), xya.dim)
+        assertEquals(1, pageMgr.numPages())
 
         // The second table uses the x and y offsets from the previous table to position it to the
         // right of the first.
@@ -176,6 +180,7 @@ class TestManuallyPdfLayoutMgr {
                 .render(lp, lp.body.topLeft.plusX(xya.dim.width + 10))
 
         assertEquals(Dim(300.0, 315.0), xyb.dim)
+        assertEquals(1, pageMgr.numPages())
 
         // The third table uses the x and y offsets from the previous tables to position it to the
         // right of the first and below the second.  Negative Y is down.  This third table showcases
@@ -210,6 +215,7 @@ class TestManuallyPdfLayoutMgr {
                 .render(lp, Coord(lp.body.topLeft.x + xya.dim.width + 10, lp.yBodyTop() - xyb.dim.height - 10))
 
         pageMgr.commit()
+        assertEquals(1, pageMgr.numPages())
 
         // Let's do a portrait page now.  I just copied this from the previous page.
         lp = pageMgr.startPageGrouping(PORTRAIT, letterPortraitBody)
@@ -260,6 +266,7 @@ class TestManuallyPdfLayoutMgr {
         val xyc: DimAndPageNums = tB
                 .wrap()
                 .render(lp, lp.body.topLeft.withX(0.0))
+        assertEquals(2, pageMgr.numPages())
 
         // This was very hastily added to this test to prove that font loading works (it does).
         val fontFile = File("target/test-classes/EmilysCandy-Regular.ttf")
@@ -284,6 +291,7 @@ class TestManuallyPdfLayoutMgr {
                                   lp.yBodyBottom + 15 + pMargin))
 
         pageMgr.commit()
+        assertEquals(2, pageMgr.numPages())
 
         // More landscape pages
         val pageHeadTextStyle = TextStyle(PDType1Font.HELVETICA, 7.0, RGB_BLACK)
@@ -477,6 +485,7 @@ class TestManuallyPdfLayoutMgr {
         tB.wrap()
                 .render(lp, lp.body.topLeft)
         pageMgr.commit()
+        assertEquals(4, pageMgr.numPages())
 
         val lineStyle = LineStyle(RGB_BLACK, 1.0)
 
@@ -517,6 +526,7 @@ class TestManuallyPdfLayoutMgr {
         // middle line
         lp.drawLine(Coord(pMargin, 0.0), Coord(pageRMargin, 0.0), lineStyle)
         pageMgr.commit()
+        assertEquals(7, pageMgr.numPages())
 
         // All done - write it out!
 
@@ -534,9 +544,34 @@ class TestManuallyPdfLayoutMgr {
         val docId = COSString("PdfLayoutMgr2 Test/Sample PDF".toByteArray(Charsets.ISO_8859_1))
         pageMgr.setFileIdentifiers(docId, docId)
 
+        val docIdCosArray: COSArray = pageMgr.getFileIdentifiers()!!
+        assertEquals(2, docIdCosArray.size())
+        assertEquals(docId, docIdCosArray.get(0))
+        assertEquals(docId, docIdCosArray.get(1))
+
         // We're just going to write to a file.
         pageMgr.save(FileOutputStream("test.pdf"))
     }
+
+
+    @Test(expected = IllegalArgumentException::class)
+    fun testInsertPageAtEx01() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
+        pageMgr.insertPageAt(SinglePage(1, pageMgr, null, letterPortraitBody), -1)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun testInsertPageAtEx02() {
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
+        pageMgr.insertPageAt(SinglePage(1, pageMgr, null, letterPortraitBody), 999)
+    }
+
+    // This will take a little longer to figure out...
+//    @Test(expected = IllegalStateException::class)
+//    fun testInsertPageAtEx03() {
+//        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(LETTER))
+//        pageMgr.insertPageAt(SinglePage(1, pageMgr, null, letterPortraitBody), 0)
+//    }
 
     companion object {
         internal val RGB_BLUE = PDColor(floatArrayOf(0.2f, 0.2f, 1f), PDDeviceRGB.INSTANCE)

@@ -45,6 +45,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
+import java.lang.IllegalArgumentException
 import java.util.HashMap
 
 /**
@@ -159,14 +160,24 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
     fun page(idx:Int):SinglePage = pages[idx]
 
     /**
-     * Allows inserting a single page before already created pages.  Use with caution.
+     * Allows inserting a single page before already created pages.
      * @param page the page to insert
      * @param idx the index to insert at (shifting the pages currently at that index and all greater indices up one.
-     * This must be >= the unCommittedPageIdx.  You cannot insert before already committed pages.
+     * This must be >= 0, <= pages.size, and >= the unCommittedPageIdx.
+     * The last means that you cannot insert before already committed pages.
      */
     fun insertPageAt(page:SinglePage, idx:Int) {
+        if (idx < 0) {
+            throw IllegalArgumentException("Insert index cannot be less than 0")
+        }
+        if (idx > pages.size) {
+            throw IllegalArgumentException("Insert index cannot be greater than the number" +
+                                           " of pages (if index == pages.size it's a legal" +
+                                           " append, but not technically an insert).")
+        }
         if (idx < unCommittedPageIdx) {
-            throw IllegalStateException("Can't insert page before already committed pages.")
+            throw IllegalStateException("Can't insert page at $idx before already" +
+                                        " committed pages at $unCommittedPageIdx.")
         }
         pages.add(idx, page)
     }
@@ -301,9 +312,7 @@ class PdfLayoutMgr(private val colorSpace: PDColorSpace,
                 stream = null
             } finally {
                 // Let it throw an exception if the closing doesn't work.
-                if (stream != null) {
-                    stream.close()
-                }
+                stream?.close()
             }
             unCommittedPageIdx++
         }

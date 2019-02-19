@@ -2,6 +2,10 @@
 
 Bigger headings mean more stable releases!
 
+## 2.4.1 2019-02-19 "Can't insert page at..."
+ - Improved error messages for PdfLayoutMgr.insertPageAt() for easier debugging of client code.
+ - Upgraded Kotlin from 1.3.20 to 1.3.21
+
 ## 2.4.0 2019-01-31 "lm2"
  - Changed package from com.planbase.pdf.layoutmanager to com.planbase.pdf.lm2.
  This makes it easy to use LayoutManager 1 and 2 in the same project which should make upgrades easier

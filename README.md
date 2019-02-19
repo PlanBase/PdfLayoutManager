@@ -27,7 +27,7 @@ Results will be found in `target/dokkaJavadoc/index.html`
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.4.0</version>
+        <version>2.4.1</version>
     </dependency>
 ```
 
