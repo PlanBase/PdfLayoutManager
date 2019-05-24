@@ -28,7 +28,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB
 import org.organicdesign.indented.StringUtils.iterableToStr
-import org.organicdesign.indented.StringUtils.objToStr
+import org.organicdesign.indented.StringUtils.indent
 import java.awt.Transparency
 import java.awt.color.ColorSpace
 import java.awt.image.BufferedImage
@@ -142,7 +142,7 @@ fun collectionToStr(collName: String, ls: Iterable<Any>) =
                     if (sB.length > collName.length + 1) {
                         sB.append(", ")
                     }
-                    sB.append(objToStr(0, item))
+                    sB.append(indent(0, item))
                 })
                 .append(")")
                 .toString()

@@ -2,6 +2,9 @@
 
 Bigger headings mean more stable releases!
 
+## 2.4.2 2019-03-06 "Update Indented"
+ - Updated Indented dependency version and other dependencies.
+
 ## 2.4.1 2019-02-19 "Can't insert page at..."
  - Improved error messages for PdfLayoutMgr.insertPageAt() for easier debugging of client code.
  - Upgraded Kotlin from 1.3.20 to 1.3.21
