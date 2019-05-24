@@ -271,12 +271,12 @@ this directory like the following (you'll have to replace the question marks):
 		<dependency>
 			<groupId>org.organicdesign.indented</groupId>
 			<artifactId>Indented</artifactId>
-			<version>0.0.9</version>
+			<version>0.0.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.organicdesign.testUtils</groupId>
 			<artifactId>TestUtils</artifactId>
-			<version>0.0.12</version>
+			<version>0.0.13</version>
 			<scope>test</scope>
 		</dependency>
 		<!--<dependency>-->

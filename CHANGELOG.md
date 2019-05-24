@@ -2,7 +2,7 @@
 
 Bigger headings mean more stable releases!
 
-## 2.4.2 2019-03-06 "Update Indented"
+## 2.4.2 2019-05-24 "Update Indented"
  - Updated Indented dependency version and other dependencies.
 
 ## 2.4.1 2019-02-19 "Can't insert page at..."
