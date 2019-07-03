@@ -24,6 +24,7 @@ import com.planbase.pdf.lm2.utils.colorToString
 import com.planbase.pdf.lm2.utils.fontToStr
 import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor
+import org.organicdesign.indented.StringUtils.stringify
 import java.io.IOException
 
 /**
@@ -190,7 +191,10 @@ data class TextStyle
             //              "font file used in this PDF");
             // Calculate our default if there's an exception.
             text.length * avgCharWidth
+        } catch (e: Exception) {
+            throw Exception("Character probably missing from font in: ${stringify(text)}", e)
         }
+
         if (characterSpacing != 0.0) {
             ret += text.length * characterSpacing
         }

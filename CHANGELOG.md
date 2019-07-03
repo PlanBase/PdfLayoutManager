@@ -2,6 +2,10 @@
 
 Bigger headings mean more stable releases!
 
+## 2.4.3 2019-06-25 "Better Debugging"
+ - Now include offending string in exception if it contains a character not included in the font (when characters are measured).
+ - Upgraded Kotlin from 1.3.21 to 1.3.40
+
 ## 2.4.2 2019-05-24 "Update Indented"
  - Updated Indented dependency version and other dependencies.
 
