@@ -34,7 +34,7 @@ data class Text(val textStyle: TextStyle,
 
     // This removes all tabs, transforms all line-terminators into "\n", and removes all runs of spaces that
     // precede line terminators.  This should simplify the subsequent line-breaking algorithm.
-    val text = cleanStr(initialText)
+    val text: String = cleanStr(initialText)
 
     fun avgCharsForWidth(width: Double): Int = (width * 1220.0 / textStyle.avgCharWidth).toInt()
 

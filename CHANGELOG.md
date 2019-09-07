@@ -2,6 +2,10 @@
 
 Bigger headings mean more stable releases!
 
+## 2.4.4 2019-09-06 "Updated dependencies"
+ - PDFBox from 2.0.15 to .16
+ - Kotlin from 1.3.40 to .50
+
 ## 2.4.3 2019-06-25 "Better Debugging"
  - Now include offending string in exception if it contains a character not included in the font (when characters are measured).
  - Upgraded Kotlin from 1.3.21 to 1.3.40
