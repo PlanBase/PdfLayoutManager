@@ -2,22 +2,26 @@
 
 Bigger headings mean more stable releases!
 
-## 2.4.4 2019-09-06 "Updated dependencies"
+## 2.4.5 2020-01-20 "Updated dependencies"
+ - PDFBox from 2.0.16 to .18
+ - Kotlin from 1.3.50 to .61
+
+### 2.4.4 2019-09-06 "Updated dependencies"
  - PDFBox from 2.0.15 to .16
  - Kotlin from 1.3.40 to .50
 
-## 2.4.3 2019-06-25 "Better Debugging"
+### 2.4.3 2019-06-25 "Better Debugging"
  - Now include offending string in exception if it contains a character not included in the font (when characters are measured).
  - Upgraded Kotlin from 1.3.21 to 1.3.40
 
-## 2.4.2 2019-05-24 "Update Indented"
+### 2.4.2 2019-05-24 "Update Indented"
  - Updated Indented dependency version and other dependencies.
 
-## 2.4.1 2019-02-19 "Can't insert page at..."
+### 2.4.1 2019-02-19 "Can't insert page at..."
  - Improved error messages for PdfLayoutMgr.insertPageAt() for easier debugging of client code.
  - Upgraded Kotlin from 1.3.20 to 1.3.21
 
-## 2.4.0 2019-01-31 "lm2"
+### 2.4.0 2019-01-31 "lm2"
  - Changed package from com.planbase.pdf.layoutmanager to com.planbase.pdf.lm2.
  This makes it easy to use LayoutManager 1 and 2 in the same project which should make upgrades easier
  for projects that make multiple independent PDFs since you can upgrade one at a time.
