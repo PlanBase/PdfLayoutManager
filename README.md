@@ -22,6 +22,16 @@ Results will be found in `target/dokkaJavadoc/index.html`
 [Changelog](CHANGELOG.md)
 
 # Maven Dependency
+Unfortunately you have to [build from source](#building-from-source) for now because
+1. Can't upload prebuilt artifacts to Sonatype without javadoc.
+2. Dokka won't generate javadoc with JDK10 or 11 (only jdk8)
+
+Please vote for the YouTrack issue (probably most effective):
+https://youtrack.jetbrains.com/issue/KT-31710
+
+Or thumbs-up the github issue (probably better than nothing):
+https://github.com/Kotlin/dokka/issues/294
+ 
 ```xml
     <!-- Affero GPL - contact PlanBase for commercial version. -->
     <dependency>
