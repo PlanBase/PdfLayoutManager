@@ -37,7 +37,7 @@ https://github.com/Kotlin/dokka/issues/294
     <dependency>
         <groupId>com.planbase.pdf</groupId>
         <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.4.5</version>
+        <version>2.4.6</version>
     </dependency>
 ```
 
