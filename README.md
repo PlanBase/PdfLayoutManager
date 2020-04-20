@@ -31,6 +31,9 @@ https://youtrack.jetbrains.com/issue/KT-31710
 
 Or thumbs-up the github issue (probably better than nothing):
 https://github.com/Kotlin/dokka/issues/294
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.planbase.pdf/PdfLayoutMgr2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.planbase.pdf/PdfLayoutMgr2)
+[![javadoc](https://javadoc.io/badge2/com.planbase.pdf/PdfLayoutMgr2/javadoc.svg)](https://javadoc.io/doc/com.planbase.pdf/PdfLayoutMgr2)
  
 ```xml
     <!-- Affero GPL - contact PlanBase for commercial version. -->
@@ -103,7 +106,7 @@ Any software that uses AfferoGPL code (in the same JVM) must be released under t
 #### Q: Why isn't this Apache-licensed any more?
 **A:** The recent version required a near-total rewrite in order to accommodate inline images and style changes.
 PlanBase paid for that.  It was a significant investment and they deserve the chance to profit from it.
-You can still use the old PdfLayoutManager versions 0.x under the Apache license, but it lacks inline styles and images.
+You can still use the old [PdfLayoutManager](https://github.com/GlenKPeterson/PdfLayoutManager) versions 1.x under the Apache license, but it lacks inline styles and images.
 
 #### Q: What languages/character sets does PdfLayoutMgr2 support?
 **A:** If you embed fonts, you can use whatever characters are in that font.
@@ -120,12 +123,12 @@ Afrikaans (af), Albanian (sq), Basque (eu), Catalan (ca), Danish (da), Dutch (nl
 #### Q: Will PdfLayoutMgr2 ever support cropping the contents of a fixed-size box?
 **A:** If individual letters or images have a dimension which is bigger than the same dimension of their bounding box, we either have to suppress their display, or crop them.  The PDF spec mentions something about a "clipping path" that might be usable for cropping overflow if you turn it on, render your object, then turn it off again.
 
-If the contents are all little things, we could just show as many little letters or images as completely fit, then no more (truncate the list of contents).  Showing none could make truncation work for big objects too, but this is conceptually very different from the very reason for the existence of PdfLayoutManager.
+If the contents are all little things, we could just show as many little letters or images as completely fit, then no more (truncate the list of contents).  Showing none could make truncation work for big objects too, but this is conceptually very different from the very reason for the existence of PdfLayoutMgr2.
 
 Maybe some day we will provide some sample code so you can do truncation yourself.  [TextStyle](src/main/java/com/planbase/pdf/lm2/attributes/TextStyle.kt) has lineHeight() and stringWidthInDocUnits() that you may find useful for writing your own compatible cropping algorithm.  If you do that (and it works well), consider contributing it back to PdfLayoutMgr2 (at least to this doc) so that others can benefit!
 
-#### Q: Why doesn't PdfLayoutManager line-wrap my insanely long single-word test string properly?
-**A:** For text wrapping to work, the text needs occasional whitespace.  In HTML, strings without whitespace do not wrap at all!  In PdfLayoutManager, a long enough string will wrap at some point wider than the cell.
+#### Q: Why doesn't PdfLayoutMgr2 line-wrap my insanely long single-word test string properly?
+**A:** For text wrapping to work, the text needs occasional whitespace.  In HTML, strings without whitespace do not wrap at all!  In PdfLayoutMgr2, a long enough string will wrap at some point wider than the cell.
 
 The text wrapping algorithm picks a slightly long starting guess for where to wrap the text, then steps backward looking for whitespace. If it doesn't find any whitspace, it splits the first line at its original guess length and continues trying to wrap the rest of the text on the next line.
 

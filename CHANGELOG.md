@@ -2,6 +2,9 @@
 
 Bigger headings mean more stable releases!
 
+## 2.4.7 2020-04-20 "Updated dependencies"
+ - Now target JDK 11 (instead of 1.8)
+
 ## 2.4.6 2020-02-29 "Updated dependencies"
  - PDFBox from 2.0.18 to .19
  - dokka-maven-plugin from 0.10.0 to 0.10.1
