@@ -5,10 +5,10 @@ import TestManuallyPdfLayoutMgr.Companion.letterLandscapeBody
 import TestManuallyPdfLayoutMgr.Companion.letterPortraitBody
 import com.planbase.pdf.lm2.PdfLayoutMgr
 import com.planbase.pdf.lm2.PdfLayoutMgr.Companion.DEFAULT_MARGIN
-import com.planbase.pdf.lm2.attributes.Orientation.LANDSCAPE
-import com.planbase.pdf.lm2.attributes.Orientation.PORTRAIT
 import com.planbase.pdf.lm2.attributes.CellStyle.Companion.TOP_LEFT_BORDERLESS
 import com.planbase.pdf.lm2.attributes.DimAndPageNums
+import com.planbase.pdf.lm2.attributes.Orientation.LANDSCAPE
+import com.planbase.pdf.lm2.attributes.Orientation.PORTRAIT
 import com.planbase.pdf.lm2.attributes.PageArea
 import com.planbase.pdf.lm2.attributes.TextStyle
 import com.planbase.pdf.lm2.contents.ScaledImage
@@ -20,7 +20,6 @@ import com.planbase.pdf.lm2.utils.RGB_BLACK
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.fail
 import org.apache.pdfbox.cos.COSString
-import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.common.PDRectangle.*
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font.TIMES_ROMAN
@@ -192,7 +191,7 @@ class PageGroupingTest {
         assertEquals(qbfCell.dim.height, qbfTable.dim.height + 1.0)
         assertEquals(cellDaP2.dim.height, tableDaP2.dim.height)
 
-        y -= listOf(imgHaP2.height, txtHaP2.height, rectY2).max() as Double
+        y -= listOf(imgHaP2.height, txtHaP2.height, rectY2).maxOrNull() as Double
 
         while (y >= lp.yBodyBottom - 400) {
             val imgHaP: HeightAndPage = lp.drawImage(Coord(melonX, y), bigMelon)
@@ -212,7 +211,7 @@ class PageGroupingTest {
             val tableDaP: DimAndPageNums = qbfTable.render(lp, Coord(tableX1, y + qbfCell.dim.height))
             Dim.assertEquals(qbfTable.dim, tableDaP.dim, 0.0)
 
-            y -= listOf(imgHaP.height, txtHaP.height, rectY).max() as Double
+            y -= listOf(imgHaP.height, txtHaP.height, rectY).maxOrNull() as Double
         }
 
         pageMgr.commit()
@@ -392,7 +391,7 @@ class PageGroupingTest {
     }
 
     @Test fun testRoomBelowCursorPortrait() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.A6))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(A6))
         val lp = pageMgr.startPageGrouping(PORTRAIT, a6PortraitBody)
         val bodyHeight = a6PortraitBody.dim.height
         val hel12Ts = TextStyle(PDType1Font.HELVETICA_BOLD_OBLIQUE, 12.0, CMYK_BLACK)
@@ -422,10 +421,10 @@ class PageGroupingTest {
     }
 
     @Test fun testFillRectAtBottomOfPage() {
-        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(PDRectangle.A6))
+        val pageMgr = PdfLayoutMgr(PDDeviceRGB.INSTANCE, Dim(A6))
         val lp = pageMgr.startPageGrouping(PORTRAIT,
-                                           PageArea(Coord(DEFAULT_MARGIN.nextDown(), PDRectangle.A6.height.nextUp() - 17.333333),
-                                                    Dim(PDRectangle.A6).minus(Dim(13.11111, 13.11111))))
+                                           PageArea(Coord(DEFAULT_MARGIN.nextDown(), A6.height.nextUp() - 17.333333),
+                                                    Dim(A6).minus(Dim(13.11111, 13.11111))))
 
         // Spent all afternoon wondering why printing 20 pages worked, but printing 200 threw an exception.
         // PageGrouping uses floating point arithmetic, but only blew up when one number was big enough and the
@@ -481,16 +480,16 @@ class PageGroupingTest {
     }
 
     companion object {
-        val a1PortraitBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.A1.height - DEFAULT_MARGIN),
-                                      Dim(PDRectangle.A1).minus(Dim(DEFAULT_MARGIN * 2.0, DEFAULT_MARGIN * 2.0)))
+        val a1PortraitBody = PageArea(Coord(DEFAULT_MARGIN, A1.height - DEFAULT_MARGIN),
+                                      Dim(A1).minus(Dim(DEFAULT_MARGIN * 2.0, DEFAULT_MARGIN * 2.0)))
 
-        val a1LandscapeBody = PageArea(Coord(DEFAULT_MARGIN, PDRectangle.A1.width - DEFAULT_MARGIN),
+        val a1LandscapeBody = PageArea(Coord(DEFAULT_MARGIN, A1.width - DEFAULT_MARGIN),
                                        a1PortraitBody.dim.swapWh())
 
-        val melonPic: BufferedImage = ImageIO.read(File("target/test-classes/melon.jpg"))
+        private val melonPic: BufferedImage = ImageIO.read(File("target/test-classes/melon.jpg"))
         const val melonHeight = 98.0
         const val melonWidth = 170.0
         val bigMelon = ScaledImage(melonPic, Dim(melonWidth, melonHeight)).wrap()
-        val bigText = Text(TextStyle(PDType1Font.TIMES_ROMAN, 93.75, RGB_BLACK), "gN")
+        val bigText = Text(TextStyle(TIMES_ROMAN, 93.75, RGB_BLACK), "gN")
     }
 }

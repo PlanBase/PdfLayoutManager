@@ -1,9 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<prerequisites>
-		<maven>3.6.3</maven>
-	</prerequisites>
 <!--
 For adding to Sonatype OSSRH, need to issue:
 mvn clean package dokka:javadoc dokka:javadocJar deploy
@@ -41,7 +38,7 @@ this directory like the following (you'll have to replace the question marks):
 -->
 	<groupId>com.planbase.pdf</groupId>
 	<artifactId>PdfLayoutMgr2</artifactId>
-	<version>2.4.7</version>
+	<version>2.4.8</version>
 	<packaging>jar</packaging>
 
 	<name>PdfLayoutMgr2</name>
@@ -76,7 +73,27 @@ this directory like the following (you'll have to replace the question marks):
 	</pluginRepositories>
 	<build>
 		<plugins>
-            <plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M3</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.6.0,)</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.6</version>
@@ -106,7 +123,7 @@ this directory like the following (you'll have to replace the question marks):
 			<plugin>
 				<groupId>org.jetbrains.dokka</groupId>
 				<artifactId>dokka-maven-plugin</artifactId>
-				<version>0.10.1</version>
+				<version>1.4.0-rc</version>
 				<executions>
 					<execution>
 						<phase>pre-site</phase>
@@ -116,16 +133,6 @@ this directory like the following (you'll have to replace the question marks):
 					</execution>
 				</executions>
 				<configuration>
-
-					<!-- Set to true to skip dokka task, default: false -->
-					<skip>false</skip>
-
-					<!-- See list of possible formats below -->
-					<outputFormat>html</outputFormat>
-
-					<!-- Use default or set to custom path to cache directory to enable package-list caching. -->
-					<!-- When set to default, caches stored in $USER_HOME/.cache/dokka -->
-					<cacheRoot>default</cacheRoot>
 
 					<!-- List of '.md' files with package and module docs -->
 					<!-- http://kotlinlang.org/docs/reference/kotlin-doc.html#module-and-package-documentation -->
@@ -268,7 +275,7 @@ this directory like the following (you'll have to replace the question marks):
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.19</version>
+			<version>2.0.21</version>
 		</dependency>
 		<!--<dependency>-->
 			<!--<groupId>junit</groupId>-->
@@ -277,14 +284,14 @@ this directory like the following (you'll have to replace the question marks):
 			<!--<scope>test</scope>-->
 		<!--</dependency>-->
 		<dependency>
-			<groupId>org.organicdesign.indented</groupId>
+			<groupId>org.organicdesign</groupId>
 			<artifactId>Indented</artifactId>
-			<version>0.0.11</version>
+			<version>0.0.14</version>
 		</dependency>
 		<dependency>
-			<groupId>org.organicdesign.testUtils</groupId>
+			<groupId>org.organicdesign</groupId>
 			<artifactId>TestUtils</artifactId>
-			<version>0.0.14</version>
+			<version>0.0.18</version>
 			<scope>test</scope>
 		</dependency>
 		<!--<dependency>-->
@@ -318,7 +325,7 @@ this directory like the following (you'll have to replace the question marks):
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <kotlin.version>1.3.72</kotlin.version>
+        <kotlin.version>1.4.0</kotlin.version>
     </properties>
 
 </project>

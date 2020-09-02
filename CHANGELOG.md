@@ -2,6 +2,9 @@
 
 Bigger headings mean more stable releases!
 
+## 2.4.8 2020-09-02 "Updated dependencies"
+ - Kotlin/Dokka 1.4.0, PDFBox 2.0.21, Indented 0.0.14, TestUtils 0.0.18
+
 ## 2.4.7 2020-04-20 "Updated dependencies"
  - Now target JDK 11 (instead of 1.8)
 

@@ -9,40 +9,14 @@ Requires PDFBox which in turn requires Log4J or apache commons Logging.
 You can use this as free software under the [Affero GPL](https://www.gnu.org/licenses/agpl-3.0.en.html) or contact PlanBase about a commercial license.
 See the [FAQ](#faq) below
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.planbase.pdf/PdfLayoutMgr2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.planbase.pdf/PdfLayoutMgr2)
+[![javadoc](https://javadoc.io/badge2/com.planbase.pdf/PdfLayoutMgr2/javadoc.svg)](https://javadoc.io/doc/com.planbase.pdf/PdfLayoutMgr2)
+ 
 ## Usage
 
 Sample Code: [TestBasics.java](src/test/java/TestBasics.kt)
 
-API Docs: for the latest, please `git pull` the sources (with java 8+ and maven 3.3+ installed) and run:
-```bash
-mvn clean package dokka:javadoc
-```
-Results will be found in `target/dokkaJavadoc/index.html`
-
 [Changelog](CHANGELOG.md)
-
-# Maven Dependency
-Unfortunately you have to [build from source](#building-from-source) for now because
-1. Can't upload prebuilt artifacts to Sonatype without javadoc.
-2. Dokka won't generate javadoc with JDK10 or 11 (only jdk8)
-
-Please vote for the YouTrack issue (probably most effective):
-https://youtrack.jetbrains.com/issue/KT-31710
-
-Or thumbs-up the github issue (probably better than nothing):
-https://github.com/Kotlin/dokka/issues/294
-
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.planbase.pdf/PdfLayoutMgr2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.planbase.pdf/PdfLayoutMgr2)
-[![javadoc](https://javadoc.io/badge2/com.planbase.pdf/PdfLayoutMgr2/javadoc.svg)](https://javadoc.io/doc/com.planbase.pdf/PdfLayoutMgr2)
- 
-```xml
-    <!-- Affero GPL - contact PlanBase for commercial version. -->
-    <dependency>
-        <groupId>com.planbase.pdf</groupId>
-        <artifactId>PdfLayoutMgr2</artifactId>
-        <version>2.4.6</version>
-    </dependency>
-```
 
 # Positioning
 
