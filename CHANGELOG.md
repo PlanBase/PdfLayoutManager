@@ -1,6 +1,8 @@
 # Changelog
 
 Bigger headings mean more stable releases!
+## 2.4.9 2020-10-06 "Updated dependencies"
+ - Bumped dependency versions
 
 ## 2.4.8 2020-09-02 "Updated dependencies"
  - Kotlin/Dokka 1.4.0, PDFBox 2.0.21, Indented 0.0.14, TestUtils 0.0.18

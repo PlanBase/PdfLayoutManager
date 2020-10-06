@@ -38,7 +38,7 @@ this directory like the following (you'll have to replace the question marks):
 -->
 	<groupId>com.planbase.pdf</groupId>
 	<artifactId>PdfLayoutMgr2</artifactId>
-	<version>2.4.8</version>
+	<version>2.4.9</version>
 	<packaging>jar</packaging>
 
 	<name>PdfLayoutMgr2</name>
@@ -123,7 +123,7 @@ this directory like the following (you'll have to replace the question marks):
 			<plugin>
 				<groupId>org.jetbrains.dokka</groupId>
 				<artifactId>dokka-maven-plugin</artifactId>
-				<version>1.4.0-rc</version>
+				<version>1.4.10</version>
 				<executions>
 					<execution>
 						<phase>pre-site</phase>
@@ -136,9 +136,9 @@ this directory like the following (you'll have to replace the question marks):
 
 					<!-- List of '.md' files with package and module docs -->
 					<!-- http://kotlinlang.org/docs/reference/kotlin-doc.html#module-and-package-documentation -->
-					<includes>
-						<file>package.html</file>
-					</includes>
+<!--					<includes>-->
+<!--						<file>package.html</file>-->
+<!--					</includes>-->
 
 					<!-- Used for linking to JDK, default: 6 -->
 					<jdkVersion>8</jdkVersion>
@@ -286,12 +286,12 @@ this directory like the following (you'll have to replace the question marks):
 		<dependency>
 			<groupId>org.organicdesign</groupId>
 			<artifactId>Indented</artifactId>
-			<version>0.0.14</version>
+			<version>0.0.15</version>
 		</dependency>
 		<dependency>
 			<groupId>org.organicdesign</groupId>
 			<artifactId>TestUtils</artifactId>
-			<version>0.0.18</version>
+			<version>0.0.19</version>
 			<scope>test</scope>
 		</dependency>
 		<!--<dependency>-->
@@ -325,7 +325,7 @@ this directory like the following (you'll have to replace the question marks):
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <kotlin.version>1.4.0</kotlin.version>
+        <kotlin.version>1.4.10</kotlin.version>
     </properties>
 
 </project>
